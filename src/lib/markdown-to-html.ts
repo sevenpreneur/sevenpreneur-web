@@ -1,7 +1,7 @@
 import { marked } from "marked";
 
 export function markdownToHtml(markdown: string) {
-  return marked.parse(markdown);
+  return marked.parse(markdown, { async: false });
 }
 
 // export async function parsedMarkdownToHtml(markdown: string): Promise<string> {
