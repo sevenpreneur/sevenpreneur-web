@@ -37,7 +37,8 @@ export const updateBA = {
       await checkUpdateResult(
         updatedCategory.length,
         "BA category",
-        "BA categories"
+        "BA categories",
+        "ba.category"
       );
 
       return {
@@ -72,7 +73,8 @@ export const updateBA = {
       await checkUpdateResult(
         updatedSubcategory.length,
         "BA subcategory",
-        "BA subcategories"
+        "BA subcategories",
+        "ba.subcategory"
       );
 
       return {
@@ -113,7 +115,8 @@ export const updateBA = {
       await checkUpdateResult(
         updatedQuestion.length,
         "BA question",
-        "BA questions"
+        "BA questions",
+        "ba.question"
       );
 
       return {
@@ -159,7 +162,8 @@ export const updateBA = {
         await checkUpdateResult(
           updatedAnswerSheet.length,
           "BA answer sheet",
-          "BA answer sheets"
+          "BA answer sheets",
+          "ba.answerSheet"
         );
 
         for (const answer of opts.input.answers) {
@@ -176,7 +180,8 @@ export const updateBA = {
           await checkUpdateResult(
             updatedAnswerItem.length,
             "BA answer item",
-            "BA answer items"
+            "BA answer items",
+            "ba.answerSheet"
           );
         }
       });

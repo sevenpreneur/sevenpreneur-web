@@ -115,7 +115,12 @@ export const updateUserData = {
           deleted_at: null,
         },
       });
-      await checkUpdateResult(updatedUser.length, "user", "users");
+      await checkUpdateResult(
+        updatedUser.length,
+        "user",
+        "users",
+        "user_business"
+      );
       return {
         code: STATUS_OK,
         message: "Success",

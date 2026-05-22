@@ -49,8 +49,9 @@ export const updateWA = {
         });
       await checkUpdateResult(
         updatedConversation.length,
-        "conversation",
-        "conversations"
+        "WA conversation",
+        "WA conversations",
+        "wa.conversation"
       );
       return {
         code: STATUS_OK,
@@ -83,8 +84,9 @@ export const updateWA = {
         });
       await checkUpdateResult(
         updatedConversation.length,
-        "conversation",
-        "conversations"
+        "WA conversation",
+        "WA conversations",
+        "wa.conversation"
       );
 
       return {
@@ -114,8 +116,8 @@ export const updateWA = {
       });
       await checkUpdateResult(
         updatedAssets.length,
-        "asset",
-        "assets",
+        "WA asset",
+        "WA assets",
         "wa.asset"
       );
 
@@ -167,7 +169,12 @@ export const updateWA = {
             id: opts.input.id,
           },
         });
-      await checkUpdateResult(updatedTemplate.length, "template", "templates");
+      await checkUpdateResult(
+        updatedTemplate.length,
+        "WA template",
+        "WA templates",
+        "wa.template"
+      );
 
       return {
         code: STATUS_OK,
@@ -190,8 +197,8 @@ export const updateWA = {
       });
       await checkUpdateResult(
         updatedAlerts.length,
-        "alert",
-        "alerts",
+        "WA alert",
+        "WA alerts",
         "wa.alert"
       );
 

@@ -36,7 +36,8 @@ export const updateArticle = {
       await checkUpdateResult(
         updatedCategory.length,
         "article category",
-        "article categories"
+        "article categories",
+        "articleCategory"
       );
       return {
         code: STATUS_OK,

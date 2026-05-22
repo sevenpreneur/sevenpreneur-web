@@ -46,7 +46,8 @@ export const updateBD = {
       await checkUpdateResult(
         updatedRevenueMTD.length,
         "BD revenue MTD",
-        "BD revenue MTDs"
+        "BD revenue MTDs",
+        "bd.revenue_mtd"
       );
 
       return {
@@ -96,7 +97,8 @@ export const updateBD = {
       await checkUpdateResult(
         updatedRevenueMTD.length,
         "BD revenue MTD",
-        "BD revenue MTDs"
+        "BD revenue MTDs",
+        "bd.revenue_mtd_csv"
       );
 
       return {
@@ -137,7 +139,8 @@ export const updateBD = {
       await checkUpdateResult(
         updatedCostMTD.length,
         "BD cost MTD",
-        "BD cost MTDs"
+        "BD cost MTDs",
+        "bd.cost_mtd"
       );
 
       return {
@@ -177,7 +180,8 @@ export const updateBD = {
       await checkUpdateResult(
         updatedNorthStarIndicator.length,
         "BD north star indicator",
-        "BD north star indicators"
+        "BD north star indicators",
+        "bd.north_star_indicator"
       );
 
       return {
@@ -216,7 +220,8 @@ export const updateBD = {
       await checkUpdateResult(
         updatedNorthStarMTD.length,
         "BD north star MTD",
-        "BD north star MTDs"
+        "BD north star MTDs",
+        "bd.north_star_mtd"
       );
 
       return {
