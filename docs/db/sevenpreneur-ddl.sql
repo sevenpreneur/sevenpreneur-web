@@ -173,6 +173,27 @@ CREATE TYPE wa_asset_type AS ENUM (
   'video'
 );
 
+-- Enumeration for the wa_templates table (wat_*)
+
+CREATE TYPE wat_category AS ENUM (
+  'marketing',
+  'utility',
+  'authentication'
+);
+
+CREATE TYPE wat_format AS ENUM (
+  'named',
+  'positional'
+);
+
+CREATE TYPE wat_status AS ENUM (
+  'pending_review',
+  'approved',
+  'rejected',
+  'disabled',
+  'paused'
+);
+
 -- Enumeration for the wa_alerts table (wa_alert_*)
 
 CREATE TYPE wa_alert_status AS ENUM (
@@ -811,6 +832,19 @@ CREATE TABLE wa_assets (
   updated_at   TIMESTAMPTZ    NOT NULL  DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE wa_templates (
+  id          SERIAL        PRIMARY KEY,
+  name        VARCHAR       NOT NULL,
+  lang_code   CHAR(5)       NOT NULL  DEFAULT 'en_US',
+  category    wat_category  NOT NULL,
+  format      wat_format    NOT NULL  DEFAULT 'named',
+  components  JSON          NOT NULL  DEFAULT '[]',
+  status      wat_status    NOT NULL  DEFAULT 'pending_review',
+  created_at  TIMESTAMPTZ   NOT NULL  DEFAULT CURRENT_TIMESTAMP,
+  updated_at  TIMESTAMPTZ   NOT NULL  DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE (name, lang_code)
+);
+
 CREATE TABLE wa_alerts (
   id                SERIAL           PRIMARY KEY,
   conv_id           CHAR(21)         NOT NULL,
@@ -1307,6 +1341,11 @@ CREATE TRIGGER update_wa_chats_updated_at_trigger
 
 CREATE TRIGGER update_wa_assets_updated_at_trigger
   BEFORE UPDATE ON wa_assets
+  FOR EACH ROW
+    EXECUTE FUNCTION update_updated_at();
+
+CREATE TRIGGER update_wa_templates_updated_at_trigger
+  BEFORE UPDATE ON wa_templates
   FOR EACH ROW
     EXECUTE FUNCTION update_updated_at();
 
