@@ -133,6 +133,8 @@ async function createTransaction(
     let domain = "sevenpreneur.com";
     if (process.env.DOMAIN_MODE === "local") {
       domain = "example.com:3000";
+    } else if (process.env.DOMAIN_MODE === "staging") {
+      domain = "sevenpreneur.net";
     }
     let xenditResponse: XenditInvoiceResponse;
     try {

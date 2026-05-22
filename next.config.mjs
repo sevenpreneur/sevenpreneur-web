@@ -23,7 +23,7 @@ const nextConfig = {
           {
             type: "header",
             key: "host",
-            value: "www.(sevenpreneur|example).com.*",
+            value: "www.(sevenpreneur.(com|net)|example.com).*",
           },
         ],
         headers: [
@@ -62,6 +62,25 @@ const nextConfig = {
           {
             type: "header",
             key: "host",
+            value: "(agora|admin|ailene).sevenpreneur.net.*",
+          },
+        ],
+        missing: [
+          {
+            type: "cookie",
+            key: "session_token",
+          },
+        ],
+        destination: "https://www.sevenpreneur.net/auth/login",
+        basePath: false,
+        permanent: false,
+      },
+      {
+        source: "/(.*)",
+        has: [
+          {
+            type: "header",
+            key: "host",
             value: "(agora|admin|ailene).example.com:3000.*",
           },
         ],
@@ -81,7 +100,7 @@ const nextConfig = {
           {
             type: "header",
             key: "host",
-            value: "www.(sevenpreneur|example).com.*",
+            value: "www.(sevenpreneur.(com|net)|example.com).*",
           },
           {
             type: "cookie",
@@ -116,7 +135,8 @@ const nextConfig = {
             {
               type: "header",
               key: "host",
-              value: "(?<subdomain>[^.]+).(sevenpreneur|example).com.*",
+              value:
+                "(?<subdomain>[^.]+).(sevenpreneur.(com|net)|example.com).*",
             },
           ],
           destination: "/:subdomain/:path*",
@@ -127,7 +147,7 @@ const nextConfig = {
             {
               type: "header",
               key: "host",
-              value: "(sevenpreneur|example).com.*",
+              value: "(sevenpreneur.(com|net)|example.com).*",
             },
           ],
           destination: "/www/:path*",
@@ -163,6 +183,8 @@ const nextConfig = {
       allowedOrigins: [
         "sevenpreneur.com",
         "*.sevenpreneur.com",
+        "sevenpreneur.net",
+        "*.sevenpreneur.net",
         "example.com",
         "*.example.com",
         process.env.NGROK_DOMAIN,

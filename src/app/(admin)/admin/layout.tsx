@@ -9,6 +9,11 @@ import { ThemeProvider } from "next-themes";
 import { cookies } from "next/headers";
 import { Toaster } from "sonner";
 
+const adminBaseURL =
+  process.env.DOMAIN_MODE === "staging"
+    ? "https://admin.sevenpreneur.net"
+    : "https://admin.sevenpreneur.com";
+
 export const metadata: Metadata = {
   title: {
     template: "%s | Admin Sevenpreneur",
@@ -16,7 +21,7 @@ export const metadata: Metadata = {
   },
   description:
     "Central hub to manage all operations of the Sevenpreneur ecosystem",
-  metadataBase: new URL("https://admin.sevenpreneur.com"),
+  metadataBase: new URL(adminBaseURL),
   alternates: {
     canonical: "/",
   },
@@ -34,6 +39,8 @@ export const metadata: Metadata = {
 let baseURL = "https://api.sevenpreneur.com/trpc";
 if (process.env.DOMAIN_MODE === "local")
   baseURL = "https://api.example.com:3000/trpc";
+else if (process.env.DOMAIN_MODE === "staging")
+  baseURL = "https://api.sevenpreneur.net/trpc";
 
 export default async function AdminLayout(
   props: Readonly<{ children: React.ReactNode }>

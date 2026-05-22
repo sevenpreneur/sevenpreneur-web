@@ -17,7 +17,9 @@ import {
 import { WhatsAppWebhookMessageStatusType } from "./type.wa.webhook";
 
 const SAVE_ATTACHMENT_URL =
-  "https://api.sevenpreneur.com/qstash/save-whatsapp-attachment";
+  process.env.DOMAIN_MODE === "staging"
+    ? "https://api.sevenpreneur.net/qstash/save-whatsapp-attachment"
+    : "https://api.sevenpreneur.com/qstash/save-whatsapp-attachment";
 
 export type WhatsappMediaType =
   | "audio"

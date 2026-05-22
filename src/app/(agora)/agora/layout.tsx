@@ -11,6 +11,11 @@ import { cookies } from "next/headers";
 import { ReactNode } from "react";
 import { Toaster } from "sonner";
 
+const agoraBaseURL =
+  process.env.DOMAIN_MODE === "staging"
+    ? "https://agora.sevenpreneur.net"
+    : "https://agora.sevenpreneur.com";
+
 export const metadata: Metadata = {
   title: {
     template: "%s | Agora Learning Sevenpreneur",
@@ -18,7 +23,7 @@ export const metadata: Metadata = {
   },
   description:
     "Central hub to manage all operations of the Sevenpreneur ecosystem",
-  metadataBase: new URL("https://agora.sevenpreneur.com"),
+  metadataBase: new URL(agoraBaseURL),
   alternates: {
     canonical: "/",
   },
@@ -36,6 +41,8 @@ export const metadata: Metadata = {
 let baseURL = "https://api.sevenpreneur.com/trpc";
 if (process.env.DOMAIN_MODE === "local")
   baseURL = "https://api.example.com:3000/trpc";
+else if (process.env.DOMAIN_MODE === "staging")
+  baseURL = "https://api.sevenpreneur.net/trpc";
 
 interface AgoraLayoutProps {
   children: ReactNode;

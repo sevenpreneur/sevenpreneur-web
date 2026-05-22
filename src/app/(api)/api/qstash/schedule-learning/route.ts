@@ -154,8 +154,12 @@ export const POST = verifySignatureAppRouter(async (req: Request) => {
       // Queue another batch if already running for more than max duration
       const duration = Date.now() - startTime;
       if (duration >= SEND_REMINDER_MAX_DURATION) {
+        const apiDomain =
+          process.env.DOMAIN_MODE === "staging"
+            ? "api.sevenpreneur.net"
+            : "api.sevenpreneur.com";
         await qstash.publishJSON({
-          url: "https://api.sevenpreneur.com/qstash/schedule-learning",
+          url: `https://${apiDomain}/qstash/schedule-learning`,
           body: {
             progress: currentProgress,
           },

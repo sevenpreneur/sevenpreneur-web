@@ -34,6 +34,8 @@ export async function DeleteSession() {
   let domain = "sevenpreneur.com";
   if (process.env.DOMAIN_MODE === "local") {
     domain = "example.com";
+  } else if (process.env.DOMAIN_MODE === "staging") {
+    domain = "sevenpreneur.net";
   }
 
   // Delete token on Cookie

@@ -105,6 +105,8 @@ if (process.env.DOMAIN_MODE === "local") {
   if (ngrokDomain !== undefined && ngrokDomain !== "") {
     baseURL = "https://" + ngrokDomain + "/";
   }
+} else if (process.env.DOMAIN_MODE === "staging") {
+  baseURL = "https://api.sevenpreneur.net/";
 }
 
 export async function AIGenerate<T extends AutoParseableTextFormat<U>, U>(

@@ -13,9 +13,16 @@ import { Toaster } from "sonner";
 let baseURL = "https://api.sevenpreneur.com/trpc";
 if (process.env.DOMAIN_MODE === "local")
   baseURL = "https://api.example.com:3000/trpc";
+else if (process.env.DOMAIN_MODE === "staging")
+  baseURL = "https://api.sevenpreneur.net/trpc";
+
+const wwwBaseURL =
+  process.env.DOMAIN_MODE === "staging"
+    ? "https://www.sevenpreneur.net"
+    : "https://www.sevenpreneur.com";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://www.sevenpreneur.com"),
+  metadataBase: new URL(wwwBaseURL),
   alternates: {
     canonical: "/",
   },

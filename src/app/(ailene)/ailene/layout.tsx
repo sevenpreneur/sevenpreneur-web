@@ -8,13 +8,18 @@ import { ThemeProvider } from "next-themes";
 import { cookies } from "next/headers";
 import { Toaster } from "sonner";
 
+const aileneBaseURL =
+  process.env.DOMAIN_MODE === "staging"
+    ? "https://ailene.sevenpreneur.net"
+    : "https://ailene.sevenpreneur.com";
+
 export const metadata: Metadata = {
   title: {
     template: "%s | Ailene Sevenpreneur",
     default: "Ailene Sevenpreneur",
   },
   description: "Platform pelatihan AI internal Sevenpreneur",
-  metadataBase: new URL("https://ailene.sevenpreneur.com"),
+  metadataBase: new URL(aileneBaseURL),
   alternates: { canonical: "/" },
   openGraph: {
     images: [
@@ -30,6 +35,8 @@ export const metadata: Metadata = {
 let baseURL = "https://api.sevenpreneur.com/trpc";
 if (process.env.DOMAIN_MODE === "local")
   baseURL = "https://api.example.com:3000/trpc";
+else if (process.env.DOMAIN_MODE === "staging")
+  baseURL = "https://api.sevenpreneur.net/trpc";
 
 export default async function AileneLayout(
   props: Readonly<{ children: React.ReactNode }>

@@ -133,10 +133,15 @@ export async function UpdateLearningReminderSchedule(
     "*",
   ].join(" ");
 
+  let apiDomain = "api.sevenpreneur.com";
+  if (process.env.DOMAIN_MODE === "staging") {
+    apiDomain = "api.sevenpreneur.net";
+  }
+
   const newSchedule = await qstash.schedules.create({
     scheduleId: LEARNING_REMINDER_SCHEDULE_ID,
     cron: cronString,
-    destination: "https://api.sevenpreneur.com/qstash/schedule-learning",
+    destination: `https://${apiDomain}/qstash/schedule-learning`,
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: "{}",
