@@ -1,5 +1,6 @@
 import AppButton from "@/components/buttons/AppButton";
 import AppPageState from "@/components/states/AppPageState";
+import DownloadCertificateButton from "./DownloadCertificateButton";
 import SendTestEmailButton from "./SendTestEmailButton";
 
 export default async function Page() {
@@ -56,6 +57,9 @@ export default async function Page() {
       </div>
       <div className="flex items-center justify-center gap-2">
         <SendTestEmailButton />
+      </div>
+      <div className="flex items-center justify-center gap-2">
+        <DownloadCertificateButton />
       </div>
     </div>
   );

@@ -107,6 +107,7 @@ export const readLMS = {
         include: {
           user: { include: { phone_country: true } },
           cohort_price: { select: { name: true } },
+          cohort: { select: { name: true } },
         },
         where: {
           user_id: opts.input.user_id,
@@ -192,6 +193,7 @@ export const readLMS = {
           phone_number: theCohortMember.user.phone_number,
           avatar: theCohortMember.user.avatar,
           cohort_id: theCohortMember.cohort_id,
+          cohort_name: theCohortMember.cohort.name,
           cohort_price_name: theCohortMember.cohort_price.name,
           certificate_url: theCohortMember.certificate_url,
           is_scout: theCohortMember.is_scout,

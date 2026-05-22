@@ -1,11 +1,12 @@
 ﻿"use client";
 import { Switch } from "@/components/ui/switch";
+import { generateCohortCertificate } from "@/lib/generate-pdf";
+import { supabase } from "@/lib/supabase";
 import { trpc } from "@/trpc/client";
-import { Info, Loader2, Star, X } from "lucide-react";
+import { Award, Info, Loader2, Star, X } from "lucide-react";
 import { FormEvent, useEffect, useState } from "react";
 import { toast } from "sonner";
 import AppButton from "../buttons/AppButton";
-import UploadFilesCMS from "../fields/UploadFilesCMS";
 import AttendanceItemAccordionLMS from "../items/AttendanceItemAccordionLMS";
 import FileItemLMS from "../items/FileItemLMS";
 import SubmissionItemAccordionLMS from "../items/SubmissionItemAccordionLMS";
@@ -30,7 +31,7 @@ export default function EditCohortMemberFormCMS(
   const updateCohortMember = trpc.update.cohortMember.useMutation();
   const setAttendance = trpc.create.attendance.useMutation();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isScoutSaving, setIsScoutSaving] = useState(false);
+  const [isGeneratingCertificate, setIsGeneratingCertificate] = useState(false);
   const [isScout, setIsScout] = useState(false);
   const [certificateURL, setCertificateURL] = useState("");
   const [pendingAttendance, setPendingAttendance] = useState<{
@@ -63,10 +64,6 @@ export default function EditCohortMemberFormCMS(
     }
   }, [memberDetails, memberDetails?.certificate_url]);
 
-  const handleCertificateChange = (value: string | null) => {
-    setCertificateURL(value ?? "");
-  };
-
   // Add event listener to prevent page refresh
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
@@ -79,34 +76,6 @@ export default function EditCohortMemberFormCMS(
   }, []);
 
   if (!props.userId) return;
-
-  const handleToggleScout = (next: boolean) => {
-    const prev = isScout;
-    setIsScout(next);
-    setIsScoutSaving(true);
-    updateCohortMember.mutate(
-      {
-        user_id: props.userId,
-        cohort_id: props.cohortId,
-        is_scout: next,
-        certificate_url: certificateURL ? certificateURL : null,
-      },
-      {
-        onSuccess: () => {
-          toast.success(next ? "Marked as Scout" : "Scout status removed");
-          utils.list.cohortMembers.invalidate();
-          utils.read.cohortMember.invalidate();
-        },
-        onError: (err) => {
-          setIsScout(prev);
-          toast.error("Failed to update scout status", {
-            description: err.message,
-          });
-        },
-        onSettled: () => setIsScoutSaving(false),
-      }
-    );
-  };
 
   const handleManualAttendance = (
     learning_id: number,
@@ -137,6 +106,49 @@ export default function EditCohortMemberFormCMS(
     );
   };
 
+  const handleGenerateCertificate = async () => {
+    if (!memberDetails) return;
+    setIsGeneratingCertificate(true);
+    try {
+      const pdfBlob = await generateCohortCertificate({
+        fullName: memberDetails.full_name,
+        cohortName: memberDetails.cohort_name,
+      });
+      const slug = memberDetails.full_name
+        .replace(/[^a-zA-Z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "")
+        .toLowerCase();
+      const filePath = `certificates/${Date.now()}-${slug}.pdf`;
+      const { error: uploadError } = await supabase.storage
+        .from("sevenpreneur")
+        .upload(filePath, pdfBlob, {
+          contentType: "application/pdf",
+          upsert: false,
+        });
+      if (uploadError) {
+        toast.error("Failed to upload certificate", {
+          description: uploadError.message,
+        });
+        return;
+      }
+      const { data: publicUrlData } = supabase.storage
+        .from("sevenpreneur")
+        .getPublicUrl(filePath);
+      if (publicUrlData?.publicUrl) {
+        setCertificateURL(publicUrlData.publicUrl);
+        toast.success("Certificate generated", {
+          description: "Click Save Changes to attach it to this member.",
+        });
+      }
+    } catch (error) {
+      toast.error("Failed to generate certificate", {
+        description: error instanceof Error ? error.message : String(error),
+      });
+    } finally {
+      setIsGeneratingCertificate(false);
+    }
+  };
+
   const handleUpdateCertificate = async (e: FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -154,13 +166,13 @@ export default function EditCohortMemberFormCMS(
         },
         {
           onSuccess: () => {
-            toast.success("Certificate updated successfully");
+            toast.success("Changes saved successfully");
             utils.list.cohortMembers.invalidate();
             utils.read.cohortMember.invalidate();
             props.onClose();
           },
           onError: (err) => {
-            toast.error("Failed to update certificate", {
+            toast.error("Failed to save changes", {
               description: err.message,
             });
           },
@@ -219,8 +231,7 @@ export default function EditCohortMemberFormCMS(
               <Switch
                 className="data-[state=checked]:bg-tertiary"
                 checked={isScout}
-                disabled={isScoutSaving}
-                onCheckedChange={handleToggleScout}
+                onCheckedChange={setIsScout}
               />
               <div className="flex items-center gap-1 text-sm font-bodycopy font-semibold">
                 <Star
@@ -287,12 +298,21 @@ export default function EditCohortMemberFormCMS(
               </div>
             </div>
           ) : (
-            <div className="upload-certificate flex flex-col gap-2 pt-4">
-              <h3 className="font-bold font-bodycopy">Upload Certificate</h3>
-              <UploadFilesCMS
-                value={certificateURL}
-                onUpload={handleCertificateChange}
-              />
+            <div className="upload-certificate flex flex-col gap-3 pt-4">
+              <h3 className="font-bold font-bodycopy">Certificate</h3>
+              <AppButton
+                variant="tertiary"
+                onClick={handleGenerateCertificate}
+                disabled={isGeneratingCertificate}
+                type="button"
+              >
+                {isGeneratingCertificate ? (
+                  <Loader2 className="animate-spin size-4" />
+                ) : (
+                  <Award className="size-4" />
+                )}
+                Generate Certificate
+              </AppButton>
             </div>
           )}
         </div>
