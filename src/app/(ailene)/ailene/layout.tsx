@@ -62,7 +62,7 @@ export default async function AileneLayout(
         storageKey="ailene-theme"
       >
         <SidebarProvider>
-          <div className="font-read min-h-screen bg-dashboard-bg dark:bg-black">
+          <div className="font-geist-sans min-h-screen bg-dashboard-bg dark:bg-black">
             {props.children}
             <div className="lg:hidden">
               <AppPageState variant="ONLY_MOBILE" />

@@ -5,6 +5,8 @@ import { Metadata } from "next";
 import {
   Cormorant_Garamond,
   Fraunces,
+  Geist,
+  Geist_Mono,
   Inter,
   JetBrains_Mono,
   Mona_Sans,
@@ -46,6 +48,16 @@ const jetbrainsMono = JetBrains_Mono({
   variable: "--font-jetbrains-mono",
   subsets: ["latin"],
   weight: ["400", "500", "600"],
+});
+
+const geistSans = Geist({
+  variable: "--font-geist-sans",
+  subsets: ["latin"],
+});
+
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
 });
 
 const openSauceOne = localFont({
@@ -114,7 +126,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html
       lang="en"
-      className={`scroll-smooth ${monaSans.variable} ${plusJakartaSans.variable} ${openSauceOne.variable} ${inter.variable} ${fraunces.variable} ${cormorantGaramond.variable} ${jetbrainsMono.variable} antialiased`}
+      className={`scroll-smooth ${monaSans.variable} ${plusJakartaSans.variable} ${openSauceOne.variable} ${inter.variable} ${fraunces.variable} ${cormorantGaramond.variable} ${jetbrainsMono.variable} ${geistSans.variable} ${geistMono.variable} antialiased`}
       suppressHydrationWarning
     >
       <GoogleTagManager gtmId={googleTagManagerId!} />

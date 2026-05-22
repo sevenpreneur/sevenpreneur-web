@@ -1,5 +1,6 @@
 "use client";
 import { trpc } from "@/trpc/client";
+import { Trophy } from "lucide-react";
 import Image from "next/image";
 
 const DEFAULT_AVATAR =
@@ -42,10 +43,10 @@ export default function DeptLeaderboardAILN(props: DeptLeaderboardAILNProps) {
   return (
     <StatShell title="DEPARTEMEN LEADERBOARD" className={props.className}>
       <div className="flex items-baseline gap-3">
-        <span className="text-3xl font-bold leading-none text-gray-900 dark:text-white">
+        <span className="text-3xl font-bold font-geist-mono leading-none text-gray-900 dark:text-white">
           #{my_rank}
         </span>
-        <span className="text-xs text-gray-500 dark:text-gray-400">
+        <span className="text-xs font-geist-mono text-gray-500 dark:text-gray-400">
           dari {total}
         </span>
       </div>
@@ -96,8 +97,13 @@ function StatShell({
     <div
       className={`flex flex-col gap-2 rounded-xl border bg-white p-5 border-dashboard-border dark:bg-card-bg dark:shadow-[0_0_18px_rgba(239,68,68,0.08)] ${className}`}
     >
-      <div className="text-xs font-medium uppercase tracking-widest text-gray-500 dark:text-gray-400">
-        {title}
+      <div className="flex items-center gap-2">
+        <div className="flex size-7 items-center justify-center rounded-md bg-red-50 dark:bg-red-500/10">
+          <Trophy className="size-4 text-red-500 dark:text-red-400" />
+        </div>
+        <span className="text-xs font-medium uppercase tracking-widest text-gray-500 dark:text-gray-400">
+          {title}
+        </span>
       </div>
       {children}
     </div>

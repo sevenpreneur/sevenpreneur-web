@@ -34,7 +34,7 @@ export default function AlertConfirmDialogAILN({
   if (!isOpen) return null;
   return (
     <div
-      className="root font-read fixed inset-0 flex w-full h-full items-end justify-center bg-black/40 z-50 dark:bg-black/70"
+      className="root font-geist-sans fixed inset-0 flex w-full h-full items-end justify-center bg-black/40 z-50 dark:bg-black/70"
       onClick={onClose}
     >
       <div

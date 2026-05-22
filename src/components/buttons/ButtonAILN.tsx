@@ -70,7 +70,7 @@ const ButtonAILN = forwardRef<HTMLButtonElement, ButtonAILNProps>(
     ref: ForwardedRef<HTMLButtonElement>
   ) => {
     const baseClasses =
-      "app-button font-read relative inline-flex gap-2 font-semibold items-center justify-center truncate transition transform hover:cursor-pointer active:scale-95 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed";
+      "app-button font-geist-sans relative inline-flex gap-2 font-semibold items-center justify-center truncate transition transform hover:cursor-pointer active:scale-95 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed";
 
     const variantClasses: Record<VariantType, string> = {
       primary:

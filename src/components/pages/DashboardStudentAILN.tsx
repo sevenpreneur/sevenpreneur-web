@@ -52,16 +52,8 @@ export default function DashboardStudentAILN({
   const firstName = user.full_name.split(" ")[0] ?? user.full_name;
   const dateLabel = dayjs().format("dddd, D MMMM YYYY").toUpperCase();
 
-  // Cohort window: starts on the most recent Tuesday on or before today,
-  // runs forward 3 months.
-  const daysFromTuesday = (dayjs().day() - 2 + 7) % 7;
-  const cohortStart = dayjs()
-    .subtract(daysFromTuesday, "day")
-    .format("YYYY-MM-DD");
-  const cohortEnd = dayjs()
-    .subtract(daysFromTuesday, "day")
-    .add(3, "month")
-    .format("YYYY-MM-DD");
+  const cohortStart = "2026-05-10";
+  const cohortEnd = "2026-06-23";
 
   return (
     <PageContainerAILN>
