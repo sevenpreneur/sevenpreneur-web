@@ -19,6 +19,8 @@ export default function AppLoginContainer() {
   let domain = "sevenpreneur.com";
   if (process.env.NEXT_PUBLIC_DOMAIN_MODE === "local") {
     domain = "example.com:3000";
+  } else if (process.env.NEXT_PUBLIC_DOMAIN_MODE === "staging") {
+    domain = "sevenpreneur.net";
   }
 
   // Return token from Google

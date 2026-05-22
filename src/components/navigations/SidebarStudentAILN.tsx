@@ -80,6 +80,8 @@ export default function SidebarStudentAILN({
   let loginDomain = "sevenpreneur.com";
   if (process.env.NEXT_PUBLIC_DOMAIN_MODE === "local") {
     loginDomain = "example.com:3000";
+  } else if (process.env.NEXT_PUBLIC_DOMAIN_MODE === "staging") {
+    loginDomain = "sevenpreneur.net";
   }
 
   const handleLogout = async () => {
