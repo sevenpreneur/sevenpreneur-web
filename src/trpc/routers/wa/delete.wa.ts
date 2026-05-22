@@ -18,6 +18,24 @@ export const deleteWA = {
       };
     }),
 
+  template: administratorProcedure
+    .input(objectHasOnlyID())
+    .mutation(async (opts) => {
+      const deletedTemplate = await opts.ctx.prisma.wATemplate.deleteMany({
+        where: { id: opts.input.id },
+      });
+      await checkDeleteResult(
+        deletedTemplate.count,
+        "templates",
+        "wa.template"
+      );
+
+      return {
+        code: STATUS_NO_CONTENT,
+        message: "Success",
+      };
+    }),
+
   alert: administratorProcedure
     .input(objectHasOnlyID())
     .mutation(async (opts) => {

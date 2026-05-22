@@ -650,19 +650,24 @@ These table below shows all routes/endpoints/procedures, categorized by object t
 | `send.wa.video`                  |         ✅          |               ❌                |
 | `send.wa.template`               |         ✅          |               ❌                |
 | `create.wa.asset`                |         ✅          |               ❌                |
+| `create.wa.template`             |         ✅          |               ❌                |
 | `create.wa.alert`                |         ✅          |               ❌                |
 | `list.wa.conversations`          |         ✅          |               ❌                |
 | `list.wa.chats`                  |         ✅          |               ❌                |
 | `list.wa.assets`                 |         ✅          |               ❌                |
+| `list.wa.templates`              |         ✅          |               ❌                |
 | `list.wa.alerts`                 |         ✅          |               ❌                |
 | `read.wa.conversation`           |         ✅          |               ❌                |
 | `read.wa.asset`                  |         ✅          |               ❌                |
+| `read.wa.template`               |         ✅          |               ❌                |
 | `read.wa.alert`                  |         ✅          |               ❌                |
 | `update.wa.conversation`         |         ✅          |               ❌                |
 | `update.wa.conversation_as_read` |         ✅          |               ❌                |
 | `update.wa.asset`                |         ✅          |               ❌                |
+| `update.wa.template`             |         ✅          |               ❌                |
 | `update.wa.alert`                |         ✅          |               ❌                |
 | `delete.wa.asset`                |         ✅          |               ❌                |
+| `delete.wa.template`             |         ✅          |               ❌                |
 | `delete.wa.alert`                |         ✅          |               ❌                |
 
 **Scopes:** Only Administrators have access to all WhatsApp chats.

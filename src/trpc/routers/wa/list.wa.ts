@@ -253,6 +253,25 @@ ORDER BY last_message_at DESC`;
       };
     }),
 
+  templates: administratorProcedure.input(z.object({})).query(async (opts) => {
+    const waTemplatesList = await opts.ctx.prisma.wATemplate.findMany({
+      select: {
+        id: true,
+        name: true,
+        lang_code: true,
+        category: true,
+        status: true,
+      },
+      orderBy: [{ name: "asc" }],
+    });
+
+    return {
+      code: STATUS_OK,
+      message: "Success",
+      list: waTemplatesList,
+    };
+  }),
+
   alerts: administratorProcedure
     .input(
       z.object({
