@@ -331,6 +331,7 @@ export default function CohortDetailsCMS(props: CohortDetailsCMSProps) {
                   sessionUserId={props.sessionUserId}
                   sessionUserRoleName={props.sessionUserRoleName}
                   cohortId={props.cohortId}
+                  cohortName={cohort.name}
                 />
               </main>
 

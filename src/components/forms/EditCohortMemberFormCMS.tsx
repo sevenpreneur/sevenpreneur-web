@@ -91,7 +91,9 @@ export default function EditCohortMemberFormCMS(
       {
         onSuccess: () => {
           toast.success(
-            type === "check_in" ? "Checked in successfully" : "Checked out successfully"
+            type === "check_in"
+              ? "Checked in successfully"
+              : "Checked out successfully"
           );
           utils.read.cohortMember.invalidate();
           utils.list.cohortMembers.invalidate();
@@ -267,17 +269,19 @@ export default function EditCohortMemberFormCMS(
               />
             ))}
           </div>
-          <div className="projects flex flex-col gap-2.5">
-            <h3 className="font-bold font-bodycopy">Task & Assignment</h3>
-            {memberDetails.projects.map((post) => (
-              <SubmissionItemAccordionLMS
-                key={post.name}
-                projectName={post.name}
-                submissionStatus={post.has_submitted}
-                submittedAt={post.submitted_at ?? ""}
-              />
-            ))}
-          </div>
+          {memberDetails.projects.length > 0 && (
+            <div className="projects flex flex-col gap-2.5">
+              <h3 className="font-bold font-bodycopy">Task & Assignment</h3>
+              {memberDetails.projects.map((post) => (
+                <SubmissionItemAccordionLMS
+                  key={post.name}
+                  projectName={post.name}
+                  submissionStatus={post.has_submitted}
+                  submittedAt={post.submitted_at ?? ""}
+                />
+              ))}
+            </div>
+          )}
           {certificateURL ? (
             <div className="certificate flex flex-col gap-2 p-3 border rounded-md">
               <h3 className="font-bold font-bodycopy">Certificate</h3>
@@ -300,19 +304,54 @@ export default function EditCohortMemberFormCMS(
           ) : (
             <div className="upload-certificate flex flex-col gap-3 pt-4">
               <h3 className="font-bold font-bodycopy">Certificate</h3>
-              <AppButton
-                variant="tertiary"
-                onClick={handleGenerateCertificate}
-                disabled={isGeneratingCertificate}
-                type="button"
-              >
-                {isGeneratingCertificate ? (
-                  <Loader2 className="animate-spin size-4" />
-                ) : (
-                  <Award className="size-4" />
-                )}
-                Generate Certificate
-              </AppButton>
+              <div className="relative overflow-hidden rounded-2xl border-2 border-dashed border-tertiary/25 bg-card-bg p-5">
+                <div
+                  className="pointer-events-none absolute right-5 top-5 grid grid-cols-6 gap-1.5 opacity-60"
+                  aria-hidden
+                >
+                  {Array.from({ length: 24 }).map((_, i) => (
+                    <span
+                      key={i}
+                      className="size-1 rounded-full bg-tertiary/40"
+                    />
+                  ))}
+                </div>
+                <div
+                  className="pointer-events-none absolute -right-16 top-1/2 size-48 -translate-y-1/2 rounded-full bg-tertiary/10 blur-3xl"
+                  aria-hidden
+                />
+
+                <div className="relative flex items-center gap-4">
+                  <div className="flex shrink-0 items-center justify-center size-10 rounded-lg bg-tertiary/10">
+                    <Award className="size-5 text-tertiary" />
+                  </div>
+                  <div className="flex flex-col min-w-0">
+                    <h4 className="font-bodycopy font-bold text-lg text-foreground">
+                      Generate Certificate
+                    </h4>
+                    <p className="text-sm text-emphasis font-bodycopy">
+                      Create members certificate in seconds.
+                    </p>
+                  </div>
+                </div>
+                <div
+                  className="relative my-4 h-px bg-tertiary/15"
+                  aria-hidden
+                />
+                <AppButton
+                  variant="tertiary"
+                  onClick={handleGenerateCertificate}
+                  disabled={isGeneratingCertificate}
+                  type="button"
+                >
+                  <span className="flex items-center gap-2">
+                    {isGeneratingCertificate && (
+                      <Loader2 className="animate-spin size-4" />
+                    )}
+                    Generate Certificate
+                  </span>
+                </AppButton>
+              </div>
             </div>
           )}
         </div>

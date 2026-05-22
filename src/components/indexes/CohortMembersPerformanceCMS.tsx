@@ -1,14 +1,18 @@
 "use client";
 import { Progress } from "@/components/ui/progress";
+import { generateCohortCertificate } from "@/lib/generate-pdf";
+import { supabase } from "@/lib/supabase";
 import { trpc } from "@/trpc/client";
-import { Eye, Search } from "lucide-react";
+import { Award, Eye, Loader2, Search } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 import AppButton from "../buttons/AppButton";
 import SectionContainerCMS from "../cards/SectionContainerCMS";
 import AppInput from "../fields/AppInput";
 import EditCohortMemberFormCMS from "../forms/EditCohortMemberFormCMS";
 import BooleanLabelCMS from "../labels/BooleanLabelCMS";
+import AppAlertConfirmDialog from "../modals/AppAlertConfirmDialog";
 import AppNumberPagination from "../navigations/AppNumberPagination";
 import AppLoadingComponents from "../states/AppLoadingComponents";
 import TableBodyCMS from "../tables/TableBodyCMS";
@@ -24,6 +28,7 @@ interface CohortMembersPerformanceCMSProps {
   sessionUserId: string;
   sessionUserRoleName: string;
   cohortId: number;
+  cohortName: string;
 }
 
 export default function CohortMembersPerformanceCMS({
@@ -31,16 +36,32 @@ export default function CohortMembersPerformanceCMS({
   sessionUserId,
   sessionUserRoleName,
   cohortId,
+  cohortName,
 }: CohortMembersPerformanceCMSProps) {
+  const utils = trpc.useUtils();
+  const updateCohortMember = trpc.update.cohortMember.useMutation();
+
   const [keyword, setKeyword] = useState("");
   const [debouncedKeyword, setDebouncedKeyword] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [openDetailsId, setOpenDetailsId] = useState<string | null>(null);
+  const [isConfirmGenerateAllOpen, setIsConfirmGenerateAllOpen] =
+    useState(false);
+  const [isGeneratingAll, setIsGeneratingAll] = useState(false);
+  const [generateProgress, setGenerateProgress] = useState({
+    done: 0,
+    total: 0,
+  });
 
   const isAllowedDetails = [
     "Administrator",
     "Super Admin",
     "Educator",
+    "Class Manager",
+  ].includes(sessionUserRoleName);
+  const isAllowedBulkGenerate = [
+    "Administrator",
+    "Super Admin",
     "Class Manager",
   ].includes(sessionUserRoleName);
 
@@ -74,9 +95,116 @@ export default function CohortMembersPerformanceCMS({
     safePage * PAGE_SIZE
   );
 
+  const studentsNeedingCertificate = allStudents.filter(
+    (m) => !m.certificate_url
+  );
+
+  const handleGenerateAllCertificates = async () => {
+    setIsConfirmGenerateAllOpen(false);
+    const targets = studentsNeedingCertificate;
+    if (targets.length === 0) {
+      toast.info("All General User members already have a certificate.");
+      return;
+    }
+
+    setIsGeneratingAll(true);
+    setGenerateProgress({ done: 0, total: targets.length });
+
+    let successCount = 0;
+    let failureCount = 0;
+
+    for (let i = 0; i < targets.length; i++) {
+      const member = targets[i];
+      try {
+        const pdfBlob = await generateCohortCertificate({
+          fullName: member.full_name,
+          cohortName: cohortName,
+        });
+        const slug = member.full_name
+          .replace(/[^a-zA-Z0-9]+/g, "-")
+          .replace(/^-+|-+$/g, "")
+          .toLowerCase();
+        const filePath = `certificates/${Date.now()}-${slug}.pdf`;
+        const { error: uploadError } = await supabase.storage
+          .from("sevenpreneur")
+          .upload(filePath, pdfBlob, {
+            contentType: "application/pdf",
+            upsert: false,
+          });
+        if (uploadError) {
+          throw new Error(uploadError.message);
+        }
+        const { data: publicUrlData } = supabase.storage
+          .from("sevenpreneur")
+          .getPublicUrl(filePath);
+        if (!publicUrlData?.publicUrl) {
+          throw new Error("Failed to resolve uploaded certificate URL");
+        }
+        await updateCohortMember.mutateAsync({
+          user_id: member.id,
+          cohort_id: cohortId,
+          certificate_url: publicUrlData.publicUrl,
+        });
+        successCount += 1;
+      } catch (error) {
+        failureCount += 1;
+        console.error(
+          `Failed to generate certificate for ${member.full_name}:`,
+          error
+        );
+      } finally {
+        setGenerateProgress({ done: i + 1, total: targets.length });
+      }
+    }
+
+    setIsGeneratingAll(false);
+    utils.list.cohortMembers.invalidate();
+    utils.read.cohortMember.invalidate();
+
+    if (failureCount === 0) {
+      toast.success(`Generated ${successCount} certificate(s) successfully.`);
+    } else if (successCount === 0) {
+      toast.error(`Failed to generate ${failureCount} certificate(s).`);
+    } else {
+      toast.warning(
+        `Generated ${successCount} of ${targets.length} certificate(s). ${failureCount} failed.`
+      );
+    }
+  };
+
   return (
     <>
-      <SectionContainerCMS title="Student Performance">
+      <SectionContainerCMS
+        title="Student Performance"
+        headerAction={
+          isAllowedBulkGenerate && (
+            <AppButton
+              variant="neutral"
+              size="small"
+              onClick={() => setIsConfirmGenerateAllOpen(true)}
+              disabled={
+                isGeneratingAll ||
+                isLoading ||
+                studentsNeedingCertificate.length === 0
+              }
+            >
+              {isGeneratingAll ? (
+                <>
+                  <Loader2 className="animate-spin size-4" />
+                  Generating {generateProgress.done}/{generateProgress.total}
+                </>
+              ) : (
+                <>
+                  <Award className="size-4" />
+                  Generate All Certificates
+                  {studentsNeedingCertificate.length > 0 &&
+                    ` (${studentsNeedingCertificate.length})`}
+                </>
+              )}
+            </AppButton>
+          )
+        }
+      >
         <div className="flex flex-col gap-3">
           <div className="w-full max-w-xs">
             <AppInput
@@ -211,6 +339,16 @@ export default function CohortMembersPerformanceCMS({
           onClose={() => setOpenDetailsId(null)}
         />
       )}
+
+      <AppAlertConfirmDialog
+        isOpen={isConfirmGenerateAllOpen}
+        alertDialogHeader="Generate certificates for all members?"
+        alertDialogMessage={`This will generate and attach a completion certificate to ${studentsNeedingCertificate.length} General User member(s) in this cohort who don't have one yet. Existing certificates will not be overwritten. This may take a while.`}
+        alertCancelLabel="Cancel"
+        alertConfirmLabel="Generate All"
+        onClose={() => setIsConfirmGenerateAllOpen(false)}
+        onConfirm={handleGenerateAllCertificates}
+      />
     </>
   );
 }
