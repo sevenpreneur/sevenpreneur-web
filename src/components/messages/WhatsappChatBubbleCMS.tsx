@@ -19,7 +19,7 @@ export default function WhatsappChatBubbleCMS(
   return (
     <div className="chat-container flex flex-col w-fit max-w-[min(70%,560px)] my-1 gap-1 items-end">
       <div
-        className={`chat-message flex flex-col w-fit max-w-full p-2 font-bodycopy text-[15px] font-[450] break-words whitespace-pre-wrap ${props.chatDirection === "INBOUND" ? "bg-white text-[#333333] dark:bg-card-inside-bg dark:text-foreground rounded-r-md rounded-bl-md" : "bg-primary text-tertiary-foreground rounded-l-md rounded-br-md"}`}
+        className={`chat-message flex flex-col w-fit max-w-full p-2 font-bodycopy text-[15px] font-[450] break-words whitespace-pre-wrap ${props.chatDirection === "INBOUND" ? "bg-white text-[#333333] dark:bg-card-inside-bg dark:text-foreground rounded-r-md rounded-bl-md" : "bg-[#eff6ff] text-[#1e293b] dark:bg-[#1e3a5f] dark:text-foreground rounded-l-md rounded-br-md"}`}
       >
         {props.children}
         {props.chatDirection === "INBOUND" && (

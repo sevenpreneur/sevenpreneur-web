@@ -9,6 +9,7 @@ import WhatsappImagePreviewCMS from "../modals/WhatsappImagePreviewCMS";
 import AppLoadingComponents from "../states/AppLoadingComponents";
 import Image from "next/image";
 import { FileText, Download, FileQuestion } from "lucide-react";
+import dayjs from "dayjs";
 
 interface WhatsappChatItemCMSProps {
   chat: WhatsAppTypeAttachmentPairUnion;
@@ -226,6 +227,32 @@ export default function WhatsappChatItemCMS(props: WhatsappChatItemCMSProps) {
           <p className="px-1 pb-1 text-sm">{props.chat.attachment.caption}</p>
         )}
       </WhatsappChatBubbleCMS>
+    );
+  }
+
+  if (props.chat.type === "STICKER") {
+    const stickerSrc = props.chat.attachment.storage_url;
+    return (
+      <div className="sticker-container flex flex-col w-fit max-w-[min(70%,560px)] my-1 gap-1 items-end">
+        {stickerSrc ? (
+          <Image
+            className="w-[160px] h-[160px] object-contain"
+            src={stickerSrc}
+            alt="Sticker"
+            width={160}
+            height={160}
+            unoptimized
+          />
+        ) : (
+          <MediaDownloadingState />
+        )}
+        <div className="flex items-center gap-1 justify-end">
+          {props.chatDirection === "OUTBOUND" && iconStatus}
+          <span className="text-xs text-[#333333]/80 font-bodycopy font-[450] leading-snug dark:text-foreground/60">
+            {dayjs(props.createdAt).format("HH:mm")}
+          </span>
+        </div>
+      </div>
     );
   }
 
