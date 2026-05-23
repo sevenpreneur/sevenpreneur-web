@@ -20,6 +20,15 @@ export const aileneRouter = createTRPCRouter({
     promptSubmissions: listAilene.championPromptSubmissions,
     useCaseSubmissions: listAilene.championUseCaseSubmissions,
   }),
+  create: createTRPCRouter({
+    // any member (student / champion / sponsor)
+    preAssessment: createAilene.preAssessment,
+    completeMaterial: createAilene.completeMaterial,
+    completeVideo: createAilene.completeVideo,
+    // champion only
+    assignPrompt: createAilene.assignPrompt,
+    assignUseCase: createAilene.assignUseCase,
+  }),
   read: createTRPCRouter({
     // any member (student / champion / sponsor)
     materialDetail: readAilene.materialDetail,
@@ -34,15 +43,6 @@ export const aileneRouter = createTRPCRouter({
     // champion only
     promptSubmissionDetail: readAilene.championPromptSubmissionDetail,
     useCaseSubmissionDetail: readAilene.championUseCaseSubmissionDetail,
-  }),
-  create: createTRPCRouter({
-    // any member (student / champion / sponsor)
-    preAssessment: createAilene.preAssessment,
-    completeMaterial: createAilene.completeMaterial,
-    completeVideo: createAilene.completeVideo,
-    // champion only
-    assignPrompt: createAilene.assignPrompt,
-    assignUseCase: createAilene.assignUseCase,
   }),
   update: createTRPCRouter({
     // any member (student / champion / sponsor)

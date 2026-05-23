@@ -60,7 +60,7 @@ export default function ChapterItemAILN(props: ChapterItemAILNProps) {
       </div>
 
       <div
-        className={`rounded-md bg-white shadow-sm dark:border dark:border-dashboard-border dark:bg-[#0E111A]/50 dark:shadow-[0_0_18px_rgba(239,68,68,0.08)] ${
+        className={`rounded-md bg-white border border-dashboard-border dark:bg-[#0E111A]/50 dark:shadow-[0_0_18px_rgba(239,68,68,0.08)] ${
           !props.unlocked ? "opacity-60 dark:opacity-50" : ""
         }`}
       >

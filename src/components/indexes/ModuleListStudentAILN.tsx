@@ -3,14 +3,19 @@ import ChapterItemAILN, {
   ChapterItemSkeleton,
 } from "@/components/items/ChapterItemAILN";
 import LevelDividerAILN from "@/components/items/LevelDividerAILN";
+import SkillPracticeModuleAILN from "@/components/items/SkillPracticeModuleAILN";
+import type { SkillPracticeItem } from "@/components/items/SkillPracticeItemAILN";
 import PageContainerAILN from "@/components/pages/PageContainerAILN";
 import AppErrorComponents from "@/components/states/AppErrorComponents";
 import { setSessionToken, trpc } from "@/trpc/client";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import dayjs from "dayjs";
+import "dayjs/locale/id";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+
+dayjs.locale("id");
 
 interface Level {
   id: number;
@@ -34,7 +39,12 @@ export default function ModuleListStudentAILN({
 }: {
   sessionToken: string;
 }) {
-  const [expanded, setExpanded] = useState<Set<number>>(new Set());
+  const [expandedChapters, setExpandedChapters] = useState<Set<number>>(
+    new Set()
+  );
+  const [expandedModules, setExpandedModules] = useState<Set<number>>(
+    new Set()
+  );
 
   useEffect(() => {
     setSessionToken(sessionToken);
@@ -44,6 +54,8 @@ export default function ModuleListStudentAILN({
   const levelsQ = trpc.ailene.list.levels.useQuery();
   const chaptersQ = trpc.ailene.list.chapters.useQuery();
   const levelProgressQ = trpc.ailene.read.levelProgress.useQuery();
+  const promptsQ = trpc.ailene.list.assignedPrompts.useQuery();
+  const useCasesQ = trpc.ailene.list.assignedUseCases.useQuery();
 
   if (
     memberQ.isLoading ||
@@ -102,18 +114,26 @@ export default function ModuleListStudentAILN({
     );
 
   const currentLevelNumber = member.current_level?.level_number ?? 0;
-  const levelById = new Map<number, Level>(levels.map((l) => [l.id, l]));
 
-  const toggle = (id: number) =>
-    setExpanded((prev) => {
+  const toggleChapter = (id: number) =>
+    setExpandedChapters((prev) => {
       const next = new Set(prev);
       if (next.has(id)) next.delete(id);
       else next.add(id);
       return next;
     });
 
-  // Interleave chapters with level-divider when level transitions.
-  // unlocked/claimable derived here so the render block stays presentational.
+  const toggleModule = (levelId: number) =>
+    setExpandedModules((prev) => {
+      const next = new Set(prev);
+      if (next.has(levelId)) next.delete(levelId);
+      else next.add(levelId);
+      return next;
+    });
+
+  // Level-driven timeline: every level shows up as a divider (except the
+  // first), with its chapters + one SkillPractice module (prompts & use cases
+  // gabungan) nested below. Order within a level: chapter → skill practice.
   type Item =
     | {
         kind: "chapter";
@@ -126,38 +146,108 @@ export default function ModuleListStudentAILN({
         level: Level;
         unlocked: boolean;
         claimable: boolean;
-      };
-  const items: Item[] = [];
-  let lastLevelId: number | null = null;
-  let weekIndex = 0;
-  for (const ch of chapters) {
-    if (ch.level_id !== lastLevelId && lastLevelId !== null) {
-      const newLevel = levelById.get(ch.level_id);
-      if (newLevel) {
-        const levelUnlocked = newLevel.level_number <= currentLevelNumber;
-        items.push({
-          kind: "level",
-          level: newLevel,
-          unlocked: levelUnlocked,
-          claimable:
-            !levelUnlocked &&
-            newLevel.level_number === currentLevelNumber + 1 &&
-            nextLevelUnlockable,
-        });
       }
-    }
-    weekIndex += 1;
-    const lvl = levelById.get(ch.level_id);
-    const levelOk = (lvl?.level_number ?? 0) <= currentLevelNumber;
-    const sessionStarted = !dayjs(ch.session_date).isAfter(dayjs());
-    items.push({
-      kind: "chapter",
-      chapter: ch,
-      index: weekIndex,
-      unlocked: levelOk && sessionStarted,
-    });
-    lastLevelId = ch.level_id;
+    | {
+        kind: "skillPractice";
+        level: Level;
+        levelUnlocked: boolean;
+        prompts: SkillPracticeItem[];
+        useCases: SkillPracticeItem[];
+      };
+
+  const chaptersByLevel = new Map<number, Chapter[]>();
+  for (const ch of chapters) {
+    const bucket = chaptersByLevel.get(ch.level_id) ?? [];
+    bucket.push(ch);
+    chaptersByLevel.set(ch.level_id, bucket);
   }
+
+  const allPrompts: SkillPracticeItem[] = (promptsQ.data?.list ?? []).map(
+    (r) => ({
+      id: r.id,
+      ref_id: r.prompt.id,
+      level: r.prompt.level,
+      name: r.prompt.name,
+      body: r.prompt.scenario,
+      categories: r.prompt.categories,
+      assigned_by: r.assigned_by,
+      deadline: r.deadline,
+      message: r.message,
+      submitted_at: r.submitted_at,
+      reviewed_at: r.reviewed_at,
+      is_accepted: r.is_accepted,
+    })
+  );
+  const allUseCases: SkillPracticeItem[] = (useCasesQ.data?.list ?? []).map(
+    (r) => ({
+      id: r.id,
+      ref_id: r.use_case.id,
+      level: r.use_case.level,
+      name: r.use_case.name,
+      body: r.use_case.description,
+      categories: r.use_case.categories,
+      assigned_by: r.assigned_by,
+      deadline: r.deadline,
+      message: r.message,
+      submitted_at: r.submitted_at,
+      reviewed_at: r.reviewed_at,
+      is_accepted: r.is_accepted,
+    })
+  );
+  const promptsByLevel = new Map<number, SkillPracticeItem[]>();
+  for (const p of allPrompts) {
+    const bucket = promptsByLevel.get(p.level.id) ?? [];
+    bucket.push(p);
+    promptsByLevel.set(p.level.id, bucket);
+  }
+  const useCasesByLevel = new Map<number, SkillPracticeItem[]>();
+  for (const u of allUseCases) {
+    const bucket = useCasesByLevel.get(u.level.id) ?? [];
+    bucket.push(u);
+    useCasesByLevel.set(u.level.id, bucket);
+  }
+
+  const items: Item[] = [];
+  let weekIndex = 0;
+  levels.forEach((lvl, lvlIdx) => {
+    const levelUnlocked = lvl.level_number <= currentLevelNumber;
+
+    if (lvlIdx > 0) {
+      items.push({
+        kind: "level",
+        level: lvl,
+        unlocked: levelUnlocked,
+        claimable:
+          !levelUnlocked &&
+          lvl.level_number === currentLevelNumber + 1 &&
+          nextLevelUnlockable,
+      });
+    }
+
+    const levelChapters = chaptersByLevel.get(lvl.id) ?? [];
+    for (const ch of levelChapters) {
+      weekIndex += 1;
+      const sessionStarted = !dayjs(ch.session_date).isAfter(dayjs());
+      items.push({
+        kind: "chapter",
+        chapter: ch,
+        index: weekIndex,
+        unlocked: levelUnlocked && sessionStarted,
+      });
+    }
+
+    const lvlPrompts = promptsByLevel.get(lvl.id) ?? [];
+    const lvlUseCases = useCasesByLevel.get(lvl.id) ?? [];
+    if (lvlPrompts.length + lvlUseCases.length > 0) {
+      items.push({
+        kind: "skillPractice",
+        level: lvl,
+        levelUnlocked,
+        prompts: lvlPrompts,
+        useCases: lvlUseCases,
+      });
+    }
+  });
 
   return (
     <PageContainerAILN>
@@ -212,25 +302,41 @@ export default function ModuleListStudentAILN({
         <div className="relative">
           <div className="absolute top-0 bottom-0 left-4 w-0.5 bg-red-200 dark:bg-red-500/40 dark:shadow-[0_0_6px_rgba(239,68,68,0.6)]" />
           <div className="space-y-4">
-            {items.map((item, i) =>
-              item.kind === "level" ? (
-                <LevelDividerAILN
-                  key={`lvl-${item.level.id}-${i}`}
+            {items.map((item, i) => {
+              if (item.kind === "level") {
+                return (
+                  <LevelDividerAILN
+                    key={`lvl-${item.level.id}-${i}`}
+                    level={item.level}
+                    unlocked={item.unlocked}
+                    claimable={item.claimable}
+                  />
+                );
+              }
+              if (item.kind === "chapter") {
+                return (
+                  <ChapterItemAILN
+                    key={item.chapter.id}
+                    chapter={item.chapter}
+                    chapterNumber={item.index}
+                    unlocked={item.unlocked}
+                    expanded={expandedChapters.has(item.chapter.id)}
+                    onToggle={() => toggleChapter(item.chapter.id)}
+                  />
+                );
+              }
+              return (
+                <SkillPracticeModuleAILN
+                  key={`skill-${item.level.id}`}
                   level={item.level}
-                  unlocked={item.unlocked}
-                  claimable={item.claimable}
+                  unlocked={item.levelUnlocked}
+                  expanded={expandedModules.has(item.level.id)}
+                  onToggle={() => toggleModule(item.level.id)}
+                  prompts={item.prompts}
+                  useCases={item.useCases}
                 />
-              ) : (
-                <ChapterItemAILN
-                  key={item.chapter.id}
-                  chapter={item.chapter}
-                  chapterNumber={item.index}
-                  unlocked={item.unlocked}
-                  expanded={expanded.has(item.chapter.id)}
-                  onToggle={() => toggle(item.chapter.id)}
-                />
-              )
-            )}
+              );
+            })}
           </div>
         </div>
       </div>
