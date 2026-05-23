@@ -1,5 +1,5 @@
 "use client";
-import AppScorecardDashboard from "@/components/cards/AppScorecardDashboard";
+import ScorecardDashboardAILN from "@/components/cards/ScorecardDashboardAILN";
 import PageContainerAILN from "@/components/pages/PageContainerAILN";
 import AppErrorComponents from "@/components/states/AppErrorComponents";
 import { setSessionToken, trpc } from "@/trpc/client";
@@ -107,7 +107,7 @@ export default function DashboardChampionAILN({
 
         {/* Stat cards */}
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
-          <AppScorecardDashboard
+          <ScorecardDashboardAILN
             title="Total Members"
             value={stats.total}
             icon={
@@ -121,8 +121,8 @@ export default function DashboardChampionAILN({
             <p className="text-xs text-gray-500 dark:text-gray-400">
               Active learners
             </p>
-          </AppScorecardDashboard>
-          <AppScorecardDashboard
+          </ScorecardDashboardAILN>
+          <ScorecardDashboardAILN
             title="On Track"
             value={stats.on_track}
             icon={
@@ -136,8 +136,8 @@ export default function DashboardChampionAILN({
             <p className="text-xs text-gray-500 dark:text-gray-400">
               {pct(stats.on_track, stats.total)}% of team
             </p>
-          </AppScorecardDashboard>
-          <AppScorecardDashboard
+          </ScorecardDashboardAILN>
+          <ScorecardDashboardAILN
             title="At Risk"
             value={stats.at_risk}
             icon={
@@ -151,8 +151,8 @@ export default function DashboardChampionAILN({
             <p className="text-xs text-gray-500 dark:text-gray-400">
               {pct(stats.at_risk, stats.total)}% of team
             </p>
-          </AppScorecardDashboard>
-          <AppScorecardDashboard
+          </ScorecardDashboardAILN>
+          <ScorecardDashboardAILN
             title="Behind"
             value={stats.behind}
             icon={
@@ -166,7 +166,7 @@ export default function DashboardChampionAILN({
             <p className="text-xs text-gray-500 dark:text-gray-400">
               {pct(stats.behind, stats.total)}% of team
             </p>
-          </AppScorecardDashboard>
+          </ScorecardDashboardAILN>
         </div>
 
         {/* Team members + coaching alerts (stacked, full width) */}

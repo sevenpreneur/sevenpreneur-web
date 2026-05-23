@@ -63,7 +63,7 @@ const variantStyles: Record<
       "bg-black/5 text-foreground dark:text-white dark:bg-card-inside-bg",
     itemHover:
       "hover:bg-black/5 hover:text-foreground dark:hover:text-white dark:hover:bg-card-inside-bg",
-    font: "font-read",
+    font: "font-geist-sans",
   },
 };
 
