@@ -87,13 +87,15 @@ const whatsappMessageRequest = (
 // https://developers.facebook.com/documentation/business-messaging/whatsapp/messages/text-messages/?locale=en_US
 export const whatsappTextMessageRequest = (
   userPhoneNumber: string,
-  message: string
+  message: string,
+  replyToWamId?: string
 ) => {
   return whatsappMessageRequest(userPhoneNumber, "text", {
     text: {
       preview_url: true,
       body: message,
     },
+    ...(replyToWamId ? { context: { message_id: replyToWamId } } : {}),
   });
 };
 

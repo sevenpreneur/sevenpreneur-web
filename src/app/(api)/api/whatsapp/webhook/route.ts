@@ -71,6 +71,9 @@ export async function POST(req: NextRequest) {
           userProfileName = change.value.contacts[0].profile.name;
         }
         for (const msg of change.value.messages) {
+          console.log(
+            `[webhook reply diag] msg.id=${msg.id} type=${msg.type} context=${JSON.stringify(msg.context ?? null)}`
+          );
           let messageType = WACType.UNSUPPORTED as WACType;
           let message = "";
           let attachment = undefined as WhatsappAttachmentAllTypes;
@@ -108,7 +111,8 @@ export async function POST(req: NextRequest) {
             messageType,
             message,
             attachment,
-            msg.timestamp
+            msg.timestamp,
+            msg.context?.id
           );
           if (!appendResult) {
             await LogError(

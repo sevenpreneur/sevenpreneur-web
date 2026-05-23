@@ -3,16 +3,27 @@ import { useState } from "react";
 import { WhatsappChatDirection, WhatsappChatStatus } from "@/lib/app-types";
 import { resolveWhatsappChatStatus } from "@/lib/whatsapp-utils";
 import { WhatsAppTypeAttachmentPairUnion } from "@/lib/whatsapp-types";
-import WhatsappChatBubbleCMS from "./WhatsappChatBubbleCMS";
+import WhatsappChatBubbleCMS, {
+  WhatsappReplyQuote,
+} from "./WhatsappChatBubbleCMS";
 import WhatsappAudioPlayerCMS from "./WhatsappAudioPlayerCMS";
 import WhatsappImagePreviewCMS from "../modals/WhatsappImagePreviewCMS";
 import AppLoadingComponents from "../states/AppLoadingComponents";
+import AppButton from "../buttons/AppButton";
 import Image from "next/image";
-import { FileText, Download, FileQuestion } from "lucide-react";
+import { FileText, Download, FileQuestion, Reply } from "lucide-react";
 import dayjs from "dayjs";
+
+export interface WhatsappReplyTarget {
+  id: string;
+  message: string;
+  type: string;
+  direction: WhatsappChatDirection;
+}
 
 interface WhatsappChatItemCMSProps {
   chat: WhatsAppTypeAttachmentPairUnion;
+  chatId: string;
   chatDirection: WhatsappChatDirection;
   chatStatus: WhatsappChatStatus | null;
   chatMessage: string;
@@ -21,6 +32,9 @@ interface WhatsappChatItemCMSProps {
   deliveredAt: string | null;
   readAt: string | null;
   failedAt: string | null;
+  onReply?: (target: WhatsappReplyTarget) => void;
+  replyTo?: WhatsappReplyQuote | null;
+  customerName?: string;
 }
 
 function MediaLoadingSkeleton({ label }: { label: string }) {
@@ -63,6 +77,16 @@ export default function WhatsappChatItemCMS(props: WhatsappChatItemCMSProps) {
     }
   );
 
+  const handleReply = props.onReply
+    ? () =>
+        props.onReply?.({
+          id: props.chatId,
+          message: props.chatMessage,
+          type: props.chat.type,
+          direction: props.chatDirection,
+        })
+    : undefined;
+
   if (props.chat.type === "TEXT") {
     return (
       <WhatsappChatBubbleCMS
@@ -71,6 +95,9 @@ export default function WhatsappChatItemCMS(props: WhatsappChatItemCMSProps) {
         iconStatus={iconStatus}
         timestampStatus={timestampStatus}
         createdAt={props.createdAt}
+        onReply={handleReply}
+        replyTo={props.replyTo}
+        customerName={props.customerName}
       >
         <p className="px-1">{props.chatMessage}</p>
       </WhatsappChatBubbleCMS>
@@ -86,6 +113,9 @@ export default function WhatsappChatItemCMS(props: WhatsappChatItemCMSProps) {
           iconStatus={iconStatus}
           timestampStatus={timestampStatus}
           createdAt={props.createdAt}
+          onReply={handleReply}
+          replyTo={props.replyTo}
+          customerName={props.customerName}
         >
           <div className="image flex flex-col w-full">
             {props.chat.attachment.storage_url ? (
@@ -127,6 +157,9 @@ export default function WhatsappChatItemCMS(props: WhatsappChatItemCMSProps) {
         iconStatus={iconStatus}
         timestampStatus={timestampStatus}
         createdAt={props.createdAt}
+        onReply={handleReply}
+        replyTo={props.replyTo}
+        customerName={props.customerName}
       >
         <div className="video flex flex-col w-full gap-1">
           {videoSrc && !videoError ? (
@@ -192,6 +225,9 @@ export default function WhatsappChatItemCMS(props: WhatsappChatItemCMSProps) {
         iconStatus={iconStatus}
         timestampStatus={timestampStatus}
         createdAt={props.createdAt}
+        onReply={handleReply}
+        replyTo={props.replyTo}
+        customerName={props.customerName}
       >
         {docSrc ? (
           <div className="document flex items-center gap-2 px-1 py-1 w-[240px] max-w-full">
@@ -232,26 +268,41 @@ export default function WhatsappChatItemCMS(props: WhatsappChatItemCMSProps) {
 
   if (props.chat.type === "STICKER") {
     const stickerSrc = props.chat.attachment.storage_url;
+    const showReply = props.chatDirection === "INBOUND" && !!handleReply;
     return (
-      <div className="sticker-container flex flex-col w-fit max-w-[min(70%,560px)] my-1 gap-1 items-end">
-        {stickerSrc ? (
-          <Image
-            className="w-[160px] h-[160px] object-contain"
-            src={stickerSrc}
-            alt="Sticker"
-            width={160}
-            height={160}
-            unoptimized
-          />
-        ) : (
-          <MediaDownloadingState />
-        )}
-        <div className="flex items-center gap-1 justify-end">
-          {props.chatDirection === "OUTBOUND" && iconStatus}
-          <span className="text-xs text-[#333333]/80 font-bodycopy font-[450] leading-snug dark:text-foreground/60">
-            {dayjs(props.createdAt).format("HH:mm")}
-          </span>
+      <div className="flex items-center gap-1">
+        <div className="sticker-container flex flex-col w-fit max-w-[min(70%,560px)] my-1 gap-1 items-end">
+          {stickerSrc ? (
+            <Image
+              className="w-[160px] h-[160px] object-contain"
+              src={stickerSrc}
+              alt="Sticker"
+              width={160}
+              height={160}
+              unoptimized
+            />
+          ) : (
+            <MediaDownloadingState />
+          )}
+          <div className="flex items-center gap-1 justify-end">
+            {props.chatDirection === "OUTBOUND" && iconStatus}
+            <span className="text-xs text-[#333333]/80 font-bodycopy font-[450] leading-snug dark:text-foreground/60">
+              {dayjs(props.createdAt).format("HH:mm")}
+            </span>
+          </div>
         </div>
+        {showReply && (
+          <AppButton
+            type="button"
+            variant="ghost"
+            size="iconRounded"
+            className="shrink-0 opacity-60 hover:opacity-100 transition-opacity"
+            onClick={handleReply}
+            aria-label="Reply"
+          >
+            <Reply className="size-4" />
+          </AppButton>
+        )}
       </div>
     );
   }
@@ -265,6 +316,9 @@ export default function WhatsappChatItemCMS(props: WhatsappChatItemCMSProps) {
         iconStatus={iconStatus}
         timestampStatus={timestampStatus}
         createdAt={props.createdAt}
+        onReply={handleReply}
+        replyTo={props.replyTo}
+        customerName={props.customerName}
       >
         <div className="audio flex flex-col w-full">
           {audioSrc && !audioError ? (

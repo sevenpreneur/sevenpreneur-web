@@ -5,7 +5,7 @@ import { WhatsAppTypeAttachmentPairUnion } from "@/lib/whatsapp-types";
 import { trpc } from "@/trpc/client";
 import { WAMode } from "@prisma/client";
 import dayjs from "dayjs";
-import { Bot } from "lucide-react";
+import { Bot, X } from "lucide-react";
 import React, {
   useEffect,
   useLayoutEffect,
@@ -17,7 +17,9 @@ import { toast } from "sonner";
 import WAImagePickerModal from "../modals/WAImagePickerModal";
 import AppErrorComponents from "../states/AppErrorComponents";
 import AppLoadingComponents from "../states/AppLoadingComponents";
-import WhatsappChatItemCMS from "./WhatsappChatItemCMS";
+import WhatsappChatItemCMS, {
+  WhatsappReplyTarget,
+} from "./WhatsappChatItemCMS";
 import WhatsappChatSubmitterCMS from "./WhatsappChatSubmitterCMS";
 
 interface WhatsappChatsCMSProps {
@@ -37,6 +39,9 @@ export default function WhatsappChatsCMS(props: WhatsappChatsCMSProps) {
 
   const [textValue, setTextValue] = useState("");
   const [showImagePicker, setShowImagePicker] = useState(false);
+  const [replyTarget, setReplyTarget] = useState<WhatsappReplyTarget | null>(
+    null
+  );
   const sendChat = trpc.send.wa.chat.useMutation();
   const sendImage = trpc.send.wa.image.useMutation();
 
@@ -118,6 +123,11 @@ export default function WhatsappChatsCMS(props: WhatsappChatsCMSProps) {
     return () => clearTimeout(timeout);
   }, [sortedChatList]);
 
+  // Clear reply target when switching conversations
+  useEffect(() => {
+    queueMicrotask(() => setReplyTarget(null));
+  }, [props.convId]);
+
   // Automatically scrolls to the bottom when the page first loads.
   useLayoutEffect(() => {
     if (conversationRef.current) {
@@ -150,10 +160,12 @@ export default function WhatsappChatsCMS(props: WhatsappChatsCMSProps) {
         {
           conv_id: props.convId,
           message: textValue.trim(),
+          reply_to_id: replyTarget?.id,
         },
         {
           onSuccess: () => {
             setTextValue("");
+            setReplyTarget(null);
             utils.list.wa.chats.invalidate({ conv_id: props.convId });
           },
           onError: () => {
@@ -216,6 +228,7 @@ export default function WhatsappChatsCMS(props: WhatsappChatsCMSProps) {
                         chat={
                           post as unknown as WhatsAppTypeAttachmentPairUnion
                         }
+                        chatId={post.id}
                         chatMessage={post.message}
                         chatDirection={post.direction}
                         chatStatus={post.status}
@@ -224,6 +237,9 @@ export default function WhatsappChatsCMS(props: WhatsappChatsCMSProps) {
                         deliveredAt={post.delivered_at}
                         readAt={post.read_at}
                         failedAt={post.failed_at}
+                        onReply={setReplyTarget}
+                        replyTo={post.reply_to}
+                        customerName={props.headerName}
                       />
                     </div>
                   </React.Fragment>
@@ -235,15 +251,49 @@ export default function WhatsappChatsCMS(props: WhatsappChatsCMSProps) {
             <div className="ai-mode-notice sticky bottom-3 flex items-center gap-2 w-full p-3 px-4 bg-card-bg border border-dashboard-border rounded-xl text-sm text-emphasis font-bodycopy font-medium z-10">
               <Bot className="size-4 shrink-0 text-tertiary" />
               <p>
-                AI is currently handling this chat. Switch to Human mode to
-                send a message.
+                AI is currently handling this chat. Switch to Human mode to send
+                a message.
               </p>
             </div>
           ) : (
             <form
-              className="send-chat sticky flex flex-col bottom-3 w-full items-center justify-center gap-6 rounded-t-xl z-10"
+              className="send-chat sticky flex flex-col bottom-3 w-full items-center justify-center gap-2 rounded-t-xl z-10"
               onSubmit={handleSendChat}
             >
+              {replyTarget && (
+                <div className="reply-preview flex items-stretch w-full bg-white dark:bg-card-bg border border-dashboard-border rounded-xl overflow-hidden">
+                  <div className="w-1 bg-primary shrink-0" />
+                  <div className="flex flex-col flex-1 min-w-0 py-2 px-3">
+                    <p className="text-xs font-bodycopy font-semibold text-primary leading-snug">
+                      {replyTarget.direction === "INBOUND"
+                        ? `Replying to ${props.headerName}`
+                        : "Replying to yourself"}
+                    </p>
+                    <p className="text-sm font-bodycopy text-emphasis line-clamp-1 break-words">
+                      {replyTarget.message?.trim() ||
+                        (replyTarget.type === "IMAGE"
+                          ? "Photo"
+                          : replyTarget.type === "VIDEO"
+                            ? "Video"
+                            : replyTarget.type === "AUDIO"
+                              ? "Voice message"
+                              : replyTarget.type === "DOCUMENT"
+                                ? "Document"
+                                : replyTarget.type === "STICKER"
+                                  ? "Sticker"
+                                  : "Message")}
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setReplyTarget(null)}
+                    aria-label="Cancel reply"
+                    className="flex items-center justify-center w-10 shrink-0 text-emphasis hover:text-foreground transition-colors cursor-pointer"
+                  >
+                    <X className="size-4" />
+                  </button>
+                </div>
+              )}
               <WhatsappChatSubmitterCMS
                 value={textValue}
                 onTextAreaChange={(value) => setTextValue(value)}

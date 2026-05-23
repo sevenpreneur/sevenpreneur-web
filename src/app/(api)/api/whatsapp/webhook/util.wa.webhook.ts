@@ -90,7 +90,8 @@ export async function appendChatFromUser(
   type: WACType,
   message: string,
   attachment: WhatsappAttachmentAllTypes,
-  created_at: string
+  created_at: string,
+  context_wam_id?: string
 ): Promise<{ conv_id: string; mode: WAMode } | false> {
   const waConversation = await getOrCreateConversation(
     prisma,
@@ -112,6 +113,32 @@ export async function appendChatFromUser(
     }
   }
 
+  let reply_to_id: string | undefined;
+  if (context_wam_id) {
+    const repliedChat = await prisma.wAChat.findFirst({
+      select: { id: true },
+      where: {
+        wam_id: context_wam_id,
+        conv_id: waConversation.id,
+      },
+    });
+    console.log(
+      `[webhook reply diag] context_wam_id=${context_wam_id} conv_id=${waConversation.id} found=${!!repliedChat} reply_to_id=${repliedChat?.id ?? null}`
+    );
+    if (repliedChat) {
+      reply_to_id = repliedChat.id;
+    } else {
+      await LogError(
+        "whatsapp.webhook",
+        `Reply context wam_id not found in conv: ${context_wam_id}`
+      );
+    }
+  } else {
+    console.log(
+      `[webhook reply diag] no context_wam_id passed to appendChatFromUser (wam_id=${wam_id})`
+    );
+  }
+
   const createdAtAsDate = new Date(Number(created_at) * 1e3); // from seconds to ms
   const createdChat = await prisma.wAChat.create({
     data: {
@@ -123,6 +150,7 @@ export async function appendChatFromUser(
       message: message,
       attachment: attachment,
       created_at: createdAtAsDate,
+      reply_to_id: reply_to_id,
     },
   });
   if (!createdChat) {

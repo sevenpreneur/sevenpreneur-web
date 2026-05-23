@@ -66,6 +66,11 @@ export type WhatsAppWebhookMessageStatusType =
   | "read"
   | "sent";
 
+export type WhatsAppWebhookMessageContext = {
+  from?: string;
+  id: string;
+};
+
 export type WhatsAppWebhookMessage = {
   messaging_product: string;
   metadata: {
@@ -87,7 +92,7 @@ export type WhatsAppWebhookMessage = {
     };
     wa_id: string;
   }[];
-  messages?: (
+  messages?: ((
     | {
         from: string;
         id: string;
@@ -145,7 +150,7 @@ export type WhatsAppWebhookMessage = {
         timestamp: string;
         type: WhatsAppWebhookOtherMessageType;
       }
-  )[];
+  ) & { context?: WhatsAppWebhookMessageContext })[];
   statuses?: {
     id: string;
     status: WhatsAppWebhookMessageStatusType;

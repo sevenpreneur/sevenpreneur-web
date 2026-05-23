@@ -32,7 +32,8 @@ async function sendWhatsappMessage(
   caller: (phone_number: string) => Promise<WhatsappMessageResponse>,
   type: WACType,
   message: string,
-  payload?: object
+  payload?: object,
+  reply_to_id?: string
 ) {
   const waConversation = await prisma.wAConversation.findFirst({
     select: { phone_number: true },
@@ -72,6 +73,7 @@ async function sendWhatsappMessage(
       type: type,
       message: message,
       attachment: payload,
+      reply_to_id: reply_to_id,
     },
   });
   if (!createdChat) {
@@ -94,13 +96,30 @@ export const sendWA = {
       z.object({
         conv_id: stringIsNanoid(),
         message: stringNotBlank(),
+        reply_to_id: stringIsNanoid().optional(),
       })
     )
     .mutation(async (opts) => {
+      let replyToWamId: string | undefined;
+      if (opts.input.reply_to_id) {
+        const replyToChat = await opts.ctx.prisma.wAChat.findFirst({
+          select: { wam_id: true },
+          where: {
+            id: opts.input.reply_to_id,
+            conv_id: opts.input.conv_id,
+          },
+        });
+        if (!replyToChat) {
+          throw readFailedNotFound("reply message");
+        }
+        replyToWamId = replyToChat.wam_id;
+      }
+
       const caller = (() => async (phone_number: string) => {
         return await whatsappTextMessageRequest(
           phone_number,
-          opts.input.message
+          opts.input.message,
+          replyToWamId
         );
       })();
       return sendWhatsappMessage(
@@ -109,7 +128,8 @@ export const sendWA = {
         caller,
         WACType.TEXT,
         opts.input.message,
-        undefined
+        undefined,
+        opts.input.reply_to_id
       );
     }),
 

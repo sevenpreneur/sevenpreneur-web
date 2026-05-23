@@ -209,6 +209,16 @@ ORDER BY last_message_at DESC`;
             lt: lastTime,
           },
         },
+        include: {
+          reply_to: {
+            select: {
+              id: true,
+              type: true,
+              direction: true,
+              message: true,
+            },
+          },
+        },
         orderBy: [{ created_at: "desc" }],
         take: opts.input.size,
       });
