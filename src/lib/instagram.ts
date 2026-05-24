@@ -28,7 +28,7 @@ const instagramGraphApiRequest = (
     };
 
     const req = https.request(
-      `https://graph.facebook.com/v23.0/${endpoint}`,
+      `https://graph.instagram.com/v23.0/${endpoint}`,
       requestOptions,
       (res) => {
         let data = "";
