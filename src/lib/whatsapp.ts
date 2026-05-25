@@ -117,7 +117,7 @@ export const whatsappAudioMessageRequest = (
 export const whatsappDocumentMessageRequest = (
   userPhoneNumber: string,
   documentUrl: string,
-  caption: string,
+  caption: string | undefined,
   fileName: string
 ) => {
   return whatsappMessageRequest(userPhoneNumber, "document", {
@@ -133,7 +133,7 @@ export const whatsappDocumentMessageRequest = (
 export const whatsappImageMessageRequest = (
   userPhoneNumber: string,
   imageUrl: string,
-  caption: string
+  caption: string | undefined
 ) => {
   return whatsappMessageRequest(userPhoneNumber, "image", {
     image: {
@@ -182,7 +182,7 @@ export const whatsappTemplateMessageRequest = (
 export const whatsappVideoMessageRequest = (
   userPhoneNumber: string,
   videoUrl: string,
-  caption: string
+  caption: string | undefined
 ) => {
   return whatsappMessageRequest(userPhoneNumber, "video", {
     video: {

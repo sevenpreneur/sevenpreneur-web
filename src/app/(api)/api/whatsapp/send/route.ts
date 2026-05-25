@@ -36,14 +36,14 @@ const SendWASchema = z.discriminatedUnion("type", [
     conv_id: z.string().min(1),
     type: z.literal("document"),
     document_url: z.string().min(1),
-    caption: z.string().min(1),
+    caption: z.string().optional(),
     file_name: z.string().min(1),
   }),
   z.strictObject({
     conv_id: z.string().min(1),
     type: z.literal("image"),
     image_url: z.string().min(1),
-    caption: z.string().min(1),
+    caption: z.string().optional(),
   }),
   z.strictObject({
     conv_id: z.string().min(1),
@@ -55,7 +55,7 @@ const SendWASchema = z.discriminatedUnion("type", [
     conv_id: z.string().min(1),
     type: z.literal("video"),
     video_url: z.string().min(1),
-    caption: z.string().min(1),
+    caption: z.string().optional(),
   }),
 ]);
 

@@ -65,7 +65,7 @@ export type WhatsappAttachmentContacts = {
 }[];
 
 export type WhatsappAttachmentDocument = {
-  caption: string;
+  caption?: string;
   filename: string;
   mime_type: string;
   sha256: string;
@@ -75,7 +75,7 @@ export type WhatsappAttachmentDocument = {
 };
 
 export type WhatsappAttachmentImage = {
-  caption: string;
+  caption?: string;
   mime_type: string;
   sha256: string;
   id: string;
@@ -93,7 +93,7 @@ export type WhatsappAttachmentSticker = {
 };
 
 export type WhatsappAttachmentVideo = {
-  caption: string;
+  caption?: string;
   mime_type: string;
   sha256: string;
   id: string;
