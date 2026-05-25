@@ -5,6 +5,17 @@ import dayjs from "dayjs";
 import { z } from "zod";
 
 export const readAilene = {
+  announcement: ailMemberProcedure.query(async (opts) => {
+    const announcement = await opts.ctx.prisma.aileneAnnouncement.findUnique({
+      where: { id: 1 },
+    });
+    return {
+      code: STATUS_OK,
+      message: "Success",
+      announcement,
+    };
+  }),
+
   preAssessment: ailMemberProcedure.query(async (opts) => {
     const memberId = opts.ctx.ail_member.id;
     const pa = await opts.ctx.prisma.ailPreAssessment.findUnique({

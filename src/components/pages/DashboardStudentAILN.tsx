@@ -8,7 +8,7 @@ import AppErrorComponents from "@/components/states/AppErrorComponents";
 import { setSessionToken, trpc } from "@/trpc/client";
 import dayjs from "dayjs";
 import "dayjs/locale/id";
-import { Star } from "lucide-react";
+import { Megaphone, Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -58,6 +58,8 @@ export default function DashboardStudentAILN({
   return (
     <PageContainerAILN>
       <div className="flex w-full flex-col gap-4">
+        <AnnouncementTickerAILN />
+
         {/* Greeting + Current Level + Total XP */}
         <div className="flex flex-wrap items-end justify-between gap-3">
           <div>
@@ -163,6 +165,60 @@ function DashboardStudentSkeleton() {
         </div>
         <div className="lg:col-span-1">
           <div className="h-full min-h-[28rem] rounded-md bg-gray-100 shadow-sm dark:border dark:border-dashboard-border dark:bg-card-bg" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ===== Announcement Ticker (AILN) =====
+
+function AnnouncementTickerAILN() {
+  const announcementQ = trpc.ailene.read.announcement.useQuery();
+
+  if (announcementQ.isLoading || !announcementQ.data?.announcement) return null;
+
+  const ann = announcementQ.data.announcement;
+  const now = dayjs();
+  const active =
+    ann.status === "ACTIVE" &&
+    now.isAfter(dayjs(ann.start_date)) &&
+    now.isBefore(dayjs(ann.end_date));
+  if (!active) return null;
+
+  const segment = (
+    <div className="flex shrink-0 items-center">
+      {Array.from({ length: 4 }).map((_, i) => (
+        <div key={i} className="flex shrink-0 items-center gap-3 px-8">
+          <span className="text-sm text-white">{ann.title}</span>
+          <span className="text-white/30">•</span>
+        </div>
+      ))}
+    </div>
+  );
+
+  return (
+    <div className="flex w-full items-stretch overflow-hidden rounded-md bg-black">
+      {/* Fixed left badge */}
+      <div className="flex shrink-0 items-center gap-2 bg-black px-4 py-3">
+        <Megaphone className="h-4 w-4 text-white" />
+        <span className="text-[11px] font-semibold uppercase tracking-wider text-white">
+          {ann.callout ?? "PENGUMUMAN"}
+        </span>
+        <span className="ml-1 h-4 w-px bg-white/15" />
+      </div>
+
+      {/* Moving marquee */}
+      <div className="relative flex-1 overflow-hidden py-3">
+        <div
+          className="flex items-center"
+          style={{
+            animation: "cat-marquee 60s linear infinite",
+            width: "max-content",
+          }}
+        >
+          {segment}
+          {segment}
         </div>
       </div>
     </div>
