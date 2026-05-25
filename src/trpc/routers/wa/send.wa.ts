@@ -11,6 +11,7 @@ import {
   whatsappTextMessageRequest,
   whatsappVideoMessageRequest,
 } from "@/lib/whatsapp";
+import { whatsappTemplateToText } from "@/lib/whatsapp-template";
 import {
   WhatsappAttachmentAudio,
   WhatsappAttachmentDocument,
@@ -304,12 +305,19 @@ export const sendWA = {
         );
       })();
 
+      const resultingText = await whatsappTemplateToText(
+        opts.ctx.prisma,
+        opts.input.template_name,
+        opts.input.lang_code,
+        opts.input.parameters
+      );
+
       return sendWhatsappMessage(
         opts.ctx.prisma,
         opts.input.conv_id,
         caller,
         WACType.TEMPLATE,
-        "", // Blank for now
+        resultingText,
         {
           name: opts.input.template_name,
           lang_code: opts.input.lang_code,
