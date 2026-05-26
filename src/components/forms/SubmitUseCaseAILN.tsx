@@ -411,6 +411,7 @@ export default function SubmitUseCaseAILN({
           utils.ailene.read.useCaseAssignment.invalidate({
             use_case_id: useCaseId,
           });
+          utils.ailene.read.todayFocus.invalidate();
           utils.ailene.list.assignedUseCases.invalidate();
         },
         onError: (err) => {

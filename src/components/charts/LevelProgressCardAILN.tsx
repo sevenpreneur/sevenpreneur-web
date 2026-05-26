@@ -1,6 +1,6 @@
 "use client";
 import { trpc } from "@/trpc/client";
-import { BarChart3, Star } from "lucide-react";
+import { Star } from "lucide-react";
 
 interface LevelProgressCardAILNProps {
   className?: string;
@@ -198,15 +198,15 @@ function StatShell({
 }) {
   return (
     <div
-      className={`flex h-full flex-col rounded-xl border bg-white p-6 border-dashboard-border dark:bg-card-bg dark:shadow-[0_0_18px_rgba(239,68,68,0.08)] ${className}`}
+      className={`flex h-full flex-col rounded-lg border border-dashboard-border bg-white p-5 dark:bg-card-bg ${className}`}
     >
-      <div className="flex items-center gap-2">
-        <div className="flex size-7 items-center justify-center rounded-md bg-red-50 dark:bg-red-500/10">
-          <BarChart3 className="size-4 text-red-500 dark:text-red-400" />
-        </div>
-        <span className="text-xs font-medium uppercase tracking-widest text-gray-500 dark:text-gray-400">
+      <div>
+        <h2 className="text-base font-bold text-foreground dark:text-white">
           Level Progress
-        </span>
+        </h2>
+        <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+          Pantau perkembangan level belajar kamu.
+        </p>
       </div>
       {children}
     </div>

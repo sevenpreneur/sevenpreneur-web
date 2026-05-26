@@ -79,7 +79,7 @@ export const readAilene = {
       OCCASIONALLY: 1,
     };
     const freqValues = ucSubs
-      .map((uc) => (uc.frequency ? freqScore[uc.frequency] ?? 0 : 0))
+      .map((uc) => (uc.frequency ? (freqScore[uc.frequency] ?? 0) : 0))
       .filter((v) => v > 0);
     const aiHabit =
       freqValues.length === 0
@@ -93,12 +93,28 @@ export const readAilene = {
     const agenticCapabilities = Math.min(agenticCount, 5);
 
     const dimensions = [
-      { key: "ai_foundation", name: "AI Foundation", score: round1(aiFoundation) },
-      { key: "prompting_quality", name: "Prompting Quality", score: round1(promptingQuality) },
+      {
+        key: "ai_foundation",
+        name: "AI Foundation",
+        score: round1(aiFoundation),
+      },
+      {
+        key: "prompting_quality",
+        name: "Prompting Quality",
+        score: round1(promptingQuality),
+      },
       { key: "tool_fluency", name: "Tool Fluency", score: round1(toolFluency) },
-      { key: "workplace_application", name: "Workplace Application", score: round1(workplaceApplication) },
+      {
+        key: "workplace_application",
+        name: "Workplace Application",
+        score: round1(workplaceApplication),
+      },
       { key: "ai_habit", name: "AI Habit", score: round1(aiHabit) },
-      { key: "agentic_capabilities", name: "Agentic Capabilities", score: round1(agenticCapabilities) },
+      {
+        key: "agentic_capabilities",
+        name: "Agentic Capabilities",
+        score: round1(agenticCapabilities),
+      },
     ];
 
     const avg = round1(
@@ -176,8 +192,7 @@ export const readAilene = {
     const ucWins =
       earliestUc &&
       (!earliestPr ||
-        (earliestUc.submitted_at as Date) >
-          (earliestPr.submitted_at as Date));
+        (earliestUc.submitted_at as Date) > (earliestPr.submitted_at as Date));
 
     if (ucWins && earliestUc) {
       return {
@@ -355,7 +370,14 @@ export const readAilene = {
     const currentLevelNumber =
       opts.ctx.ail_member.current_level?.level_number ?? 0;
 
-    const [chapters, quizSubs, videoComps, materialComps] = await Promise.all([
+    const [
+      chapters,
+      quizSubs,
+      videoComps,
+      materialComps,
+      promptAssignments,
+      useCaseAssignments,
+    ] = await Promise.all([
       opts.ctx.prisma.ailChapter.findMany({
         where: { status: "ACTIVE" },
         orderBy: { session_date: "asc" },
@@ -387,6 +409,42 @@ export const readAilene = {
         where: { member_id: memberId },
         select: { material_id: true },
       }),
+      opts.ctx.prisma.ailPromptSubmission.findMany({
+        where: {
+          member_id: memberId,
+          assigned_by_id: { not: null },
+          submitted_at: null,
+          prompt: { status: "ACTIVE" },
+        },
+        orderBy: [{ deadline: "asc" }, { created_at: "asc" }],
+        include: {
+          prompt: {
+            select: {
+              id: true,
+              name: true,
+              level: { select: { level_number: true, name: true } },
+            },
+          },
+        },
+      }),
+      opts.ctx.prisma.ailUseCaseSubmission.findMany({
+        where: {
+          member_id: memberId,
+          assigned_by_id: { not: null },
+          submitted_at: null,
+          use_case: { status: "ACTIVE" },
+        },
+        orderBy: [{ deadline: "asc" }, { created_at: "asc" }],
+        include: {
+          use_case: {
+            select: {
+              id: true,
+              name: true,
+              level: { select: { level_number: true, name: true } },
+            },
+          },
+        },
+      }),
     ]);
 
     const completedQuizIds = new Set(quizSubs.map((s) => s.quiz_id));
@@ -396,14 +454,45 @@ export const readAilene = {
     );
 
     type Focus = {
-      kind: "Quiz" | "Video" | "Material";
+      kind:
+        | "Quiz"
+        | "Video"
+        | "Material"
+        | "PromptPractice"
+        | "UseCasePractice";
       task_id: string;
       task_title: string;
-      chapter_id: number;
-      chapter_name: string;
+      chapter_id: number | null;
+      chapter_name: string | null;
+      deadline?: Date | null;
       href: string;
     };
     let focus: Focus | null = null;
+
+    const assignmentFocus = [
+      ...promptAssignments.map((row) => ({
+        kind: "PromptPractice" as const,
+        task_id: String(row.prompt.id),
+        task_title: row.prompt.name,
+        chapter_id: null,
+        chapter_name: row.prompt.level.name,
+        deadline: row.deadline,
+        href: `/student/practice/prompts/${row.prompt.id}`,
+      })),
+      ...useCaseAssignments.map((row) => ({
+        kind: "UseCasePractice" as const,
+        task_id: String(row.use_case.id),
+        task_title: row.use_case.name,
+        chapter_id: null,
+        chapter_name: row.use_case.level.name,
+        deadline: row.deadline,
+        href: `/student/practice/use-cases/${row.use_case.id}`,
+      })),
+    ].sort((a, b) => {
+      const aTime = a.deadline?.getTime() ?? Number.MAX_SAFE_INTEGER;
+      const bTime = b.deadline?.getTime() ?? Number.MAX_SAFE_INTEGER;
+      return aTime - bTime;
+    })[0];
 
     for (const ch of chapters) {
       if (ch.level.level_number > currentLevelNumber) continue;
@@ -433,6 +522,10 @@ export const readAilene = {
         };
         break;
       }
+      if (assignmentFocus) {
+        focus = assignmentFocus;
+        break;
+      }
       const v = ch.videos.find((x) => !completedVideoIds.has(x.id));
       if (v) {
         focus = {
@@ -445,6 +538,10 @@ export const readAilene = {
         };
         break;
       }
+    }
+
+    if (!focus && assignmentFocus) {
+      focus = assignmentFocus;
     }
 
     return { code: STATUS_OK, message: "Success", focus };
@@ -606,9 +703,7 @@ export const readAilene = {
     .query(async (opts) => {
       const memberId = opts.ctx.ail_member.id;
       const today = dayjs().startOf("day");
-      const to = opts.input?.to
-        ? dayjs(opts.input.to).startOf("day")
-        : today;
+      const to = opts.input?.to ? dayjs(opts.input.to).startOf("day") : today;
       // Default range: last 90 days (~3 months) ending at `to`.
       const from = opts.input?.from
         ? dayjs(opts.input.from).startOf("day")

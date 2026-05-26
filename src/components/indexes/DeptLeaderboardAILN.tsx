@@ -1,6 +1,5 @@
 "use client";
 import { trpc } from "@/trpc/client";
-import { Trophy } from "lucide-react";
 import Image from "next/image";
 
 const DEFAULT_AVATAR =
@@ -15,14 +14,14 @@ export default function DeptLeaderboardAILN(props: DeptLeaderboardAILNProps) {
 
   if (q.isLoading) {
     return (
-      <StatShell title="DEPARTEMEN LEADERBOARD" className={props.className}>
+      <StatShell title="Departemen Leaderboard" className={props.className}>
         <CardLoading />
       </StatShell>
     );
   }
   if (q.error || !q.data) {
     return (
-      <StatShell title="DEPARTEMEN LEADERBOARD" className={props.className}>
+      <StatShell title="Departemen Leaderboard" className={props.className}>
         <CardError />
       </StatShell>
     );
@@ -30,7 +29,7 @@ export default function DeptLeaderboardAILN(props: DeptLeaderboardAILNProps) {
 
   if (!q.data.group || q.data.leaderboard.length === 0) {
     return (
-      <StatShell title="DEPARTEMEN LEADERBOARD" className={props.className}>
+      <StatShell title="Departemen Leaderboard" className={props.className}>
         <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
           Kamu belum tergabung dalam group manapun.
         </p>
@@ -41,7 +40,7 @@ export default function DeptLeaderboardAILN(props: DeptLeaderboardAILNProps) {
   const { leaderboard, my_rank, total } = q.data;
 
   return (
-    <StatShell title="DEPARTEMEN LEADERBOARD" className={props.className}>
+    <StatShell title="Departemen Leaderboard" className={props.className}>
       <div className="flex items-baseline gap-3">
         <span className="text-3xl font-bold font-geist-mono leading-none text-gray-900 dark:text-white">
           #{my_rank}
@@ -95,15 +94,15 @@ function StatShell({
 }) {
   return (
     <div
-      className={`flex flex-col gap-2 rounded-xl border bg-white p-5 border-dashboard-border dark:bg-card-bg dark:shadow-[0_0_18px_rgba(239,68,68,0.08)] ${className}`}
+      className={`flex flex-col gap-2 rounded-lg border border-dashboard-border bg-white p-5 dark:bg-card-bg ${className}`}
     >
-      <div className="flex items-center gap-2">
-        <div className="flex size-7 items-center justify-center rounded-md bg-red-50 dark:bg-red-500/10">
-          <Trophy className="size-4 text-red-500 dark:text-red-400" />
-        </div>
-        <span className="text-xs font-medium uppercase tracking-widest text-gray-500 dark:text-gray-400">
+      <div>
+        <h2 className="text-base font-bold text-foreground dark:text-white">
           {title}
-        </span>
+        </h2>
+        <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+          Peringkat kontribusi di departemen kamu.
+        </p>
       </div>
       {children}
     </div>

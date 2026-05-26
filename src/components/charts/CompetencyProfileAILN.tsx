@@ -77,7 +77,7 @@ export default function CompetencyProfileAILN({
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <h2 className="text-base font-bold text-foreground dark:text-white">
-            Profil Kompetensi AI Anda
+            Profil Kompetensi AI
           </h2>
           <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
             6 dimensi · Rata-rata saat ini:{" "}
@@ -208,7 +208,7 @@ function RadarBlock({
   }, [labels, values, isDark]);
 
   return (
-    <div className="h-[320px]">
+    <div className="h-[280px]">
       <Radar data={data} options={options} />
     </div>
   );

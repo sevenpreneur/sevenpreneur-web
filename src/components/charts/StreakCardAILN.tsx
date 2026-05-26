@@ -82,9 +82,12 @@ export default function StreakCardAILN({
     <Shell className={className}>
       {/* Top: lifetime achievements */}
       <div className="flex flex-col gap-1">
-        <h3 className="text-lg font-bold text-foreground dark:text-white">
+        <h2 className="text-base font-bold text-foreground dark:text-white">
           Capaian Kamu
-        </h3>
+        </h2>
+        <p className="text-xs text-gray-500 dark:text-gray-400">
+          Ringkasan aktivitas dan streak selama cohort.
+        </p>
       </div>
 
       <div className="mt-5 flex flex-col gap-3">
@@ -180,7 +183,7 @@ function Shell({
 }) {
   return (
     <div
-      className={`flex flex-col rounded-xl border border-dashboard-border bg-white p-5 dark:bg-card-bg ${className ?? ""}`}
+      className={`flex flex-col rounded-lg border border-dashboard-border bg-white p-5 dark:bg-card-bg ${className ?? ""}`}
     >
       {children}
     </div>

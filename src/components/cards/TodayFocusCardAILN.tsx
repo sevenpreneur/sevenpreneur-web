@@ -2,15 +2,58 @@
 import ButtonAILN from "@/components/buttons/ButtonAILN";
 import AlertConfirmDialogAILN from "@/components/modals/AlertConfirmDialogAILN";
 import { trpc } from "@/trpc/client";
-import { ArrowRight, BookOpen, PlayCircle, SquareCheck } from "lucide-react";
+import {
+  ArrowRight,
+  BookOpen,
+  ClipboardCheck,
+  PlayCircle,
+  SquareCheck,
+} from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-function labelForKind(kind: "Quiz" | "Video" | "Material") {
+type FocusKind =
+  | "Quiz"
+  | "Video"
+  | "Material"
+  | "PromptPractice"
+  | "UseCasePractice";
+
+function labelForKind(kind: FocusKind) {
   if (kind === "Quiz") return "Quiz";
   if (kind === "Video") return "Recording";
+  if (kind === "PromptPractice") return "Prompt Practice";
+  if (kind === "UseCasePractice") return "Use Case Practice";
   return "Materi";
+}
+
+function headlineForFocus(focus: {
+  kind: FocusKind;
+  task_title: string;
+  chapter_name: string | null;
+}) {
+  if (focus.kind === "PromptPractice" || focus.kind === "UseCasePractice") {
+    return (
+      <>
+        Kerjakan {labelForKind(focus.kind).toLowerCase()}{" "}
+        <span className="rounded px-1 text-red-600 dark:text-red-400 dark:drop-shadow-[0_0_4px_rgba(239,68,68,0.6)]">
+          {focus.task_title}
+        </span>
+        {focus.chapter_name ? ` di ${focus.chapter_name}.` : "."}
+      </>
+    );
+  }
+
+  return (
+    <>
+      Selesaikan {labelForKind(focus.kind).toLowerCase()}{" "}
+      <span className="rounded px-1 text-red-600 dark:text-red-400 dark:drop-shadow-[0_0_4px_rgba(239,68,68,0.6)]">
+        {focus.task_title}
+      </span>{" "}
+      di Chapter {focus.chapter_name}.
+    </>
+  );
 }
 
 export default function TodayFocusCardAILN() {
@@ -67,29 +110,23 @@ export default function TodayFocusCardAILN() {
       ? SquareCheck
       : focus.kind === "Video"
         ? PlayCircle
-        : BookOpen;
+        : focus.kind === "Material"
+          ? BookOpen
+          : ClipboardCheck;
 
   return (
-    <div className="flex h-full flex-col gap-3 rounded-xl border bg-white p-6 border-dashboard-border dark:bg-card-bg dark:shadow-[0_0_18px_rgba(239,68,68,0.08)]">
+    <div className="flex h-fit flex-col gap-3 rounded-lg border border-dashboard-border bg-white p-5 dark:bg-card-bg">
       <div className="flex items-center gap-2 text-xs font-medium uppercase tracking-widest text-gray-500 dark:text-gray-400">
         <span className="size-2 rounded-full bg-red-500 dark:shadow-[0_0_8px_rgba(239,68,68,0.9)]" />
         FOKUS HARI INI
-        <span className="text-gray-400 dark:text-gray-500">·</span>
-        <span className="inline-flex items-center gap-1 normal-case text-gray-500 dark:text-gray-400">
-          <Icon className="size-3.5" />
-          {labelForKind(focus.kind)}
-        </span>
       </div>
       <h2 className="text-xl font-bold leading-snug text-gray-900 dark:text-white">
-        Selesaikan {labelForKind(focus.kind).toLowerCase()}{" "}
-        <span className="rounded px-1 text-red-600 dark:text-red-400 dark:drop-shadow-[0_0_4px_rgba(239,68,68,0.6)]">
-          {focus.task_title}
-        </span>{" "}
-        di Chapter {focus.chapter_name}.
+        {headlineForFocus(focus)}
       </h2>
       <p className="text-sm text-gray-500 dark:text-gray-400">
-        Pilih task ini sebagai langkah berikutnya supaya progres chapter kamu
-        terus maju.
+        {focus.kind === "PromptPractice" || focus.kind === "UseCasePractice"
+          ? "Practice dengan deadline terdekat dari Champion kamu."
+          : "Pilih task ini sebagai langkah berikutnya supaya progres chapter kamu terus maju."}
       </p>
       <div className="mt-2 flex flex-wrap items-center gap-2">
         {focus.kind === "Video" && (
@@ -116,6 +153,15 @@ export default function TodayFocusCardAILN() {
             </ButtonAILN>
           </Link>
         )}
+        {(focus.kind === "PromptPractice" ||
+          focus.kind === "UseCasePractice") && (
+          <Link href={focus.href}>
+            <ButtonAILN>
+              Mulai sekarang
+              <ArrowRight className="size-3.5" />
+            </ButtonAILN>
+          </Link>
+        )}
         {focus.kind === "Quiz" && (
           <ButtonAILN onClick={() => setIsQuizDialogOpen(true)}>
             Mulai sekarang
@@ -123,7 +169,7 @@ export default function TodayFocusCardAILN() {
           </ButtonAILN>
         )}
         <Link href="/student/modules">
-          <ButtonAILN variant="light">Lihat detail</ButtonAILN>
+          <ButtonAILN variant="outline">Lihat detail</ButtonAILN>
         </Link>
       </div>
 
@@ -153,7 +199,7 @@ function CardShell({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex h-full flex-col gap-3 rounded-xl border bg-white p-6 border-dashboard-border dark:bg-card-bg dark:shadow-[0_0_18px_rgba(239,68,68,0.08)]">
+    <div className="flex h-fit flex-col gap-3 rounded-lg border border-dashboard-border bg-white p-5 dark:bg-card-bg">
       <div className="text-xs font-medium uppercase tracking-widest text-gray-500 dark:text-gray-400">
         {title}
       </div>

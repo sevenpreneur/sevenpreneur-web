@@ -200,6 +200,7 @@ export default function SubmitPromptAILN({
           utils.ailene.read.promptAssignment.invalidate({
             prompt_id: promptId,
           });
+          utils.ailene.read.todayFocus.invalidate();
           utils.ailene.list.assignedPrompts.invalidate();
         },
         onError: (err) => {

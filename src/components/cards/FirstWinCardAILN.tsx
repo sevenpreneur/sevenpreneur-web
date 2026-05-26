@@ -78,15 +78,15 @@ export default function FirstWinCardAILN() {
   }
 
   return (
-    <div className="relative overflow-hidden rounded-lg border border-amber-200/70 bg-gradient-to-br from-white via-amber-50 to-amber-100 px-6 py-5 dark:border-amber-500/30 dark:from-amber-500/5 dark:via-amber-500/10 dark:to-yellow-500/15">
+    <div className="relative rounded-lg border border-amber-200/70 bg-gradient-to-br from-white via-amber-50 to-amber-100 px-6 py-6 dark:border-amber-500/30 dark:from-amber-500/5 dark:via-amber-500/10 dark:to-yellow-500/15">
       <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-amber-700 dark:text-amber-300">
         <Star className="size-3.5" fill="currentColor" />
         {badge}
       </div>
-      <h2 className="mt-2 text-3xl font-bold leading-tight md:text-4xl">
+      <h2 className="mt-2 break-words text-2xl font-bold leading-snug md:text-3xl">
         {headline}
       </h2>
-      <p className="mt-3 text-sm text-gray-700 dark:text-gray-300">
+      <p className="mt-3 break-words text-sm text-gray-700 dark:text-gray-300">
         {description}
       </p>
     </div>

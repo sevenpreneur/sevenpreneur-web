@@ -110,18 +110,16 @@ export default function DashboardStudentAILN({
 
         <FirstWinCardAILN />
 
-        {/* Two-column body: left = focus + streak + level progress, right = rank */}
+        <TodayFocusCardAILN />
+
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-          <div className="flex flex-col gap-4 lg:col-span-2">
-            <TodayFocusCardAILN />
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-              <StreakCardAILN startDate={cohortStart} endDate={cohortEnd} />
-              <LevelProgressCardAILN />
-            </div>
-          </div>
-          <div className="lg:col-span-1">
-            <DeptLeaderboardAILN className="h-full" />
-          </div>
+          <StreakCardAILN
+            startDate={cohortStart}
+            endDate={cohortEnd}
+            className="h-full min-h-[360px]"
+          />
+          <LevelProgressCardAILN className="h-full min-h-[360px]" />
+          <DeptLeaderboardAILN className="h-full min-h-[360px]" />
         </div>
 
         <CompetencyProfileAILN />
@@ -157,18 +155,12 @@ function DashboardStudentSkeleton() {
         </div>
       </div>
 
-      {/* Two-column body */}
+      <div className="h-36 rounded-lg border border-dashboard-border bg-gray-100 dark:bg-card-bg" />
+
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-        <div className="flex flex-col gap-4 lg:col-span-2">
-          <div className="h-48 rounded-md bg-gray-100 shadow-sm dark:border dark:border-dashboard-border dark:bg-card-bg" />
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            <div className="h-56 rounded-md bg-gray-100 shadow-sm dark:border dark:border-dashboard-border dark:bg-card-bg" />
-            <div className="h-56 rounded-md bg-gray-100 shadow-sm dark:border dark:border-dashboard-border dark:bg-card-bg" />
-          </div>
-        </div>
-        <div className="lg:col-span-1">
-          <div className="h-full min-h-[28rem] rounded-md bg-gray-100 shadow-sm dark:border dark:border-dashboard-border dark:bg-card-bg" />
-        </div>
+        <div className="h-[360px] rounded-lg border border-dashboard-border bg-gray-100 dark:bg-card-bg" />
+        <div className="h-[360px] rounded-lg border border-dashboard-border bg-gray-100 dark:bg-card-bg" />
+        <div className="h-[360px] rounded-lg border border-dashboard-border bg-gray-100 dark:bg-card-bg" />
       </div>
     </div>
   );
