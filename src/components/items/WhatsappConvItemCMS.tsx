@@ -9,34 +9,24 @@ import {
   getLabelWhatsappChatType,
   resolveWhatsappChatStatus,
 } from "@/lib/whatsapp-utils";
-import {
-  faFire,
-  faMugHot,
-  faSnowflake,
-  IconDefinition,
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import dayjs from "dayjs";
 import Image from "next/image";
+import BooleanLabelCMS from "../labels/BooleanLabelCMS";
 
 const variantStyles: Record<
   LeadStatus,
   {
-    icon: IconDefinition;
-    bg_color: string;
+    color: string;
   }
 > = {
   COLD: {
-    icon: faSnowflake,
-    bg_color: "text-primary-soft-foreground bg-primary-soft-background",
+    color: "bg-primary-soft-foreground",
   },
   WARM: {
-    icon: faMugHot,
-    bg_color: "text-[#FB7A36] bg-[#FDE4D8]",
+    color: "bg-warning-foreground",
   },
   HOT: {
-    icon: faFire,
-    bg_color: "text-[#FED106] bg-destructive",
+    color: "bg-destructive",
   },
 };
 
@@ -57,7 +47,7 @@ interface WhatsappConvItemCMSProps {
 }
 
 export default function WhatsappConvItemCMS(props: WhatsappConvItemCMSProps) {
-  const { bg_color, icon } = variantStyles[props.convLeadStatus];
+  const { color } = variantStyles[props.convLeadStatus];
   const isActive = props.convId === props.selectedConvId;
 
   const initialName = props.convUserFullName
@@ -96,10 +86,8 @@ export default function WhatsappConvItemCMS(props: WhatsappConvItemCMSProps) {
           </div>
           {props.convLeadStatus !== "COLD" && (
             <div
-              className={`conv-lead-status absolute flex bottom-0 -right-1 items-center justify-center ${bg_color} aspect-square size-5 rounded-full overflow-hidden`}
-            >
-              <FontAwesomeIcon icon={icon} size="2xs" />
-            </div>
+              className={`conv-lead-status absolute bottom-0 -right-1 ${color} aspect-square size-3 rounded-full border-2 border-background`}
+            />
           )}
         </div>
         <div className="flex flex-col min-w-0">
@@ -107,15 +95,10 @@ export default function WhatsappConvItemCMS(props: WhatsappConvItemCMSProps) {
             <p className="conv-full-name text-[15px] font-semibold font-bodycopy leading-snug line-clamp-1">
               {props.convUserFullName}
             </p>
-            <span
-              className={`conv-assignment shrink-0 text-[10px] font-bodycopy font-semibold py-0.5 px-1.5 rounded-full ${
-                props.convIsAssigned
-                  ? "bg-success-foreground/10 text-success-foreground"
-                  : "bg-secondary-soft-background text-secondary-soft-foreground dark:bg-sevenpreneur-pink-midgnight dark:text-sevenpreneur-pink-rose"
-              }`}
-            >
-              {props.convIsAssigned ? "Assigned" : "Unassigned"}
-            </span>
+            <BooleanLabelCMS
+              value={props.convIsAssigned}
+              label={props.convIsAssigned ? "Assigned" : "Unassigned"}
+            />
           </div>
           <div className="flex items-center gap-1.5">
             {props.convLastMessageDirection === "OUTBOUND" && (

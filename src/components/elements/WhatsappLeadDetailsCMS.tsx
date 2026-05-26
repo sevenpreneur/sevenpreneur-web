@@ -245,7 +245,7 @@ export default function WhatsappLeadDetailsCMS(
                             height={500}
                           />
                         </div>
-                        <p className="text-sm text-[#333333] font-bodycopy font-semibold line-clamp-1">
+                        <p className="text-sm text-[#333333] font-bodycopy font-semibold line-clamp-1 dark:text-sevenpreneur-white">
                           {leadDetails.handler?.full_name}
                         </p>
                         <AppButton
