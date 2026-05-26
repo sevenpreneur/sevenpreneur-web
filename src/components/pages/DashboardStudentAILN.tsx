@@ -1,6 +1,7 @@
 "use client";
 import FirstWinCardAILN from "@/components/cards/FirstWinCardAILN";
 import TodayFocusCardAILN from "@/components/cards/TodayFocusCardAILN";
+import CompetencyProfileAILN from "@/components/charts/CompetencyProfileAILN";
 import LevelProgressCardAILN from "@/components/charts/LevelProgressCardAILN";
 import StreakCardAILN from "@/components/charts/StreakCardAILN";
 import DeptLeaderboardAILN from "@/components/indexes/DeptLeaderboardAILN";
@@ -122,6 +123,8 @@ export default function DashboardStudentAILN({
             <DeptLeaderboardAILN className="h-full" />
           </div>
         </div>
+
+        <CompetencyProfileAILN />
       </div>
     </PageContainerAILN>
   );
