@@ -5,7 +5,9 @@ import { useSidebar } from "@/contexts/SidebarContext";
 import { DeleteSession } from "@/lib/actions";
 import { setSessionToken, trpc } from "@/trpc/client";
 import {
+  BarChart3,
   ChevronLeft,
+  ClipboardCheck,
   LayoutDashboard,
   LogOut,
   type LucideIcon,
@@ -41,6 +43,16 @@ const MENUS: {
     url: "/sponsor",
     icon: LayoutDashboard,
     exact: true,
+  },
+  {
+    name: "Pre Assessment",
+    url: "/sponsor/pre-assessment",
+    icon: ClipboardCheck,
+  },
+  {
+    name: "Distribusi Level",
+    url: "/sponsor/level-distribution",
+    icon: BarChart3,
   },
 ];
 

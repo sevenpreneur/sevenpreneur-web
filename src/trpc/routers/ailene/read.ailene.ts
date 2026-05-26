@@ -644,6 +644,225 @@ export const readAilene = {
     };
   }),
 
+  executiveView: sponsorProcedure.query(async (opts) => {
+    const now = dayjs();
+    const weeklyActiveThreshold = now.subtract(7, "day").toDate();
+    const roiValuePerHour = 250000;
+
+    const [members, useCaseSubmissions] = await Promise.all([
+      opts.ctx.prisma.ailMember.findMany({
+        select: {
+          id: true,
+          last_active_at: true,
+          current_level: {
+            select: {
+              level_number: true,
+            },
+          },
+        },
+      }),
+      opts.ctx.prisma.ailUseCaseSubmission.findMany({
+        where: { submitted_at: { not: null } },
+        select: {
+          hours_saved: true,
+          hours_without_ai: true,
+        },
+      }),
+    ]);
+
+    const memberCount = members.length;
+    const avgLevel =
+      memberCount === 0
+        ? 0
+        : members.reduce(
+            (sum, member) => sum + (member.current_level?.level_number ?? 0),
+            0
+          ) / memberCount;
+
+    const activeWeeklyCount = members.filter(
+      (member) =>
+        member.last_active_at &&
+        dayjs(member.last_active_at).isAfter(dayjs(weeklyActiveThreshold))
+    ).length;
+
+    let hoursSavedTotal = 0;
+    for (const row of useCaseSubmissions) {
+      if (row.hours_saved === null || row.hours_without_ai === null) continue;
+      const saved = Number(row.hours_without_ai) - Number(row.hours_saved);
+      if (saved > 0) hoursSavedTotal += saved;
+    }
+
+    const roiCohortToDate = hoursSavedTotal * roiValuePerHour;
+
+    return {
+      code: STATUS_OK,
+      message: "Success",
+      metrics: {
+        avg_level: Math.round(avgLevel * 10) / 10,
+        member_count: memberCount,
+        hours_saved_total: Math.round(hoursSavedTotal * 10) / 10,
+        roi_cohort_to_date: Math.round(roiCohortToDate),
+        staff_active_weekly_count: activeWeeklyCount,
+        staff_active_weekly_percent:
+          memberCount === 0
+            ? 0
+            : Math.round((activeWeeklyCount / memberCount) * 100),
+      },
+    };
+  }),
+
+  weeklyTrends: sponsorProcedure.query(async (opts) => {
+    const weekCount = 12;
+    const totalMembers = await opts.ctx.prisma.ailMember.count();
+    const end = dayjs().endOf("week");
+    const start = end.subtract(weekCount - 1, "week").startOf("week");
+
+    const rows = await opts.ctx.prisma.ailUseCaseSubmission.findMany({
+      where: {
+        submitted_at: {
+          not: null,
+          gte: start.toDate(),
+          lte: end.toDate(),
+        },
+      },
+      select: {
+        member_id: true,
+        submitted_at: true,
+        hours_saved: true,
+        hours_without_ai: true,
+      },
+    });
+
+    const weeks = Array.from({ length: weekCount }).map((_, index) => {
+      const weekStart = start.add(index, "week");
+      const weekEnd = weekStart.endOf("week");
+      const weekRows = rows.filter((row) => {
+        const submittedAt = dayjs(row.submitted_at);
+        return (
+          submittedAt.isAfter(weekStart.subtract(1, "millisecond")) &&
+          submittedAt.isBefore(weekEnd.add(1, "millisecond"))
+        );
+      });
+      const activeMembers = new Set(weekRows.map((row) => row.member_id)).size;
+      const hoursSaved = weekRows.reduce((sum, row) => {
+        if (row.hours_saved === null || row.hours_without_ai === null) {
+          return sum;
+        }
+        const saved = Number(row.hours_without_ai) - Number(row.hours_saved);
+        return saved > 0 ? sum + saved : sum;
+      }, 0);
+
+      return {
+        label: weekStart.format("D MMM"),
+        hours_saved: Math.round(hoursSaved * 10) / 10,
+        adoption_percent:
+          totalMembers === 0
+            ? 0
+            : Math.round((activeMembers / totalMembers) * 100),
+        highlight: index === weekCount - 1,
+      };
+    });
+
+    return { code: STATUS_OK, message: "Success", weeks };
+  }),
+
+  levelDistribution: sponsorProcedure.query(async (opts) => {
+    const [levels, members] = await Promise.all([
+      opts.ctx.prisma.ailLevel.findMany({
+        where: { status: "ACTIVE" },
+        orderBy: { level_number: "asc" },
+        select: { id: true, level_number: true, name: true },
+      }),
+      opts.ctx.prisma.ailMember.findMany({
+        select: { current_level_id: true },
+      }),
+    ]);
+
+    const total = members.length;
+    const countByLevel = new Map<number, number>();
+    for (const member of members) {
+      countByLevel.set(
+        member.current_level_id,
+        (countByLevel.get(member.current_level_id) ?? 0) + 1
+      );
+    }
+
+    const levelsDistribution = levels.map((level) => {
+      const count = countByLevel.get(level.id) ?? 0;
+      return {
+        id: level.id,
+        code: `L${level.level_number}`,
+        name: level.name,
+        count,
+        percent: total === 0 ? 0 : Math.round((count / total) * 100),
+      };
+    });
+
+    return {
+      code: STATUS_OK,
+      message: "Success",
+      total,
+      levels: levelsDistribution,
+    };
+  }),
+
+  organizationLeaderboard: sponsorProcedure.query(async (opts) => {
+    const monthStart = dayjs().startOf("month").toDate();
+    const submissions = await opts.ctx.prisma.ailUseCaseSubmission.findMany({
+      where: {
+        submitted_at: { not: null, gte: monthStart },
+      },
+      select: {
+        hours_saved: true,
+        hours_without_ai: true,
+        member: {
+          select: {
+            group: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    const hoursByGroup = new Map<number, { name: string; hours: number }>();
+    for (const submission of submissions) {
+      const group = submission.member.group;
+      if (!group) continue;
+      if (
+        submission.hours_saved === null ||
+        submission.hours_without_ai === null
+      ) {
+        continue;
+      }
+      const saved =
+        Number(submission.hours_without_ai) - Number(submission.hours_saved);
+      if (saved <= 0) continue;
+
+      const existing = hoursByGroup.get(group.id) ?? {
+        name: group.name,
+        hours: 0,
+      };
+      existing.hours += saved;
+      hoursByGroup.set(group.id, existing);
+    }
+
+    const list = Array.from(hoursByGroup.entries())
+      .map(([id, item]) => ({
+        id,
+        name: item.name,
+        hours: Math.round(item.hours * 10) / 10,
+      }))
+      .sort((a, b) => b.hours - a.hours)
+      .slice(0, 5)
+      .map((item, index) => ({ ...item, rank: index + 1 }));
+
+    return { code: STATUS_OK, message: "Success", list };
+  }),
+
   achievements: ailMemberProcedure.query(async (opts) => {
     const memberId = opts.ctx.ail_member.id;
 

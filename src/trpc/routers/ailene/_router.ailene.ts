@@ -48,6 +48,11 @@ export const aileneRouter = createTRPCRouter({
     groupLeaderboard: readAilene.groupLeaderboard,
     promptAssignment: readAilene.promptAssignment,
     useCaseAssignment: readAilene.useCaseAssignment,
+    // sponsor only
+    executiveView: readAilene.executiveView,
+    weeklyTrends: readAilene.weeklyTrends,
+    levelDistribution: readAilene.levelDistribution,
+    organizationLeaderboard: readAilene.organizationLeaderboard,
     // champion only
     promptSubmissionDetail: readAilene.championPromptSubmissionDetail,
     useCaseSubmissionDetail: readAilene.championUseCaseSubmissionDetail,

@@ -394,7 +394,7 @@ export const listAilene = {
             },
             total_xp,
             progress_percent,
-            current_chapter: null,
+            current_chapter: null as { id: number; name: string } | null,
             last_active_at,
             status,
           };
