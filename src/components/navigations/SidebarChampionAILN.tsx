@@ -46,7 +46,7 @@ const MENUS: {
     icon: LayoutDashboard,
     exact: true,
   },
-  { name: "Library", url: "/champion/library", icon: BookMarked },
+  { name: "Library & Assignment", url: "/champion/library", icon: BookMarked },
   { name: "Submissions", url: "/champion/submissions", icon: ClipboardCheck },
 ];
 

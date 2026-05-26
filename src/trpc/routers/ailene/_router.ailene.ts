@@ -15,6 +15,7 @@ export const aileneRouter = createTRPCRouter({
     assignedUseCases: listAilene.myAssignedUseCases,
     // champion only
     members: listAilene.championMembers,
+    categories: listAilene.categories,
     promptLibrary: listAilene.promptLibrary,
     useCaseLibrary: listAilene.useCaseLibrary,
     promptSubmissions: listAilene.championPromptSubmissions,
@@ -28,6 +29,8 @@ export const aileneRouter = createTRPCRouter({
     // champion only
     assignPrompt: createAilene.assignPrompt,
     assignUseCase: createAilene.assignUseCase,
+    promptAssignment: createAilene.promptAssignment,
+    useCaseAssignment: createAilene.useCaseAssignment,
   }),
   read: createTRPCRouter({
     // any member (student / champion / sponsor)

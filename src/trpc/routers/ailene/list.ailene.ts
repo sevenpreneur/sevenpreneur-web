@@ -489,6 +489,14 @@ export const listAilene = {
     return { code: STATUS_OK, message: "Success", list };
   }),
 
+  categories: championProcedure.query(async (opts) => {
+    const list = await opts.ctx.prisma.ailCategory.findMany({
+      orderBy: { name: "asc" },
+      select: { id: true, name: true },
+    });
+    return { code: STATUS_OK, message: "Success", list };
+  }),
+
   useCaseLibrary: championProcedure.query(async (opts) => {
     const useCases = await opts.ctx.prisma.ailUseCase.findMany({
       where: { status: "ACTIVE" },

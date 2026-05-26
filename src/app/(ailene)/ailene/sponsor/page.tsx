@@ -1,4 +1,5 @@
 import DashboardPreAssesmentAILN from "@/components/pages/DashboardPreAssesmentAILN";
+import DashboardSponsorAILN from "@/components/pages/DashboardSponsorAILN";
 import { setSessionToken } from "@/trpc/server";
 import { Metadata } from "next";
 import { cookies } from "next/headers";
@@ -14,5 +15,6 @@ export default async function SponsorPage() {
   if (!sessionToken) return null;
   setSessionToken(sessionToken);
 
-  return <DashboardPreAssesmentAILN sessionToken={sessionToken} />;
+  // return <DashboardPreAssesmentAILN sessionToken={sessionToken} />;
+  return <DashboardSponsorAILN sessionToken={sessionToken} />;
 }

@@ -17,6 +17,30 @@ const assignInputSchema = z.object({
   message: z.string().max(500).nullable().optional(),
 });
 
+const createAssignmentBaseSchema = z.object({
+  name: z.string().min(1).max(255),
+  description: z.string().min(1),
+  category_ids: z
+    .array(z.number().int().positive())
+    .min(1, "Pilih minimal 1 kategori.")
+    .max(2, "Maksimal 2 kategori."),
+  assignment: z
+    .object({
+      target_type: z.enum(["MEMBER", "GROUP"]),
+      target_ids: z.array(z.number().int().positive()).min(1),
+      deadline: z.string().datetime(),
+      message: z.string().max(500).nullable().optional(),
+    })
+    .nullable()
+    .optional(),
+});
+
+const createPromptAssignmentSchema = createAssignmentBaseSchema.extend({
+  expected_output: z.string().min(1),
+});
+
+const createUseCaseAssignmentSchema = createAssignmentBaseSchema;
+
 async function resolveAssignmentTargets(
   prisma: PrismaClient,
   championId: number,
@@ -400,6 +424,202 @@ export const createAilene = {
         assigned_count: result.count,
         target_total: memberIds.length,
         skipped: memberIds.length - result.count,
+      };
+    }),
+
+  promptAssignment: championProcedure
+    .input(createPromptAssignmentSchema)
+    .mutation(async (opts) => {
+      const championId = opts.ctx.ail_member.id;
+      const { name, description, expected_output, category_ids, assignment } =
+        opts.input;
+
+      const uniqueCategoryIds = Array.from(new Set(category_ids));
+      const categories = await opts.ctx.prisma.ailCategory.findMany({
+        where: { id: { in: uniqueCategoryIds } },
+        select: { id: true },
+      });
+      if (categories.length !== uniqueCategoryIds.length) {
+        throw new TRPCError({
+          code: STATUS_NOT_FOUND,
+          message: "Some categories were not found.",
+        });
+      }
+
+      const level = await opts.ctx.prisma.ailLevel.findUnique({
+        where: { level_number: 2 },
+        select: { id: true },
+      });
+      if (!level) {
+        throw new TRPCError({
+          code: STATUS_NOT_FOUND,
+          message: "Prompt level (L2) not found.",
+        });
+      }
+
+      let memberIds: number[] = [];
+      let deadlineDate: Date | null = null;
+      if (assignment) {
+        deadlineDate = new Date(assignment.deadline);
+        if (deadlineDate.getTime() <= Date.now()) {
+          throw new TRPCError({
+            code: STATUS_BAD_REQUEST,
+            message: "Deadline must be in the future.",
+          });
+        }
+        memberIds = await resolveAssignmentTargets(
+          opts.ctx.prisma,
+          championId,
+          assignment.target_type,
+          assignment.target_ids
+        );
+        if (memberIds.length === 0) {
+          throw new TRPCError({
+            code: STATUS_BAD_REQUEST,
+            message: "No target members.",
+          });
+        }
+      }
+
+      const result = await opts.ctx.prisma.$transaction(async (tx) => {
+        const prompt = await tx.ailPrompt.create({
+          data: {
+            level_id: level.id,
+            name,
+            scenario: description,
+            expected_output,
+            status: "ACTIVE",
+            categories: {
+              create: uniqueCategoryIds.map((cid) => ({
+                category: { connect: { id: cid } },
+              })),
+            },
+          },
+          select: { id: true },
+        });
+
+        let assignedCount = 0;
+        if (assignment && deadlineDate && memberIds.length > 0) {
+          const sub = await tx.ailPromptSubmission.createMany({
+            data: memberIds.map((mid) => ({
+              member_id: mid,
+              prompt_id: prompt.id,
+              assigned_by_id: championId,
+              deadline: deadlineDate!,
+              message: assignment.message ?? null,
+            })),
+            skipDuplicates: true,
+          });
+          assignedCount = sub.count;
+        }
+
+        return { promptId: prompt.id, assignedCount };
+      });
+
+      return {
+        code: STATUS_OK,
+        message: "Prompt assignment created",
+        prompt_id: result.promptId,
+        assigned_count: result.assignedCount,
+        target_total: memberIds.length,
+        skipped: memberIds.length - result.assignedCount,
+      };
+    }),
+
+  useCaseAssignment: championProcedure
+    .input(createUseCaseAssignmentSchema)
+    .mutation(async (opts) => {
+      const championId = opts.ctx.ail_member.id;
+      const { name, description, category_ids, assignment } = opts.input;
+
+      const uniqueCategoryIds = Array.from(new Set(category_ids));
+      const categories = await opts.ctx.prisma.ailCategory.findMany({
+        where: { id: { in: uniqueCategoryIds } },
+        select: { id: true },
+      });
+      if (categories.length !== uniqueCategoryIds.length) {
+        throw new TRPCError({
+          code: STATUS_NOT_FOUND,
+          message: "Some categories were not found.",
+        });
+      }
+
+      const level = await opts.ctx.prisma.ailLevel.findUnique({
+        where: { level_number: 3 },
+        select: { id: true },
+      });
+      if (!level) {
+        throw new TRPCError({
+          code: STATUS_NOT_FOUND,
+          message: "Use case level (L3) not found.",
+        });
+      }
+
+      let memberIds: number[] = [];
+      let deadlineDate: Date | null = null;
+      if (assignment) {
+        deadlineDate = new Date(assignment.deadline);
+        if (deadlineDate.getTime() <= Date.now()) {
+          throw new TRPCError({
+            code: STATUS_BAD_REQUEST,
+            message: "Deadline must be in the future.",
+          });
+        }
+        memberIds = await resolveAssignmentTargets(
+          opts.ctx.prisma,
+          championId,
+          assignment.target_type,
+          assignment.target_ids
+        );
+        if (memberIds.length === 0) {
+          throw new TRPCError({
+            code: STATUS_BAD_REQUEST,
+            message: "No target members.",
+          });
+        }
+      }
+
+      const result = await opts.ctx.prisma.$transaction(async (tx) => {
+        const useCase = await tx.ailUseCase.create({
+          data: {
+            level_id: level.id,
+            name,
+            description,
+            status: "ACTIVE",
+            categories: {
+              create: uniqueCategoryIds.map((cid) => ({
+                category: { connect: { id: cid } },
+              })),
+            },
+          },
+          select: { id: true },
+        });
+
+        let assignedCount = 0;
+        if (assignment && deadlineDate && memberIds.length > 0) {
+          const sub = await tx.ailUseCaseSubmission.createMany({
+            data: memberIds.map((mid) => ({
+              member_id: mid,
+              use_case_id: useCase.id,
+              assigned_by_id: championId,
+              deadline: deadlineDate!,
+              message: assignment.message ?? null,
+            })),
+            skipDuplicates: true,
+          });
+          assignedCount = sub.count;
+        }
+
+        return { useCaseId: useCase.id, assignedCount };
+      });
+
+      return {
+        code: STATUS_OK,
+        message: "Use case assignment created",
+        use_case_id: result.useCaseId,
+        assigned_count: result.assignedCount,
+        target_total: memberIds.length,
+        skipped: memberIds.length - result.assignedCount,
       };
     }),
 };

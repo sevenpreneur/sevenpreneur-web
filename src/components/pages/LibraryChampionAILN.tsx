@@ -1,10 +1,11 @@
 "use client";
 import AssignFormChampionAILN from "@/components/forms/AssignFormChampionAILN";
+import CreateAssignmentFormChampionAILN from "@/components/forms/CreateAssignmentFormChampionAILN";
 import PageContainerAILN from "@/components/pages/PageContainerAILN";
 import AppErrorComponents from "@/components/states/AppErrorComponents";
 import ButtonAILN from "@/components/buttons/ButtonAILN";
 import { setSessionToken, trpc } from "@/trpc/client";
-import { BookOpen, Bookmark, Send } from "lucide-react";
+import { BookOpen, Bookmark, Plus, Send } from "lucide-react";
 import { useEffect, useState } from "react";
 
 type LibraryTab = "PROMPT" | "USE_CASE";
@@ -51,6 +52,7 @@ export default function LibraryChampionAILN({
     null
   );
   const [assignOpen, setAssignOpen] = useState(false);
+  const [createOpen, setCreateOpen] = useState(false);
 
   const promptQ = trpc.ailene.list.promptLibrary.useQuery(undefined, {
     enabled: tab === "PROMPT",
@@ -87,6 +89,14 @@ export default function LibraryChampionAILN({
               Kelola library prompt &amp; use case dan assign ke tim Anda.
             </p>
           </div>
+          <ButtonAILN
+            type="button"
+            variant="secondary"
+            onClick={() => setCreateOpen(true)}
+          >
+            <Plus className="size-4" />
+            Buat Assignment
+          </ButtonAILN>
         </div>
 
         {/* Tabs */}
@@ -248,6 +258,11 @@ export default function LibraryChampionAILN({
               ? { id: selectedUseCase.id, name: selectedUseCase.name }
               : null
         }
+      />
+
+      <CreateAssignmentFormChampionAILN
+        isOpen={createOpen}
+        onClose={() => setCreateOpen(false)}
       />
     </PageContainerAILN>
   );
