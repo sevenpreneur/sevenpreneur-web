@@ -18,6 +18,17 @@ CREATE TYPE ail_use_case_frequency AS ENUM (
   'occasionally'
 );
 
+CREATE TYPE ail_use_case_type AS ENUM (
+  'workflow_automation',
+  'content_creation',
+  'data_analysis',
+  'research',
+  'communication',
+  'decision_support',
+  'learning',
+  'other'
+);
+
 CREATE TYPE ail_learning_type AS ENUM (
   'quiz',
   'video',
@@ -244,11 +255,13 @@ CREATE TABLE ail_use_case_submissions (
     assigned_by_id INTEGER                    NULL,
     deadline       TIMESTAMPTZ                NULL,
     message        TEXT                       NULL,
-    outcome_proof  VARCHAR                    NULL,
-    hours_saved    DECIMAL(6, 2)              NULL,
-    description    TEXT                       NULL,
-    ai_tool        VARCHAR                    NULL,
-    frequency      ail_use_case_frequency     NULL,
+    outcome_proof    VARCHAR                    NULL,
+    hours_saved      DECIMAL(6, 2)              NULL,
+    hours_without_ai DECIMAL(6, 2)              NULL,
+    description      TEXT                       NULL,
+    ai_tool          VARCHAR                    NULL,
+    frequency        ail_use_case_frequency     NULL,
+    type             ail_use_case_type          NULL,
     submitted_at   TIMESTAMPTZ                NULL,
     reviewed_by_id INTEGER                    NULL,
     reviewed_at    TIMESTAMPTZ                NULL,

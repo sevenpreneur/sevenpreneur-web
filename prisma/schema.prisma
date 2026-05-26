@@ -299,6 +299,19 @@ enum AilUseCaseFrequency {
   @@map("ail_use_case_frequency")
 }
 
+enum AilUseCaseType {
+  WORKFLOW_AUTOMATION @map("workflow_automation")
+  CONTENT_CREATION    @map("content_creation")
+  DATA_ANALYSIS       @map("data_analysis")
+  RESEARCH            @map("research")
+  COMMUNICATION       @map("communication")
+  DECISION_SUPPORT    @map("decision_support")
+  LEARNING            @map("learning")
+  OTHER               @map("other")
+
+  @@map("ail_use_case_type")
+}
+
 enum AilLearningType {
   QUIZ     @map("quiz")
   VIDEO    @map("video")
@@ -1611,11 +1624,13 @@ model AilUseCaseSubmission {
   assigned_by_id Int?                 @db.Integer
   deadline       DateTime?            @db.Timestamptz()
   message        String?              @db.Text
-  outcome_proof  String?              @db.VarChar()
-  hours_saved    Decimal?             @db.Decimal(6, 2)
-  description    String?              @db.Text
-  ai_tool        String?              @db.VarChar()
-  frequency      AilUseCaseFrequency?
+  outcome_proof    String?              @db.VarChar()
+  hours_saved      Decimal?             @db.Decimal(6, 2)
+  hours_without_ai Decimal?             @db.Decimal(6, 2)
+  description      String?              @db.Text
+  ai_tool          String?              @db.VarChar()
+  frequency        AilUseCaseFrequency?
+  type             AilUseCaseType?
   submitted_at   DateTime?            @db.Timestamptz()
   reviewed_by    AilMember?           @relation("use_case_submission_reviewed_by", fields: [reviewed_by_id], references: [id])
   reviewed_by_id Int?                 @db.Integer

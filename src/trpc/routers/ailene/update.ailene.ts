@@ -467,9 +467,20 @@ export const updateAilene = {
         use_case_id: z.number().int().positive(),
         outcome_proof: z.string().min(1).max(500),
         hours_saved: z.number().min(0).max(9999.99),
+        hours_without_ai: z.number().min(0).max(9999.99),
         description: z.string().min(1).max(5000),
         ai_tool: z.string().min(1).max(255),
         frequency: z.enum(["DAILY", "WEEKLY", "MONTHLY", "OCCASIONALLY"]),
+        type: z.enum([
+          "WORKFLOW_AUTOMATION",
+          "CONTENT_CREATION",
+          "DATA_ANALYSIS",
+          "RESEARCH",
+          "COMMUNICATION",
+          "DECISION_SUPPORT",
+          "LEARNING",
+          "OTHER",
+        ]),
       })
     )
     .mutation(async (opts) => {
@@ -478,9 +489,11 @@ export const updateAilene = {
         use_case_id,
         outcome_proof,
         hours_saved,
+        hours_without_ai,
         description,
         ai_tool,
         frequency,
+        type,
       } = opts.input;
 
       const existing = await opts.ctx.prisma.ailUseCaseSubmission.findUnique({
@@ -508,9 +521,11 @@ export const updateAilene = {
         data: {
           outcome_proof,
           hours_saved,
+          hours_without_ai,
           description,
           ai_tool,
           frequency,
+          type,
           submitted_at: new Date(),
         },
       });

@@ -5,6 +5,62 @@ import dayjs from "dayjs";
 import { z } from "zod";
 
 export const readAilene = {
+  firstWin: ailMemberProcedure.query(async (opts) => {
+    const memberId = opts.ctx.ail_member.id;
+
+    // Find the earliest submission across both kinds — this is the user's
+    // true "first win" milestone and the card commemorates it permanently.
+    const [earliestUc, earliestPr] = await Promise.all([
+      opts.ctx.prisma.ailUseCaseSubmission.findFirst({
+        where: { member_id: memberId, submitted_at: { not: null } },
+        orderBy: { submitted_at: "asc" },
+        include: { use_case: { select: { name: true } } },
+      }),
+      opts.ctx.prisma.ailPromptSubmission.findFirst({
+        where: { member_id: memberId, submitted_at: { not: null } },
+        orderBy: { submitted_at: "asc" },
+        include: { prompt: { select: { name: true } } },
+      }),
+    ]);
+
+    if (!earliestUc && !earliestPr) {
+      return { code: STATUS_OK, message: "Success", first_win: null };
+    }
+
+    // Each kind has its own "first" milestone. If both exist, surface the
+    // one whose first submission happened most recently — the milestone the
+    // user just unlocked.
+    const ucWins =
+      earliestUc &&
+      (!earliestPr ||
+        (earliestUc.submitted_at as Date) >
+          (earliestPr.submitted_at as Date));
+
+    if (ucWins && earliestUc) {
+      return {
+        code: STATUS_OK,
+        message: "Success",
+        first_win: {
+          kind: "use_case" as const,
+          name: earliestUc.use_case.name,
+          hours_saved: earliestUc.hours_saved,
+          hours_without_ai: earliestUc.hours_without_ai,
+          submitted_at: earliestUc.submitted_at,
+        },
+      };
+    }
+
+    return {
+      code: STATUS_OK,
+      message: "Success",
+      first_win: {
+        kind: "prompt" as const,
+        name: earliestPr!.prompt.name,
+        submitted_at: earliestPr!.submitted_at,
+      },
+    };
+  }),
+
   announcement: ailMemberProcedure.query(async (opts) => {
     const announcement = await opts.ctx.prisma.aileneAnnouncement.findUnique({
       where: { id: 1 },
@@ -653,9 +709,11 @@ export const readAilene = {
           message: row.message,
           outcome_proof: row.outcome_proof,
           hours_saved: row.hours_saved,
+          hours_without_ai: row.hours_without_ai,
           description: row.description,
           ai_tool: row.ai_tool,
           frequency: row.frequency,
+          type: row.type,
           submitted_at: row.submitted_at,
           reviewed_at: row.reviewed_at,
           comment: row.comment,
@@ -813,9 +871,11 @@ export const readAilene = {
           message: row.message,
           outcome_proof: row.outcome_proof,
           hours_saved: row.hours_saved,
+          hours_without_ai: row.hours_without_ai,
           description: row.description,
           ai_tool: row.ai_tool,
           frequency: row.frequency,
+          type: row.type,
           submitted_at: row.submitted_at,
           reviewed_at: row.reviewed_at,
           comment: row.comment,

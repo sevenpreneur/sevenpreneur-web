@@ -1,4 +1,5 @@
 "use client";
+import FirstWinCardAILN from "@/components/cards/FirstWinCardAILN";
 import TodayFocusCardAILN from "@/components/cards/TodayFocusCardAILN";
 import LevelProgressCardAILN from "@/components/charts/LevelProgressCardAILN";
 import StreakCardAILN from "@/components/charts/StreakCardAILN";
@@ -10,8 +11,7 @@ import dayjs from "dayjs";
 import "dayjs/locale/id";
 import { Megaphone, Star } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 dayjs.locale("id");
 
@@ -107,7 +107,7 @@ export default function DashboardStudentAILN({
           </div>
         </div>
 
-        <TickerBar />
+        <FirstWinCardAILN />
 
         {/* Two-column body: left = focus + streak + level progress, right = rank */}
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
@@ -222,50 +222,5 @@ function AnnouncementTickerAILN() {
         </div>
       </div>
     </div>
-  );
-}
-
-// ===== Ticker =====
-
-function TickerBar() {
-  const [closed, setClosed] = useState(false);
-  const tickerQ = trpc.read.ad.ticker.useQuery({ id: 1 });
-
-  if (closed) return null;
-  if (tickerQ.isLoading || !tickerQ.data?.ticker) return null;
-
-  const ticker = tickerQ.data.ticker;
-  const now = dayjs();
-  const active =
-    ticker.status === "ACTIVE" &&
-    now.isAfter(dayjs(ticker.start_date)) &&
-    now.isBefore(dayjs(ticker.end_date));
-  if (!active) return null;
-
-  return (
-    <Link
-      href={ticker.target_url}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="flex items-center gap-3 rounded-md bg-black px-4 py-2.5 text-sm text-white hover:opacity-90 dark:border dark:border-red-500/30 dark:bg-red-500/10 dark:shadow-[0_0_16px_rgba(239,68,68,0.18)]"
-    >
-      {ticker.callout && (
-        <span className="rounded-md bg-white/10 px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide dark:bg-red-500/20 dark:text-red-100">
-          {ticker.callout}
-        </span>
-      )}
-      <span className="flex-1 truncate">{ticker.title}</span>
-      <button
-        type="button"
-        onClick={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          setClosed(true);
-        }}
-        className="text-xs text-gray-400 hover:text-white dark:text-red-300/70 dark:hover:text-red-100"
-      >
-        tutup
-      </button>
-    </Link>
   );
 }

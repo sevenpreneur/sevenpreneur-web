@@ -9,10 +9,9 @@ import AppErrorComponents from "@/components/states/AppErrorComponents";
 import AppPageState from "@/components/states/AppPageState";
 import { supabase } from "@/lib/supabase";
 import { setSessionToken, trpc } from "@/trpc/client";
-import { AilUseCaseFrequency } from "@prisma/client";
+import { AilUseCaseFrequency, AilUseCaseType } from "@prisma/client";
 import dayjs from "dayjs";
 import {
-  BarChart3,
   CalendarClock,
   CheckCircle2,
   CircleAlert,
@@ -24,10 +23,7 @@ import {
   Loader2,
   MessageSquare,
   Send,
-  SquarePen,
   Tag,
-  UploadCloud,
-  Wand2,
   X,
 } from "lucide-react";
 import Link from "next/link";
@@ -51,35 +47,28 @@ const OUTCOME_MIME_TYPES = [
 ];
 
 function FieldRow({
-  icon,
   label,
   helper,
   required,
   children,
 }: {
-  icon: React.ReactNode;
   label: string;
   helper?: string;
   required?: boolean;
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex gap-3">
-      <div className="size-9 shrink-0 rounded-md border border-dashboard-border bg-card-inside-bg flex items-center justify-center text-foreground dark:text-gray-300">
-        {icon}
-      </div>
-      <div className="flex-1 flex flex-col gap-1.5 min-w-0">
-        <label className="flex items-center gap-0.5 text-sm font-semibold font-read text-foreground dark:text-white">
-          {label}
-          {required && <span className="text-destructive">*</span>}
-        </label>
-        {children}
-        {helper && (
-          <p className="text-xs font-read text-gray-500 dark:text-gray-400">
-            {helper}
-          </p>
-        )}
-      </div>
+    <div className="flex flex-col gap-1.5 min-w-0">
+      <label className="flex items-center gap-0.5 text-sm font-semibold font-read text-foreground dark:text-white">
+        {label}
+        {required && <span className="text-destructive">*</span>}
+      </label>
+      {children}
+      {helper && (
+        <p className="text-xs font-read text-gray-500 dark:text-gray-400">
+          {helper}
+        </p>
+      )}
     </div>
   );
 }
@@ -123,6 +112,47 @@ const FREQUENCY_OPTIONS: { value: AilUseCaseFrequency; label: string }[] = [
   { value: "OCCASIONALLY", label: "Sesekali" },
 ];
 
+const TYPE_OPTIONS: { value: AilUseCaseType; label: string }[] = [
+  { value: "WORKFLOW_AUTOMATION", label: "Workflow Automation" },
+  { value: "CONTENT_CREATION", label: "Content Creation" },
+  { value: "DATA_ANALYSIS", label: "Data Analysis" },
+  { value: "RESEARCH", label: "Research" },
+  { value: "COMMUNICATION", label: "Communication" },
+  { value: "DECISION_SUPPORT", label: "Decision Support" },
+  { value: "LEARNING", label: "Learning" },
+  { value: "OTHER", label: "Lainnya" },
+];
+
+// Popular AI tools shown as clickable chips. Stored as comma-separated VARCHAR
+// in `ai_tool`. User can add custom tools beyond this list via the input below.
+const AI_TOOL_PRESETS = [
+  "ChatGPT",
+  "Claude",
+  "Gemini",
+  "Perplexity",
+  "Copilot",
+  "Custom GPT",
+  "Notion AI",
+  "NotebookLM",
+  "Cursor",
+  "Windsurf",
+  "Midjourney",
+  "DALL·E",
+  "ElevenLabs",
+  "Suno",
+  "Runway",
+  "n8n",
+  "Zapier",
+  "Make",
+];
+
+function parseAiTools(csv: string): string[] {
+  return csv
+    .split(",")
+    .map((s) => s.trim())
+    .filter((s) => s.length > 0);
+}
+
 export default function SubmitUseCaseAILN({
   sessionToken,
   useCaseId,
@@ -147,16 +177,22 @@ export default function SubmitUseCaseAILN({
     outcomeFileName: string | null;
     outcomeLinkInput: string;
     hoursSaved: string;
-    aiTool: string;
+    hoursWithoutAi: string;
+    aiTools: string[];
+    aiToolCustomInput: string;
     frequency: AilUseCaseFrequency | "";
+    type: AilUseCaseType | "";
     description: string;
   }>({
     outcomeProof: "",
     outcomeFileName: null,
     outcomeLinkInput: "",
     hoursSaved: "",
-    aiTool: "",
+    hoursWithoutAi: "",
+    aiTools: [],
+    aiToolCustomInput: "",
     frequency: "",
+    type: "",
     description: "",
   });
   const [isUploading, setIsUploading] = useState(false);
@@ -180,8 +216,14 @@ export default function SubmitUseCaseAILN({
         a.hours_saved !== null && a.hours_saved !== undefined
           ? String(a.hours_saved)
           : "",
-      aiTool: a.ai_tool ?? "",
+      hoursWithoutAi:
+        a.hours_without_ai !== null && a.hours_without_ai !== undefined
+          ? String(a.hours_without_ai)
+          : "",
+      aiTools: a.ai_tool ? parseAiTools(a.ai_tool) : [],
+      aiToolCustomInput: "",
       frequency: a.frequency ?? "",
+      type: a.type ?? "",
       description: a.description ?? "",
     });
   }, [a]);
@@ -319,21 +361,36 @@ export default function SubmitUseCaseAILN({
       toast.error("Outcome / bukti hasil wajib diisi.");
       return;
     }
-    const hoursNum = Number(formData.hoursSaved);
-    if (!Number.isFinite(hoursNum) || hoursNum < 0) {
-      toast.error("Hours saved harus angka non-negatif.");
+    const hoursWithAiNum = Number(formData.hoursSaved);
+    if (!Number.isFinite(hoursWithAiNum) || hoursWithAiNum < 0) {
+      toast.error("Jam dengan AI harus angka non-negatif.");
+      return;
+    }
+    const hoursWithoutAiNum = Number(formData.hoursWithoutAi);
+    if (!Number.isFinite(hoursWithoutAiNum) || hoursWithoutAiNum < 0) {
+      toast.error("Jam tanpa AI harus angka non-negatif.");
       return;
     }
     if (!formData.description.trim()) {
-      toast.error("Deskripsi wajib diisi.");
+      toast.error("Cerita penerapan wajib diisi.");
       return;
     }
-    if (!formData.aiTool.trim()) {
-      toast.error("AI tool wajib diisi.");
+    if (formData.aiTools.length === 0) {
+      toast.error("Pilih minimal satu AI tool.");
       return;
     }
     if (!formData.frequency) {
       toast.error("Pilih frekuensi pemakaian.");
+      return;
+    }
+    if (!formData.type) {
+      toast.error("Pilih tipe use case.");
+      return;
+    }
+
+    const aiToolCsv = formData.aiTools.join(", ");
+    if (aiToolCsv.length > 255) {
+      toast.error("Daftar AI tool terlalu panjang (maks 255 karakter).");
       return;
     }
 
@@ -341,10 +398,12 @@ export default function SubmitUseCaseAILN({
       {
         use_case_id: useCaseId,
         outcome_proof: formData.outcomeProof.trim(),
-        hours_saved: hoursNum,
+        hours_saved: hoursWithAiNum,
+        hours_without_ai: hoursWithoutAiNum,
         description: formData.description.trim(),
-        ai_tool: formData.aiTool.trim(),
+        ai_tool: aiToolCsv,
         frequency: formData.frequency as AilUseCaseFrequency,
+        type: formData.type as AilUseCaseType,
       },
       {
         onSuccess: () => {
@@ -406,7 +465,7 @@ export default function SubmitUseCaseAILN({
 
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1fr_1.8fr] lg:items-start">
           {/* LEFT: Deskripsi use case + champion review notes */}
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-4 lg:sticky lg:top-6 lg:self-start lg:max-h-[calc(100vh-3rem)] lg:overflow-y-auto">
             <div className="flex flex-col gap-4 rounded-lg border border-dashboard-border bg-white p-5 dark:bg-card-bg">
               <div className="size-10 rounded-full bg-black flex items-center justify-center text-white dark:bg-white dark:text-black">
                 <FileText className="size-5" />
@@ -474,81 +533,63 @@ export default function SubmitUseCaseAILN({
 
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               <FieldRow
-                icon={<Clock className="size-4" />}
-                label="Hours Saved (Jam)"
-                helper="Estimasi waktu yang berhasil dihemat."
+                label="Tipe Use Case"
+                helper="Kategori utama use case ini."
                 required
               >
-                <AppNumberInput
-                  inputId="uc-hours"
-                  inputConfig="decimal"
-                  inputPlaceholder="e.g. 3.5"
-                  value={formData.hoursSaved}
-                  onInputChange={(v) =>
-                    setFormData((prev) => ({ ...prev, hoursSaved: v }))
+                <AppSelect
+                  selectId="uc-type"
+                  selectPlaceholder="Pilih tipe…"
+                  value={formData.type || null}
+                  onChange={(v) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      type: (v as AilUseCaseType | null) ?? "",
+                    }))
                   }
                   variant="AILN"
                   disabled={isLocked}
                   required
+                  options={TYPE_OPTIONS.map((o) => ({
+                    label: o.label,
+                    value: o.value,
+                  }))}
                 />
               </FieldRow>
               <FieldRow
-                icon={<Wand2 className="size-4" />}
-                label="AI Tool yang Dipakai"
-                helper="Sebutkan semua tool utama yang digunakan."
+                label="Frekuensi Pemakaian"
+                helper="Seberapa sering use case ini kamu pakai."
                 required
               >
-                <AppInput
-                  inputId="uc-tool"
-                  inputType="text"
-                  inputPlaceholder="e.g. ChatGPT, Claude, Gemini, NotebookLM"
-                  value={formData.aiTool}
-                  onInputChange={(v) =>
-                    setFormData((prev) => ({ ...prev, aiTool: v }))
+                <AppSelect
+                  selectId="uc-frequency"
+                  selectPlaceholder="Pilih frekuensi…"
+                  value={formData.frequency || null}
+                  onChange={(v) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      frequency: (v as AilUseCaseFrequency | null) ?? "",
+                    }))
                   }
-                  characterLength={255}
                   variant="AILN"
                   disabled={isLocked}
                   required
+                  options={FREQUENCY_OPTIONS.map((o) => ({
+                    label: o.label,
+                    value: o.value,
+                  }))}
                 />
               </FieldRow>
             </div>
 
             <FieldRow
-              icon={<BarChart3 className="size-4" />}
-              label="Frekuensi Pemakaian"
-              helper="Seberapa sering use case ini kamu gunakan dalam pekerjaan."
-              required
-            >
-              <AppSelect
-                selectId="uc-frequency"
-                selectPlaceholder="Pilih frekuensi…"
-                value={formData.frequency || null}
-                onChange={(v) =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    frequency: (v as AilUseCaseFrequency | null) ?? "",
-                  }))
-                }
-                variant="AILN"
-                disabled={isLocked}
-                required
-                options={FREQUENCY_OPTIONS.map((o) => ({
-                  label: o.label,
-                  value: o.value,
-                }))}
-              />
-            </FieldRow>
-
-            <FieldRow
-              icon={<SquarePen className="size-4" />}
-              label="Deskripsi Penerapan"
+              label="Ceritakan apa yang kamu kerjakan"
               required
             >
               <div className="flex flex-col gap-1">
                 <AppTextArea
                   textAreaId="uc-description"
-                  textAreaPlaceholder="Ceritakan gimana kamu pakai AI di pekerjaanmu, langkah-langkahnya, dan dampak konkret yang kamu rasakan."
+                  textAreaPlaceholder="3–5 kalimat cukup. Apa problem-nya, AI apa yang kamu pakai, dan apa hasilnya."
                   value={formData.description}
                   onTextAreaChange={(v) =>
                     setFormData((prev) => ({ ...prev, description: v }))
@@ -565,14 +606,179 @@ export default function SubmitUseCaseAILN({
               </div>
             </FieldRow>
 
+            <FieldRow
+              label="Jam Kerja: Tanpa vs Dengan AI"
+              helper="Estimasi waktu untuk menyelesaikan task ini sebelum vs sesudah pakai AI."
+              required
+            >
+              <div className="flex flex-wrap items-center gap-3 text-sm">
+                <div className="flex items-center gap-2">
+                  <span className="font-medium font-read text-gray-600 dark:text-gray-300">
+                    Tanpa AI
+                  </span>
+                  <div className="w-24">
+                    <AppNumberInput
+                      inputId="uc-hours-without"
+                      inputConfig="decimal"
+                      inputPlaceholder="18"
+                      value={formData.hoursWithoutAi}
+                      onInputChange={(v) =>
+                        setFormData((prev) => ({ ...prev, hoursWithoutAi: v }))
+                      }
+                      variant="AILN"
+                      disabled={isLocked}
+                      required
+                    />
+                  </div>
+                  <span className="text-xs font-read text-gray-500">jam</span>
+                </div>
+                <span className="text-gray-400">→</span>
+                <div className="flex items-center gap-2">
+                  <span className="font-medium font-read text-gray-600 dark:text-gray-300">
+                    Dengan AI
+                  </span>
+                  <div className="w-24">
+                    <AppNumberInput
+                      inputId="uc-hours"
+                      inputConfig="decimal"
+                      inputPlaceholder="5"
+                      value={formData.hoursSaved}
+                      onInputChange={(v) =>
+                        setFormData((prev) => ({ ...prev, hoursSaved: v }))
+                      }
+                      variant="AILN"
+                      disabled={isLocked}
+                      required
+                    />
+                  </div>
+                  <span className="text-xs font-read text-gray-500">jam</span>
+                </div>
+                {(() => {
+                  const without = Number(formData.hoursWithoutAi);
+                  const withAi = Number(formData.hoursSaved);
+                  if (
+                    !Number.isFinite(without) ||
+                    !Number.isFinite(withAi) ||
+                    without <= 0 ||
+                    withAi < 0 ||
+                    withAi >= without
+                  ) {
+                    return null;
+                  }
+                  const saved = without - withAi;
+                  const pct = Math.round((saved / without) * 100);
+                  return (
+                    <span className="inline-flex items-center gap-1.5 rounded-md bg-emerald-100 px-2.5 py-1 text-xs font-semibold text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300">
+                      Jam dihemat: {saved.toFixed(saved % 1 === 0 ? 0 : 1)} jam
+                      · {pct}% lebih cepat
+                    </span>
+                  );
+                })()}
+              </div>
+            </FieldRow>
+
+            <FieldRow
+              label="AI Tools yang Dipakai"
+              helper="Klik untuk pilih. Bisa tambah tool custom di bawah."
+              required
+            >
+              <div className="flex flex-col gap-2">
+                <div className="flex flex-wrap gap-1.5">
+                  {AI_TOOL_PRESETS.map((tool) => {
+                    const selected = formData.aiTools.includes(tool);
+                    return (
+                      <button
+                        key={tool}
+                        type="button"
+                        disabled={isLocked}
+                        onClick={() =>
+                          setFormData((prev) => ({
+                            ...prev,
+                            aiTools: selected
+                              ? prev.aiTools.filter((t) => t !== tool)
+                              : [...prev.aiTools, tool],
+                          }))
+                        }
+                        className={`rounded-full border px-3 py-1 text-xs font-medium font-read transition disabled:cursor-not-allowed disabled:opacity-60 ${
+                          selected
+                            ? "border-black bg-black text-white dark:border-white dark:bg-white dark:text-black"
+                            : "border-dashboard-border bg-white text-foreground hover:border-foreground/40 dark:bg-card-inside-bg dark:text-gray-200"
+                        }`}
+                      >
+                        {tool}
+                      </button>
+                    );
+                  })}
+                  {formData.aiTools
+                    .filter((t) => !AI_TOOL_PRESETS.includes(t))
+                    .map((tool) => (
+                      <button
+                        key={tool}
+                        type="button"
+                        disabled={isLocked}
+                        onClick={() =>
+                          setFormData((prev) => ({
+                            ...prev,
+                            aiTools: prev.aiTools.filter((t) => t !== tool),
+                          }))
+                        }
+                        className="inline-flex items-center gap-1 rounded-full border border-black bg-black px-3 py-1 text-xs font-medium font-read text-white disabled:cursor-not-allowed disabled:opacity-60 dark:border-white dark:bg-white dark:text-black"
+                      >
+                        {tool}
+                        <X className="size-3" />
+                      </button>
+                    ))}
+                </div>
+                {!isLocked && (
+                  <div className="flex items-center gap-2">
+                    <div className="flex-1 max-w-[280px]">
+                      <AppInput
+                        inputId="uc-tool-other"
+                        inputType="text"
+                        inputPlaceholder="Tambah tool lain (e.g. Loveable, Bolt)…"
+                        value={formData.aiToolCustomInput}
+                        onInputChange={(v) =>
+                          setFormData((prev) => ({
+                            ...prev,
+                            aiToolCustomInput: v,
+                          }))
+                        }
+                        characterLength={64}
+                        variant="AILN"
+                      />
+                    </div>
+                    <button
+                      type="button"
+                      disabled={!formData.aiToolCustomInput.trim()}
+                      onClick={() => {
+                        const v = formData.aiToolCustomInput.trim();
+                        if (!v) return;
+                        setFormData((prev) =>
+                          prev.aiTools.includes(v)
+                            ? { ...prev, aiToolCustomInput: "" }
+                            : {
+                                ...prev,
+                                aiTools: [...prev.aiTools, v],
+                                aiToolCustomInput: "",
+                              }
+                        );
+                      }}
+                      className="rounded-md border border-dashboard-border bg-white px-3 py-2 text-xs font-semibold font-read text-foreground hover:border-foreground/40 disabled:cursor-not-allowed disabled:opacity-60 dark:bg-card-inside-bg dark:text-gray-200"
+                    >
+                      Tambah
+                    </button>
+                  </div>
+                )}
+              </div>
+            </FieldRow>
+
             {/* Bukti Outcome — upload file OR paste link, both write to outcome_proof */}
             <FieldRow
-              icon={<UploadCloud className="size-4" />}
               label="Bukti Outcome"
               helper="Upload bukti hasil kerja atau link yang menunjukkan dampak nyata."
               required
             >
-              <div className="grid grid-cols-1 gap-3 md:grid-cols-[1fr_auto_1fr] md:items-stretch">
+              <div className="flex flex-col gap-3">
                 {/* Upload zone */}
                 <div
                   onDragOver={(e) => {
@@ -617,26 +823,24 @@ export default function SubmitUseCaseAILN({
                 </div>
 
                 {/* "atau" separator */}
-                <div className="flex items-center justify-center text-xs font-medium font-read text-gray-400 md:flex-col md:gap-1">
-                  <span className="hidden h-full w-px bg-dashboard-border md:block" />
+                <div className="flex items-center gap-2 text-xs font-medium font-read text-gray-400">
+                  <span className="h-px flex-1 bg-dashboard-border" />
                   <span>atau</span>
-                  <span className="hidden h-full w-px bg-dashboard-border md:block" />
+                  <span className="h-px flex-1 bg-dashboard-border" />
                 </div>
 
                 {/* Link input */}
-                <div className="flex flex-col justify-center">
-                  <AppInput
-                    inputId="uc-outcome-link"
-                    inputType="url"
-                    inputIcon={<LinkIcon className="size-4" />}
-                    inputPlaceholder="Tempel link (Google Drive, Notion, dll)"
-                    value={formData.outcomeLinkInput}
-                    onInputChange={handleLinkChange}
-                    characterLength={500}
-                    variant="AILN"
-                    disabled={isLocked || isUploading}
-                  />
-                </div>
+                <AppInput
+                  inputId="uc-outcome-link"
+                  inputType="url"
+                  inputIcon={<LinkIcon className="size-4" />}
+                  inputPlaceholder="Tempel link (Google Drive, Notion, dll)"
+                  value={formData.outcomeLinkInput}
+                  onInputChange={handleLinkChange}
+                  characterLength={500}
+                  variant="AILN"
+                  disabled={isLocked || isUploading}
+                />
               </div>
 
               {/* Uploaded file chip */}
