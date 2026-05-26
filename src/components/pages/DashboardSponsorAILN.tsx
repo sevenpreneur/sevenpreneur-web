@@ -7,7 +7,6 @@ import { useEffect, useState } from "react";
 
 const BLUE_DARK = "#00359D";
 const BLUE_MID = "#5b7bc4";
-const BLUE_SOFT = "#dde4f3";
 const BLUE_MUTED = "#9eb0d3";
 const BLUE_PALE = "#eef2fb";
 
@@ -185,13 +184,13 @@ export default function DashboardSponsorAILN({
         {/* Header */}
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div className="min-w-0">
-            <div className="text-[11px] font-semibold tracking-widest text-gray-500">
+            <div className="text-[11px] font-semibold tracking-widest text-gray-500 dark:text-gray-400">
               SPONSOR · EXECUTIVE VIEW
             </div>
-            <h1 className="mt-1 text-3xl font-bold leading-tight text-gray-900">
+            <h1 className="mt-1 text-3xl font-bold leading-tight text-gray-900 dark:text-white">
               Hutama Karya
             </h1>
-            <p className="mt-1 text-sm text-gray-500">
+            <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
               240 staff aktif · 18 departemen · cohort Q2-2026 berjalan
               ke-bulan-2.
             </p>
@@ -220,17 +219,17 @@ export default function DashboardSponsorAILN({
         {/* Trend + Distribusi Level + Top Departemen */}
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1.7fr)_minmax(0,1fr)]">
           {/* Trend mingguan */}
-          <div className="rounded-lg border border-dashboard-border bg-white p-5 shadow-sm">
+          <div className="rounded-lg border border-dashboard-border bg-white p-5 shadow-sm dark:bg-card-bg dark:shadow-[0_0_16px_rgba(0,53,157,0.06)]">
             <div className="flex flex-wrap items-start justify-between gap-2">
               <div>
-                <div className="text-base font-bold text-gray-900">
+                <div className="text-base font-bold text-gray-900 dark:text-white">
                   Trend mingguan · Jam dihemat × Adopsi
                 </div>
-                <p className="mt-0.5 text-xs text-gray-500">
+                <p className="mt-0.5 text-xs text-gray-500 dark:text-gray-400">
                   W1 Jun – W4 Agu · sumber log workplace use case
                 </p>
               </div>
-              <div className="flex items-center gap-3 text-xs text-gray-600">
+              <div className="flex items-center gap-3 text-xs text-gray-600 dark:text-gray-300">
                 <span className="inline-flex items-center gap-1.5">
                   <span
                     className="inline-block size-2 rounded-full"
@@ -252,18 +251,15 @@ export default function DashboardSponsorAILN({
               <TrendBarChart data={TREND_WEEKS} />
             </div>
 
-            <div
-              className="mt-5 rounded-md px-4 py-3 text-sm"
-              style={{ backgroundColor: BLUE_PALE, color: BLUE_DARK }}
-            >
+            <div className="mt-5 rounded-md bg-[#eef2fb] px-4 py-3 text-sm text-[#00359D] dark:bg-blue-500/10 dark:text-blue-200">
               <span className="font-semibold">Insight:</span>{" "}
-              <span className="text-gray-700">
+              <span className="text-gray-700 dark:text-gray-300">
                 akselerasi 24% minggu ini didorong departemen{" "}
-                <span className="font-semibold text-gray-900">
+                <span className="font-semibold text-gray-900 dark:text-white">
                   Operations (+412j)
                 </span>{" "}
                 dan{" "}
-                <span className="font-semibold text-gray-900">
+                <span className="font-semibold text-gray-900 dark:text-white">
                   Customer Support (+318j)
                 </span>
                 .
@@ -274,14 +270,13 @@ export default function DashboardSponsorAILN({
           {/* Right column: stacked */}
           <div className="flex flex-col gap-4">
             {/* Distribusi Level Organisasi */}
-            <div className="rounded-lg border border-dashboard-border bg-white p-5 shadow-sm">
+            <div className="rounded-lg border border-dashboard-border bg-white p-5 shadow-sm dark:bg-card-bg dark:shadow-[0_0_16px_rgba(0,53,157,0.06)]">
               <div className="flex items-start justify-between gap-2">
-                <div className="text-base font-bold text-gray-900">
+                <div className="text-base font-bold text-gray-900 dark:text-white">
                   Distribusi Level Organisasi
                 </div>
                 <button
-                  className="inline-flex items-center gap-1 text-xs font-semibold"
-                  style={{ color: BLUE_DARK }}
+                  className="inline-flex items-center gap-1 text-xs font-semibold text-[#00359D] dark:text-blue-300"
                 >
                   Drill <ArrowRight className="size-3" />
                 </button>
@@ -312,19 +307,18 @@ export default function DashboardSponsorAILN({
                         className="inline-block size-2.5 rounded-sm"
                         style={{ backgroundColor: l.color }}
                       />
-                      <span className="font-semibold text-gray-900">
+                      <span className="font-semibold text-gray-900 dark:text-white">
                         {l.code}
                       </span>
-                      <span className="text-gray-600">{l.name}</span>
+                      <span className="text-gray-600 dark:text-gray-300">
+                        {l.name}
+                      </span>
                     </div>
                     <div className="flex items-baseline gap-3 text-xs">
-                      <span className="font-semibold text-gray-900">
+                      <span className="font-semibold text-gray-900 dark:text-white">
                         {l.count}
                       </span>
-                      <span
-                        className="w-8 text-right font-medium"
-                        style={{ color: BLUE_DARK }}
-                      >
+                      <span className="w-8 text-right font-medium text-[#00359D] dark:text-blue-300">
                         {l.percent}%
                       </span>
                     </div>
@@ -334,19 +328,18 @@ export default function DashboardSponsorAILN({
             </div>
 
             {/* Top Departemen */}
-            <div className="rounded-lg border border-dashboard-border bg-white p-5 shadow-sm">
+            <div className="rounded-lg border border-dashboard-border bg-white p-5 shadow-sm dark:bg-card-bg dark:shadow-[0_0_16px_rgba(0,53,157,0.06)]">
               <div className="flex items-start justify-between gap-2">
                 <div>
-                  <div className="text-base font-bold text-gray-900">
+                  <div className="text-base font-bold text-gray-900 dark:text-white">
                     Top Departemen
                   </div>
-                  <p className="mt-0.5 text-xs text-gray-500">
+                  <p className="mt-0.5 text-xs text-gray-500 dark:text-gray-400">
                     by jam dihemat bulan ini
                   </p>
                 </div>
                 <button
-                  className="inline-flex items-center gap-1 text-xs font-semibold"
-                  style={{ color: BLUE_DARK }}
+                  className="inline-flex items-center gap-1 text-xs font-semibold text-[#00359D] dark:text-blue-300"
                 >
                   Semua <ArrowRight className="size-3" />
                 </button>
@@ -361,12 +354,14 @@ export default function DashboardSponsorAILN({
                       key={d.name}
                       className="grid grid-cols-[auto_1fr_auto] items-center gap-3"
                     >
-                      <span className="text-xs font-semibold text-gray-400">
+                      <span className="text-xs font-semibold text-gray-400 dark:text-gray-500">
                         #{d.rank}
                       </span>
                       <div className="min-w-0">
-                        <div className="truncate text-gray-900">{d.name}</div>
-                        <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-gray-100">
+                        <div className="truncate text-gray-900 dark:text-white">
+                          {d.name}
+                        </div>
+                        <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-gray-100 dark:bg-dashboard-border">
                           <div
                             className="h-full rounded-full"
                             style={{
@@ -376,7 +371,7 @@ export default function DashboardSponsorAILN({
                           />
                         </div>
                       </div>
-                      <span className="text-sm font-semibold text-gray-900">
+                      <span className="text-sm font-semibold text-gray-900 dark:text-white">
                         {d.hours}j
                       </span>
                     </li>
@@ -390,12 +385,14 @@ export default function DashboardSponsorAILN({
         {/* Kesehatan Program + Aktivitas terkini */}
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
           {/* Kesehatan Program */}
-          <div className="rounded-lg border border-dashboard-border bg-white p-5 shadow-sm">
+          <div className="rounded-lg border border-dashboard-border bg-white p-5 shadow-sm dark:bg-card-bg dark:shadow-[0_0_16px_rgba(0,53,157,0.06)]">
             <div className="flex items-start justify-between gap-2">
-              <div className="text-base font-bold text-gray-900">
+              <div className="text-base font-bold text-gray-900 dark:text-white">
                 Kesehatan Program
               </div>
-              <span className="text-xs text-gray-500">Update real-time</span>
+              <span className="text-xs text-gray-500 dark:text-gray-400">
+                Update real-time
+              </span>
             </div>
 
             <div className="mt-4 grid grid-cols-2 gap-3 xl:grid-cols-4">
@@ -406,8 +403,8 @@ export default function DashboardSponsorAILN({
           </div>
 
           {/* Aktivitas terkini */}
-          <div className="rounded-lg border border-dashboard-border bg-white p-5 shadow-sm">
-            <div className="text-base font-bold text-gray-900">
+          <div className="rounded-lg border border-dashboard-border bg-white p-5 shadow-sm dark:bg-card-bg dark:shadow-[0_0_16px_rgba(0,53,157,0.06)]">
+            <div className="text-base font-bold text-gray-900 dark:text-white">
               Aktivitas terkini
             </div>
             <ul className="mt-3 flex flex-col gap-3 text-sm">
@@ -418,13 +415,17 @@ export default function DashboardSponsorAILN({
                     style={{ backgroundColor: BLUE_DARK }}
                   />
                   <div className="min-w-0 flex-1">
-                    <div className="text-sm text-gray-900">
+                    <div className="text-sm text-gray-900 dark:text-white">
                       <span className="font-semibold">{a.actor}</span>{" "}
-                      <span className="text-gray-700">{a.action}</span>
+                      <span className="text-gray-700 dark:text-gray-300">
+                        {a.action}
+                      </span>
                     </div>
-                    <div className="text-xs text-gray-500">{a.meta}</div>
+                    <div className="text-xs text-gray-500 dark:text-gray-400">
+                      {a.meta}
+                    </div>
                   </div>
-                  <span className="shrink-0 text-xs text-gray-400">
+                  <span className="shrink-0 text-xs text-gray-400 dark:text-gray-500">
                     {a.time}
                   </span>
                 </li>
@@ -447,7 +448,7 @@ function PeriodToggle({
   onChange: (p: Period) => void;
 }) {
   return (
-    <div className="inline-flex h-9 items-center rounded-md border border-dashboard-border bg-white p-0.5 text-sm">
+    <div className="inline-flex h-9 items-center rounded-md border border-dashboard-border bg-white p-0.5 text-sm dark:bg-card-bg">
       {PERIODS.map((p) => {
         const active = p === period;
         return (
@@ -456,8 +457,8 @@ function PeriodToggle({
             onClick={() => onChange(p)}
             className={`h-full rounded px-3 text-xs font-semibold transition-colors ${
               active
-                ? "bg-black text-white"
-                : "text-gray-600 hover:text-gray-900"
+                ? "bg-black text-white dark:bg-white dark:text-black"
+                : "text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100"
             }`}
           >
             {p}
@@ -487,20 +488,23 @@ function KpiCard({
   const deltaColor = delta.dir === "down" ? BLUE_MUTED : BLUE_DARK;
 
   return (
-    <div className="relative flex flex-col rounded-lg border border-dashboard-border bg-white p-4 shadow-sm">
-      <div className="flex items-center justify-between gap-2 text-[11px] font-semibold tracking-widest text-gray-500">
+    <div className="relative flex flex-col rounded-lg border border-dashboard-border bg-white p-4 shadow-sm dark:bg-card-bg dark:shadow-[0_0_16px_rgba(0,53,157,0.06)]">
+      <div className="flex items-center justify-between gap-2 text-[11px] font-semibold tracking-widest text-gray-500 dark:text-gray-400">
         <span className="truncate">{label}</span>
-        <ArrowRight className="size-3.5 shrink-0 text-gray-400" />
+        <ArrowRight className="size-3.5 shrink-0 text-gray-400 dark:text-gray-500" />
       </div>
 
       <div className="mt-2 flex items-baseline gap-1.5">
-        <span className="text-4xl font-bold leading-none text-gray-900">
+        <span className="text-4xl font-bold leading-none text-gray-900 dark:text-white">
           {value}
         </span>
-        <span className="text-sm text-gray-500">{unit}</span>
+        <span className="text-sm text-gray-500 dark:text-gray-400">{unit}</span>
       </div>
 
-      <div className="mt-2 text-xs font-medium" style={{ color: deltaColor }}>
+      <div
+        className="mt-2 text-xs font-medium dark:!text-blue-300"
+        style={{ color: deltaColor }}
+      >
         {arrow} {delta.text}
       </div>
 
@@ -509,8 +513,7 @@ function KpiCard({
       </div>
 
       <button
-        className="mt-2 self-end text-xs font-semibold"
-        style={{ color: BLUE_DARK }}
+        className="mt-2 self-end text-xs font-semibold text-[#00359D] dark:text-blue-300"
       >
         {cta} →
       </button>
@@ -596,8 +599,15 @@ function TrendBarChart({
         const barH = (d.value / max) * chartH;
         const x = PAD_L + i * slot + (slot - barW) / 2;
         const y = PAD_T + (chartH - barH);
-        const color = d.highlight ? BLUE_DARK : BLUE_SOFT;
-        const labelColor = d.highlight ? BLUE_DARK : "#6b7280";
+        const fillClass = d.highlight
+          ? "fill-[#00359D]"
+          : "fill-[#dde4f3] dark:fill-blue-500/25";
+        const valueClass = d.highlight
+          ? "fill-[#00359D] dark:fill-blue-300"
+          : "fill-gray-500 dark:fill-gray-400";
+        const labelClass = d.highlight
+          ? "fill-gray-900 dark:fill-white"
+          : "fill-gray-500 dark:fill-gray-400";
         return (
           <g key={i}>
             <text
@@ -606,18 +616,25 @@ function TrendBarChart({
               textAnchor="middle"
               fontSize="11"
               fontWeight={d.highlight ? 700 : 500}
-              fill={labelColor}
+              className={valueClass}
             >
               {d.value.toFixed(1)}k
             </text>
-            <rect x={x} y={y} width={barW} height={barH} rx={3} fill={color} />
+            <rect
+              x={x}
+              y={y}
+              width={barW}
+              height={barH}
+              rx={3}
+              className={fillClass}
+            />
             <text
               x={x + barW / 2}
               y={H - 8}
               textAnchor="middle"
               fontSize="11"
               fontWeight={d.highlight ? 700 : 400}
-              fill={d.highlight ? "#111827" : "#6b7280"}
+              className={labelClass}
             >
               {d.label}
             </text>
@@ -641,27 +658,32 @@ function HealthCard({
   hint: string;
   tone: "good" | "warn";
 }) {
-  const dotColor = tone === "good" ? "#10b981" : "#f59e0b";
-  const pillBg = tone === "good" ? "#ecfdf5" : "#fffbeb";
-  const pillText = tone === "good" ? "#047857" : "#b45309";
+  const dotClass =
+    tone === "good"
+      ? "bg-emerald-500 dark:bg-emerald-400"
+      : "bg-amber-500 dark:bg-amber-400";
+  const pillClass =
+    tone === "good"
+      ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300"
+      : "bg-amber-50 text-amber-700 dark:bg-amber-500/15 dark:text-amber-300";
 
   return (
-    <div className="flex flex-col rounded-md border border-dashboard-border bg-white p-3">
-      <div className="text-[10px] font-semibold tracking-widest text-gray-500">
+    <div className="flex flex-col rounded-md border border-dashboard-border bg-white p-3 dark:bg-card-inside-bg">
+      <div className="text-[10px] font-semibold tracking-widest text-gray-500 dark:text-gray-400">
         {label}
       </div>
       <div className="mt-2 flex items-baseline gap-1.5">
-        <span className="text-2xl font-bold text-gray-900">{value}</span>
-        <span className="text-xs text-gray-500">{target}</span>
+        <span className="text-2xl font-bold text-gray-900 dark:text-white">
+          {value}
+        </span>
+        <span className="text-xs text-gray-500 dark:text-gray-400">
+          {target}
+        </span>
       </div>
       <span
-        className="mt-3 inline-flex w-fit items-center gap-1.5 rounded-full px-2 py-0.5 text-[11px] font-medium"
-        style={{ backgroundColor: pillBg, color: pillText }}
+        className={`mt-3 inline-flex w-fit items-center gap-1.5 rounded-full px-2 py-0.5 text-[11px] font-medium ${pillClass}`}
       >
-        <span
-          className="inline-block size-1.5 rounded-full"
-          style={{ backgroundColor: dotColor }}
-        />
+        <span className={`inline-block size-1.5 rounded-full ${dotClass}`} />
         {hint}
       </span>
     </div>

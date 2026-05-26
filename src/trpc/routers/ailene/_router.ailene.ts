@@ -34,6 +34,7 @@ export const aileneRouter = createTRPCRouter({
     announcement: readAilene.announcement,
     firstWin: readAilene.firstWin,
     competencyProfile: readAilene.competencyProfile,
+    organizationStats: readAilene.organizationStats,
     materialDetail: readAilene.materialDetail,
     quizResult: readAilene.quizResult,
     preAssessment: readAilene.preAssessment,

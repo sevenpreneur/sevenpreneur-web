@@ -1,5 +1,9 @@
 import { STATUS_NOT_FOUND, STATUS_OK } from "@/lib/status_code";
-import { ailMemberProcedure, championProcedure } from "@/trpc/init";
+import {
+  ailMemberProcedure,
+  championProcedure,
+  sponsorProcedure,
+} from "@/trpc/init";
 import { TRPCError } from "@trpc/server";
 import dayjs from "dayjs";
 import { z } from "zod";
@@ -527,6 +531,19 @@ export const readAilene = {
       tasks_required: tasksRequired,
       tasks_done: tasksDone,
       next_level_unlockable,
+    };
+  }),
+
+  organizationStats: sponsorProcedure.query(async (opts) => {
+    const [member_count, group_count] = await Promise.all([
+      opts.ctx.prisma.ailMember.count(),
+      opts.ctx.prisma.ailGroup.count(),
+    ]);
+    return {
+      code: STATUS_OK,
+      message: "Success",
+      member_count,
+      group_count,
     };
   }),
 
