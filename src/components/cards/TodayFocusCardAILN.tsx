@@ -2,13 +2,7 @@
 import ButtonAILN from "@/components/buttons/ButtonAILN";
 import AlertConfirmDialogAILN from "@/components/modals/AlertConfirmDialogAILN";
 import { trpc } from "@/trpc/client";
-import {
-  ArrowRight,
-  BookOpen,
-  ClipboardCheck,
-  PlayCircle,
-  SquareCheck,
-} from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -104,15 +98,6 @@ export default function TodayFocusCardAILN() {
       </CardShell>
     );
   }
-
-  const Icon =
-    focus.kind === "Quiz"
-      ? SquareCheck
-      : focus.kind === "Video"
-        ? PlayCircle
-        : focus.kind === "Material"
-          ? BookOpen
-          : ClipboardCheck;
 
   return (
     <div className="flex h-fit flex-col gap-3 rounded-lg border border-dashboard-border bg-white p-5 dark:bg-card-bg">

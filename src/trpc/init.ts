@@ -1,6 +1,7 @@
 import { Optional } from "@/lib/optional-type";
 import GetPrismaClient from "@/lib/prisma";
 import { initTRPC, TRPCError } from "@trpc/server";
+import dayjs from "dayjs";
 import { headers } from "next/headers";
 
 export type createTRPCContextOptions = {
@@ -157,6 +158,25 @@ export const ailMemberProcedure = t.procedure.use(async (opts) => {
       message: "Not an Ailene member.",
     });
   }
+
+  const activityNow = dayjs();
+  const activityThreshold = activityNow.subtract(10, "minute").toDate();
+  if (
+    !ail_member.last_active_at ||
+    ail_member.last_active_at < activityThreshold
+  ) {
+    await ctx.prisma.ailMember.updateMany({
+      where: {
+        id: ail_member.id,
+        OR: [
+          { last_active_at: null },
+          { last_active_at: { lt: activityThreshold } },
+        ],
+      },
+      data: { last_active_at: activityNow.toDate() },
+    });
+  }
+
   return opts.next({
     ctx: {
       prisma: ctx.prisma,
