@@ -55,7 +55,7 @@ export default function LevelDistributionSponsorAILN() {
                 style={{ backgroundColor: getColor(index) }}
               />
               <span className="font-semibold text-gray-900 dark:text-white">
-                {level.code}
+                {level.label ?? level.code}
               </span>
               <span className="truncate text-gray-600 dark:text-gray-300">
                 {level.name}

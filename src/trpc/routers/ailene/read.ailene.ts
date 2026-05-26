@@ -767,18 +767,46 @@ export const readAilene = {
   }),
 
   levelDistribution: sponsorProcedure.query(async (opts) => {
-    const [levels, members] = await Promise.all([
+    const weeklyActiveThreshold = dayjs().subtract(7, "day").toDate();
+    const levelNumbers = [0, 1, 2, 3];
+    const [levels, members, groups] = await Promise.all([
       opts.ctx.prisma.ailLevel.findMany({
         where: { status: "ACTIVE" },
         orderBy: { level_number: "asc" },
         select: { id: true, level_number: true, name: true },
       }),
       opts.ctx.prisma.ailMember.findMany({
-        select: { current_level_id: true },
+        select: { current_level_id: true, last_active_at: true },
+      }),
+      opts.ctx.prisma.ailGroup.findMany({
+        orderBy: { name: "asc" },
+        select: {
+          id: true,
+          name: true,
+          members: {
+            select: {
+              current_level_id: true,
+              last_active_at: true,
+            },
+          },
+        },
       }),
     ]);
+    const levelByNumber = new Map(levels.map((level) => [level.level_number, level]));
+    const displayLevels = levelNumbers.map((levelNumber) => {
+      const level = levelByNumber.get(levelNumber);
+      return {
+        id: level?.id ?? -levelNumber - 1,
+        level_number: levelNumber,
+        name: level?.name ?? `Level ${levelNumber}`,
+      };
+    });
 
     const total = members.length;
+    const activeWeekly = members.filter(
+      (member) =>
+        member.last_active_at && member.last_active_at >= weeklyActiveThreshold
+    ).length;
     const countByLevel = new Map<number, number>();
     for (const member of members) {
       countByLevel.set(
@@ -787,46 +815,113 @@ export const readAilene = {
       );
     }
 
-    const levelsDistribution = levels.map((level) => {
+    const levelsDistribution = displayLevels.map((level) => {
       const count = countByLevel.get(level.id) ?? 0;
       return {
         id: level.id,
         code: `L${level.level_number}`,
+        label: `Level ${level.level_number}`,
         name: level.name,
         count,
         percent: total === 0 ? 0 : Math.round((count / total) * 100),
       };
     });
+    const entryLevelIds = new Set(
+      displayLevels
+        .filter((level) => level.level_number <= 1)
+        .map((level) => level.id)
+    );
+    const groupsDistribution = groups
+      .map((group) => {
+        const groupTotal = group.members.length;
+        const groupCounts = displayLevels.map((level) => {
+          const count = group.members.filter(
+            (member) => member.current_level_id === level.id
+          ).length;
+          return {
+            level_id: level.id,
+            code: `L${level.level_number}`,
+            label: `Level ${level.level_number}`,
+            name: level.name,
+            count,
+            percent:
+              groupTotal === 0 ? 0 : Math.round((count / groupTotal) * 100),
+          };
+        });
+        const beginnerCount = group.members.filter((member) =>
+          entryLevelIds.has(member.current_level_id)
+        ).length;
+
+        return {
+          id: group.id,
+          name: group.name,
+          total: groupTotal,
+          active_weekly: group.members.filter(
+            (member) =>
+              member.last_active_at &&
+              member.last_active_at >= weeklyActiveThreshold
+          ).length,
+          entry_level_count: beginnerCount,
+          entry_level_percent:
+            groupTotal === 0
+              ? 0
+              : Math.round((beginnerCount / groupTotal) * 100),
+          levels: groupCounts,
+        };
+      })
+      .sort((a, b) => b.total - a.total || a.name.localeCompare(b.name));
+
+    const groupsNeedingIntervention = groupsDistribution
+      .filter((group) => group.total > 0 && group.entry_level_percent >= 35)
+      .sort(
+        (a, b) =>
+          b.entry_level_percent - a.entry_level_percent || b.total - a.total
+      );
 
     return {
       code: STATUS_OK,
       message: "Success",
       total,
+      active_weekly: activeWeekly,
+      participation_percent:
+        total === 0 ? 0 : Math.round((activeWeekly / total) * 100),
       levels: levelsDistribution,
+      groups: groupsDistribution,
+      groups_needing_intervention: groupsNeedingIntervention,
     };
   }),
 
   organizationLeaderboard: sponsorProcedure.query(async (opts) => {
     const monthStart = dayjs().startOf("month").toDate();
-    const submissions = await opts.ctx.prisma.ailUseCaseSubmission.findMany({
-      where: {
-        submitted_at: { not: null, gte: monthStart },
-      },
-      select: {
-        hours_saved: true,
-        hours_without_ai: true,
-        member: {
-          select: {
-            group: {
-              select: {
-                id: true,
-                name: true,
+    const [groups, submissions] = await Promise.all([
+      opts.ctx.prisma.ailGroup.findMany({
+        orderBy: { name: "asc" },
+        select: {
+          id: true,
+          name: true,
+          members: { select: { id: true } },
+        },
+      }),
+      opts.ctx.prisma.ailUseCaseSubmission.findMany({
+        where: {
+          submitted_at: { not: null, gte: monthStart },
+        },
+        select: {
+          hours_saved: true,
+          hours_without_ai: true,
+          member: {
+            select: {
+              group: {
+                select: {
+                  id: true,
+                  name: true,
+                },
               },
             },
           },
         },
-      },
-    });
+      }),
+    ]);
 
     const hoursByGroup = new Map<number, { name: string; hours: number }>();
     for (const submission of submissions) {
@@ -850,14 +945,14 @@ export const readAilene = {
       hoursByGroup.set(group.id, existing);
     }
 
-    const list = Array.from(hoursByGroup.entries())
-      .map(([id, item]) => ({
-        id,
-        name: item.name,
-        hours: Math.round(item.hours * 10) / 10,
+    const list = groups
+      .map((group) => ({
+        id: group.id,
+        name: group.name,
+        member_count: group.members.length,
+        hours: Math.round((hoursByGroup.get(group.id)?.hours ?? 0) * 10) / 10,
       }))
-      .sort((a, b) => b.hours - a.hours)
-      .slice(0, 5)
+      .sort((a, b) => b.hours - a.hours || a.name.localeCompare(b.name))
       .map((item, index) => ({ ...item, rank: index + 1 }));
 
     return { code: STATUS_OK, message: "Success", list };
