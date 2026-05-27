@@ -598,6 +598,7 @@ CREATE TABLE events (
   meeting_url    VARCHAR                   NULL,
   location_name  VARCHAR                   NULL,
   location_url   VARCHAR                   NULL,
+  external_payment_url  VARCHAR            NULL,
   published_at   TIMESTAMPTZ           NOT NULL  DEFAULT CURRENT_TIMESTAMP,
   updated_at     TIMESTAMPTZ           NOT NULL  DEFAULT CURRENT_TIMESTAMP,
   context        TEXT                      NULL,

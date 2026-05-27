@@ -47,6 +47,7 @@ export async function POST(req: NextRequest) {
         method: true,
         tags: true,
         context: true,
+        external_payment_url: true,
         event_prices: {
           select: { name: true, amount: true },
           where: { status: "ACTIVE" },
@@ -88,7 +89,9 @@ export async function POST(req: NextRequest) {
     ...events.map((item) => ({
       ...item,
       category: "event" as const,
-      payment_url: `${baseUrl}/events/${item.slug_url}/${item.id}/checkout`,
+      payment_url:
+        item.external_payment_url ??
+        `${baseUrl}/events/${item.slug_url}/${item.id}/checkout`,
     })),
     ...playlists.map((item) => ({
       ...item,
