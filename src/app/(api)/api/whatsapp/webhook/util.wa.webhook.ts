@@ -189,7 +189,7 @@ export async function triggerLangGraphAgent(payload: {
     return;
   }
   try {
-    await fetch(`${agentUrl}/api/v1/messages/incoming`, {
+    const response = await fetch(`${agentUrl}/api/v1/messages/incoming`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -197,6 +197,17 @@ export async function triggerLangGraphAgent(payload: {
       },
       body: JSON.stringify(payload),
     });
+    if (!response.ok) {
+      const responseBody = await response.text().catch(() => "");
+      await LogError(
+        "whatsapp.webhook",
+        `LangGraph agent returned ${response.status} ${response.statusText}.`,
+        {
+          response_body: responseBody,
+          payload,
+        }
+      );
+    }
   } catch (e) {
     await LogError("whatsapp.webhook", "Failed to trigger LangGraph agent.", e);
   }
