@@ -123,19 +123,24 @@ export async function POST(req: NextRequest) {
           }
 
           if (appendResult.mode === WAMode.AI) {
-            triggerLangGraphAgent({
+            const langGraphPayload = {
               id: appendResult.id,
               conv_id: appendResult.conv_id,
               wam_id: msg.id,
-              direction: "inbound",
-              sender_type: "user",
+              direction: "inbound" as const,
+              sender_type: "user" as const,
               type: msg.type,
               message: message,
               name: userProfileName,
               reply_to_id: appendResult.reply_to_id,
               attachment: attachment ?? null,
               sent_at: new Date(Number(msg.timestamp) * 1e3).toISOString(),
-            });
+            };
+            console.log(
+              "[webhook] triggerLangGraphAgent payload:",
+              JSON.stringify(langGraphPayload)
+            );
+            triggerLangGraphAgent(langGraphPayload);
           }
 
           // Enqueue media upload to Supabase Storage as a background QStash job.
@@ -143,7 +148,12 @@ export async function POST(req: NextRequest) {
           if (msg.type == "audio") {
             await enqueueSaveAttachment(qstash, "audio", msg.audio, msg.id);
           } else if (msg.type == "document") {
-            await enqueueSaveAttachment(qstash, "document", msg.document, msg.id);
+            await enqueueSaveAttachment(
+              qstash,
+              "document",
+              msg.document,
+              msg.id
+            );
           } else if (msg.type == "image") {
             await enqueueSaveAttachment(qstash, "image", msg.image, msg.id);
           } else if (msg.type == "sticker") {
