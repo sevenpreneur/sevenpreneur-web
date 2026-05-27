@@ -4,6 +4,9 @@
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnSave": true,
   "editor.insertSpaces": true,
+  "github.copilot.enable": {
+    "*": false
+  },
   "[prisma]": {
     "editor.defaultFormatter": "Prisma.prisma"
   },
