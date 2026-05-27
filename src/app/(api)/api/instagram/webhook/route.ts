@@ -1,7 +1,11 @@
 import LogError from "@/lib/prisma-log-error";
 import { NextRequest, NextResponse } from "next/server";
 import { IGWebhookBody } from "./type.ig.webhook";
-import { handleMessagingEvent } from "./util.ig.webhook";
+import {
+  fetchInstagramMediaCaption,
+  handleMessagingEvent,
+  triggerLangGraphAutoComment,
+} from "./util.ig.webhook";
 
 // Trial allowlist for auto-commenting to prevent abuse while we iterate on the feature.
 const AUTO_COMMENT_USERNAME_ALLOWLIST = new Set([
@@ -61,7 +65,11 @@ export async function POST(req: NextRequest) {
             continue;
           }
 
-          triggerLangGraphAutoComment({
+          const mediaCaption = await fetchInstagramMediaCaption(
+            comment.media.original_media_id ?? comment.media.id
+          );
+
+          await triggerLangGraphAutoComment({
             ig_business_account_id: entry.id,
             comment: {
               id: comment.id,
@@ -74,7 +82,11 @@ export async function POST(req: NextRequest) {
                 : null,
               media: {
                 id: comment.media.id,
+                caption: mediaCaption,
                 media_product_type: comment.media.media_product_type ?? null,
+                ad_id: comment.media.ad_id ?? null,
+                ad_title: comment.media.ad_title ?? null,
+                original_media_id: comment.media.original_media_id ?? null,
               },
               parent_id: comment.parent_id ?? null,
               created_time: comment.created_time ?? null,
@@ -100,42 +112,4 @@ export async function POST(req: NextRequest) {
   }
 
   return new NextResponse(undefined, { status: 200 });
-}
-
-async function triggerLangGraphAutoComment(payload: {
-  ig_business_account_id: string;
-  comment: {
-    id: string;
-    text: string;
-    from: { id: string; username: string | null } | null;
-    media: { id: string; media_product_type: string | null };
-    parent_id: string | null;
-    created_time: number | null;
-  };
-}) {
-  const agentUrl = process.env.AGENT_URL;
-  const agentSecretKey = process.env.AGENT_SECRET_KEY;
-  if (!agentUrl || !agentSecretKey) {
-    await LogError(
-      "instagram.webhook",
-      "AGENT_URL or AGENT_SECRET_KEY not configured."
-    );
-    return;
-  }
-  try {
-    await fetch(`${agentUrl}/api/v1/instagram/comments`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${agentSecretKey}`,
-      },
-      body: JSON.stringify(payload),
-    });
-  } catch (e) {
-    await LogError(
-      "instagram.webhook",
-      "Failed to trigger LangGraph auto-comment.",
-      e
-    );
-  }
 }

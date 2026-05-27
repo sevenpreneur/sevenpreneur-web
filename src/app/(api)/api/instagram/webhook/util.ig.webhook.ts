@@ -1,5 +1,25 @@
+import { instagramGetMediaContextRequest } from "@/lib/instagram";
 import LogError from "@/lib/prisma-log-error";
 import { IGWebhookMessagingEvent } from "./type.ig.webhook";
+
+export type IGAutoCommentPayload = {
+  ig_business_account_id: string;
+  comment: {
+    id: string;
+    text: string | null;
+    from: { id: string; username: string | null } | null;
+    media: {
+      id: string;
+      caption: string | null;
+      media_product_type: string | null;
+      ad_id: string | null;
+      ad_title: string | null;
+      original_media_id: string | null;
+    };
+    parent_id: string | null;
+    created_time: number | null;
+  };
+};
 
 export async function handleMessagingEvent(
   ig_business_account_id: string,
@@ -42,5 +62,71 @@ export async function handleMessagingEvent(
   } catch (e) {
     await LogError("instagram.webhook", "Failed to handle messaging event.", e);
     return false;
+  }
+}
+
+export async function fetchInstagramMediaCaption(
+  mediaId: string
+): Promise<string | null> {
+  const accessToken = process.env.META_IG_ACCESS_TOKEN;
+  if (!accessToken) {
+    await LogError(
+      "instagram.webhook",
+      "META_IG_ACCESS_TOKEN not configured."
+    );
+    return null;
+  }
+
+  try {
+    const data = await instagramGetMediaContextRequest(mediaId);
+
+    if (data.error) {
+      await LogError(
+        "instagram.webhook",
+        "Failed to fetch Instagram media caption.",
+        data
+      );
+      return null;
+    }
+
+    return data.caption ?? null;
+  } catch (e) {
+    await LogError(
+      "instagram.webhook",
+      "Failed to fetch Instagram media caption.",
+      e
+    );
+    return null;
+  }
+}
+
+export async function triggerLangGraphAutoComment(
+  payload: IGAutoCommentPayload
+) {
+  const agentUrl = process.env.AGENT_URL;
+  const agentSecretKey = process.env.AGENT_SECRET_KEY;
+  if (!agentUrl || !agentSecretKey) {
+    await LogError(
+      "instagram.webhook",
+      "AGENT_URL or AGENT_SECRET_KEY not configured."
+    );
+    return;
+  }
+
+  try {
+    await fetch(`${agentUrl}/api/v1/instagram/comments`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${agentSecretKey}`,
+      },
+      body: JSON.stringify(payload),
+    });
+  } catch (e) {
+    await LogError(
+      "instagram.webhook",
+      "Failed to trigger LangGraph auto-comment.",
+      e
+    );
   }
 }

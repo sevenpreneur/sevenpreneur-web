@@ -20,6 +20,7 @@ export type IGWebhookCommentValue = {
   };
   media: {
     id: string;
+    caption?: string;
     media_product_type?: string;
     ad_id?: string;
     ad_title?: string;
