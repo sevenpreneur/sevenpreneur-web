@@ -21,7 +21,10 @@ export async function POST(req: NextRequest) {
   const parsed = GetWAChatsSchema.safeParse(await req.json());
   if (!parsed.success) {
     return NextResponse.json(
-      { error: "Invalid request body", details: z.flattenError(parsed.error).fieldErrors },
+      {
+        error: "Invalid request body",
+        details: z.flattenError(parsed.error).fieldErrors,
+      },
       { status: 400 }
     );
   }
@@ -31,7 +34,13 @@ export async function POST(req: NextRequest) {
   const prisma = GetPrismaClient();
 
   const conversation = await prisma.wAConversation.findFirst({
-    select: { id: true },
+    select: {
+      id: true,
+      full_name: true,
+      phone_number: true,
+      lead_status: true,
+      winning_rate: true,
+    },
     where: { id: conv_id },
   });
   if (!conversation) {
@@ -69,5 +78,16 @@ export async function POST(req: NextRequest) {
   // Pass next_cursor as `before` in subsequent requests to load older messages
   const next_cursor = has_more ? pageChats[pageChats.length - 1].id : null;
 
-  return NextResponse.json({ list, has_more, next_cursor });
+  return NextResponse.json({
+    data: {
+      conv_id: conversation.id,
+      nama: conversation.full_name,
+      nomer_hp: conversation.phone_number,
+      status_lead: conversation.lead_status,
+      winning_rate: conversation.winning_rate,
+    },
+    list,
+    has_more,
+    next_cursor,
+  });
 }
