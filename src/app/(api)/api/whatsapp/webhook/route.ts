@@ -124,6 +124,7 @@ export async function POST(req: NextRequest) {
 
           if (appendResult.mode === WAMode.AI) {
             triggerLangGraphAgent({
+              id: appendResult.id,
               conv_id: appendResult.conv_id,
               wam_id: msg.id,
               direction: "inbound",

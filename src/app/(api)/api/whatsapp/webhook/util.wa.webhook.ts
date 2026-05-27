@@ -93,7 +93,12 @@ export async function appendChatFromUser(
   created_at: string,
   context_wam_id?: string
 ): Promise<
-  { conv_id: string; mode: WAMode; reply_to_id: string | null } | false
+  {
+    id: string;
+    conv_id: string;
+    mode: WAMode;
+    reply_to_id: string | null;
+  } | false
 > {
   const waConversation = await getOrCreateConversation(
     prisma,
@@ -161,6 +166,7 @@ export async function appendChatFromUser(
   }
 
   return {
+    id: createdChat.id,
     conv_id: waConversation.id,
     mode: waConversation.mode,
     reply_to_id: reply_to_id ?? null,
@@ -168,6 +174,7 @@ export async function appendChatFromUser(
 }
 
 export async function triggerLangGraphAgent(payload: {
+  id: string;
   conv_id: string;
   wam_id: string;
   direction: string;
