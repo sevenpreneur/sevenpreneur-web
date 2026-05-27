@@ -131,6 +131,7 @@ export async function POST(req: NextRequest) {
               type: msg.type,
               message: message,
               name: userProfileName,
+              reply_to_id: appendResult.reply_to_id,
               attachment: attachment ?? null,
               sent_at: new Date(Number(msg.timestamp) * 1e3).toISOString(),
             });

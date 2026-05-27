@@ -92,7 +92,9 @@ export async function appendChatFromUser(
   attachment: WhatsappAttachmentAllTypes,
   created_at: string,
   context_wam_id?: string
-): Promise<{ conv_id: string; mode: WAMode } | false> {
+): Promise<
+  { conv_id: string; mode: WAMode; reply_to_id: string | null } | false
+> {
   const waConversation = await getOrCreateConversation(
     prisma,
     full_name,
@@ -158,7 +160,11 @@ export async function appendChatFromUser(
     return false;
   }
 
-  return { conv_id: waConversation.id, mode: waConversation.mode };
+  return {
+    conv_id: waConversation.id,
+    mode: waConversation.mode,
+    reply_to_id: reply_to_id ?? null,
+  };
 }
 
 export async function triggerLangGraphAgent(payload: {
@@ -169,6 +175,7 @@ export async function triggerLangGraphAgent(payload: {
   type: string;
   message: string;
   name: string;
+  reply_to_id: string | null;
   attachment: object | null;
   sent_at: string | null;
 }) {
