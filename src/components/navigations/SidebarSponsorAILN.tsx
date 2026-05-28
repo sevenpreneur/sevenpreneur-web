@@ -11,6 +11,7 @@ import {
   LayoutDashboard,
   LogOut,
   Megaphone,
+  Target,
   type LucideIcon,
 } from "lucide-react";
 import { useTheme } from "next-themes";
@@ -54,6 +55,11 @@ const MENUS: {
     name: "Distribusi Level",
     url: "/sponsor/level-distribution",
     icon: BarChart3,
+  },
+  {
+    name: "Outcome",
+    url: "/sponsor/outcome",
+    icon: Target,
   },
   {
     name: "Pengumuman",

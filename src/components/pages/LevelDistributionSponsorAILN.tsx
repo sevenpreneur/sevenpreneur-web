@@ -4,6 +4,7 @@ import PageContainerAILN from "@/components/pages/PageContainerAILN";
 import AppErrorComponents from "@/components/states/AppErrorComponents";
 import { setSessionToken, trpc } from "@/trpc/client";
 import { Building2, Download, Search } from "lucide-react";
+import Link from "next/link";
 import { useEffect } from "react";
 
 const SPONSOR_BLUE = "#00359D";
@@ -163,8 +164,9 @@ export default function LevelDistributionSponsorAILN({
                 </div>
               ) : (
                 data.groups_needing_intervention.slice(0, 4).map((group) => (
-                  <div
+                  <Link
                     key={group.id}
+                    href={`/sponsor/groups/${group.id}`}
                     className="rounded-md border border-amber-200 bg-amber-50 px-4 py-3 dark:border-amber-500/30 dark:bg-amber-500/10"
                   >
                     <div className="flex items-center justify-between gap-3">
@@ -184,7 +186,7 @@ export default function LevelDistributionSponsorAILN({
                         Lihat detail
                       </span>
                     </div>
-                  </div>
+                  </Link>
                 ))
               )}
             </div>
@@ -228,6 +230,7 @@ function DepartmentDistributionRow({
   maxTotal,
 }: {
   group: {
+    id: number;
     name: string;
     total: number;
     levels: {
@@ -240,7 +243,10 @@ function DepartmentDistributionRow({
   maxTotal: number;
 }) {
   return (
-    <div className="grid grid-cols-[minmax(7rem,10rem)_minmax(0,1fr)_3.5rem] items-center gap-3 text-sm">
+    <Link
+      href={`/sponsor/groups/${group.id}`}
+      className="grid grid-cols-[minmax(7rem,10rem)_minmax(0,1fr)_3.5rem] items-center gap-3 rounded-md py-1 text-sm transition hover:bg-gray-50 dark:hover:bg-card-inside-bg"
+    >
       <div className="truncate font-medium text-gray-700 dark:text-gray-200">
         {group.name}
       </div>
@@ -271,7 +277,7 @@ function DepartmentDistributionRow({
       <div className="text-right font-geist-mono text-xs font-semibold text-gray-700 dark:text-gray-200">
         {group.total} org
       </div>
-    </div>
+    </Link>
   );
 }
 

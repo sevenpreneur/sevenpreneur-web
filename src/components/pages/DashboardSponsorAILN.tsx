@@ -7,14 +7,10 @@ import OrganizationLeaderboardAILN from "@/components/indexes/OrganizationLeader
 import PageContainerAILN from "@/components/pages/PageContainerAILN";
 import AppErrorComponents from "@/components/states/AppErrorComponents";
 import { setSessionToken, trpc } from "@/trpc/client";
-import { Download, Megaphone } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { Download } from "lucide-react";
+import { useEffect } from "react";
 
 const BLUE_DARK = "#00359D";
-
-const PERIODS = ["7H", "30H", "Cohort", "YTD"] as const;
-type Period = (typeof PERIODS)[number];
 
 const HEALTH_CARDS: {
   label: string;
@@ -96,8 +92,6 @@ export default function DashboardSponsorAILN({
     setSessionToken(sessionToken);
   }, [sessionToken]);
 
-  const [period, setPeriod] = useState<Period>("Cohort");
-  const router = useRouter();
   const executiveQ = trpc.ailene.read.executiveView.useQuery();
 
   if (executiveQ.isLoading) {
@@ -173,18 +167,9 @@ export default function DashboardSponsorAILN({
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
-            <PeriodToggle period={period} onChange={setPeriod} />
             <ButtonAILN variant="light" size="medium">
               <Download className="size-4" />
               Export PDF
-            </ButtonAILN>
-            <ButtonAILN
-              variant="primary"
-              size="medium"
-              onClick={() => router.push("/sponsor/announcement")}
-            >
-              <Megaphone className="size-4" />
-              Kirim pengumuman
             </ButtonAILN>
           </div>
         </div>
@@ -323,35 +308,6 @@ function DashboardSponsorSkeleton() {
           <div className="h-48 rounded-lg border border-dashboard-border bg-white dark:bg-card-bg" />
         </div>
       </div>
-    </div>
-  );
-}
-
-function PeriodToggle({
-  period,
-  onChange,
-}: {
-  period: Period;
-  onChange: (p: Period) => void;
-}) {
-  return (
-    <div className="inline-flex h-9 items-center rounded-md border border-dashboard-border bg-white p-0.5 text-sm dark:bg-card-bg">
-      {PERIODS.map((p) => {
-        const active = p === period;
-        return (
-          <button
-            key={p}
-            onClick={() => onChange(p)}
-            className={`h-full rounded px-3 text-xs font-semibold transition-colors ${
-              active
-                ? "bg-black text-white dark:bg-white dark:text-black"
-                : "text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100"
-            }`}
-          >
-            {p}
-          </button>
-        );
-      })}
     </div>
   );
 }

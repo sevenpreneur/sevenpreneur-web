@@ -13,7 +13,7 @@ import {
 } from "chart.js";
 import dayjs from "dayjs";
 import "dayjs/locale/id";
-import { Building2, ChevronDown, Download, GitCompare } from "lucide-react";
+import { Building2, ChevronDown, Download } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useEffect, useMemo, useState } from "react";
 import { Radar } from "react-chartjs-2";
@@ -89,10 +89,6 @@ export default function DashboardPreAssesmentAILN({
             <ButtonAILN variant="light" size="medium">
               <Download className="size-4" />
               Export PDF
-            </ButtonAILN>
-            <ButtonAILN variant="primary" size="medium">
-              <GitCompare className="size-4" />
-              Bandingkan dengan Outcome
             </ButtonAILN>
           </div>
         </div>

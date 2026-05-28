@@ -1,6 +1,7 @@
 "use client";
 import type React from "react";
 import { trpc } from "@/trpc/client";
+import Link from "next/link";
 
 const BLUE_DARK = "#00359D";
 
@@ -50,31 +51,36 @@ export default function OrganizationLeaderboardAILN() {
             return (
               <li
                 key={department.id}
-                className="grid grid-cols-[auto_1fr_auto] items-center gap-3"
+                className="rounded-md transition hover:bg-gray-50 dark:hover:bg-card-inside-bg"
               >
-                <span className="text-xs font-semibold text-gray-400 dark:text-gray-500">
-                  #{department.rank}
-                </span>
-                <div className="min-w-0">
-                  <div className="truncate text-gray-900 dark:text-white">
-                    {department.name}
+                <Link
+                  href={`/sponsor/groups/${department.id}`}
+                  className="grid grid-cols-[auto_1fr_auto] items-center gap-3 p-1.5"
+                >
+                  <span className="text-xs font-semibold text-gray-400 dark:text-gray-500">
+                    #{department.rank}
+                  </span>
+                  <div className="min-w-0">
+                    <div className="truncate font-medium text-gray-900 dark:text-white">
+                      {department.name}
+                    </div>
+                    <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-gray-100 dark:bg-dashboard-border">
+                      <div
+                        className="h-full rounded-full"
+                        style={{
+                          width: `${widthPct}%`,
+                          backgroundColor: BLUE_DARK,
+                        }}
+                      />
+                    </div>
                   </div>
-                  <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-gray-100 dark:bg-dashboard-border">
-                    <div
-                      className="h-full rounded-full"
-                      style={{
-                        width: `${widthPct}%`,
-                        backgroundColor: BLUE_DARK,
-                      }}
-                    />
-                  </div>
-                </div>
-                <span className="text-sm font-semibold text-gray-900 dark:text-white">
-                  {department.hours.toLocaleString("id-ID", {
-                    maximumFractionDigits: 1,
-                  })}
-                  j
-                </span>
+                  <span className="text-sm font-semibold text-gray-900 dark:text-white">
+                    {department.hours.toLocaleString("id-ID", {
+                      maximumFractionDigits: 1,
+                    })}
+                    j
+                  </span>
+                </Link>
               </li>
             );
           })}

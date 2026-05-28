@@ -1,6 +1,8 @@
 import { createTRPCRouter } from "@/trpc/init";
 import { createAilene } from "./create.ailene";
 import { listAilene } from "./list.ailene";
+import { readGroupAilene } from "./read-group.ailene";
+import { readOutcome } from "./read-outcome.ailene";
 import { readPreAssessment } from "./read-pre-assessment.ailene";
 import { readAilene } from "./read.ailene";
 import { updateAilene } from "./update.ailene";
@@ -54,6 +56,19 @@ export const aileneRouter = createTRPCRouter({
       safetyGaps: readPreAssessment.safetyGaps,
       topUseCases: readPreAssessment.topUseCases,
       voice: readPreAssessment.voice,
+    }),
+    group: createTRPCRouter({
+      departments: readGroupAilene.departments,
+      overview: readGroupAilene.overview,
+      levelDistribution: readGroupAilene.levelDistribution,
+      topUseCases: readGroupAilene.topUseCases,
+      attentionMembers: readGroupAilene.attentionMembers,
+    }),
+    outcome: createTRPCRouter({
+      // sponsor-scoped end-of-program results (current state)
+      overview: readOutcome.overview,
+      levelDistribution: readOutcome.levelDistribution,
+      topPerformers: readOutcome.topPerformers,
     }),
     todayFocus: readAilene.todayFocus,
     levelProgress: readAilene.levelProgress,
