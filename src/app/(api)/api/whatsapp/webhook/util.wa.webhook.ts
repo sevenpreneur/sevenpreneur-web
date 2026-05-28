@@ -93,12 +93,13 @@ export async function appendChatFromUser(
   created_at: string,
   context_wam_id?: string
 ): Promise<
-  {
-    id: string;
-    conv_id: string;
-    mode: WAMode;
-    reply_to_id: string | null;
-  } | false
+  | {
+      id: string;
+      conv_id: string;
+      mode: WAMode;
+      reply_to_id: string | null;
+    }
+  | false
 > {
   const waConversation = await getOrCreateConversation(
     prisma,
@@ -196,14 +197,17 @@ export async function triggerLangGraphAgent(payload: {
     return;
   }
   try {
-    const response = await fetch(`${agentUrl}/api/v1/messages/incoming`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${agentSecretKey}`,
-      },
-      body: JSON.stringify(payload),
-    });
+    const response = await fetch(
+      `${agentUrl}/api/v1/webhook/whatsapp/message`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${agentSecretKey}`,
+        },
+        body: JSON.stringify(payload),
+      }
+    );
     if (!response.ok) {
       const responseBody = await response.text().catch(() => "");
       await LogError(
