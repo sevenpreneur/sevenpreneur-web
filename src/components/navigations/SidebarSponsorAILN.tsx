@@ -10,6 +10,7 @@ import {
   ClipboardCheck,
   LayoutDashboard,
   LogOut,
+  Megaphone,
   type LucideIcon,
 } from "lucide-react";
 import { useTheme } from "next-themes";
@@ -53,6 +54,11 @@ const MENUS: {
     name: "Distribusi Level",
     url: "/sponsor/level-distribution",
     icon: BarChart3,
+  },
+  {
+    name: "Pengumuman",
+    url: "/sponsor/announcement",
+    icon: Megaphone,
   },
 ];
 

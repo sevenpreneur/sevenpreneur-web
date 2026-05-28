@@ -8,6 +8,7 @@ import PageContainerAILN from "@/components/pages/PageContainerAILN";
 import AppErrorComponents from "@/components/states/AppErrorComponents";
 import { setSessionToken, trpc } from "@/trpc/client";
 import { Download, Megaphone } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const BLUE_DARK = "#00359D";
@@ -96,6 +97,7 @@ export default function DashboardSponsorAILN({
   }, [sessionToken]);
 
   const [period, setPeriod] = useState<Period>("Cohort");
+  const router = useRouter();
   const executiveQ = trpc.ailene.read.executiveView.useQuery();
 
   if (executiveQ.isLoading) {
@@ -176,7 +178,11 @@ export default function DashboardSponsorAILN({
               <Download className="size-4" />
               Export PDF
             </ButtonAILN>
-            <ButtonAILN variant="primary" size="medium">
+            <ButtonAILN
+              variant="primary"
+              size="medium"
+              onClick={() => router.push("/sponsor/announcement")}
+            >
               <Megaphone className="size-4" />
               Kirim pengumuman
             </ButtonAILN>

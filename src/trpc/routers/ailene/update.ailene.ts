@@ -3,8 +3,13 @@ import {
   STATUS_NOT_FOUND,
   STATUS_OK,
 } from "@/lib/status_code";
-import { ailMemberProcedure, championProcedure } from "@/trpc/init";
+import {
+  ailMemberProcedure,
+  championProcedure,
+  sponsorProcedure,
+} from "@/trpc/init";
 import { TRPCError } from "@trpc/server";
+import dayjs from "dayjs";
 import { z } from "zod";
 import {
   finalizeQuizSubmission,
@@ -14,6 +19,38 @@ import {
 } from "./utils.ailene";
 
 export const updateAilene = {
+  announcement: sponsorProcedure
+    .input(
+      z
+        .object({
+          message: z.string().min(1).max(500),
+          start_date: z.iso.date(),
+          end_date: z.iso.date(),
+        })
+        .refine((data) => dayjs(data.end_date).isAfter(dayjs(data.start_date)), {
+          message: "End date must be after start date.",
+          path: ["end_date"],
+        })
+    )
+    .mutation(async (opts) => {
+      const { message, start_date, end_date } = opts.input;
+
+      const announcement = await opts.ctx.prisma.aileneAnnouncement.update({
+        where: { id: 1 },
+        data: {
+          title: message.trim(),
+          start_date: dayjs(start_date).startOf("day").toDate(),
+          end_date: dayjs(end_date).endOf("day").toDate(),
+        },
+      });
+
+      return {
+        code: STATUS_OK,
+        message: "Announcement updated",
+        announcement,
+      };
+    }),
+
   unlockLevel: ailMemberProcedure
     .input(z.object({ level_id: z.number().int() }))
     .mutation(async (opts) => {

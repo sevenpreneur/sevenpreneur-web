@@ -1,6 +1,7 @@
 import { createTRPCRouter } from "@/trpc/init";
 import { createAilene } from "./create.ailene";
 import { listAilene } from "./list.ailene";
+import { readPreAssessment } from "./read-pre-assessment.ailene";
 import { readAilene } from "./read.ailene";
 import { updateAilene } from "./update.ailene";
 
@@ -40,7 +41,20 @@ export const aileneRouter = createTRPCRouter({
     organizationStats: readAilene.organizationStats,
     materialDetail: readAilene.materialDetail,
     quizResult: readAilene.quizResult,
-    preAssessment: readAilene.preAssessment,
+    preAssessment: createTRPCRouter({
+      // member-scoped: the logged-in member's own pre-assessment
+      mine: readAilene.preAssessment,
+      // sponsor-scoped org aggregations (optional group_id filter)
+      departments: readPreAssessment.departments,
+      overview: readPreAssessment.overview,
+      pillars: readPreAssessment.pillars,
+      usageFrequency: readPreAssessment.usageFrequency,
+      tools: readPreAssessment.tools,
+      teamMaturity: readPreAssessment.teamMaturity,
+      safetyGaps: readPreAssessment.safetyGaps,
+      topUseCases: readPreAssessment.topUseCases,
+      voice: readPreAssessment.voice,
+    }),
     todayFocus: readAilene.todayFocus,
     levelProgress: readAilene.levelProgress,
     streak: readAilene.streak,
@@ -58,6 +72,8 @@ export const aileneRouter = createTRPCRouter({
     useCaseSubmissionDetail: readAilene.championUseCaseSubmissionDetail,
   }),
   update: createTRPCRouter({
+    // sponsor only
+    announcement: updateAilene.announcement,
     // any member (student / champion / sponsor)
     unlockLevel: updateAilene.unlockLevel,
     startQuizAttempt: updateAilene.startQuizAttempt,
