@@ -70,10 +70,7 @@ export async function fetchInstagramMediaCaption(
 ): Promise<string | null> {
   const accessToken = process.env.META_IG_ACCESS_TOKEN;
   if (!accessToken) {
-    await LogError(
-      "instagram.webhook",
-      "META_IG_ACCESS_TOKEN not configured."
-    );
+    await LogError("instagram.webhook", "META_IG_ACCESS_TOKEN not configured.");
     return null;
   }
 
@@ -114,7 +111,7 @@ export async function triggerLangGraphAutoComment(
   }
 
   try {
-    await fetch(`${agentUrl}/api/v1/instagram/comments`, {
+    await fetch(`${agentUrl}/api/v1/webhook/instagram/comment`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
