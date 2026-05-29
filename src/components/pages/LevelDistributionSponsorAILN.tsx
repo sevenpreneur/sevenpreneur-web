@@ -7,9 +7,9 @@ import { Building2, Download, Search } from "lucide-react";
 import Link from "next/link";
 import { useEffect } from "react";
 
-const SPONSOR_BLUE = "#00359D";
-const SPONSOR_BLUE_DARK = "#001f5d";
-const LEVEL_COLORS = ["#eef2fb", "#cbd7f0", "#8ea6d8", "#3f67b5", "#00359D"];
+const SPONSOR_BLUE = "#1F2937";
+const SPONSOR_BLUE_DARK = "#111827";
+const LEVEL_COLORS = ["#f3f4f6", "#d1d5db", "#9ca3af", "#4b5563", "#1f2937"];
 
 export default function LevelDistributionSponsorAILN({
   sessionToken,
@@ -77,7 +77,7 @@ export default function LevelDistributionSponsorAILN({
             <label className="flex items-center gap-2 rounded-md border border-dashboard-border bg-white px-3 py-2 text-xs font-medium text-gray-600 dark:bg-card-inside-bg dark:text-gray-300">
               <input
                 type="checkbox"
-                className="size-3.5 rounded border-gray-300 accent-[#00359D]"
+                className="size-3.5 rounded border-gray-300 accent-[#1F2937]"
               />
               Highlight underperform
             </label>

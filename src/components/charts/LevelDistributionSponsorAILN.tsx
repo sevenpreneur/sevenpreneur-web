@@ -2,7 +2,7 @@
 import type React from "react";
 import { trpc } from "@/trpc/client";
 
-const LEVEL_COLORS = ["#eef2fb", "#9eb0d3", "#5b7bc4", "#00359D", "#001f5d"];
+const LEVEL_COLORS = ["#f3f4f6", "#d1d5db", "#9ca3af", "#4b5563", "#1f2937"];
 
 export default function LevelDistributionSponsorAILN() {
   const q = trpc.ailene.read.levelDistribution.useQuery();
@@ -65,7 +65,7 @@ export default function LevelDistributionSponsorAILN() {
               <span className="font-semibold text-gray-900 dark:text-white">
                 {level.count}
               </span>
-              <span className="w-8 text-right font-medium text-[#00359D] dark:text-blue-300">
+              <span className="w-8 text-right font-medium text-[#1F2937] dark:text-gray-300">
                 {level.percent}%
               </span>
             </div>

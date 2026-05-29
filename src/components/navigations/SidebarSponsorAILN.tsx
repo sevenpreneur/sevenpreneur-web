@@ -32,7 +32,7 @@ const HUTAMA_KARYA_LOGO_SQUARE_DARK =
 const DEFAULT_AVATAR =
   "https://tskubmriuclmbcfmaiur.supabase.co/storage/v1/object/public/sevenpreneur//default-avatar.svg.png";
 
-const ACCENT = "#00359D";
+const ACCENT = "#1F2937";
 
 const MENUS: {
   name: string;
@@ -146,7 +146,7 @@ export default function SidebarSponsorAILN({
           className="absolute -right-4 top-6 z-10 flex h-8 w-8 items-center justify-center rounded-full border bg-white shadow-sm dark:border-blue-500/40 dark:bg-black dark:shadow-[0_0_8px_rgba(0,53,157,0.4)]"
         >
           <ChevronLeft
-            className={`h-3 w-3 text-gray-500 transition-transform dark:text-blue-300 ${isCollapsed ? "rotate-180" : ""}`}
+            className={`h-3 w-3 text-gray-500 transition-transform dark:text-gray-300 ${isCollapsed ? "rotate-180" : ""}`}
           />
         </button>
 
@@ -165,16 +165,16 @@ export default function SidebarSponsorAILN({
 
         {/* Mode indicator */}
         <div
-          className={`mb-4 flex items-center rounded-md border border-dashboard-border bg-white dark:border-blue-500/30 dark:bg-blue-500/5 dark:shadow-[0_0_12px_rgba(0,53,157,0.15)] ${
+          className={`mb-4 flex items-center rounded-md border border-dashboard-border bg-white dark:bg-white/5 ${
             isCollapsed ? "justify-center p-2" : "gap-2 px-3 py-2"
           }`}
         >
           <span
-            className="size-2 shrink-0 rounded-full dark:shadow-[0_0_8px_rgba(0,53,157,0.9)]"
+            className="size-2 shrink-0 rounded-full"
             style={{ backgroundColor: ACCENT }}
           />
           {!isCollapsed && (
-            <span className="text-xs font-semibold text-gray-700 dark:text-blue-100">
+            <span className="text-xs font-semibold text-gray-700 dark:text-gray-200">
               Dashboard Sponsor
             </span>
           )}
@@ -194,8 +194,8 @@ export default function SidebarSponsorAILN({
                 style={active ? { backgroundColor: ACCENT } : undefined}
                 className={`flex items-center gap-3 rounded-md p-2 text-sm transition ${
                   active
-                    ? "text-white dark:shadow-[inset_0_0_0_1px_rgba(0,53,157,0.6),0_0_12px_rgba(0,53,157,0.35)]"
-                    : "text-gray-700 hover:bg-gray-100 hover:text-black dark:text-gray-300 dark:hover:bg-blue-500/10 dark:hover:text-blue-100"
+                    ? "text-white dark:shadow-[inset_0_0_0_1px_rgba(148,163,184,0.25)]"
+                    : "text-gray-700 hover:bg-gray-100 hover:text-black dark:text-gray-300 dark:hover:bg-white/5 dark:hover:text-white"
                 } ${isCollapsed ? "justify-center" : ""}`}
               >
                 <Icon className="h-4 w-4 shrink-0" />
@@ -208,14 +208,14 @@ export default function SidebarSponsorAILN({
         {/* User card */}
         <div className="mt-3 shrink-0">
           {!isCollapsed ? (
-            <div className="rounded-lg border border-dashboard-border p-3 dark:border-blue-500/25 dark:bg-blue-500/5 dark:shadow-[0_0_20px_rgba(0,53,157,0.08)]">
+            <div className="rounded-lg border border-dashboard-border p-3 dark:bg-white/5">
               <div className="flex items-center gap-3">
                 <Image
                   src={user?.avatar || DEFAULT_AVATAR}
                   alt={user?.full_name ?? ""}
                   width={36}
                   height={36}
-                  className="h-9 w-9 rounded-full object-cover dark:ring-1 dark:ring-blue-500/40"
+                  className="h-9 w-9 rounded-full object-cover dark:ring-1 dark:ring-white/15"
                 />
                 <div className="flex-1 min-w-0">
                   <div className="truncate text-sm font-semibold dark:text-white">
@@ -226,7 +226,7 @@ export default function SidebarSponsorAILN({
                   </div>
                 </div>
               </div>
-              <div className="mt-2 border-t border-dashboard-border pt-2 dark:border-blue-500/20">
+              <div className="mt-2 border-t border-dashboard-border pt-2">
                 <div className="flex items-center justify-between gap-2">
                   <span className="text-[10px] uppercase tracking-wide text-gray-500 dark:text-gray-400">
                     Theme
@@ -240,6 +240,7 @@ export default function SidebarSponsorAILN({
                 onClick={handleLogout}
                 disabled={isLoggingOut}
                 className="mt-3 w-full"
+                style={{ backgroundColor: ACCENT }}
               >
                 <LogOut className="size-4" />
                 {isLoggingOut ? "Logging out..." : "Logout"}

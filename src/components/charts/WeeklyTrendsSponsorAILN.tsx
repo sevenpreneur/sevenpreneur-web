@@ -2,8 +2,8 @@
 import type React from "react";
 import { trpc } from "@/trpc/client";
 
-const BLUE_DARK = "#00359D";
-const BLUE_MUTED = "#9eb0d3";
+const BLUE_DARK = "#1F2937";
+const BLUE_MUTED = "#9ca3af";
 
 export default function WeeklyTrendsSponsorAILN() {
   const q = trpc.ailene.read.weeklyTrends.useQuery();
@@ -104,10 +104,10 @@ function TrendBarChart({
         const x = PAD_L + i * slot + (slot - barW) / 2;
         const y = PAD_T + (chartH - barH);
         const fillClass = d.highlight
-          ? "fill-[#00359D]"
-          : "fill-[#dde4f3] dark:fill-blue-500/25";
+          ? "fill-[#1F2937] dark:fill-gray-200"
+          : "fill-gray-200 dark:fill-gray-600/40";
         const valueClass = d.highlight
-          ? "fill-[#00359D] dark:fill-blue-300"
+          ? "fill-[#1F2937] dark:fill-gray-200"
           : "fill-gray-500 dark:fill-gray-400";
         const labelClass = d.highlight
           ? "fill-gray-900 dark:fill-white"

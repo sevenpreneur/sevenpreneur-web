@@ -3,7 +3,7 @@ import type React from "react";
 import { trpc } from "@/trpc/client";
 import Link from "next/link";
 
-const BLUE_DARK = "#00359D";
+const BLUE_DARK = "#1F2937";
 
 export default function OrganizationLeaderboardAILN() {
   const q = trpc.ailene.read.organizationLeaderboard.useQuery();

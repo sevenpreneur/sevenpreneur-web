@@ -106,9 +106,6 @@ export default function DashboardPreAssesmentAILN({
               Titik nol — sebelum modul pertama
             </span>
           </div>
-          <span className="font-mono text-xs text-gray-400 dark:text-gray-500">
-            Sumber: pre-assessment 15 soal · self-rating + kuis literasi
-          </span>
         </div>
 
         {/* 4 KPI tiles */}
@@ -372,9 +369,6 @@ export default function DashboardPreAssesmentAILN({
                   <span className="font-semibold text-gray-900 dark:text-white">
                     {voiceQ.data.supportive_percent}%
                   </span>
-                </span>
-                <span className="ml-auto font-mono text-xs text-gray-400 dark:text-gray-500">
-                  T0 · pasangan before untuk SP-05 Outcome
                 </span>
               </div>
             </div>

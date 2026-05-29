@@ -10,7 +10,7 @@ import { setSessionToken, trpc } from "@/trpc/client";
 import { Download } from "lucide-react";
 import { useEffect } from "react";
 
-const BLUE_DARK = "#00359D";
+const BLUE_DARK = "#1F2937";
 
 const HEALTH_CARDS: {
   label: string;
