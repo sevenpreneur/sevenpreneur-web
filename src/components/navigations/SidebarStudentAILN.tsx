@@ -10,6 +10,7 @@ import {
   ChevronLeft,
   CircleUser,
   ClipboardList,
+  LineChart,
   LogOut,
   UserRoundKey,
   type LucideIcon,
@@ -46,6 +47,7 @@ const MENUS: {
     exact: true,
   },
   { name: "Skill Practice", url: "/student/practice", icon: ClipboardList },
+  { name: "Progress Saya", url: "/student/my-progress", icon: LineChart },
   { name: "Profile", url: "/student/profile", icon: CircleUser },
 ];
 
