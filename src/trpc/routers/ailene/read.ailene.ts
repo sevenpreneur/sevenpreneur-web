@@ -958,6 +958,326 @@ export const readAilene = {
     return { code: STATUS_OK, message: "Success", list };
   }),
 
+  championMemberDetail: championProcedure
+    .input(z.object({ member_id: z.number().int().positive() }))
+    .query(async (opts) => {
+      const championId = opts.ctx.ail_member.id;
+      const { member_id } = opts.input;
+
+      const member = await opts.ctx.prisma.ailMember.findUnique({
+        where: { id: member_id },
+        include: {
+          user: {
+            select: { id: true, full_name: true, email: true, avatar: true },
+          },
+          group: { select: { id: true, name: true, champion_id: true } },
+          current_level: true,
+        },
+      });
+
+      if (!member || member.group?.champion_id !== championId) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "You can only access members in groups you lead.",
+        });
+      }
+
+      const currentLevelNumber = member.current_level.level_number;
+      const [
+        levels,
+        quizSubs,
+        promptSubs,
+        useCaseSubs,
+        videoComps,
+        materialComps,
+        currentLevelChapters,
+      ] = await Promise.all([
+        opts.ctx.prisma.ailLevel.findMany({
+          where: { status: "ACTIVE" },
+          orderBy: { level_number: "asc" },
+        }),
+        opts.ctx.prisma.ailQuizSubmission.findMany({
+          where: { member_id, is_completed: true },
+          orderBy: { submitted_at: "desc" },
+          include: {
+            quiz: {
+              select: {
+                id: true,
+                name: true,
+                chapter: {
+                  select: {
+                    id: true,
+                    name: true,
+                    level: { select: { level_number: true, name: true } },
+                  },
+                },
+              },
+            },
+          },
+        }),
+        opts.ctx.prisma.ailPromptSubmission.findMany({
+          where: { member_id, assigned_by_id: championId },
+          orderBy: [{ submitted_at: "desc" }, { created_at: "desc" }],
+          include: {
+            prompt: {
+              select: {
+                id: true,
+                name: true,
+                level: { select: { level_number: true, name: true } },
+              },
+            },
+          },
+        }),
+        opts.ctx.prisma.ailUseCaseSubmission.findMany({
+          where: { member_id, assigned_by_id: championId },
+          orderBy: [{ submitted_at: "desc" }, { created_at: "desc" }],
+          include: {
+            use_case: {
+              select: {
+                id: true,
+                name: true,
+                level: { select: { level_number: true, name: true } },
+              },
+            },
+          },
+        }),
+        opts.ctx.prisma.ailVideoCompletion.findMany({
+          where: { member_id },
+          select: { video_id: true, completed_at: true },
+        }),
+        opts.ctx.prisma.ailMaterialCompletion.findMany({
+          where: { member_id },
+          select: { material_id: true, completed_at: true },
+        }),
+        opts.ctx.prisma.ailChapter.findMany({
+          where: {
+            status: "ACTIVE",
+            level: { level_number: currentLevelNumber },
+          },
+          select: {
+            quizzes: { where: { status: "ACTIVE" }, select: { id: true } },
+            materials: { where: { status: "ACTIVE" }, select: { id: true } },
+          },
+        }),
+      ]);
+
+      const nextLevel =
+        levels.find((level) => level.level_number === currentLevelNumber + 1) ??
+        null;
+      const currentRequiredQuizIds = currentLevelChapters.flatMap((chapter) =>
+        chapter.quizzes.map((quiz) => quiz.id)
+      );
+      const currentRequiredMaterialIds = currentLevelChapters.flatMap(
+        (chapter) => chapter.materials.map((material) => material.id)
+      );
+      const completedQuizIds = new Set(quizSubs.map((submission) => submission.quiz_id));
+      const completedMaterialIds = new Set(
+        materialComps.map((completion) => completion.material_id)
+      );
+      const gateDone =
+        currentRequiredQuizIds.filter((id) => completedQuizIds.has(id)).length +
+        currentRequiredMaterialIds.filter((id) => completedMaterialIds.has(id))
+          .length;
+      const gateTotal =
+        currentRequiredQuizIds.length + currentRequiredMaterialIds.length;
+      const gatePercent = gateTotal === 0 ? 100 : Math.round((gateDone / gateTotal) * 100);
+
+      const bestQuizByQuiz = new Map<string, number>();
+      for (const submission of quizSubs) {
+        const prev = bestQuizByQuiz.get(submission.quiz_id);
+        if (prev === undefined || submission.score > prev) {
+          bestQuizByQuiz.set(submission.quiz_id, submission.score);
+        }
+      }
+      const avgQuiz =
+        bestQuizByQuiz.size === 0
+          ? 0
+          : Math.round(
+              Array.from(bestQuizByQuiz.values()).reduce((a, b) => a + b, 0) /
+                bestQuizByQuiz.size
+            );
+
+      const activityDays = [
+        ...quizSubs.map((submission) => submission.submitted_at),
+        ...videoComps.map((completion) => completion.completed_at),
+        ...materialComps.map((completion) => completion.completed_at),
+      ].map((date) => dayjs(date).startOf("day").format("YYYY-MM-DD"));
+      const activeDaySet = new Set(activityDays);
+      let streak = 0;
+      let cursor = dayjs().startOf("day");
+      if (!activeDaySet.has(cursor.format("YYYY-MM-DD"))) {
+        cursor = cursor.subtract(1, "day");
+      }
+      while (activeDaySet.has(cursor.format("YYYY-MM-DD"))) {
+        streak += 1;
+        cursor = cursor.subtract(1, "day");
+      }
+
+      const promptAccepted = promptSubs.filter((submission) => submission.is_accepted).length;
+      const useCaseAccepted = useCaseSubs.filter((submission) => submission.is_accepted).length;
+      const submittedPrompts = promptSubs.filter((submission) => submission.submitted_at);
+      const submittedUseCases = useCaseSubs.filter((submission) => submission.submitted_at);
+      const uniqueTools = new Set<string>();
+      for (const submission of submittedUseCases) {
+        if (!submission.ai_tool) continue;
+        for (const raw of submission.ai_tool.split(",")) {
+          const tool = raw.trim().toLowerCase();
+          if (tool) uniqueTools.add(tool);
+        }
+      }
+
+      const clamp = (n: number, min = 0, max = 5) =>
+        Math.max(min, Math.min(max, n));
+      const dimensions = [
+        {
+          key: "specificity",
+          label: "Specificity",
+          score: clamp(avgQuiz / 20),
+        },
+        {
+          key: "context",
+          label: "Context",
+          score:
+            submittedPrompts.length === 0
+              ? 0
+              : clamp((promptAccepted / submittedPrompts.length) * 5),
+        },
+        {
+          key: "verification",
+          label: "Verification",
+          score:
+            submittedUseCases.length === 0
+              ? 0
+              : clamp((useCaseAccepted / submittedUseCases.length) * 5),
+        },
+        {
+          key: "iteration",
+          label: "Iteration",
+          score: clamp(submittedPrompts.length / 2),
+        },
+        {
+          key: "workflow",
+          label: "Workflow",
+          score: clamp(submittedUseCases.length),
+        },
+        {
+          key: "tool",
+          label: "Tool",
+          score: clamp(uniqueTools.size),
+        },
+      ].map((dimension) => ({
+        ...dimension,
+        score: Math.round(dimension.score * 10) / 10,
+      }));
+
+      const activities = [
+        ...useCaseSubs.map((submission) => ({
+          id: `use-case-${submission.id}`,
+          type: "use_case" as const,
+          title: `Use case: ${submission.use_case.name}`,
+          subtitle: submission.is_accepted
+            ? "Diterima"
+            : submission.submitted_at
+              ? "Submitted - menunggu review"
+              : "Belum submit",
+          status: submission.is_accepted
+            ? "accepted"
+            : submission.submitted_at
+              ? "submitted"
+              : "assigned",
+          occurred_at: submission.reviewed_at ?? submission.submitted_at ?? submission.created_at,
+        })),
+        ...promptSubs.map((submission) => ({
+          id: `prompt-${submission.id}`,
+          type: "prompt" as const,
+          title: `Prompt: ${submission.prompt.name}`,
+          subtitle: submission.is_accepted
+            ? "Diterima"
+            : submission.submitted_at
+              ? "Submitted - menunggu review"
+              : "Belum submit",
+          status: submission.is_accepted
+            ? "accepted"
+            : submission.submitted_at
+              ? "submitted"
+              : "assigned",
+          occurred_at: submission.reviewed_at ?? submission.submitted_at ?? submission.created_at,
+        })),
+        ...quizSubs.slice(0, 8).map((submission) => ({
+          id: `quiz-${submission.id}`,
+          type: "quiz" as const,
+          title: `Quiz: ${submission.quiz.name}`,
+          subtitle: `Lulus - skor ${submission.score}/100`,
+          status: "accepted",
+          occurred_at: submission.submitted_at,
+        })),
+      ]
+        .sort(
+          (a, b) =>
+            dayjs(b.occurred_at).valueOf() - dayjs(a.occurred_at).valueOf()
+        )
+        .slice(0, 8);
+
+      return {
+        code: STATUS_OK,
+        message: "Success",
+        member: {
+          id: member.id,
+          full_name: member.user.full_name,
+          email: member.user.email,
+          avatar: member.user.avatar,
+          job_title: member.job_title,
+          group: member.group ? { id: member.group.id, name: member.group.name } : null,
+          current_level: {
+            id: member.current_level.id,
+            level_number: member.current_level.level_number,
+            name: member.current_level.name,
+            icon: member.current_level.icon,
+          },
+          joined_at: member.created_at,
+          last_active_at: member.last_active_at,
+        },
+        metrics: {
+          gate_percent: gatePercent,
+          streak_days: streak,
+          submission_total: submittedPrompts.length + submittedUseCases.length,
+          avg_quiz: avgQuiz,
+        },
+        radar: {
+          total_submissions: submittedPrompts.length + submittedUseCases.length,
+          dimensions,
+        },
+        gate: {
+          from_level: currentLevelNumber,
+          to_level: nextLevel?.level_number ?? currentLevelNumber,
+          next_level_id: nextLevel?.id ?? null,
+          done: gateDone,
+          total: gateTotal,
+          percent: gatePercent,
+          ready: gatePercent >= 100,
+          requirements: [
+            {
+              label: `${gateDone} / ${gateTotal} modul level ${currentLevelNumber} selesai`,
+              completed: gateTotal > 0 && gateDone >= gateTotal,
+            },
+            {
+              label: avgQuiz > 0 ? `Avg quiz ${avgQuiz}/100` : "Avg quiz belum ada",
+              completed: avgQuiz >= 80,
+            },
+            {
+              label: `${useCaseAccepted} use case diterima`,
+              completed: useCaseAccepted > 0,
+            },
+            {
+              label: `${promptAccepted} prompt diterima`,
+              completed: promptAccepted > 0,
+            },
+          ],
+        },
+        activities,
+      };
+    }),
+
   achievements: ailMemberProcedure.query(async (opts) => {
     const memberId = opts.ctx.ail_member.id;
 

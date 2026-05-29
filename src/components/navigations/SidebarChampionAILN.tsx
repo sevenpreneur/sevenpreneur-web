@@ -8,6 +8,7 @@ import {
   BookMarked,
   ChevronLeft,
   ClipboardCheck,
+  FileText,
   LayoutDashboard,
   LogOut,
   UserRound,
@@ -46,8 +47,9 @@ const MENUS: {
     icon: LayoutDashboard,
     exact: true,
   },
-  { name: "Library & Assignment", url: "/champion/library", icon: BookMarked },
+  { name: "Assignment", url: "/champion/assignment", icon: BookMarked },
   { name: "Submissions", url: "/champion/submissions", icon: ClipboardCheck },
+  { name: "Reports", url: "/champion/report", icon: FileText },
 ];
 
 export default function SidebarChampionAILN({

@@ -12,6 +12,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 dayjs.extend(relativeTime);
@@ -244,9 +245,12 @@ export default function DashboardChampionAILN({
                               <div className="h-8 w-8 rounded-full bg-gray-200 dark:bg-dashboard-border" />
                             )}
                             <div>
-                              <div className="font-semibold dark:text-white">
+                              <Link
+                                href={`/champion/members/${m.member_id}`}
+                                className="font-semibold text-gray-900 hover:text-emerald-700 dark:text-white dark:hover:text-emerald-300"
+                              >
                                 {m.user.full_name}
-                              </div>
+                              </Link>
                               <div className="text-xs text-gray-500 dark:text-gray-400">
                                 {m.user.email}
                               </div>

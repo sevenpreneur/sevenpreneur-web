@@ -4,6 +4,7 @@ import { listAilene } from "./list.ailene";
 import { readGroupAilene } from "./read-group.ailene";
 import { readOutcome } from "./read-outcome.ailene";
 import { readPreAssessment } from "./read-pre-assessment.ailene";
+import { readReportAilene } from "./read-report.ailene";
 import { readAilene } from "./read.ailene";
 import { updateAilene } from "./update.ailene";
 
@@ -70,6 +71,9 @@ export const aileneRouter = createTRPCRouter({
       levelDistribution: readOutcome.levelDistribution,
       topPerformers: readOutcome.topPerformers,
     }),
+    report: createTRPCRouter({
+      champion: readReportAilene.championReport,
+    }),
     todayFocus: readAilene.todayFocus,
     levelProgress: readAilene.levelProgress,
     streak: readAilene.streak,
@@ -83,6 +87,7 @@ export const aileneRouter = createTRPCRouter({
     levelDistribution: readAilene.levelDistribution,
     organizationLeaderboard: readAilene.organizationLeaderboard,
     // champion only
+    memberDetail: readAilene.championMemberDetail,
     promptSubmissionDetail: readAilene.championPromptSubmissionDetail,
     useCaseSubmissionDetail: readAilene.championUseCaseSubmissionDetail,
   }),

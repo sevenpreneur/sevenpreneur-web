@@ -3,12 +3,14 @@ import ButtonAILN from "@/components/buttons/ButtonAILN";
 import AppSheet from "@/components/modals/AppSheet";
 import { trpc } from "@/trpc/client";
 import dayjs from "dayjs";
-import { Loader2, Plus, X } from "lucide-react";
+import { Loader2, Plus } from "lucide-react";
 import { FormEvent, useMemo, useState } from "react";
+import Select from "react-select";
 import { toast } from "sonner";
 
 type AssignmentKind = "PROMPT" | "USE_CASE";
 type TargetMode = "INDIVIDUAL" | "BULK";
+type CategoryOption = { value: number; label: string };
 
 interface CreateAssignmentFormChampionAILNProps {
   isOpen: boolean;
@@ -57,21 +59,14 @@ export default function CreateAssignmentFormChampionAILN({
   const groups = memberQ.data?.ail_member?.championed_groups ?? [];
   const members = membersQ.data?.list ?? [];
 
-  const selectedCategories = useMemo(
-    () => categories.filter((c) => selectedCategoryIds.includes(c.id)),
-    [categories, selectedCategoryIds]
+  const categoryOptions = useMemo<CategoryOption[]>(
+    () => categories.map((c) => ({ value: c.id, label: c.name })),
+    [categories]
   );
-
-  const toggleCategory = (id: number) => {
-    setSelectedCategoryIds((prev) => {
-      if (prev.includes(id)) return prev.filter((x) => x !== id);
-      if (prev.length >= 2) {
-        toast.error("Maksimal 2 kategori.");
-        return prev;
-      }
-      return [...prev, id];
-    });
-  };
+  const selectedCategoryOptions = useMemo(
+    () => categoryOptions.filter((o) => selectedCategoryIds.includes(o.value)),
+    [categoryOptions, selectedCategoryIds]
+  );
   const toggleMember = (id: number) =>
     setSelectedMemberIds((prev) =>
       prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
@@ -329,55 +324,57 @@ export default function CreateAssignmentFormChampionAILN({
               </span>
             </div>
 
-            {selectedCategories.length > 0 && (
-              <div className="flex flex-wrap gap-1.5">
-                {selectedCategories.map((c) => (
-                  <span
-                    key={c.id}
-                    className="inline-flex items-center gap-1 rounded-md bg-emerald-50 px-2 py-0.5 text-xs font-medium text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300"
-                  >
-                    {c.name}
-                    <button
-                      type="button"
-                      onClick={() => toggleCategory(c.id)}
-                      className="hover:opacity-70"
-                    >
-                      <X className="size-3" />
-                    </button>
-                  </span>
-                ))}
-              </div>
-            )}
-
-            {categoriesQ.isLoading ? (
-              <div className="text-sm text-gray-500">Memuat kategori…</div>
-            ) : categories.length === 0 ? (
-              <div className="text-sm text-gray-500">Belum ada kategori.</div>
-            ) : (
-              <div className="flex flex-wrap gap-1.5 rounded-md border border-dashboard-border p-2">
-                {categories.map((c) => {
-                  const checked = selectedCategoryIds.includes(c.id);
-                  const disabled = !checked && selectedCategoryIds.length >= 2;
-                  return (
-                    <button
-                      key={c.id}
-                      type="button"
-                      onClick={() => toggleCategory(c.id)}
-                      disabled={disabled}
-                      className={`rounded-md border px-2 py-1 text-xs font-medium transition ${
-                        checked
-                          ? "border-emerald-500 bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300"
-                          : disabled
-                            ? "cursor-not-allowed border-dashboard-border text-gray-300 dark:text-gray-600"
-                            : "border-dashboard-border text-gray-600 hover:border-gray-400 dark:text-gray-300"
-                      }`}
-                    >
-                      {c.name}
-                    </button>
-                  );
-                })}
-              </div>
-            )}
+            <Select<CategoryOption, true>
+              isMulti
+              instanceId="champion-assignment-category"
+              options={categoryOptions}
+              value={selectedCategoryOptions}
+              onChange={(vals) =>
+                setSelectedCategoryIds(vals.map((v) => v.value))
+              }
+              isOptionDisabled={() => selectedCategoryIds.length >= 2}
+              isLoading={categoriesQ.isLoading}
+              closeMenuOnSelect={false}
+              placeholder="Cari & pilih kategori (maks 2)…"
+              loadingMessage={() => "Memuat kategori…"}
+              noOptionsMessage={() =>
+                categories.length === 0
+                  ? "Belum ada kategori."
+                  : "Kategori tidak ditemukan."
+              }
+              unstyled
+              classNames={{
+                control: ({ isFocused }) =>
+                  `rounded-md border bg-card-inside-bg px-2 py-1 text-sm transition ${
+                    isFocused ? "border-emerald-500" : "border-dashboard-border"
+                  }`,
+                valueContainer: () => "flex flex-wrap gap-1 py-0.5",
+                placeholder: () => "px-1 text-gray-400 dark:text-gray-500",
+                input: () => "px-1 text-sm dark:text-gray-200",
+                multiValue: () =>
+                  "inline-flex items-center overflow-hidden rounded-md bg-emerald-50 text-xs font-medium text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300",
+                multiValueLabel: () => "py-0.5 pl-2",
+                multiValueRemove: () =>
+                  "flex items-center px-1 hover:bg-emerald-100 hover:text-emerald-900 dark:hover:bg-emerald-500/20",
+                indicatorsContainer: () => "flex items-center text-gray-400",
+                indicatorSeparator: () => "hidden",
+                dropdownIndicator: () => "px-1 hover:text-gray-600",
+                clearIndicator: () => "px-1 hover:text-gray-600",
+                menu: () =>
+                  "z-50 mt-1 overflow-hidden rounded-md border border-dashboard-border bg-card-bg shadow-lg",
+                menuList: () => "max-h-60 overflow-y-auto p-1",
+                option: ({ isFocused, isDisabled }) =>
+                  `rounded px-2 py-1.5 text-sm ${
+                    isDisabled
+                      ? "cursor-not-allowed text-gray-300 dark:text-gray-600"
+                      : isFocused
+                        ? "cursor-pointer bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300"
+                        : "cursor-pointer text-gray-700 dark:text-gray-200"
+                  }`,
+                noOptionsMessage: () => "p-2 text-sm text-gray-500",
+                loadingMessage: () => "p-2 text-sm text-gray-500",
+              }}
+            />
           </div>
 
           {/* Assign toggle */}

@@ -8,7 +8,7 @@ import { setSessionToken, trpc } from "@/trpc/client";
 import { BookOpen, Bookmark, Plus, Send } from "lucide-react";
 import { useEffect, useState } from "react";
 
-type LibraryTab = "PROMPT" | "USE_CASE";
+type AssignmentTab = "PROMPT" | "USE_CASE";
 
 interface CategoryRef {
   id: number;
@@ -37,7 +37,7 @@ interface UseCaseItem {
   categories: CategoryRef[];
 }
 
-export default function LibraryChampionAILN({
+export default function AssignmentChampionAILN({
   sessionToken,
 }: {
   sessionToken: string;
@@ -46,7 +46,7 @@ export default function LibraryChampionAILN({
     setSessionToken(sessionToken);
   }, [sessionToken]);
 
-  const [tab, setTab] = useState<LibraryTab>("PROMPT");
+  const [tab, setTab] = useState<AssignmentTab>("PROMPT");
   const [selectedPromptId, setSelectedPromptId] = useState<number | null>(null);
   const [selectedUseCaseId, setSelectedUseCaseId] = useState<number | null>(
     null
@@ -82,11 +82,9 @@ export default function LibraryChampionAILN({
         {/* Header */}
         <div className="flex items-start justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold dark:text-white">
-              Library &amp; Assignment
-            </h1>
+            <h1 className="text-2xl font-bold dark:text-white">Assignment</h1>
             <p className="text-sm text-gray-500 dark:text-gray-400">
-              Kelola library prompt &amp; use case dan assign ke tim Anda.
+              Kelola prompt &amp; use case dan assign ke tim Anda.
             </p>
           </div>
           <ButtonAILN
@@ -110,7 +108,7 @@ export default function LibraryChampionAILN({
                 : "border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
             }`}
           >
-            Prompt Library (L2)
+            Prompt (L2)
           </button>
           <button
             type="button"
@@ -121,7 +119,7 @@ export default function LibraryChampionAILN({
                 : "border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
             }`}
           >
-            Use Case Library (L3)
+            Use Case (L3)
           </button>
         </div>
 
@@ -138,14 +136,14 @@ export default function LibraryChampionAILN({
               </div>
 
               {isLoading ? (
-                <LibraryGridSkeleton />
+                <AssignmentGridSkeleton />
               ) : tab === "PROMPT" ? (
                 prompts.length === 0 ? (
-                  <EmptyState label="Belum ada prompt di library." />
+                  <EmptyState label="Belum ada prompt." />
                 ) : (
                   <div className="grid grid-cols-1 gap-3 md:grid-cols-2 2xl:grid-cols-3">
                     {prompts.map((p) => (
-                      <LibraryCard
+                      <AssignmentCard
                         key={p.id}
                         levelNumber={p.level.level_number}
                         name={p.name}
@@ -158,11 +156,11 @@ export default function LibraryChampionAILN({
                   </div>
                 )
               ) : useCases.length === 0 ? (
-                <EmptyState label="Belum ada use case di library." />
+                <EmptyState label="Belum ada use case." />
               ) : (
                 <div className="grid grid-cols-1 gap-3 md:grid-cols-2 2xl:grid-cols-3">
                   {useCases.map((u) => (
-                    <LibraryCard
+                    <AssignmentCard
                       key={u.id}
                       levelNumber={u.level.level_number}
                       name={u.name}
@@ -268,7 +266,7 @@ export default function LibraryChampionAILN({
   );
 }
 
-function LibraryCard({
+function AssignmentCard({
   levelNumber,
   name,
   body,
@@ -382,7 +380,7 @@ function EmptyState({ label }: { label: string }) {
   );
 }
 
-function LibraryGridSkeleton() {
+function AssignmentGridSkeleton() {
   return (
     <div className="grid grid-cols-1 gap-3 md:grid-cols-2 2xl:grid-cols-3">
       {Array.from({ length: 6 }).map((_, i) => (

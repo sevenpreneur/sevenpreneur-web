@@ -48,6 +48,24 @@
   --color-sevenpreneur-soft-danger: #f6d7e0;
   --color-sevenpreneur-accent-danger: #df396a;
 
+  /* --- AILENE (AILN) Color --- */
+
+  /* neutral */
+  --color-ailn-bg: #fafaf9;
+  --color-ailn-surface: #ffffff;
+  --color-ailn-surface-2: #f5f5f4;
+  --color-ailn-border: #e7e5e4;
+  --color-ailn-ink-3: #71717a;
+  --color-ailn-ink: #0b0b0c;
+  /* accent */
+  --color-ailn-accent: #ee2333;
+  --color-ailn-accent-soft: #fdecec;
+  /* state */
+  --color-ailn-success: oklch(0.55 0.12 155);
+  --color-ailn-warning: oklch(0.66 0.14 70);
+  --color-ailn-danger: oklch(0.56 0.17 25);
+  --color-ailn-info: oklch(0.55 0.11 230);
+
   /* --- UI Design System --- */
 
   /* solid */
