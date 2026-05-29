@@ -8,7 +8,6 @@ import {
   BookOpen,
   CalendarDays,
   ChevronLeft,
-  CircleUser,
   ClipboardList,
   LineChart,
   LogOut,
@@ -48,7 +47,6 @@ const MENUS: {
   },
   { name: "Skill Practice", url: "/student/practice", icon: ClipboardList },
   { name: "Progress Saya", url: "/student/my-progress", icon: LineChart },
-  { name: "Profile", url: "/student/profile", icon: CircleUser },
 ];
 
 export default function SidebarStudentAILN({
