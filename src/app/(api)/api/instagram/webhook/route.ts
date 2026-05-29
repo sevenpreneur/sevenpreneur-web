@@ -8,11 +8,11 @@ import {
 } from "./util.ig.webhook";
 
 // Trial allowlist for auto-commenting to prevent abuse while we iterate on the feature.
-const AUTO_COMMENT_USERNAME_ALLOWLIST = new Set([
-  "akmallfhn",
-  "dimasora",
-  "bramasta_space",
-]);
+// const AUTO_COMMENT_USERNAME_ALLOWLIST = new Set([
+//   "akmallfhn",
+//   "dimasora",
+//   "bramasta_space",
+// ]);
 
 export async function GET(req: NextRequest) {
   const VERIFY_TOKEN = process.env.META_IG_VERIFICATION_TOKEN;
@@ -54,16 +54,24 @@ export async function POST(req: NextRequest) {
             continue;
           }
 
-          // Skip trigger if commenter's username not in allowlist
-          if (
-            !comment.from?.username ||
-            !AUTO_COMMENT_USERNAME_ALLOWLIST.has(comment.from.username)
-          ) {
+          // Skip trigger for nested comments/replies to avoid auto-reply loops.
+          if (comment.parent_id) {
             console.log(
-              `[instagram.webhook] skip auto-comment trigger — username=${comment.from?.username ?? "unknown"} not in allowlist`
+              `[instagram.webhook] skip auto-comment trigger — comment_id=${comment.id} parent_id=${comment.parent_id}`
             );
             continue;
           }
+
+          // Skip trigger if commenter's username not in allowlist
+          // if (
+          //   !comment.from?.username ||
+          //   !AUTO_COMMENT_USERNAME_ALLOWLIST.has(comment.from.username)
+          // ) {
+          //   console.log(
+          //     `[instagram.webhook] skip auto-comment trigger — username=${comment.from?.username ?? "unknown"} not in allowlist`
+          //   );
+          //   continue;
+          // }
 
           const mediaCaption = await fetchInstagramMediaCaption(
             comment.media.original_media_id ?? comment.media.id
