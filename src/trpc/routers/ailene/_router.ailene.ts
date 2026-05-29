@@ -43,6 +43,7 @@ export const aileneRouter = createTRPCRouter({
     competencyProfile: readAilene.competencyProfile,
     organizationStats: readAilene.organizationStats,
     materialDetail: readAilene.materialDetail,
+    levelMaterials: readAilene.levelMaterials,
     quizResult: readAilene.quizResult,
     preAssessment: createTRPCRouter({
       // member-scoped: the logged-in member's own pre-assessment

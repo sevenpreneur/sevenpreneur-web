@@ -299,6 +299,95 @@ export const readAilene = {
       };
     }),
 
+  // Other learning materials within the same level as the given material,
+  // numbered sequentially (e.g. "2.5") with completion + lock status — used by
+  // the "Modul lain di level ini" sidebar on the material detail page.
+  levelMaterials: ailMemberProcedure
+    .input(z.object({ material_id: z.string().min(1) }))
+    .query(async (opts) => {
+      const memberId = opts.ctx.ail_member.id;
+      const currentLevelNumber =
+        opts.ctx.ail_member.current_level?.level_number ?? 0;
+      const { material_id } = opts.input;
+
+      const current = await opts.ctx.prisma.ailMaterial.findUnique({
+        where: { id: material_id },
+        select: { chapter: { select: { level_id: true } } },
+      });
+      if (!current) {
+        throw new TRPCError({
+          code: STATUS_NOT_FOUND,
+          message: "Material not found.",
+        });
+      }
+      const levelId = current.chapter.level_id;
+
+      const [level, chapters] = await Promise.all([
+        opts.ctx.prisma.ailLevel.findUnique({
+          where: { id: levelId },
+          select: { level_number: true },
+        }),
+        opts.ctx.prisma.ailChapter.findMany({
+          where: { level_id: levelId, status: "ACTIVE" },
+          orderBy: { session_date: "asc" },
+          select: {
+            session_date: true,
+            materials: {
+              where: { status: "ACTIVE" },
+              orderBy: { order_index: "asc" },
+              select: { id: true, title: true },
+            },
+          },
+        }),
+      ]);
+
+      const levelNumber = level?.level_number ?? 0;
+      const levelUnlocked = levelNumber <= currentLevelNumber;
+
+      const allIds = chapters.flatMap((ch) => ch.materials.map((m) => m.id));
+      const completions =
+        allIds.length === 0
+          ? []
+          : await opts.ctx.prisma.ailMaterialCompletion.findMany({
+              where: { member_id: memberId, material_id: { in: allIds } },
+              select: { material_id: true },
+            });
+      const doneSet = new Set(completions.map((c) => c.material_id));
+
+      const now = dayjs();
+      let counter = 0;
+      const materials: {
+        id: string;
+        title: string;
+        index: number;
+        completed: boolean;
+        locked: boolean;
+        is_current: boolean;
+      }[] = [];
+      for (const ch of chapters) {
+        const sessionStarted = !dayjs(ch.session_date).isAfter(now);
+        const unlocked = levelUnlocked && sessionStarted;
+        for (const m of ch.materials) {
+          counter += 1;
+          materials.push({
+            id: m.id,
+            title: m.title,
+            index: counter,
+            completed: doneSet.has(m.id),
+            locked: !unlocked,
+            is_current: m.id === material_id,
+          });
+        }
+      }
+
+      return {
+        code: STATUS_OK,
+        message: "Success",
+        level_number: levelNumber,
+        materials,
+      };
+    }),
+
   quizResult: ailMemberProcedure
     .input(z.object({ quiz_id: z.string().min(1) }))
     .query(async (opts) => {

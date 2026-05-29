@@ -10,7 +10,9 @@ import {
   faCircleCheck,
   faClock,
   faFilePdf,
+  faLayerGroup,
   faListUl,
+  faLock,
   faPenRuler,
   faStar,
   faTag,
@@ -19,6 +21,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import dayjs from "dayjs";
 import "dayjs/locale/id";
 import { marked } from "marked";
+import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import styles from "./ailene-prose.module.css";
 
@@ -112,6 +115,14 @@ export default function MaterialDetailsAILN({
     {
       material_id: materialId,
     }
+  );
+
+  const levelMaterialsQ = trpc.ailene.read.levelMaterials.useQuery({
+    material_id: materialId,
+  });
+  const levelNumber = levelMaterialsQ.data?.level_number ?? 0;
+  const otherMaterials = (levelMaterialsQ.data?.materials ?? []).filter(
+    (m) => !m.is_current
   );
 
   const markMutation = trpc.ailene.create.completeMaterial.useMutation({
@@ -371,6 +382,74 @@ export default function MaterialDetailsAILN({
                       );
                     })}
                   </nav>
+                </div>
+              )}
+
+              {otherMaterials.length > 0 && (
+                <div className="rounded-xl border border-dashboard-border bg-white p-4 dark:bg-card-bg dark:shadow-[0_0_18px_rgba(239,68,68,0.08)]">
+                  <div className="mb-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                    <FontAwesomeIcon
+                      icon={faLayerGroup}
+                      className="h-3.5 w-3.5 text-red-500"
+                    />
+                    <span>Modul lain di Level {levelNumber}</span>
+                  </div>
+                  <div className="flex flex-col gap-0.5">
+                    {otherMaterials.map((m) => {
+                      const row = (
+                        <>
+                          <span className="w-7 shrink-0 font-geist-mono text-xs text-gray-400 dark:text-gray-500">
+                            {levelNumber}.{m.index}
+                          </span>
+                          <span
+                            className={`line-clamp-2 flex-1 text-sm leading-snug ${
+                              m.locked
+                                ? "text-gray-400 dark:text-gray-500"
+                                : "text-sevenpreneur-coal dark:text-gray-200"
+                            }`}
+                          >
+                            {m.title}
+                          </span>
+                          {m.completed ? (
+                            <FontAwesomeIcon
+                              icon={faCircleCheck}
+                              className="mt-0.5 h-3.5 w-3.5 shrink-0 text-green-500"
+                              title="Selesai"
+                            />
+                          ) : m.locked ? (
+                            <span className="mt-0.5 inline-flex shrink-0 items-center gap-1 rounded-full border border-dashboard-border px-2 py-0.5 text-[10px] font-medium text-gray-500 dark:text-gray-400">
+                              <FontAwesomeIcon
+                                icon={faLock}
+                                className="h-2.5 w-2.5"
+                              />
+                              Terkunci
+                            </span>
+                          ) : (
+                            <span className="mt-0.5 inline-flex shrink-0 items-center rounded-full border border-blue-300 bg-blue-50 px-2 py-0.5 text-[10px] font-medium text-blue-600 dark:border-blue-500/30 dark:bg-blue-500/10 dark:text-blue-400">
+                              Baru
+                            </span>
+                          )}
+                        </>
+                      );
+
+                      return m.locked ? (
+                        <div
+                          key={m.id}
+                          className="flex cursor-not-allowed items-start gap-2 rounded-md px-2 py-2"
+                        >
+                          {row}
+                        </div>
+                      ) : (
+                        <Link
+                          key={m.id}
+                          href={`/student/materials/${m.id}`}
+                          className="flex items-start gap-2 rounded-md px-2 py-2 transition-colors hover:bg-gray-50 dark:hover:bg-card-inside-bg"
+                        >
+                          {row}
+                        </Link>
+                      );
+                    })}
+                  </div>
                 </div>
               )}
 
