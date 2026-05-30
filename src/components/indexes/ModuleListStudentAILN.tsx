@@ -13,7 +13,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import dayjs from "dayjs";
 import "dayjs/locale/id";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 
 dayjs.locale("id");
 
@@ -56,6 +57,102 @@ export default function ModuleListStudentAILN({
   const levelProgressQ = trpc.ailene.read.levelProgress.useQuery();
   const promptsQ = trpc.ailene.list.assignedPrompts.useQuery();
   const useCasesQ = trpc.ailene.list.assignedUseCases.useQuery();
+
+  // Auto-expand: URL param wins (?chapter=<id> from "Lihat detail" deep links),
+  // else earliest in-progress chapter, else earliest accessible not-started
+  // chapter (so fresh members still see their first chapter opened). Runs once
+  // after data loads.
+  const searchParams = useSearchParams();
+  const chapterParam = searchParams.get("chapter");
+  const practiceParam = searchParams.get("practice");
+  const autoExpandedRef = useRef(false);
+  useEffect(() => {
+    if (autoExpandedRef.current) return;
+    const chapters = chaptersQ.data?.list;
+    const member = memberQ.data?.ail_member;
+    const levels = levelsQ.data?.list;
+    if (!chapters || !member || !levels) return;
+    // Practice queries are non-blocking for the main render, but they decide
+    // the practice tier — wait until both have settled before deciding.
+    if (promptsQ.isLoading || useCasesQ.isLoading) return;
+    autoExpandedRef.current = true;
+
+    if (chapterParam) {
+      const id = Number(chapterParam);
+      if (Number.isFinite(id) && chapters.some((c) => c.id === id)) {
+        setExpandedChapters(new Set([id]));
+        return;
+      }
+    }
+    if (practiceParam) {
+      const id = Number(practiceParam);
+      if (Number.isFinite(id)) {
+        setExpandedModules(new Set([id]));
+        return;
+      }
+    }
+
+    // chapters are sorted asc by session_date upstream — find() = earliest
+    const earliestInProgress = chapters.find(
+      (c) => c.progress === "in_progress"
+    );
+    if (earliestInProgress) {
+      setExpandedChapters(new Set([earliestInProgress.id]));
+      return;
+    }
+
+    const currentLevelNumber = member.current_level?.level_number ?? 0;
+
+    // Earliest unlocked practice module that still has at least one item not
+    // yet "accepted" (todo / overdue / rejected / pending review all count as
+    // belum kelar). Picks the lowest level_number.
+    const levelsWithUnfinished = new Map<number, number>();
+    const consider = (
+      row: { reviewed_at: string | null; is_accepted: boolean },
+      lvl: { id: number; level_number: number }
+    ) => {
+      const accepted = !!row.reviewed_at && row.is_accepted;
+      if (accepted) return;
+      if (lvl.level_number > currentLevelNumber) return;
+      if (!levelsWithUnfinished.has(lvl.id)) {
+        levelsWithUnfinished.set(lvl.id, lvl.level_number);
+      }
+    };
+    for (const r of promptsQ.data?.list ?? []) consider(r, r.prompt.level);
+    for (const r of useCasesQ.data?.list ?? []) consider(r, r.use_case.level);
+    const earliestPractice = [...levelsWithUnfinished.entries()].sort(
+      (a, b) => a[1] - b[1]
+    )[0];
+    if (earliestPractice) {
+      setExpandedModules(new Set([earliestPractice[0]]));
+      return;
+    }
+
+    // Fallback: earliest chapter the member can actually open right now —
+    // level unlocked, session started, not yet completed.
+    const levelNumberById = new Map(levels.map((l) => [l.id, l.level_number]));
+    const now = dayjs();
+    const nextAccessible = chapters.find((c) => {
+      if (c.progress === "completed") return false;
+      const lvlNum = levelNumberById.get(c.level_id);
+      if (lvlNum === undefined || lvlNum > currentLevelNumber) return false;
+      if (dayjs(c.session_date).isAfter(now)) return false;
+      return true;
+    });
+    if (nextAccessible) {
+      setExpandedChapters(new Set([nextAccessible.id]));
+    }
+  }, [
+    chaptersQ.data,
+    memberQ.data,
+    levelsQ.data,
+    promptsQ.data,
+    promptsQ.isLoading,
+    useCasesQ.data,
+    useCasesQ.isLoading,
+    chapterParam,
+    practiceParam,
+  ]);
 
   if (
     memberQ.isLoading ||

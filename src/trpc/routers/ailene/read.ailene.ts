@@ -511,7 +511,7 @@ export const readAilene = {
             select: {
               id: true,
               name: true,
-              level: { select: { level_number: true, name: true } },
+              level: { select: { id: true, level_number: true, name: true } },
             },
           },
         },
@@ -529,7 +529,7 @@ export const readAilene = {
             select: {
               id: true,
               name: true,
-              level: { select: { level_number: true, name: true } },
+              level: { select: { id: true, level_number: true, name: true } },
             },
           },
         },
@@ -553,6 +553,7 @@ export const readAilene = {
       task_title: string;
       chapter_id: number | null;
       chapter_name: string | null;
+      level_id: number | null;
       deadline?: Date | null;
       href: string;
     };
@@ -565,6 +566,7 @@ export const readAilene = {
         task_title: row.prompt.name,
         chapter_id: null,
         chapter_name: row.prompt.level.name,
+        level_id: row.prompt.level.id,
         deadline: row.deadline,
         href: `/student/practice/prompts/${row.prompt.id}`,
       })),
@@ -574,6 +576,7 @@ export const readAilene = {
         task_title: row.use_case.name,
         chapter_id: null,
         chapter_name: row.use_case.level.name,
+        level_id: row.use_case.level.id,
         deadline: row.deadline,
         href: `/student/practice/use-cases/${row.use_case.id}`,
       })),
@@ -595,6 +598,7 @@ export const readAilene = {
           task_title: m.title,
           chapter_id: ch.id,
           chapter_name: ch.name,
+          level_id: ch.level_id,
           href: `/student/materials/${m.id}`,
         };
         break;
@@ -607,6 +611,7 @@ export const readAilene = {
           task_title: q.name,
           chapter_id: ch.id,
           chapter_name: ch.name,
+          level_id: ch.level_id,
           href: `/student/quizzes/${q.id}`,
         };
         break;
@@ -623,6 +628,7 @@ export const readAilene = {
           task_title: v.title,
           chapter_id: ch.id,
           chapter_name: ch.name,
+          level_id: ch.level_id,
           href: v.video_url,
         };
         break;

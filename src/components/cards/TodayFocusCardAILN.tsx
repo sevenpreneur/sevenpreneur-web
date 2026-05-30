@@ -80,6 +80,17 @@ export default function TodayFocusCardAILN() {
   }
 
   const focus = q.data.focus;
+
+  const detailHref = focus
+    ? focus.kind === "PromptPractice" || focus.kind === "UseCasePractice"
+      ? focus.level_id != null
+        ? `/student/modules?practice=${focus.level_id}`
+        : "/student/modules"
+      : focus.chapter_id != null
+        ? `/student/modules?chapter=${focus.chapter_id}`
+        : "/student/modules"
+    : "/student/modules";
+
   if (!focus) {
     return (
       <CardShell title="● FOKUS HARI INI">
@@ -153,7 +164,7 @@ export default function TodayFocusCardAILN() {
             <ArrowRight className="size-3.5" />
           </ButtonAILN>
         )}
-        <Link href="/student/modules">
+        <Link href={detailHref}>
           <ButtonAILN variant="outline">Lihat detail</ButtonAILN>
         </Link>
       </div>
