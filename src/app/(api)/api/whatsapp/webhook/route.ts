@@ -140,7 +140,7 @@ export async function POST(req: NextRequest) {
               "[webhook] triggerLangGraphAgent payload:",
               JSON.stringify(langGraphPayload)
             );
-            triggerLangGraphAgent(langGraphPayload);
+            await triggerLangGraphAgent(langGraphPayload);
           }
 
           // Enqueue media upload to Supabase Storage as a background QStash job.
