@@ -131,6 +131,86 @@ export const updateAilene = {
         }
       }
 
+      const [bestQuiz, group, cohortAvg] = await Promise.all([
+        requiredQuizIds.length === 0
+          ? null
+          : opts.ctx.prisma.ailQuizSubmission.findFirst({
+              where: {
+                member_id: member.id,
+                quiz_id: { in: requiredQuizIds },
+                is_completed: true,
+              },
+              orderBy: { score: "desc" },
+              select: { score: true },
+            }),
+        member.group_id
+          ? opts.ctx.prisma.ailGroup.findUnique({
+              where: { id: member.group_id },
+              select: { name: true },
+            })
+          : null,
+        opts.ctx.prisma.ailMember.findMany({
+          where: { current_level_id: targetLevel.id },
+          select: { created_at: true, level_history: true },
+        }),
+      ]);
+
+      const currentLevelStartedAt =
+        Array.isArray(member.level_history) &&
+        member.level_history.find((entry) => {
+          if (!entry || typeof entry !== "object") return false;
+          const row = entry as Record<string, unknown>;
+          return row.level_id === member.current_level_id;
+        });
+      const startedAt =
+        currentLevelStartedAt &&
+        typeof currentLevelStartedAt === "object" &&
+        "unlocked_at" in currentLevelStartedAt &&
+        typeof currentLevelStartedAt.unlocked_at === "string"
+          ? dayjs(currentLevelStartedAt.unlocked_at)
+          : dayjs(member.created_at);
+      const completedAt = dayjs();
+      const elapsedDays = Math.max(1, completedAt.diff(startedAt, "day") + 1);
+
+      const avgElapsedValues = cohortAvg
+        .map((row) => {
+          if (!Array.isArray(row.level_history)) return null;
+          const targetEntry = row.level_history.find((entry) => {
+            if (!entry || typeof entry !== "object") return false;
+            const item = entry as Record<string, unknown>;
+            return item.level_id === targetLevel.id;
+          });
+          const prevEntry = row.level_history.find((entry) => {
+            if (!entry || typeof entry !== "object") return false;
+            const item = entry as Record<string, unknown>;
+            return item.level_id === member.current_level_id;
+          });
+          const targetUnlockedAt =
+            targetEntry &&
+            typeof targetEntry === "object" &&
+            "unlocked_at" in targetEntry &&
+            typeof targetEntry.unlocked_at === "string"
+              ? dayjs(targetEntry.unlocked_at)
+              : null;
+          const previousUnlockedAt =
+            prevEntry &&
+            typeof prevEntry === "object" &&
+            "unlocked_at" in prevEntry &&
+            typeof prevEntry.unlocked_at === "string"
+              ? dayjs(prevEntry.unlocked_at)
+              : dayjs(row.created_at);
+          if (!targetUnlockedAt) return null;
+          return Math.max(1, targetUnlockedAt.diff(previousUnlockedAt, "day") + 1);
+        })
+        .filter((value): value is number => value !== null);
+      const cohortAvgDays =
+        avgElapsedValues.length === 0
+          ? 14
+          : Math.round(
+              avgElapsedValues.reduce((sum, value) => sum + value, 0) /
+                avgElapsedValues.length
+            );
+
       const history = Array.isArray(member.level_history)
         ? [...(member.level_history as unknown[])]
         : [];
@@ -151,6 +231,25 @@ export const updateAilene = {
         code: STATUS_OK,
         message: "Level unlocked",
         level_id: targetLevel.id,
+        unlock_summary: {
+          member_name: opts.ctx.user.full_name,
+          group_name: group?.name ?? null,
+          completed_at: completedAt.toDate(),
+          previous_level: {
+            level_number: currentLevelNumber,
+            name: member.current_level?.name ?? `Level ${currentLevelNumber}`,
+          },
+          unlocked_level: {
+            level_number: targetLevel.level_number,
+            name: targetLevel.name,
+          },
+          final_quiz_score: bestQuiz?.score ?? 100,
+          quiz_threshold: 70,
+          modules_done: totalRequired,
+          modules_total: totalRequired,
+          elapsed_days: elapsedDays,
+          cohort_avg_days: cohortAvgDays,
+        },
       };
     }),
 
