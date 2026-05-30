@@ -1,22 +1,48 @@
 "use client";
+import ButtonAILN from "@/components/buttons/ButtonAILN";
 import CompetencyProfileAILN from "@/components/charts/CompetencyProfileAILN";
 import LevelProgressCardAILN from "@/components/charts/LevelProgressCardAILN";
 import PageContainerAILN from "@/components/pages/PageContainerAILN";
 import AppErrorComponents from "@/components/states/AppErrorComponents";
 import { setSessionToken, trpc } from "@/trpc/client";
+import {
+  Chart as ChartJS,
+  Filler,
+  Legend,
+  LineElement,
+  PointElement,
+  RadialLinearScale,
+  Tooltip,
+} from "chart.js";
 import dayjs from "dayjs";
 import "dayjs/locale/id";
 import {
+  ChevronRight,
+  Download,
   FileText,
   Flame,
   Lock,
+  Share2,
   Sparkles,
   Star,
   Timer,
   type LucideIcon,
 } from "lucide-react";
+import { useTheme } from "next-themes";
 import Image from "next/image";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
+import { Radar } from "react-chartjs-2";
+
+ChartJS.register(
+  RadialLinearScale,
+  PointElement,
+  LineElement,
+  Filler,
+  Tooltip,
+  Legend
+);
 
 dayjs.locale("id");
 
@@ -39,6 +65,9 @@ export default function MyProgressStudentAILN({
   useEffect(() => {
     setSessionToken(sessionToken);
   }, [sessionToken]);
+
+  const searchParams = useSearchParams();
+  const isOutcome = searchParams.get("outcome") === "true";
 
   const userQ = trpc.auth.checkSession.useQuery();
   const memberQ = trpc.auth.checkAilMember.useQuery();
@@ -68,6 +97,22 @@ export default function MyProgressStudentAILN({
   const firstName = user.full_name.split(" ")[0] ?? user.full_name;
   const levelNumber = member.current_level?.level_number ?? 0;
   const levelName = member.current_level?.name ?? "—";
+
+  if (isOutcome) {
+    return (
+      <PageContainerAILN>
+        <OutcomeView
+          firstName={firstName}
+          fullName={user.full_name}
+          jobTitle={member.job_title}
+          groupName={member.group?.name ?? null}
+          levelNumber={levelNumber}
+          levelName={levelName}
+          totalXp={member.total_xp}
+        />
+      </PageContainerAILN>
+    );
+  }
 
   return (
     <PageContainerAILN>
@@ -657,6 +702,341 @@ function ProgressSkeleton() {
         ))}
       </div>
       <div className="h-72 rounded-lg border border-dashboard-border bg-gray-100 dark:bg-card-bg" />
+    </div>
+  );
+}
+
+// ===== Outcome view (?outcome=true) ========================================
+// "Program selesai" snapshot. Radar (6 dimensi) di-hardcode untuk Awal vs
+// Sekarang karena belum ada endpoint baseline; sisanya pakai data nyata
+// (achievements + member).
+
+function OutcomeView({
+  firstName,
+  fullName,
+  jobTitle,
+  groupName,
+  levelNumber,
+  levelName,
+  totalXp,
+}: {
+  firstName: string;
+  fullName: string;
+  jobTitle: string | null;
+  groupName: string | null;
+  levelNumber: number;
+  levelName: string;
+  totalXp: number;
+}) {
+  const year = dayjs().format("YYYY");
+  const certificateId = `AC-L${levelNumber}-${year}-0001`;
+
+  return (
+    <div className="flex w-full flex-col gap-5">
+      {/* Breadcrumb */}
+      <div className="flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400">
+        <Link
+          href="/student"
+          className="hover:text-gray-700 dark:hover:text-gray-300"
+        >
+          Pembelajaran
+        </Link>
+        <ChevronRight className="size-3" />
+        <Link
+          href="/student/my-progress"
+          className="hover:text-gray-700 dark:hover:text-gray-300"
+        >
+          Progress Saya
+        </Link>
+        <ChevronRight className="size-3" />
+        <span className="font-medium text-gray-700 dark:text-gray-300">
+          Outcome
+        </span>
+      </div>
+
+      {/* Header */}
+      <div className="flex flex-wrap items-start justify-between gap-4">
+        <div className="min-w-0">
+          <div className="text-[11px] font-semibold uppercase tracking-widest text-red-500 dark:text-red-400">
+            Outcome · Program Selesai
+          </div>
+          <h1 className="mt-1 text-2xl font-bold leading-tight dark:text-white">
+            Perjalanan AI {firstName}
+          </h1>
+          <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+            {[fullName, jobTitle, groupName].filter(Boolean).join(" · ")}.
+            Mulai dari{" "}
+            <span className="font-geist-mono text-gray-700 dark:text-gray-300">
+              L0 Searcher
+            </span>
+            , sekarang{" "}
+            <span className="font-semibold text-gray-700 dark:text-gray-200">
+              Level {levelNumber} {levelName}
+            </span>
+            .
+          </p>
+        </div>
+        <ButtonAILN variant="outline">
+          <Download className="size-4" />
+          Unduh ringkasan PDF
+        </ButtonAILN>
+      </div>
+
+      {/* Radar + 2x2 stat grid */}
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)]">
+        <OutcomeRadarCard />
+        <OutcomeStatsGrid totalXp={totalXp} levelNumber={levelNumber} />
+      </div>
+
+      {/* Certificate */}
+      <OutcomeCertificateCard
+        levelNumber={levelNumber}
+        levelName={levelName}
+        certificateId={certificateId}
+        groupName={groupName}
+      />
+    </div>
+  );
+}
+
+const OUTCOME_PILLAR_LABELS = [
+  "Specificity",
+  "Context",
+  "Verification",
+  "Iteration",
+  "Workflow",
+  "Selection",
+];
+const OUTCOME_PILLAR_AWAL = [1.2, 1.5, 1.0, 1.3, 1.0, 1.4];
+const OUTCOME_PILLAR_SEKARANG = [4.2, 4.4, 3.5, 4.0, 3.7, 3.6];
+
+function OutcomeRadarCard() {
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === "dark";
+
+  const { data, options, awalAvg, sekarangAvg } = useMemo(() => {
+    const avg = (xs: number[]) => xs.reduce((s, x) => s + x, 0) / xs.length;
+    const gridColor = isDark
+      ? "rgba(148, 163, 184, 0.18)"
+      : "rgba(148, 163, 184, 0.28)";
+    const angleColor = isDark
+      ? "rgba(148, 163, 184, 0.16)"
+      : "rgba(148, 163, 184, 0.22)";
+    const labelColor = isDark
+      ? "rgba(226, 232, 240, 0.85)"
+      : "rgba(71, 85, 105, 0.95)";
+
+    return {
+      awalAvg: avg(OUTCOME_PILLAR_AWAL),
+      sekarangAvg: avg(OUTCOME_PILLAR_SEKARANG),
+      data: {
+        labels: OUTCOME_PILLAR_LABELS,
+        datasets: [
+          {
+            label: "Awal",
+            data: OUTCOME_PILLAR_AWAL,
+            backgroundColor: "rgba(148, 163, 184, 0.06)",
+            borderColor: isDark
+              ? "rgba(148, 163, 184, 0.5)"
+              : "rgba(148, 163, 184, 0.6)",
+            borderDash: [4, 3],
+            borderWidth: 1.5,
+            pointRadius: 0,
+            pointHoverRadius: 0,
+          },
+          {
+            label: "Sekarang",
+            data: OUTCOME_PILLAR_SEKARANG,
+            backgroundColor: "rgba(239, 68, 68, 0.18)",
+            borderColor: "rgba(239, 68, 68, 0.85)",
+            borderWidth: 2,
+            pointBackgroundColor: "rgba(239, 68, 68, 1)",
+            pointBorderColor: isDark ? "#0a0a0a" : "#FFFFFF",
+            pointBorderWidth: 2,
+            pointRadius: 3,
+            pointHoverRadius: 5,
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: (ctx: {
+                parsed: { r: number };
+                dataset: { label?: string };
+              }) =>
+                ` ${ctx.dataset.label}: ${ctx.parsed.r.toLocaleString(
+                  "id-ID",
+                  { minimumFractionDigits: 1, maximumFractionDigits: 1 }
+                )} / 5`,
+            },
+          },
+        },
+        scales: {
+          r: {
+            min: 0,
+            max: 5,
+            angleLines: { color: angleColor, lineWidth: 1 },
+            grid: { color: gridColor, lineWidth: 1 },
+            ticks: { display: false },
+            pointLabels: {
+              color: labelColor,
+              font: { size: 11, weight: 500 as const },
+            },
+          },
+        },
+      } as const,
+    };
+  }, [isDark]);
+
+  const fmtAvg = (n: number) =>
+    n.toLocaleString("id-ID", {
+      minimumFractionDigits: 1,
+      maximumFractionDigits: 1,
+    });
+
+  return (
+    <div className="flex flex-col rounded-lg border border-dashboard-border bg-white p-5 dark:bg-card-bg">
+      <h3 className="text-base font-bold text-foreground dark:text-white">
+        Pillar radar · awal vs sekarang
+      </h3>
+      <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+        6 dimensi · skala 0–5
+      </p>
+      <div className="mt-4 h-[280px]">
+        <Radar data={data} options={options} />
+      </div>
+      <div className="mt-3 flex flex-wrap items-center justify-center gap-6 text-xs">
+        <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400">
+          <span className="inline-block h-px w-6 border-t border-dashed border-gray-400" />
+          <span>Awal</span>
+          <span className="font-geist-mono font-semibold text-gray-700 dark:text-gray-300">
+            {fmtAvg(awalAvg)}
+          </span>
+        </div>
+        <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300">
+          <span className="inline-block h-0.5 w-6 bg-red-500" />
+          <span>Sekarang</span>
+          <span className="font-geist-mono font-semibold text-red-600 dark:text-red-400">
+            {fmtAvg(sekarangAvg)}
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function OutcomeStatsGrid({
+  totalXp,
+  levelNumber,
+}: {
+  totalXp: number;
+  levelNumber: number;
+}) {
+  const q = trpc.ailene.read.achievements.useQuery();
+
+  if (q.isLoading) {
+    return (
+      <div className="grid grid-cols-2 gap-4">
+        {Array.from({ length: 4 }).map((_, i) => (
+          <div
+            key={i}
+            className="h-28 animate-pulse rounded-lg border border-dashboard-border bg-gray-100 dark:bg-card-bg"
+          />
+        ))}
+      </div>
+    );
+  }
+  if (q.error || !q.data) {
+    return (
+      <div className="rounded-lg border border-dashboard-border bg-white p-5 text-sm text-red-500 dark:bg-card-bg dark:text-red-400">
+        Gagal memuat capaian.
+      </div>
+    );
+  }
+
+  const a = q.data;
+
+  return (
+    <div className="grid grid-cols-2 gap-4">
+      <StatCard
+        icon={FileText}
+        value={fmtInt(a.use_case_count)}
+        label="Use Case Dicatat"
+        sub={
+          a.tools_mastered.length > 0
+            ? `${a.tools_mastered.length} tools dikuasai`
+            : undefined
+        }
+      />
+      <StatCard
+        icon={Sparkles}
+        value={fmtInt(a.prompt_count)}
+        label="Prompt Dicatat"
+      />
+      <StatCard
+        icon={Star}
+        value={totalXp.toLocaleString("id-ID")}
+        unit="XP"
+        label="Total XP"
+        sub={`Level ${levelNumber}`}
+      />
+      <StatCard
+        icon={Timer}
+        value={fmtHours(a.hours_saved_total)}
+        unit="jam"
+        label="Jam Dihemat"
+        sub="estimasi"
+        accent
+      />
+    </div>
+  );
+}
+
+function OutcomeCertificateCard({
+  levelNumber,
+  levelName,
+  certificateId,
+  groupName,
+}: {
+  levelNumber: number;
+  levelName: string;
+  certificateId: string;
+  groupName: string | null;
+}) {
+  return (
+    <div className="flex flex-wrap items-center gap-4 rounded-lg border border-dashboard-border bg-white p-4 dark:bg-card-bg dark:shadow-[0_0_16px_rgba(239,68,68,0.08)]">
+      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-md bg-red-50 text-red-600 dark:bg-red-500/15 dark:text-red-400 dark:shadow-[0_0_12px_rgba(239,68,68,0.4)]">
+        <Star className="size-6" fill="currentColor" />
+      </div>
+      <div className="flex min-w-0 flex-1 flex-col gap-1">
+        <div className="flex flex-wrap items-center gap-2">
+          <h3 className="text-base font-bold dark:text-white">
+            Sertifikat Level {levelNumber} {levelName}
+          </h3>
+          <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-[11px] font-medium text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400">
+            Tertinggi di program
+          </span>
+        </div>
+        <p className="text-xs text-gray-500 dark:text-gray-400">
+          Diverifikasi oleh Champion{groupName ? ` ${groupName}` : ""} ·{" "}
+          <span className="font-geist-mono">ID {certificateId}</span>
+        </p>
+      </div>
+      <div className="flex shrink-0 flex-wrap items-center gap-2">
+        <ButtonAILN variant="outline" size="small">
+          <Download className="size-4" />
+          Unduh PDF
+        </ButtonAILN>
+        <ButtonAILN variant="outline" size="small">
+          <Share2 className="size-4" />
+          Bagikan
+        </ButtonAILN>
+      </div>
     </div>
   );
 }
