@@ -3,7 +3,7 @@ import LogError from "@/lib/prisma-log-error";
 import GetQStashClient from "@/lib/qstash";
 import { WhatsappAttachmentAllTypes } from "@/lib/whatsapp-types";
 import { WACType, WAMode } from "@prisma/client";
-import { NextRequest, NextResponse } from "next/server";
+import { after, NextRequest, NextResponse } from "next/server";
 import { WhatsAppWebhookBody } from "./type.wa.webhook";
 import {
   appendChatFromUser,
@@ -140,7 +140,7 @@ export async function POST(req: NextRequest) {
               "[webhook] triggerLangGraphAgent payload:",
               JSON.stringify(langGraphPayload)
             );
-            await triggerLangGraphAgent(langGraphPayload);
+            after(() => triggerLangGraphAgent(langGraphPayload));
           }
 
           // Enqueue media upload to Supabase Storage as a background QStash job.
