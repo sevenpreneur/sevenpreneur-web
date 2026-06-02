@@ -220,21 +220,28 @@ CREATE TABLE ail_prompts (
 );
 
 CREATE TABLE ail_prompt_submissions (
-    id             SERIAL       PRIMARY KEY,
-    member_id      INTEGER      NOT NULL,
-    prompt_id      INTEGER      NOT NULL,
-    assigned_by_id INTEGER          NULL,                        -- champion who assigned; NULL = self-driven
-    deadline       TIMESTAMPTZ      NULL,
-    message        TEXT             NULL,                        -- champion's assignment note
-    input          TEXT             NULL,                        -- filled by student
-    output         TEXT             NULL,
-    submitted_at   TIMESTAMPTZ      NULL,                        -- NULL = not yet submitted
-    reviewed_by_id INTEGER          NULL,                        -- champion who reviewed
-    reviewed_at    TIMESTAMPTZ      NULL,
-    comment        TEXT             NULL,                        -- champion's review feedback
-    is_accepted    BOOLEAN      NOT NULL DEFAULT FALSE,
-    created_at     TIMESTAMPTZ  NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at     TIMESTAMPTZ  NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    id                 SERIAL       PRIMARY KEY,
+    member_id          INTEGER      NOT NULL,
+    prompt_id          INTEGER      NOT NULL,
+    assigned_by_id     INTEGER          NULL,                    -- champion who assigned; NULL = self-driven
+    deadline           TIMESTAMPTZ      NULL,
+    message            TEXT             NULL,                    -- champion's assignment note
+    input              TEXT             NULL,                    -- filled by student
+    output             TEXT             NULL,
+    submitted_at       TIMESTAMPTZ      NULL,                    -- NULL = not yet submitted
+    reviewed_by_id     INTEGER          NULL,                    -- champion who reviewed
+    reviewed_at        TIMESTAMPTZ      NULL,
+    comment            TEXT             NULL,                    -- champion's review feedback
+    is_accepted        BOOLEAN      NOT NULL DEFAULT FALSE,
+    -- Prompting Quality rubric (filled by champion at review): 1–5 per dimension.
+    -- Used by ailene.read.competencyProfile pillar 2 (6-pillar diagnostic).
+    rubric_specificity SMALLINT         NULL CHECK (rubric_specificity BETWEEN 1 AND 5),
+    rubric_context     SMALLINT         NULL CHECK (rubric_context     BETWEEN 1 AND 5),
+    rubric_constraints SMALLINT         NULL CHECK (rubric_constraints BETWEEN 1 AND 5),
+    rubric_examples    SMALLINT         NULL CHECK (rubric_examples    BETWEEN 1 AND 5),
+    rubric_iteration   SMALLINT         NULL CHECK (rubric_iteration   BETWEEN 1 AND 5),
+    created_at         TIMESTAMPTZ  NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at         TIMESTAMPTZ  NOT NULL DEFAULT CURRENT_TIMESTAMP,
     UNIQUE (member_id, prompt_id)
 );
 
