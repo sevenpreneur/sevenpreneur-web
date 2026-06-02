@@ -164,6 +164,122 @@ export const readAilene = {
     };
   }),
 
+  // Rekomendasi use case / prompt mandiri dari KATALOG — relevan ke level +
+  // (ringan) role/departemen. Read-only; tidak butuh migrasi.
+  recommendations: ailMemberProcedure.query(async (opts) => {
+    const memberId = opts.ctx.ail_member.id;
+
+    const me = await opts.ctx.prisma.ailMember.findUnique({
+      where: { id: memberId },
+      select: {
+        current_level_id: true,
+        job_title: true,
+        group: { select: { name: true } },
+        current_level: { select: { level_number: true } },
+      },
+    });
+    if (!me) {
+      return { code: STATUS_OK, message: "Success", level_number: 0, department: null, items: [] };
+    }
+
+    const levelId = me.current_level_id;
+    const levelNumber = me.current_level?.level_number ?? 0;
+    const department = me.group?.name ?? null;
+    // Hint untuk preferensi kategori (Opsi A — ringan, dipakai utk SORT).
+    const hint = `${me.job_title ?? ""} ${department ?? ""}`.toLowerCase();
+
+    const [doneUc, donePr] = await Promise.all([
+      opts.ctx.prisma.ailUseCaseSubmission.findMany({
+        where: { member_id: memberId },
+        select: { use_case_id: true },
+      }),
+      opts.ctx.prisma.ailPromptSubmission.findMany({
+        where: { member_id: memberId },
+        select: { prompt_id: true },
+      }),
+    ]);
+    const doneUcIds = doneUc
+      .map((x) => x.use_case_id)
+      .filter((x): x is number => x != null);
+    const donePrIds = donePr
+      .map((x) => x.prompt_id)
+      .filter((x): x is number => x != null);
+
+    const [useCases, prompts] = await Promise.all([
+      opts.ctx.prisma.ailUseCase.findMany({
+        where: {
+          level_id: levelId,
+          status: "ACTIVE",
+          ...(doneUcIds.length ? { id: { notIn: doneUcIds } } : {}),
+        },
+        select: {
+          id: true,
+          name: true,
+          description: true,
+          categories: { select: { category: { select: { name: true } } } },
+        },
+        take: 12,
+      }),
+      opts.ctx.prisma.ailPrompt.findMany({
+        where: {
+          level_id: levelId,
+          status: "ACTIVE",
+          ...(donePrIds.length ? { id: { notIn: donePrIds } } : {}),
+        },
+        select: {
+          id: true,
+          name: true,
+          scenario: true,
+          categories: { select: { category: { select: { name: true } } } },
+        },
+        take: 12,
+      }),
+    ]);
+
+    type Rec = {
+      id: number;
+      kind: "use_case" | "prompt";
+      title: string;
+      description: string;
+      category: string | null;
+    };
+    const ucItems: Rec[] = useCases.map((u) => ({
+      id: u.id,
+      kind: "use_case",
+      title: u.name,
+      description: u.description,
+      category: u.categories[0]?.category.name ?? null,
+    }));
+    const prItems: Rec[] = prompts.map((p) => ({
+      id: p.id,
+      kind: "prompt",
+      title: p.name,
+      description: p.scenario,
+      category: p.categories[0]?.category.name ?? null,
+    }));
+
+    // Relevansi ringan: item yg kategorinya nyerempet role/dept didahulukan.
+    const relevance = (r: Rec) =>
+      r.category && hint.includes(r.category.toLowerCase()) ? 1 : 0;
+    const byRelevance = (a: Rec, b: Rec) => relevance(b) - relevance(a);
+    ucItems.sort(byRelevance);
+    prItems.sort(byRelevance);
+
+    // Mix tergantung level: L0–L1 condong prompt, L2+ condong use case.
+    const caseFirst = levelNumber >= 2;
+    const primary = caseFirst ? ucItems : prItems;
+    const secondary = caseFirst ? prItems : ucItems;
+    const items = [...primary, ...secondary].slice(0, 6);
+
+    return {
+      code: STATUS_OK,
+      message: "Success",
+      level_number: levelNumber,
+      department,
+      items,
+    };
+  }),
+
   firstWin: ailMemberProcedure.query(async (opts) => {
     const memberId = opts.ctx.ail_member.id;
 
@@ -806,6 +922,214 @@ export const readAilene = {
     };
   }),
 
+  // Program-health metrics for the sponsor dashboard, all derived from real
+  // data (no targets/deltas — we have no historical baseline yet). Each metric
+  // is a percentage plus a human-readable "X dari Y" detail.
+  programHealth: sponsorProcedure.query(async (opts) => {
+    const [
+      members,
+      ucReviewed,
+      ucAccepted,
+      promptReviewed,
+      promptAccepted,
+      ucSubmitters,
+      promptSubmitters,
+    ] = await Promise.all([
+      opts.ctx.prisma.ailMember.findMany({
+        select: { id: true, current_level: { select: { level_number: true } } },
+      }),
+      opts.ctx.prisma.ailUseCaseSubmission.count({
+        where: { reviewed_at: { not: null } },
+      }),
+      opts.ctx.prisma.ailUseCaseSubmission.count({
+        where: { reviewed_at: { not: null }, is_accepted: true },
+      }),
+      opts.ctx.prisma.ailPromptSubmission.count({
+        where: { reviewed_at: { not: null } },
+      }),
+      opts.ctx.prisma.ailPromptSubmission.count({
+        where: { reviewed_at: { not: null }, is_accepted: true },
+      }),
+      opts.ctx.prisma.ailUseCaseSubmission.findMany({
+        where: { submitted_at: { not: null } },
+        select: { member_id: true },
+        distinct: ["member_id"],
+      }),
+      opts.ctx.prisma.ailPromptSubmission.findMany({
+        where: { submitted_at: { not: null } },
+        select: { member_id: true },
+        distinct: ["member_id"],
+      }),
+    ]);
+
+    const memberCount = members.length;
+    const atL1 = members.filter(
+      (m) => (m.current_level?.level_number ?? 0) >= 1
+    ).length;
+    const atL2 = members.filter(
+      (m) => (m.current_level?.level_number ?? 0) >= 2
+    ).length;
+
+    const reviewedTotal = ucReviewed + promptReviewed;
+    const acceptedTotal = ucAccepted + promptAccepted;
+
+    const submitters = new Set<number>();
+    for (const row of ucSubmitters) submitters.add(row.member_id);
+    for (const row of promptSubmitters) submitters.add(row.member_id);
+
+    const pct = (num: number, den: number) =>
+      den === 0 ? 0 : Math.round((num / den) * 100);
+
+    return {
+      code: STATUS_OK,
+      message: "Success",
+      metrics: [
+        {
+          key: "pass_l1",
+          label: "Lulus L1",
+          name: "Capai Level 1+",
+          percent: pct(atL1, memberCount),
+          detail: `${atL1} dari ${memberCount} staff`,
+        },
+        {
+          key: "pass_l2",
+          label: "Lulus L2",
+          name: "Capai Level 2+",
+          percent: pct(atL2, memberCount),
+          detail: `${atL2} dari ${memberCount} staff`,
+        },
+        {
+          key: "accepted",
+          label: "Submission diterima",
+          name: "Hasil kerja di-ACC",
+          percent: pct(acceptedTotal, reviewedTotal),
+          detail: `${acceptedTotal} dari ${reviewedTotal} direview`,
+        },
+        {
+          key: "participation",
+          label: "Partisipasi",
+          name: "Staff pernah submit",
+          percent: pct(submitters.size, memberCount),
+          detail: `${submitters.size} dari ${memberCount} staff`,
+        },
+      ],
+    };
+  }),
+
+  // Recent organization activity feed — merges real submission/review/
+  // pre-assessment events across all members, newest first.
+  recentActivity: sponsorProcedure.query(async (opts) => {
+    const take = 8;
+    const [ucSubs, ucReviews, preAssessments] = await Promise.all([
+      opts.ctx.prisma.ailUseCaseSubmission.findMany({
+        where: { submitted_at: { not: null } },
+        orderBy: { submitted_at: "desc" },
+        take,
+        select: {
+          submitted_at: true,
+          use_case: { select: { name: true } },
+          member: {
+            select: {
+              user: { select: { full_name: true } },
+              group: { select: { name: true } },
+            },
+          },
+        },
+      }),
+      opts.ctx.prisma.ailUseCaseSubmission.findMany({
+        where: { reviewed_at: { not: null } },
+        orderBy: { reviewed_at: "desc" },
+        take,
+        select: {
+          reviewed_at: true,
+          is_accepted: true,
+          reviewed_by: { select: { user: { select: { full_name: true } } } },
+          use_case: { select: { name: true } },
+          member: { select: { group: { select: { name: true } } } },
+        },
+      }),
+      opts.ctx.prisma.ailPreAssessment.findMany({
+        orderBy: { created_at: "desc" },
+        take,
+        select: {
+          created_at: true,
+          q3_job_role: true,
+          member: {
+            select: {
+              user: { select: { full_name: true } },
+              group: { select: { name: true } },
+            },
+          },
+        },
+      }),
+    ]);
+
+    type Activity = {
+      at: Date;
+      actor: string;
+      action: string;
+      meta: string;
+    };
+    const items: Activity[] = [];
+
+    for (const row of ucSubs) {
+      if (!row.submitted_at) continue;
+      items.push({
+        at: row.submitted_at,
+        actor: row.member.user?.full_name ?? "Staff",
+        action: "kirim use case",
+        meta: [row.member.group?.name, row.use_case?.name]
+          .filter(Boolean)
+          .join(" · "),
+      });
+    }
+    for (const row of ucReviews) {
+      if (!row.reviewed_at) continue;
+      items.push({
+        at: row.reviewed_at,
+        actor: row.reviewed_by?.user?.full_name ?? "Champion",
+        action: row.is_accepted ? "terima use case" : "review use case",
+        meta: [row.member.group?.name, row.use_case?.name]
+          .filter(Boolean)
+          .join(" · "),
+      });
+    }
+    for (const row of preAssessments) {
+      items.push({
+        at: row.created_at,
+        actor: row.member.user?.full_name ?? "Staff",
+        action: "selesai pre-assessment",
+        meta: [row.member.group?.name, row.q3_job_role]
+          .filter(Boolean)
+          .join(" · "),
+      });
+    }
+
+    const now = dayjs();
+    const relTime = (date: Date): string => {
+      const min = now.diff(dayjs(date), "minute");
+      if (min < 1) return "baru saja";
+      if (min < 60) return `${min} mnt`;
+      const hour = Math.floor(min / 60);
+      if (hour < 24) return `${hour}j`;
+      const day = Math.floor(hour / 24);
+      if (day < 7) return `${day}h`;
+      return dayjs(date).format("D MMM");
+    };
+
+    const activity = items
+      .sort((a, b) => dayjs(b.at).valueOf() - dayjs(a.at).valueOf())
+      .slice(0, 6)
+      .map((item) => ({
+        actor: item.actor,
+        action: item.action,
+        meta: item.meta,
+        time: relTime(item.at),
+      }));
+
+    return { code: STATUS_OK, message: "Success", activity };
+  }),
+
   weeklyTrends: sponsorProcedure.query(async (opts) => {
     const weekCount = 12;
     const totalMembers = await opts.ctx.prisma.ailMember.count();
@@ -1313,6 +1637,19 @@ export const readAilene = {
         )
         .slice(0, 8);
 
+      const coachingNotes = await opts.ctx.prisma.ailCoachingNote.findMany({
+        where: { member_id },
+        orderBy: { created_at: "desc" },
+        take: 20,
+        include: { champion: { select: { user: { select: { full_name: true } } } } },
+      });
+      const notes = coachingNotes.map((n) => ({
+        id: n.id,
+        text: n.text,
+        created_at: n.created_at,
+        champion_name: n.champion.user.full_name,
+      }));
+
       return {
         code: STATUS_OK,
         message: "Success",
@@ -1370,6 +1707,7 @@ export const readAilene = {
           ],
         },
         activities,
+        notes,
       };
     }),
 

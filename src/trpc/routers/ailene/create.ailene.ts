@@ -309,6 +309,36 @@ export const createAilene = {
       };
     }),
 
+  coachingNote: championProcedure
+    .input(
+      z.object({
+        member_id: z.number().int().positive(),
+        text: z.string().trim().min(1).max(1000),
+      })
+    )
+    .mutation(async (opts) => {
+      const championId = opts.ctx.ail_member.id;
+      const { member_id, text } = opts.input;
+
+      // Champion hanya boleh memberi catatan ke member di grup yg dia pimpin.
+      const member = await opts.ctx.prisma.ailMember.findUnique({
+        where: { id: member_id },
+        select: { group: { select: { champion_id: true } } },
+      });
+      if (!member || member.group?.champion_id !== championId) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "You can only add notes to members in groups you lead.",
+        });
+      }
+
+      const note = await opts.ctx.prisma.ailCoachingNote.create({
+        data: { member_id, champion_id: championId, text },
+      });
+
+      return { code: STATUS_OK, message: "Catatan tersimpan", id: note.id };
+    }),
+
   assignPrompt: championProcedure
     .input(assignInputSchema)
     .mutation(async (opts) => {

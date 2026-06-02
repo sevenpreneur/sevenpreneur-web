@@ -30,6 +30,7 @@ export const aileneRouter = createTRPCRouter({
     preAssessment: createAilene.preAssessment,
     completeMaterial: createAilene.completeMaterial,
     completeVideo: createAilene.completeVideo,
+    coachingNote: createAilene.coachingNote,
     // champion only
     assignPrompt: createAilene.assignPrompt,
     assignUseCase: createAilene.assignUseCase,
@@ -41,6 +42,7 @@ export const aileneRouter = createTRPCRouter({
     announcement: readAilene.announcement,
     firstWin: readAilene.firstWin,
     competencyProfile: readAilene.competencyProfile,
+    recommendations: readAilene.recommendations,
     organizationStats: readAilene.organizationStats,
     materialDetail: readAilene.materialDetail,
     levelMaterials: readAilene.levelMaterials,
@@ -84,6 +86,8 @@ export const aileneRouter = createTRPCRouter({
     useCaseAssignment: readAilene.useCaseAssignment,
     // sponsor only
     executiveView: readAilene.executiveView,
+    programHealth: readAilene.programHealth,
+    recentActivity: readAilene.recentActivity,
     weeklyTrends: readAilene.weeklyTrends,
     levelDistribution: readAilene.levelDistribution,
     organizationLeaderboard: readAilene.organizationLeaderboard,

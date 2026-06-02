@@ -1276,8 +1276,23 @@ model AilMember {
   use_case_submissions       AilUseCaseSubmission[]  @relation("use_case_submission_member")
   use_case_assignments_given AilUseCaseSubmission[]  @relation("use_case_submission_assigned_by")
   use_case_reviews_given     AilUseCaseSubmission[]  @relation("use_case_submission_reviewed_by")
+  coaching_notes_received    AilCoachingNote[]       @relation("coaching_note_member")
+  coaching_notes_given       AilCoachingNote[]       @relation("coaching_note_champion")
 
   @@map("ail_members")
+}
+
+model AilCoachingNote {
+  id          Int       @id @default(autoincrement()) @db.Integer
+  member      AilMember @relation("coaching_note_member", fields: [member_id], references: [id])
+  member_id   Int       @db.Integer
+  champion    AilMember @relation("coaching_note_champion", fields: [champion_id], references: [id])
+  champion_id Int       @db.Integer
+  text        String    @db.Text
+  created_at  DateTime  @default(now()) @db.Timestamptz()
+
+  @@index([member_id])
+  @@map("ail_coaching_notes")
 }
 
 model AilGroup {
