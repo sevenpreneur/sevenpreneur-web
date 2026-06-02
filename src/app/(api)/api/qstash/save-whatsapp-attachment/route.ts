@@ -1,5 +1,8 @@
 import GetPrismaClient from "@/lib/prisma";
-import { saveWhatsappAttachment } from "../../whatsapp/webhook/util.wa.webhook";
+import {
+  saveWhatsappAttachment,
+  triggerLangGraphAgentForMedia,
+} from "../../whatsapp/webhook/util.wa.webhook";
 import { verifySignatureAppRouter } from "@upstash/qstash/dist/nextjs";
 
 type SaveWhatsappAttachmentJob = {
@@ -18,6 +21,9 @@ export const POST = verifySignatureAppRouter(async (req: Request) => {
     body.attachment,
     body.wam_id
   );
+
+  // storage_url is persisted now — notify the agent with the full attachment.
+  await triggerLangGraphAgentForMedia(prisma, body.wam_id);
 
   return Response.json({ received: true, storage_url: storageUrl });
 });

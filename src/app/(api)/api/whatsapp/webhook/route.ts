@@ -122,7 +122,16 @@ export async function POST(req: NextRequest) {
             return new NextResponse(undefined, { status: 500 });
           }
 
-          if (appendResult.mode === WAMode.AI) {
+          // Non-media triggers here.
+          const isDeferredMedia = [
+            "audio",
+            "document",
+            "image",
+            "sticker",
+            "video",
+          ].includes(msg.type);
+
+          if (appendResult.mode === WAMode.AI && !isDeferredMedia) {
             const langGraphPayload = {
               id: appendResult.id,
               conv_id: appendResult.conv_id,

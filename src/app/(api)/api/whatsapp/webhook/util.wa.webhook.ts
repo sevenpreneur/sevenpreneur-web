@@ -224,6 +224,64 @@ export async function triggerLangGraphAgent(payload: {
   }
 }
 
+// Triggers the agent for a media message after its attachment is uploaded
+export async function triggerLangGraphAgentForMedia(
+  prisma: ReturnType<typeof GetPrismaClient>,
+  wam_id: string
+) {
+  try {
+    const chat = await prisma.wAChat.findFirst({
+      select: {
+        id: true,
+        conv_id: true,
+        reply_to_id: true,
+        type: true,
+        message: true,
+        attachment: true,
+        created_at: true,
+        conv: { select: { full_name: true, mode: true } },
+      },
+      where: { wam_id: wam_id },
+    });
+    if (!chat) {
+      await LogError(
+        "whatsapp.webhook",
+        `triggerLangGraphAgentForMedia: chat not found for wam_id ${wam_id}`
+      );
+      return;
+    }
+
+    if (chat.conv.mode !== WAMode.AI) {
+      return;
+    }
+
+    const payload = {
+      id: chat.id,
+      conv_id: chat.conv_id,
+      wam_id: wam_id,
+      direction: "inbound" as const,
+      sender_type: "user" as const,
+      type: chat.type.toLowerCase(), // WACType enum -> lowercase WhatsApp type
+      message: chat.message,
+      name: chat.conv.full_name,
+      reply_to_id: chat.reply_to_id,
+      attachment: chat.attachment as object | null,
+      sent_at: chat.created_at.toISOString(),
+    };
+    console.log(
+      "[qstash] triggerLangGraphAgentForMedia payload:",
+      JSON.stringify(payload)
+    );
+    await triggerLangGraphAgent(payload);
+  } catch (e) {
+    await LogError(
+      "whatsapp.webhook",
+      `triggerLangGraphAgentForMedia failed for wam_id ${wam_id}:`,
+      e
+    );
+  }
+}
+
 export async function updateStatusByMessageID(
   prisma: ReturnType<typeof GetPrismaClient>,
   phone_number: string,
