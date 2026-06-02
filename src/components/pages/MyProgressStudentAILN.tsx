@@ -2,18 +2,11 @@
 import ButtonAILN from "@/components/buttons/ButtonAILN";
 import CompetencyProfileAILN from "@/components/charts/CompetencyProfileAILN";
 import LevelProgressCardAILN from "@/components/charts/LevelProgressCardAILN";
+import StreakCardAILN from "@/components/charts/StreakCardAILN";
 import PageContainerAILN from "@/components/pages/PageContainerAILN";
 import AppErrorComponents from "@/components/states/AppErrorComponents";
 import { setSessionToken, trpc } from "@/trpc/client";
-import {
-  Chart as ChartJS,
-  Filler,
-  Legend,
-  LineElement,
-  PointElement,
-  RadialLinearScale,
-  Tooltip,
-} from "chart.js";
+import { Tooltip as MuiTooltip } from "@mui/material";
 import dayjs from "dayjs";
 import "dayjs/locale/id";
 import {
@@ -33,16 +26,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
-import { Radar } from "react-chartjs-2";
-
-ChartJS.register(
-  RadialLinearScale,
-  PointElement,
-  LineElement,
-  Filler,
-  Tooltip,
-  Legend
-);
 
 dayjs.locale("id");
 
@@ -97,6 +80,9 @@ export default function MyProgressStudentAILN({
   const firstName = user.full_name.split(" ")[0] ?? user.full_name;
   const levelNumber = member.current_level?.level_number ?? 0;
   const levelName = member.current_level?.name ?? "—";
+  // Rentang streak = sejak member bergabung sampai hari ini (bukan hardcoded).
+  const cohortStart = dayjs(member.created_at).format("YYYY-MM-DD");
+  const cohortEnd = dayjs().format("YYYY-MM-DD");
 
   if (isOutcome) {
     return (
@@ -137,57 +123,23 @@ export default function MyProgressStudentAILN({
               .
             </p>
           </div>
-          <div className="flex items-center gap-3">
-            {member.current_level?.icon && (
-              <div className="flex items-center gap-2 rounded-md bg-white p-3 shadow-sm dark:border dark:border-red-500/30 dark:bg-red-500/5 dark:shadow-[0_0_16px_rgba(239,68,68,0.15)]">
-                <Image
-                  src={member.current_level.icon}
-                  alt={levelName}
-                  width={32}
-                  height={32}
-                  className="h-8 w-8"
-                />
-                <div className="flex flex-col">
-                  <div className="text-xs text-gray-500 dark:text-gray-400">
-                    Current Level
-                  </div>
-                  <div className="font-bold dark:text-white">
-                    Level {levelNumber}
-                  </div>
-                </div>
-              </div>
-            )}
-            <div className="flex items-center gap-2 rounded-md bg-white p-3 shadow-sm dark:border dark:border-red-500/30 dark:bg-red-500/5 dark:shadow-[0_0_16px_rgba(239,68,68,0.15)]">
-              <Star
-                className="size-5 text-amber-500 dark:text-amber-400 dark:drop-shadow-[0_0_6px_rgba(251,191,36,0.7)]"
-                fill="currentColor"
-              />
-              <div className="flex flex-col">
-                <div className="text-xs text-gray-500 dark:text-gray-400">
-                  Total XP
-                </div>
-                <div className="font-bold dark:text-white">
-                  {member.total_xp.toLocaleString("id-ID")} XP
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
 
-        {/* Level journey */}
+        {/* Level journey — full width */}
         <LevelProgressCardAILN />
 
-        {/* Achievement stats */}
-        <StatsPanel totalXp={member.total_xp} levelNumber={levelNumber} />
-
-        {/* Competency radar */}
-        <CompetencyProfileAILN />
-
-        {/* Leaderboard + Streak */}
-        <div className="grid grid-cols-1 gap-5 xl:grid-cols-[minmax(0,420px)_1fr]">
-          <LeaderboardPanel />
-          <StreakPanel />
+        {/* Profil Kompetensi 60% sejajar Capaian Kamu / streak 40% (tinggi sama) */}
+        <div className="grid grid-cols-1 gap-5 xl:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
+          <CompetencyProfileAILN className="h-full" />
+          <StreakCardAILN
+            startDate={cohortStart}
+            endDate={cohortEnd}
+            className="h-full"
+          />
         </div>
+
+        {/* Leaderboard — full width */}
+        <LeaderboardPanel />
       </div>
     </PageContainerAILN>
   );
@@ -206,7 +158,7 @@ function StatsPanel({
 
   if (q.isLoading) {
     return (
-      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-4">
         {Array.from({ length: 4 }).map((_, i) => (
           <div
             key={i}
@@ -227,7 +179,7 @@ function StatsPanel({
   const a = q.data;
 
   return (
-    <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+    <div className="grid grid-cols-2 gap-4">
       <StatCard
         icon={FileText}
         value={fmtInt(a.use_case_count)}
@@ -468,6 +420,13 @@ const WINDOW_OPTIONS = [
   { days: 90, label: "90 hari" },
 ];
 
+const STREAK_MONTHS = [
+  "Jan", "Feb", "Mar", "Apr", "Mei", "Jun",
+  "Jul", "Agu", "Sep", "Okt", "Nov", "Des",
+];
+// Inisial hari (Senin-start) untuk header kolom tiap blok bulan.
+const DOW_INITIALS = ["S", "S", "R", "K", "J", "S", "M"];
+
 function tierClass(count: number): string {
   if (count === 0) return "bg-gray-200 dark:bg-dashboard-border";
   if (count <= 2) return "bg-red-200 dark:bg-red-500/30";
@@ -493,24 +452,29 @@ function computeStats(days: DayCell[]) {
   return { longest, active, total: days.length, rest: days.length - active };
 }
 
-function buildWeeks(days: DayCell[]): (DayCell | null)[][] {
-  if (days.length === 0) return [];
-  const weeks: (DayCell | null)[][] = [];
-  let col: (DayCell | null)[] = [];
-  const lead = (dayjs(days[0].date).day() + 6) % 7; // Monday-start index
-  for (let i = 0; i < lead; i++) col.push(null);
-  for (const d of days) {
-    col.push(d);
-    if (col.length === 7) {
-      weeks.push(col);
-      col = [];
+// Kalender multi-bulan: tiap bulan jadi blok (hari = kolom Sen..Min, minggu =
+// baris ke bawah); blok bulan disusun berdampingan ke samping.
+type MonthCal = { key: string; label: string; weeks: (DayCell | null)[][] };
+function buildMonthCalendars(days: DayCell[]): MonthCal[] {
+  const countByDate = new Map(days.map((d) => [d.date, d.count]));
+  const inRange = new Set(days.map((d) => d.date));
+  const monthKeys = [...new Set(days.map((d) => d.date.slice(0, 7)))].sort();
+
+  return monthKeys.map((mk) => {
+    const monthIdx = Number(mk.slice(5, 7)) - 1;
+    const daysInMonth = dayjs(`${mk}-01`).daysInMonth();
+    const lead = (dayjs(`${mk}-01`).day() + 6) % 7; // Monday-start offset
+    const cells: (DayCell | null)[] = [];
+    for (let i = 0; i < lead; i++) cells.push(null);
+    for (let dnum = 1; dnum <= daysInMonth; dnum++) {
+      const date = `${mk}-${String(dnum).padStart(2, "0")}`;
+      cells.push(inRange.has(date) ? { date, count: countByDate.get(date) ?? 0 } : null);
     }
-  }
-  if (col.length > 0) {
-    while (col.length < 7) col.push(null);
-    weeks.push(col);
-  }
-  return weeks;
+    while (cells.length % 7 !== 0) cells.push(null);
+    const weeks: (DayCell | null)[][] = [];
+    for (let i = 0; i < cells.length; i += 7) weeks.push(cells.slice(i, i + 7));
+    return { key: mk, label: STREAK_MONTHS[monthIdx], weeks };
+  });
 }
 
 function StreakPanel() {
@@ -522,7 +486,7 @@ function StreakPanel() {
     return all.slice(-windowDays);
   }, [q.data, windowDays]);
   const stats = useMemo(() => computeStats(visibleDays), [visibleDays]);
-  const weeks = useMemo(() => buildWeeks(visibleDays), [visibleDays]);
+  const monthCals = useMemo(() => buildMonthCalendars(visibleDays), [visibleDays]);
   const todayKey = dayjs().format("YYYY-MM-DD");
 
   return (
@@ -600,34 +564,51 @@ function StreakPanel() {
             </div>
           </div>
 
-          {/* Heatmap */}
-          <div className="mt-3 flex gap-1 overflow-x-auto pb-1">
-            {weeks.map((week, wi) => (
-              <div key={wi} className="flex flex-col gap-1">
-                {week.map((cell, di) =>
-                  cell ? (
-                    <div
-                      key={cell.date}
-                      className={`group/cell relative size-3 rounded-[2px] ${tierClass(
-                        cell.count
-                      )} ${
-                        cell.date === todayKey
-                          ? "ring-1 ring-red-600 dark:ring-red-400"
-                          : ""
-                      }`}
-                    >
-                      <div className="pointer-events-none invisible absolute bottom-full left-1/2 z-20 mb-1.5 -translate-x-1/2 whitespace-nowrap rounded-md bg-gray-900 px-2 py-1 text-[10px] font-medium text-white opacity-0 shadow-md transition group-hover/cell:visible group-hover/cell:opacity-100 dark:bg-black dark:ring-1 dark:ring-red-500/40">
-                        {dayjs(cell.date).format("D MMM YYYY")} · {cell.count}{" "}
-                        aktivitas
-                        <div className="absolute left-1/2 top-full size-0 -translate-x-1/2 border-[4px] border-transparent border-t-gray-900 dark:border-t-black" />
+          {/* Heatmap — blok per bulan disusun ke samping; di tiap blok hari ke
+              samping (Sen..Min), minggu ke bawah */}
+          <div className="mt-3 overflow-x-auto pb-1">
+            <div className="flex gap-4">
+              {monthCals.map((month) => (
+                <div key={month.key} className="flex shrink-0 flex-col gap-1">
+                  <div className="text-center text-[11px] font-semibold text-gray-500 dark:text-gray-400">
+                    {month.label}
+                  </div>
+                  <div className="grid grid-cols-7 gap-1">
+                    {DOW_INITIALS.map((d, i) => (
+                      <div
+                        key={i}
+                        className="size-5 text-center text-[9px] leading-5 text-gray-400 dark:text-gray-500"
+                      >
+                        {d}
                       </div>
+                    ))}
+                  </div>
+                  {month.weeks.map((week, wi) => (
+                    <div key={wi} className="grid grid-cols-7 gap-1">
+                      {week.map((cell, di) =>
+                        cell ? (
+                          <MuiTooltip
+                            key={cell.date}
+                            arrow
+                            title={`${dayjs(cell.date).format("D MMM YYYY")} · ${cell.count} aktivitas`}
+                          >
+                            <div
+                              className={`size-5 rounded-[4px] ${tierClass(cell.count)} ${
+                                cell.date === todayKey
+                                  ? "ring-1 ring-red-600 dark:ring-red-400"
+                                  : ""
+                              }`}
+                            />
+                          </MuiTooltip>
+                        ) : (
+                          <div key={`pad-${month.key}-${wi}-${di}`} className="size-5" />
+                        )
+                      )}
                     </div>
-                  ) : (
-                    <div key={`pad-${wi}-${di}`} className="size-3" />
-                  )
-                )}
-              </div>
-            ))}
+                  ))}
+                </div>
+              ))}
+            </div>
           </div>
 
           {/* Legend */}
@@ -693,7 +674,7 @@ function ProgressSkeleton() {
         <div className="h-16 w-40 rounded-md bg-gray-200 dark:bg-dashboard-border" />
       </div>
       <div className="h-48 rounded-lg border border-dashboard-border bg-gray-100 dark:bg-card-bg" />
-      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-4">
         {Array.from({ length: 4 }).map((_, i) => (
           <div
             key={i}
@@ -782,9 +763,9 @@ function OutcomeView({
         </ButtonAILN>
       </div>
 
-      {/* Radar + 2x2 stat grid */}
+      {/* Radar (kompetensi terkini, real) + 2x2 stat grid */}
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)]">
-        <OutcomeRadarCard />
+        <CompetencyProfileAILN className="h-full" />
         <OutcomeStatsGrid totalXp={totalXp} levelNumber={levelNumber} />
       </div>
 
@@ -795,137 +776,6 @@ function OutcomeView({
         certificateId={certificateId}
         groupName={groupName}
       />
-    </div>
-  );
-}
-
-const OUTCOME_PILLAR_LABELS = [
-  "Specificity",
-  "Context",
-  "Verification",
-  "Iteration",
-  "Workflow",
-  "Selection",
-];
-const OUTCOME_PILLAR_AWAL = [1.2, 1.5, 1.0, 1.3, 1.0, 1.4];
-const OUTCOME_PILLAR_SEKARANG = [4.2, 4.4, 3.5, 4.0, 3.7, 3.6];
-
-function OutcomeRadarCard() {
-  const { resolvedTheme } = useTheme();
-  const isDark = resolvedTheme === "dark";
-
-  const { data, options, awalAvg, sekarangAvg } = useMemo(() => {
-    const avg = (xs: number[]) => xs.reduce((s, x) => s + x, 0) / xs.length;
-    const gridColor = isDark
-      ? "rgba(148, 163, 184, 0.18)"
-      : "rgba(148, 163, 184, 0.28)";
-    const angleColor = isDark
-      ? "rgba(148, 163, 184, 0.16)"
-      : "rgba(148, 163, 184, 0.22)";
-    const labelColor = isDark
-      ? "rgba(226, 232, 240, 0.85)"
-      : "rgba(71, 85, 105, 0.95)";
-
-    return {
-      awalAvg: avg(OUTCOME_PILLAR_AWAL),
-      sekarangAvg: avg(OUTCOME_PILLAR_SEKARANG),
-      data: {
-        labels: OUTCOME_PILLAR_LABELS,
-        datasets: [
-          {
-            label: "Awal",
-            data: OUTCOME_PILLAR_AWAL,
-            backgroundColor: "rgba(148, 163, 184, 0.06)",
-            borderColor: isDark
-              ? "rgba(148, 163, 184, 0.5)"
-              : "rgba(148, 163, 184, 0.6)",
-            borderDash: [4, 3],
-            borderWidth: 1.5,
-            pointRadius: 0,
-            pointHoverRadius: 0,
-          },
-          {
-            label: "Sekarang",
-            data: OUTCOME_PILLAR_SEKARANG,
-            backgroundColor: "rgba(239, 68, 68, 0.18)",
-            borderColor: "rgba(239, 68, 68, 0.85)",
-            borderWidth: 2,
-            pointBackgroundColor: "rgba(239, 68, 68, 1)",
-            pointBorderColor: isDark ? "#0a0a0a" : "#FFFFFF",
-            pointBorderWidth: 2,
-            pointRadius: 3,
-            pointHoverRadius: 5,
-          },
-        ],
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: { display: false },
-          tooltip: {
-            callbacks: {
-              label: (ctx: {
-                parsed: { r: number };
-                dataset: { label?: string };
-              }) =>
-                ` ${ctx.dataset.label}: ${ctx.parsed.r.toLocaleString(
-                  "id-ID",
-                  { minimumFractionDigits: 1, maximumFractionDigits: 1 }
-                )} / 5`,
-            },
-          },
-        },
-        scales: {
-          r: {
-            min: 0,
-            max: 5,
-            angleLines: { color: angleColor, lineWidth: 1 },
-            grid: { color: gridColor, lineWidth: 1 },
-            ticks: { display: false },
-            pointLabels: {
-              color: labelColor,
-              font: { size: 11, weight: 500 as const },
-            },
-          },
-        },
-      } as const,
-    };
-  }, [isDark]);
-
-  const fmtAvg = (n: number) =>
-    n.toLocaleString("id-ID", {
-      minimumFractionDigits: 1,
-      maximumFractionDigits: 1,
-    });
-
-  return (
-    <div className="flex flex-col rounded-lg border border-dashboard-border bg-white p-5 dark:bg-card-bg">
-      <h3 className="text-base font-bold text-foreground dark:text-white">
-        Pillar radar · awal vs sekarang
-      </h3>
-      <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-        6 dimensi · skala 0–5
-      </p>
-      <div className="mt-4 h-[280px]">
-        <Radar data={data} options={options} />
-      </div>
-      <div className="mt-3 flex flex-wrap items-center justify-center gap-6 text-xs">
-        <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400">
-          <span className="inline-block h-px w-6 border-t border-dashed border-gray-400" />
-          <span>Awal</span>
-          <span className="font-geist-mono font-semibold text-gray-700 dark:text-gray-300">
-            {fmtAvg(awalAvg)}
-          </span>
-        </div>
-        <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300">
-          <span className="inline-block h-0.5 w-6 bg-red-500" />
-          <span>Sekarang</span>
-          <span className="font-geist-mono font-semibold text-red-600 dark:text-red-400">
-            {fmtAvg(sekarangAvg)}
-          </span>
-        </div>
-      </div>
     </div>
   );
 }
