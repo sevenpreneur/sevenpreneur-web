@@ -8,13 +8,8 @@ import type { AppRouter } from "@/trpc/routers/_app";
 import type { inferRouterOutputs } from "@trpc/server";
 import dayjs from "dayjs";
 import "dayjs/locale/id";
-import {
-  Download,
-  FileText,
-  Send,
-} from "lucide-react";
+import { Download } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
-import { toast } from "sonner";
 
 const ACCENT = "#107158";
 type ChampionReportData =
@@ -73,7 +68,6 @@ function ReportContent({
     1
   );
 
-  const recipientInitials = getInitials(data.recipient?.full_name ?? "SP");
   const generatedLabel = useMemo(
     () => dayjs(data.generated_at).locale("id").format("D MMMM YYYY, HH:mm"),
     [data.generated_at]
@@ -128,10 +122,6 @@ function ReportContent({
     doc.text(wrapped, 16, y);
 
     doc.save(`${slugify(data.report.title)}.pdf`);
-  };
-
-  const handleSend = () => {
-    toast.success("Draft laporan siap dikirim ke Sponsor.");
   };
 
   return (
@@ -270,79 +260,21 @@ function ReportContent({
           <aside className="flex flex-col gap-4">
             <section className="rounded-lg border border-dashboard-border bg-white p-5 shadow-sm dark:bg-card-bg">
               <h2 className="text-base font-bold text-gray-900 dark:text-white">
-                Kirim laporan
+                Unduh laporan
               </h2>
-              <div className="mt-4 text-[11px] font-semibold uppercase tracking-widest text-gray-500">
-                Penerima
-              </div>
-              <div className="mt-2 flex items-center gap-3 rounded-md border border-dashboard-border bg-gray-50 p-3 dark:bg-card-inside-bg">
-                <div className="flex size-9 items-center justify-center rounded-full bg-pink-100 text-xs font-bold text-pink-700">
-                  {recipientInitials}
-                </div>
-                <div className="min-w-0">
-                  <div className="truncate text-sm font-semibold text-gray-900 dark:text-white">
-                    {data.recipient?.full_name ?? "Sponsor"}
-                  </div>
-                  <div className="truncate text-xs text-gray-500 dark:text-gray-400">
-                    {data.recipient?.job_title ?? "Penerima laporan"}
-                  </div>
-                </div>
-              </div>
-
-              <label className="mt-4 flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
-                <input type="checkbox" defaultChecked className="accent-[#107158]" />
-                Lampirkan PDF
-              </label>
-              <label className="mt-3 flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
-                <input type="checkbox" defaultChecked className="accent-[#107158]" />
-                Notifikasi email + in-app
-              </label>
-
+              <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                Hasilkan ringkasan periode ini sebagai PDF untuk dibagikan
+                manual ke sponsor / tim.
+              </p>
               <ButtonAILN
                 variant="primary"
                 size="medium"
                 className="mt-4 w-full"
-                onClick={handleSend}
-              >
-                <Send className="size-4" />
-                Kirim ke Sponsor
-              </ButtonAILN>
-              <ButtonAILN
-                variant="light"
-                size="medium"
-                className="mt-2 w-full"
                 onClick={handleDownload}
               >
                 <Download className="size-4" />
-                Unduh PDF saja
+                Unduh PDF
               </ButtonAILN>
-            </section>
-
-            <section className="rounded-lg border border-dashboard-border bg-white shadow-sm dark:bg-card-bg">
-              <div className="border-b border-dashboard-border p-4 text-base font-bold text-gray-900 dark:text-white">
-                Laporan terkirim
-              </div>
-              <div className="flex flex-col">
-                {data.sent_reports.map((report) => (
-                  <div
-                    key={report.id}
-                    className="grid grid-cols-[2rem_minmax(0,1fr)_3rem] items-center gap-3 border-b border-dashboard-border px-4 py-3 last:border-b-0"
-                  >
-                    <FileText className="size-4 text-gray-400" />
-                    <div className="min-w-0">
-                      <div className="truncate text-sm font-semibold text-gray-900 dark:text-white">
-                        {report.title}
-                      </div>
-                      <div className="truncate text-xs text-gray-500 dark:text-gray-400">
-                        Dibaca {report.recipient}
-                      </div>
-                    </div>
-                    <span className="text-right text-xs text-gray-400">
-                      {dayjs(report.sent_at).format("DD MMM")}
-                    </span>
-                  </div>
-                ))}
-              </div>
             </section>
           </aside>
         </div>
@@ -390,16 +322,6 @@ function ReportSkeleton() {
       </div>
     </div>
   );
-}
-
-function getInitials(name: string) {
-  return name
-    .split(" ")
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((part) => part[0])
-    .join("")
-    .toUpperCase();
 }
 
 function slugify(text: string) {

@@ -8,16 +8,14 @@ import { setSessionToken, trpc } from "@/trpc/client";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import {
-  ArrowUp,
   Check,
   CheckCircle2,
   ClipboardList,
   FileText,
   Send,
-  StickyNote,
   Upload,
 } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 dayjs.extend(relativeTime);
 
@@ -36,6 +34,15 @@ export default function MemberDetailsChampionAILN({
 
   const detailQ = trpc.ailene.read.memberDetail.useQuery({
     member_id: memberId,
+  });
+
+  const utils = trpc.useUtils();
+  const [noteText, setNoteText] = useState("");
+  const noteMutation = trpc.ailene.create.coachingNote.useMutation({
+    onSuccess: () => {
+      setNoteText("");
+      utils.ailene.read.memberDetail.invalidate({ member_id: memberId });
+    },
   });
 
   if (detailQ.isLoading) {
@@ -66,10 +73,27 @@ export default function MemberDetailsChampionAILN({
     );
   }
 
-  const { member, metrics, radar, gate, activities } = detailQ.data;
+  const { member, metrics, radar, gate, activities, notes } = detailQ.data;
+
+  const submitNote = () => {
+    const text = noteText.trim();
+    if (!text || noteMutation.isPending) return;
+    noteMutation.mutate({ member_id: memberId, text });
+  };
   const lastActiveLabel = member.last_active_at
     ? `aktif ${dayjs(member.last_active_at).fromNow()}`
     : "belum pernah aktif";
+
+  // Status badge dari progres gate, bukan hardcoded.
+  const onTrack = gate.ready || gate.percent >= 50;
+  const statusLabel = gate.ready
+    ? "Siap naik level"
+    : onTrack
+      ? "On track"
+      : "Perlu dorongan";
+  const statusCls = onTrack
+    ? "border-emerald-300 bg-emerald-50 text-emerald-700 dark:border-emerald-500/40 dark:bg-emerald-500/10 dark:text-emerald-300"
+    : "border-amber-300 bg-amber-50 text-amber-700 dark:border-amber-500/40 dark:bg-amber-500/10 dark:text-amber-300";
   const joinedLabel = dayjs(member.joined_at).format("DD MMM YYYY");
 
   return (
@@ -86,8 +110,10 @@ export default function MemberDetailsChampionAILN({
                 <span className="text-sm font-bold" style={{ color: ACCENT }}>
                   L{member.current_level.level_number} {member.current_level.name}
                 </span>
-                <span className="rounded-full border border-emerald-300 bg-emerald-50 px-2 py-0.5 text-[11px] font-semibold text-emerald-700 dark:border-emerald-500/40 dark:bg-emerald-500/10 dark:text-emerald-300">
-                  On track
+                <span
+                  className={`rounded-full border px-2 py-0.5 text-[11px] font-semibold ${statusCls}`}
+                >
+                  {statusLabel}
                 </span>
               </div>
               <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
@@ -96,21 +122,6 @@ export default function MemberDetailsChampionAILN({
                 {joinedLabel} - {lastActiveLabel}
               </p>
             </div>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-2">
-            <ButtonAILN variant="light" size="medium">
-              <StickyNote className="size-4" />
-              Kirim catatan
-            </ButtonAILN>
-            <ButtonAILN
-              variant="secondary"
-              size="medium"
-              disabled={!gate.ready || !gate.next_level_id}
-            >
-              <ArrowUp className="size-4" />
-              Promote ke L{gate.to_level}
-            </ButtonAILN>
           </div>
         </div>
 
@@ -166,7 +177,7 @@ export default function MemberDetailsChampionAILN({
             </div>
           </Section>
 
-          <Section title="Riwayat submission & review" action="Semua aktivitas ->">
+          <Section title="Riwayat submission & review">
             <div className="-mx-5 -mb-5 flex flex-col">
               {activities.length === 0 ? (
                 <div className="px-5 py-10 text-center text-sm text-gray-500 dark:text-gray-400">
@@ -178,14 +189,46 @@ export default function MemberDetailsChampionAILN({
                 ))
               )}
 
+              {notes.length > 0 && (
+                <div className="flex flex-col gap-2 border-t border-dashboard-border px-5 py-3">
+                  <div className="text-[10px] font-semibold uppercase tracking-widest text-gray-500 dark:text-gray-400">
+                    Catatan coaching
+                  </div>
+                  {notes.map((note) => (
+                    <div
+                      key={note.id}
+                      className="rounded-md bg-gray-50 px-3 py-2 text-sm dark:bg-card-inside-bg"
+                    >
+                      <p className="text-gray-800 dark:text-gray-200">
+                        {note.text}
+                      </p>
+                      <p className="mt-1 text-[11px] text-gray-400 dark:text-gray-500">
+                        {note.champion_name} ·{" "}
+                        {dayjs(note.created_at).format("D MMM YYYY, HH:mm")}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              )}
+
               <div className="flex gap-2 border-t border-dashboard-border bg-gray-50 px-5 py-3 dark:bg-card-inside-bg">
                 <input
+                  value={noteText}
+                  onChange={(e) => setNoteText(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") submitNote();
+                  }}
                   placeholder={`Tulis catatan coaching untuk ${member.full_name.split(" ")[0]}...`}
                   className="h-9 min-w-0 flex-1 rounded-md border border-dashboard-border bg-white px-3 text-sm outline-none focus:border-emerald-500 dark:bg-card-bg dark:text-white"
                 />
-                <ButtonAILN variant="primary" size="medium">
+                <ButtonAILN
+                  variant="primary"
+                  size="medium"
+                  onClick={submitNote}
+                  disabled={!noteText.trim() || noteMutation.isPending}
+                >
                   <Send className="size-4" />
-                  Kirim
+                  {noteMutation.isPending ? "Menyimpan..." : "Kirim"}
                 </ButtonAILN>
               </div>
             </div>
