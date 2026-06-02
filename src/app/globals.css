@@ -163,7 +163,7 @@
 
 :root {
   --background: var(--color-sevenpreneur-white);
-  --foreground: var(--color-surface-black);
+  --foreground: var(--color-sevenpreneur-surface-black);
   --border: var(--color-sevenpreneur-ash);
   /* dashboard */
   --dashboard-bg: #fafbfe;
@@ -425,5 +425,21 @@
   }
   .sb-group-hover:hover {
     background-color: var(--sb-item-hover);
+  }
+
+  /* Premium dashboard surface. Light mode floats on a soft layered shadow with
+     no gray border (the flat 1px border is what reads as "generic"); dark mode
+     uses a hairline border since shadows don't show on dark backgrounds. */
+  .ailn-card {
+    border-radius: 0.75rem;
+    background-color: #ffffff;
+    box-shadow:
+      0 1px 2px rgba(16, 24, 40, 0.04),
+      0 2px 8px rgba(16, 24, 40, 0.05);
+  }
+  .dark .ailn-card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--dashboard-border);
+    box-shadow: none;
   }
 }
