@@ -23,7 +23,7 @@ const nextConfig = {
           {
             type: "header",
             key: "host",
-            value: "www.(sevenpreneur.(com|net)|example.com).*",
+            value: "www.(sevenpreneur.com|example.com).*",
           },
         ],
         headers: [
@@ -43,7 +43,7 @@ const nextConfig = {
           {
             type: "header",
             key: "host",
-            value: "(agora|admin|ailene).sevenpreneur.com.*",
+            value: "(agora|admin).sevenpreneur.com.*",
           },
         ],
         missing: [
@@ -62,26 +62,7 @@ const nextConfig = {
           {
             type: "header",
             key: "host",
-            value: "(agora|admin|ailene).sevenpreneur.net.*",
-          },
-        ],
-        missing: [
-          {
-            type: "cookie",
-            key: "session_token",
-          },
-        ],
-        destination: "https://www.sevenpreneur.net/auth/login",
-        basePath: false,
-        permanent: false,
-      },
-      {
-        source: "/(.*)",
-        has: [
-          {
-            type: "header",
-            key: "host",
-            value: "(agora|admin|ailene).example.com:3000.*",
+            value: "(agora|admin).example.com:3000.*",
           },
         ],
         missing: [
@@ -100,7 +81,7 @@ const nextConfig = {
           {
             type: "header",
             key: "host",
-            value: "www.(sevenpreneur.(com|net)|example.com).*",
+            value: "www.(sevenpreneur.com|example.com).*",
           },
           {
             type: "cookie",
@@ -124,7 +105,7 @@ const nextConfig = {
     return {
       beforeFiles: [
         {
-          source: "/(admin|agora|ailene|api|www)",
+          source: "/(admin|agora|api|www)",
           destination: "/_not-found/page",
         },
       ],
@@ -135,8 +116,7 @@ const nextConfig = {
             {
               type: "header",
               key: "host",
-              value:
-                "(?<subdomain>[^.]+).(sevenpreneur.(com|net)|example.com).*",
+              value: "(?<subdomain>[^.]+).(sevenpreneur.com|example.com).*",
             },
           ],
           destination: "/:subdomain/:path*",
@@ -147,7 +127,7 @@ const nextConfig = {
             {
               type: "header",
               key: "host",
-              value: "(sevenpreneur.(com|net)|example.com).*",
+              value: "(sevenpreneur.com|example.com).*",
             },
           ],
           destination: "/www/:path*",
@@ -183,8 +163,6 @@ const nextConfig = {
       allowedOrigins: [
         "sevenpreneur.com",
         "*.sevenpreneur.com",
-        "sevenpreneur.net",
-        "*.sevenpreneur.net",
         "example.com",
         "*.example.com",
         process.env.NGROK_DOMAIN,

@@ -3,7 +3,7 @@ export type ProductCategory = "COHORT" | "PLAYLIST" | "AI" | "EVENT";
 export type TransactionStatus = "PAID" | "PENDING" | "FAILED";
 export type StatusType = "ACTIVE" | "INACTIVE";
 export type NumberConfig = "numeric" | "decimal" | "phone_number";
-export type PlatformType = "SVP" | "CMS" | "LMS" | "AILN";
+export type PlatformType = "SVP" | "CMS" | "LMS";
 export type SocialMediaVariant =
   | "instagram"
   | "facebook"
@@ -116,5 +116,3 @@ export type WhatsappChatType =
 // Article related
 export type ArticleStatus = "DRAFT" | "PUBLISHED" | "UNPUBLISHED";
 
-// AILENE related
-export type TaskVariant = "Quiz" | "Video" | "Material";

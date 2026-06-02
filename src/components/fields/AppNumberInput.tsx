@@ -49,14 +49,6 @@ const variantStyles: Record<
     disabled: "bg-card-inside-bg text-muted-foreground dark:text-foreground/30",
     font: "font-bodycopy",
   },
-  AILN: {
-    focus: "focus:outline-black/10 focus:border-black",
-    focusWithin: "focus-within:outline-black/10 focus-within:border-black",
-    border: "border border-dashboard-border",
-    background: "bg-card-inside-bg",
-    disabled: "bg-card-inside-bg text-muted-foreground dark:text-foreground/30",
-    font: "font-geist-sans",
-  },
 };
 
 export const NumberVariant: Record<

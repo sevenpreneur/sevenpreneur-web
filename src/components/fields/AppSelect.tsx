@@ -53,18 +53,6 @@ const variantStyles: Record<
       "hover:bg-tertiary/5 hover:text-tertiary dark:hover:text-white dark:hover:bg-card-inside-bg",
     font: "font-bodycopy",
   },
-  AILN: {
-    focus: "outline-4 outline-black/10 border-black",
-    border: "border border-dashboard-border",
-    background: "bg-card-inside-bg",
-    disabled: "bg-card-inside-bg text-muted-foreground dark:text-foreground/30",
-    dropdown: "bg-card-bg border border-dashboard-border",
-    itemActive:
-      "bg-black/5 text-foreground dark:text-white dark:bg-card-inside-bg",
-    itemHover:
-      "hover:bg-black/5 hover:text-foreground dark:hover:text-white dark:hover:bg-card-inside-bg",
-    font: "font-geist-sans",
-  },
 };
 
 export interface OptionType {

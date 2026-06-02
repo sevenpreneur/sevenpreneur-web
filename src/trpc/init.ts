@@ -1,7 +1,6 @@
 import { Optional } from "@/lib/optional-type";
 import GetPrismaClient from "@/lib/prisma";
 import { initTRPC, TRPCError } from "@trpc/server";
-import dayjs from "dayjs";
 import { headers } from "next/headers";
 
 export type createTRPCContextOptions = {
@@ -142,63 +141,3 @@ export const roleBasedProcedure = (roleList: string[]) => {
     });
   });
 };
-
-export const ailMemberProcedure = t.procedure.use(async (opts) => {
-  const { ctx } = opts;
-  if (!ctx.user) {
-    throw new TRPCError({ code: "UNAUTHORIZED" });
-  }
-  const ail_member = await ctx.prisma.ailMember.findUnique({
-    where: { user_id: ctx.user.id },
-    include: { current_level: true },
-  });
-  if (!ail_member) {
-    throw new TRPCError({
-      code: "FORBIDDEN",
-      message: "Not an Ailene member.",
-    });
-  }
-
-  const activityNow = dayjs();
-  const activityThreshold = activityNow.subtract(10, "minute").toDate();
-  if (
-    !ail_member.last_active_at ||
-    ail_member.last_active_at < activityThreshold
-  ) {
-    await ctx.prisma.ailMember.updateMany({
-      where: {
-        id: ail_member.id,
-        OR: [
-          { last_active_at: null },
-          { last_active_at: { lt: activityThreshold } },
-        ],
-      },
-      data: { last_active_at: activityNow.toDate() },
-    });
-  }
-
-  return opts.next({
-    ctx: {
-      prisma: ctx.prisma,
-      user: ctx.user, // not-null
-      ail_member, // not-null
-    },
-  });
-});
-
-export const championProcedure = ailMemberProcedure.use(async (opts) => {
-  if (opts.ctx.ail_member.role !== "CHAMPION") {
-    throw new TRPCError({
-      code: "FORBIDDEN",
-      message: "Champion access only.",
-    });
-  }
-  return opts.next(opts);
-});
-
-export const sponsorProcedure = ailMemberProcedure.use(async (opts) => {
-  if (opts.ctx.ail_member.role !== "SPONSOR") {
-    throw new TRPCError({ code: "FORBIDDEN", message: "Sponsor access only." });
-  }
-  return opts.next(opts);
-});
