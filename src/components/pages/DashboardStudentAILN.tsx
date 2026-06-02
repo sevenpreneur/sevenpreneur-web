@@ -1,17 +1,24 @@
 "use client";
 import FirstWinCardAILN from "@/components/cards/FirstWinCardAILN";
 import TodayFocusCardAILN from "@/components/cards/TodayFocusCardAILN";
-import CompetencyProfileAILN from "@/components/charts/CompetencyProfileAILN";
-import LevelProgressCardAILN from "@/components/charts/LevelProgressCardAILN";
-import StreakCardAILN from "@/components/charts/StreakCardAILN";
-import DeptLeaderboardAILN from "@/components/indexes/DeptLeaderboardAILN";
+import RecommendationsAILN from "@/components/indexes/RecommendationsAILN";
 import PageContainerAILN from "@/components/pages/PageContainerAILN";
 import AppErrorComponents from "@/components/states/AppErrorComponents";
 import { setSessionToken, trpc } from "@/trpc/client";
 import dayjs from "dayjs";
 import "dayjs/locale/id";
-import { Megaphone, Star } from "lucide-react";
+import {
+  BookOpen,
+  ClipboardList,
+  Flame,
+  LineChart,
+  Megaphone,
+  Star,
+  Target,
+} from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect } from "react";
 
 dayjs.locale("id");
@@ -52,9 +59,6 @@ export default function DashboardStudentAILN({
   const member = memberQ.data.ail_member;
   const firstName = user.full_name.split(" ")[0] ?? user.full_name;
   const dateLabel = dayjs().format("dddd, D MMMM YYYY").toUpperCase();
-
-  const cohortStart = "2026-05-10";
-  const cohortEnd = "2026-06-23";
 
   return (
     <PageContainerAILN>
@@ -112,19 +116,150 @@ export default function DashboardStudentAILN({
 
         <TodayFocusCardAILN />
 
-        <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-          <StreakCardAILN
-            startDate={cohortStart}
-            endDate={cohortEnd}
-            className="h-full min-h-[360px]"
-          />
-          <LevelProgressCardAILN className="h-full min-h-[360px]" />
-          <DeptLeaderboardAILN className="h-full min-h-[360px]" />
-        </div>
+        {/* Momentum hari ini — ringkas & memicu aksi. Analitik lengkap
+            (radar, streak heatmap, level journey, leaderboard) ada di Progress Saya. */}
+        <MomentumStrip />
 
-        <CompetencyProfileAILN />
+        {/* Aksi cepat — jadikan halaman ini pusat aktivitas harian */}
+        <QuickActions />
+
+        {/* Rekomendasi use case / prompt mandiri dari katalog (level + role/dept) */}
+        <RecommendationsAILN />
       </div>
     </PageContainerAILN>
+  );
+}
+
+// ===== Momentum strip (Hari Ini) — streak ringkas + nudge pilar terlemah =====
+
+function MomentumStrip() {
+  const streakQ = trpc.ailene.read.streak.useQuery();
+  const compQ = trpc.ailene.read.competencyProfile.useQuery();
+
+  const streak = streakQ.data?.current_streak ?? 0;
+  const dims = compQ.data?.profile?.dimensions ?? [];
+  const weakest = dims.length
+    ? dims.reduce((min, d) => (d.score < min.score ? d : min), dims[0])
+    : null;
+
+  return (
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+      {/* Streak ringkas */}
+      <div className="flex items-center gap-4 rounded-lg border border-dashboard-border bg-white p-5 dark:bg-card-bg">
+        <span className="flex size-12 shrink-0 items-center justify-center rounded-full bg-red-50 text-red-500 dark:bg-red-500/15 dark:text-red-400">
+          <Flame className="size-6" fill="currentColor" />
+        </span>
+        <div className="min-w-0">
+          <div className="flex items-baseline gap-1.5">
+            <span className="font-geist-mono text-3xl font-bold leading-none text-foreground dark:text-white">
+              {streak}
+            </span>
+            <span className="text-sm text-gray-500 dark:text-gray-400">
+              hari berjalan
+            </span>
+          </div>
+          <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+            {streak > 0
+              ? "Mantap! Selesaikan 1 aktivitas hari ini biar streak nggak putus."
+              : "Mulai streak-mu — selesaikan 1 aktivitas hari ini."}
+          </p>
+        </div>
+      </div>
+
+      {/* Nudge: fokus pilar terlemah */}
+      <Link
+        href="/student/practice"
+        className="group flex flex-col justify-center gap-1 rounded-lg border border-dashboard-border bg-white p-5 transition hover:border-red-300 dark:bg-card-bg dark:hover:border-red-500/40"
+      >
+        <div className="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-widest text-gray-500 dark:text-gray-400">
+          <Target className="size-3.5" />
+          Fokus hari ini
+        </div>
+        {weakest ? (
+          <>
+            <p className="text-sm text-gray-700 dark:text-gray-200">
+              Perkuat{" "}
+              <span className="font-semibold text-foreground dark:text-white">
+                {weakest.name}
+              </span>{" "}
+              <span className="text-gray-400 dark:text-gray-500">
+                ({weakest.score}/5)
+              </span>
+            </p>
+            <span className="text-xs font-medium text-red-600 group-hover:underline dark:text-red-400">
+              Latihan sekarang →
+            </span>
+          </>
+        ) : (
+          <p className="text-sm text-gray-500 dark:text-gray-400">
+            Selesaikan beberapa aktivitas dulu untuk dapat rekomendasi fokus.
+          </p>
+        )}
+      </Link>
+    </div>
+  );
+}
+
+// ===== Aksi cepat (Hari Ini) =====
+
+function QuickActions() {
+  return (
+    <div className="rounded-lg border border-dashboard-border bg-white p-5 dark:bg-card-bg">
+      <div className="text-[10px] font-semibold uppercase tracking-widest text-gray-500 dark:text-gray-400">
+        Aksi Cepat
+      </div>
+      <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-3">
+        <ActionTile
+          href="/student/modules"
+          icon={BookOpen}
+          title="Lanjutkan Belajar"
+          desc="Modul & materi level kamu"
+        />
+        <ActionTile
+          href="/student/practice"
+          icon={ClipboardList}
+          title="Latihan Prompt"
+          desc="Skill practice dari Champion"
+        />
+        <ActionTile
+          href="/student/my-progress"
+          icon={LineChart}
+          title="Lihat Progres"
+          desc="Level, streak & kompetensi"
+        />
+      </div>
+    </div>
+  );
+}
+
+function ActionTile({
+  href,
+  icon: Icon,
+  title,
+  desc,
+}: {
+  href: string;
+  icon: LucideIcon;
+  title: string;
+  desc: string;
+}) {
+  return (
+    <Link
+      href={href}
+      className="group flex items-start gap-3 rounded-lg border border-dashboard-border bg-gray-50/60 p-4 transition hover:border-red-300 hover:bg-white dark:bg-card-inside-bg dark:hover:border-red-500/40"
+    >
+      <span className="flex size-9 shrink-0 items-center justify-center rounded-md bg-white text-red-500 shadow-sm dark:bg-card-bg dark:text-red-400">
+        <Icon className="size-4" />
+      </span>
+      <span className="min-w-0">
+        <span className="block text-sm font-semibold text-foreground dark:text-white">
+          {title}
+        </span>
+        <span className="mt-0.5 block text-xs text-gray-500 dark:text-gray-400">
+          {desc}
+        </span>
+      </span>
+    </Link>
   );
 }
 
