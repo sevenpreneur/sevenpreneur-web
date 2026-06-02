@@ -2,8 +2,7 @@
 import type React from "react";
 import { trpc } from "@/trpc/client";
 import Link from "next/link";
-
-const BLUE_DARK = "#1F2937";
+import { BAR_DEEP } from "../charts/sponsor-palette";
 
 export default function OrganizationLeaderboardAILN() {
   const q = trpc.ailene.read.organizationLeaderboard.useQuery();
@@ -69,7 +68,7 @@ export default function OrganizationLeaderboardAILN() {
                         className="h-full rounded-full"
                         style={{
                           width: `${widthPct}%`,
-                          backgroundColor: BLUE_DARK,
+                          backgroundColor: BAR_DEEP,
                         }}
                       />
                     </div>
@@ -92,7 +91,7 @@ export default function OrganizationLeaderboardAILN() {
 
 function Shell({ children }: { children: React.ReactNode }) {
   return (
-    <div className="rounded-lg border border-dashboard-border bg-white p-5 shadow-sm dark:bg-card-bg dark:shadow-[0_0_16px_rgba(0,53,157,0.06)]">
+    <div className="ailn-card p-5">
       {children}
     </div>
   );

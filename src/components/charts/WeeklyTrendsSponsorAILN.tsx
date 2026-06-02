@@ -1,9 +1,56 @@
 "use client";
 import type React from "react";
 import { trpc } from "@/trpc/client";
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+  type ChartConfig,
+} from "@/components/ui/chart";
+import {
+  Bar,
+  CartesianGrid,
+  Cell,
+  ComposedChart,
+  Line,
+  XAxis,
+  YAxis,
+} from "recharts";
+import { BAR_DEEP, BAR_SOFT, LINE_ADOPTION } from "./sponsor-palette";
+import { SAMPLE_TREND } from "./sample-trend-data";
 
-const BLUE_DARK = "#1F2937";
-const BLUE_MUTED = "#9ca3af";
+const chartConfig = {
+  hours_saved: { label: "Jam dihemat", color: BAR_DEEP },
+  adoption_percent: { label: "Adopsi %", color: LINE_ADOPTION },
+} satisfies ChartConfig;
+
+type TrendWeek = {
+  label: string;
+  hours_saved: number;
+  adoption_percent: number;
+  highlight?: boolean;
+};
+
+// Use real data when there's any activity; otherwise fall back to local sample
+// data (keeping the real week labels) so the chart isn't barren in empty envs.
+function resolveWeeks(realWeeks: TrendWeek[]): {
+  weeks: TrendWeek[];
+  isSample: boolean;
+} {
+  // Need a few weeks of activity before the real data forms a meaningful trend;
+  // a lone spike still reads as "broken/empty", so fall back to sample below.
+  const nonZeroWeeks = realWeeks.filter((w) => w.hours_saved > 0).length;
+  if (nonZeroWeeks >= 4) return { weeks: realWeeks, isSample: false };
+
+  const base = realWeeks.length === SAMPLE_TREND.length ? realWeeks : SAMPLE_TREND;
+  const weeks = base.map((w, i) => ({
+    label: w.label,
+    hours_saved: SAMPLE_TREND[i].hours_saved,
+    adoption_percent: SAMPLE_TREND[i].adoption_percent,
+    highlight: i === base.length - 1,
+  }));
+  return { weeks, isSample: true };
+}
 
 export default function WeeklyTrendsSponsorAILN() {
   const q = trpc.ailene.read.weeklyTrends.useQuery();
@@ -26,12 +73,21 @@ export default function WeeklyTrendsSponsorAILN() {
     );
   }
 
+  const { weeks, isSample } = resolveWeeks(q.data.weeks);
+
   return (
     <Shell>
       <div className="flex flex-wrap items-start justify-between gap-2">
         <div>
-          <div className="text-base font-bold text-gray-900 dark:text-white">
-            Trend mingguan · Jam dihemat × Adopsi
+          <div className="flex items-center gap-2">
+            <div className="text-base font-bold text-gray-900 dark:text-white">
+              Trend mingguan · Jam dihemat × Adopsi
+            </div>
+            {isSample && (
+              <span className="rounded-full bg-gray-100 px-2 py-0.5 text-[10px] font-medium text-gray-500 dark:bg-dashboard-border dark:text-gray-400">
+                data contoh
+              </span>
+            )}
           </div>
           <p className="mt-0.5 text-xs text-gray-500 dark:text-gray-400">
             12 minggu terakhir · sumber log workplace use case
@@ -41,36 +97,32 @@ export default function WeeklyTrendsSponsorAILN() {
           <span className="inline-flex items-center gap-1.5">
             <span
               className="inline-block size-2 rounded-full"
-              style={{ backgroundColor: BLUE_DARK }}
+              style={{ backgroundColor: BAR_DEEP }}
             />
             Jam dihemat
           </span>
           <span className="inline-flex items-center gap-1.5">
             <span
-              className="inline-block size-2 rounded-full"
-              style={{ backgroundColor: BLUE_MUTED }}
+              className="inline-block h-0.5 w-3 rounded-full"
+              style={{ backgroundColor: LINE_ADOPTION }}
             />
             Adopsi %
           </span>
         </div>
       </div>
 
-      <div className="mt-5">
-        <TrendBarChart data={q.data.weeks} />
+      <div className="mt-5 min-h-[240px] flex-1">
+        <TrendChart data={weeks} />
       </div>
     </Shell>
   );
 }
 
 function Shell({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="rounded-lg border border-dashboard-border bg-white p-5 shadow-sm dark:bg-card-bg dark:shadow-[0_0_16px_rgba(0,53,157,0.06)]">
-      {children}
-    </div>
-  );
+  return <div className="ailn-card flex h-full flex-col p-5">{children}</div>;
 }
 
-function TrendBarChart({
+function TrendChart({
   data,
 }: {
   data: {
@@ -80,77 +132,97 @@ function TrendBarChart({
     highlight?: boolean;
   }[];
 }) {
-  const W = 720;
-  const H = 240;
-  const PAD_L = 8;
-  const PAD_R = 8;
-  const PAD_T = 28;
-  const PAD_B = 28;
-
-  const chartW = W - PAD_L - PAD_R;
-  const chartH = H - PAD_T - PAD_B;
-  const max = Math.max(...data.map((d) => d.hours_saved), 1) * 1.1;
-  const slot = chartW / Math.max(data.length, 1);
-  const barW = slot * 0.6;
+  if (data.length === 0) {
+    return (
+      <div className="flex h-64 items-center justify-center rounded-md bg-gray-50 text-sm text-gray-500 dark:bg-card-inside-bg dark:text-gray-400">
+        Belum ada data trend.
+      </div>
+    );
+  }
 
   return (
-    <svg
-      viewBox={`0 0 ${W} ${H}`}
-      preserveAspectRatio="xMidYMid meet"
-      className="h-64 w-full"
-    >
-      {data.map((d, i) => {
-        const barH = (d.hours_saved / max) * chartH;
-        const x = PAD_L + i * slot + (slot - barW) / 2;
-        const y = PAD_T + (chartH - barH);
-        const fillClass = d.highlight
-          ? "fill-[#1F2937] dark:fill-gray-200"
-          : "fill-gray-200 dark:fill-gray-600/40";
-        const valueClass = d.highlight
-          ? "fill-[#1F2937] dark:fill-gray-200"
-          : "fill-gray-500 dark:fill-gray-400";
-        const labelClass = d.highlight
-          ? "fill-gray-900 dark:fill-white"
-          : "fill-gray-500 dark:fill-gray-400";
-        return (
-          <g key={`${d.label}-${i}`}>
-            <text
-              x={x + barW / 2}
-              y={y - 6}
-              textAnchor="middle"
-              fontSize="11"
-              fontWeight={d.highlight ? 700 : 500}
-              className={valueClass}
-            >
-              {d.hours_saved.toLocaleString("id-ID", { maximumFractionDigits: 1 })}j
-            </text>
-            <rect
-              x={x}
-              y={y}
-              width={barW}
-              height={barH}
-              rx={3}
-              className={fillClass}
+    <ChartContainer config={chartConfig} className="aspect-auto h-full w-full">
+      <ComposedChart
+        data={data}
+        margin={{ top: 8, right: 8, left: 8, bottom: 0 }}
+        barCategoryGap="22%"
+      >
+        <CartesianGrid vertical={false} strokeDasharray="3 3" />
+        <XAxis
+          dataKey="label"
+          tickLine={false}
+          axisLine={false}
+          tickMargin={8}
+          minTickGap={16}
+          fontSize={11}
+        />
+        <YAxis yAxisId="hours" hide />
+        <YAxis yAxisId="adoption" domain={[0, 100]} hide />
+        <ChartTooltip
+          cursor={{ fill: "var(--color-ailn-surface-2)", opacity: 0.6 }}
+          content={
+            <ChartTooltipContent
+              labelKey="label"
+              formatter={(value, name) => {
+                const isPct = name === "adoption_percent";
+                const color = isPct ? LINE_ADOPTION : BAR_DEEP;
+                const text = isPct
+                  ? `${Number(value).toLocaleString("id-ID")}%`
+                  : `${Number(value).toLocaleString("id-ID", {
+                      maximumFractionDigits: 1,
+                    })} jam`;
+                return (
+                  <div className="flex w-full items-center justify-between gap-4">
+                    <span className="flex items-center gap-1.5">
+                      {isPct ? (
+                        // Line metric → line-shaped indicator (matches legend)
+                        <span
+                          className="inline-block h-[3px] w-3 shrink-0 rounded-full"
+                          style={{ backgroundColor: color }}
+                        />
+                      ) : (
+                        // Bar metric → square indicator
+                        <span
+                          className="size-2 shrink-0 rounded-[2px]"
+                          style={{ backgroundColor: color }}
+                        />
+                      )}
+                      <span className="text-muted-foreground">
+                        {isPct ? "Adopsi" : "Jam dihemat"}
+                      </span>
+                    </span>
+                    <span className="font-mono font-medium tabular-nums text-foreground">
+                      {text}
+                    </span>
+                  </div>
+                );
+              }}
             />
-            <text
-              x={x + barW / 2}
-              y={H - 8}
-              textAnchor="middle"
-              fontSize="11"
-              fontWeight={d.highlight ? 700 : 400}
-              className={labelClass}
-            >
-              {d.label}
-            </text>
-            <circle
-              cx={x + barW / 2}
-              cy={PAD_T + (1 - d.adoption_percent / 100) * chartH}
-              r="2.5"
-              fill={BLUE_MUTED}
+          }
+        />
+        <Bar
+          yAxisId="hours"
+          dataKey="hours_saved"
+          radius={[5, 5, 0, 0]}
+          minPointSize={(value) => ((value ?? 0) > 0 ? 3 : 0)}
+        >
+          {data.map((d, i) => (
+            <Cell
+              key={d.label}
+              fill={d.highlight ?? i === data.length - 1 ? BAR_DEEP : BAR_SOFT}
             />
-          </g>
-        );
-      })}
-    </svg>
+          ))}
+        </Bar>
+        <Line
+          yAxisId="adoption"
+          dataKey="adoption_percent"
+          type="monotone"
+          stroke={LINE_ADOPTION}
+          strokeWidth={2.5}
+          dot={false}
+          activeDot={{ r: 4 }}
+        />
+      </ComposedChart>
+    </ChartContainer>
   );
 }

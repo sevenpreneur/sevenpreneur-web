@@ -1,8 +1,28 @@
 "use client";
 import type React from "react";
 import { trpc } from "@/trpc/client";
+import { BAR_DEEP } from "./sponsor-palette";
+import {
+  ShareBarList,
+  ShareBarListContent,
+  ShareBarListFill,
+  ShareBarListItem,
+  ShareBarListLabel,
+  ShareBarListValue,
+} from "@/components/share-bar-list";
 
-const LEVEL_COLORS = ["#f3f4f6", "#d1d5db", "#9ca3af", "#4b5563", "#1f2937"];
+// Single consistent bar color — magnitude is shown by bar length, not hue, so
+// no level looks "faded" relative to another (matches the reference design).
+const BAR_COLOR = BAR_DEEP;
+
+type Level = {
+  id: number | string;
+  code: string;
+  label?: string | null;
+  name: string;
+  count: number;
+  percent: number;
+};
 
 export default function LevelDistributionSponsorAILN() {
   const q = trpc.ailene.read.levelDistribution.useQuery();
@@ -10,7 +30,7 @@ export default function LevelDistributionSponsorAILN() {
   if (q.isLoading) {
     return (
       <Shell>
-        <div className="h-40 animate-pulse rounded-md bg-gray-100 dark:bg-dashboard-border" />
+        <div className="h-48 animate-pulse rounded-md bg-gray-100 dark:bg-dashboard-border" />
       </Shell>
     );
   }
@@ -18,12 +38,14 @@ export default function LevelDistributionSponsorAILN() {
   if (q.error || !q.data) {
     return (
       <Shell>
-        <div className="flex h-40 items-center justify-center text-sm text-gray-500">
+        <div className="flex h-48 items-center justify-center text-sm text-gray-500">
           Gagal memuat distribusi level.
         </div>
       </Shell>
     );
   }
+
+  const levels = q.data.levels as Level[];
 
   return (
     <Shell>
@@ -31,59 +53,41 @@ export default function LevelDistributionSponsorAILN() {
         Distribusi Level Organisasi
       </div>
 
-      <div className="mt-4 flex h-3 w-full overflow-hidden rounded-full bg-gray-100 dark:bg-dashboard-border">
-        {q.data.levels.map((level, index) => (
-          <div
-            key={level.id}
-            style={{
-              width: `${level.percent}%`,
-              backgroundColor: getColor(index),
-            }}
-          />
-        ))}
+      <div className="mt-3 -mx-2">
+        <ShareBarList aria-label="Distribusi karyawan per level">
+          {levels.map((level) => (
+            <ShareBarListItem
+              key={level.id}
+              value={level.percent}
+              title={`${level.count.toLocaleString("id-ID")} staff`}
+              style={
+                {
+                  "--share-bar-color": BAR_COLOR,
+                } as React.CSSProperties
+              }
+            >
+              <ShareBarListContent>
+                <ShareBarListLabel className="truncate">
+                  <span className="font-semibold text-gray-900 dark:text-white">
+                    {level.label ?? level.code}
+                  </span>{" "}
+                  <span className="text-gray-500 dark:text-gray-400">
+                    {level.name}
+                  </span>
+                </ShareBarListLabel>
+                <ShareBarListValue className="text-gray-900 dark:text-white">
+                  {level.percent}%
+                </ShareBarListValue>
+              </ShareBarListContent>
+              <ShareBarListFill />
+            </ShareBarListItem>
+          ))}
+        </ShareBarList>
       </div>
-
-      <ul className="mt-4 flex flex-col gap-2 text-sm">
-        {q.data.levels.map((level, index) => (
-          <li
-            key={level.id}
-            className="flex items-center justify-between gap-2"
-          >
-            <div className="flex min-w-0 items-center gap-2">
-              <span
-                className="inline-block size-2.5 rounded-sm"
-                style={{ backgroundColor: getColor(index) }}
-              />
-              <span className="font-semibold text-gray-900 dark:text-white">
-                {level.label ?? level.code}
-              </span>
-              <span className="truncate text-gray-600 dark:text-gray-300">
-                {level.name}
-              </span>
-            </div>
-            <div className="flex items-baseline gap-3 text-xs">
-              <span className="font-semibold text-gray-900 dark:text-white">
-                {level.count}
-              </span>
-              <span className="w-8 text-right font-medium text-[#1F2937] dark:text-gray-300">
-                {level.percent}%
-              </span>
-            </div>
-          </li>
-        ))}
-      </ul>
     </Shell>
   );
 }
 
 function Shell({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="rounded-lg border border-dashboard-border bg-white p-5 shadow-sm dark:bg-card-bg dark:shadow-[0_0_16px_rgba(0,53,157,0.06)]">
-      {children}
-    </div>
-  );
-}
-
-function getColor(index: number) {
-  return LEVEL_COLORS[index] ?? LEVEL_COLORS[LEVEL_COLORS.length - 1];
+  return <div className="ailn-card p-5">{children}</div>;
 }
