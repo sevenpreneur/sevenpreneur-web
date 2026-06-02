@@ -1,5 +1,11 @@
 "use client";
 
+import { AILENE_ORG_NAME, AILENE_PROGRAM_NAME } from "@/lib/ailene-config";
+import {
+  usePdfReport,
+  type ReportProps,
+} from "@/components/reports/AileneReportPDF";
+import dayjs from "dayjs";
 import ButtonAILN from "@/components/buttons/ButtonAILN";
 import PageContainerAILN from "@/components/pages/PageContainerAILN";
 import AppErrorComponents from "@/components/states/AppErrorComponents";
@@ -26,6 +32,7 @@ export default function GroupDetailsSponsorAILN({
   }, [sessionToken]);
 
   const router = useRouter();
+  const pdf = usePdfReport();
   const input = { group_id: groupId };
   const departmentsQ = trpc.ailene.read.group.departments.useQuery();
   const overviewQ = trpc.ailene.read.group.overview.useQuery(input);
@@ -54,6 +61,93 @@ export default function GroupDetailsSponsorAILN({
   const selectedDepartment = departmentsQ.data?.departments.find(
     (department) => department.id === groupId
   );
+
+  const buildReport = (): ReportProps => {
+    const sections: ReportProps["sections"] = [
+      {
+        type: "kpi",
+        title: "Indikator Departemen",
+        items: [
+          {
+            label: "Partisipasi Mingguan",
+            value: `${metrics.active_members}`,
+            unit: `/ ${metrics.total_members}`,
+            footer: `${metrics.active_percent}% aktif minggu ini`,
+          },
+          {
+            label: "Avg Level",
+            value: formatScore(metrics.avg_level),
+            unit: "/ 4",
+            footer: `${metrics.beginner_count} org di L0–L1`,
+          },
+          {
+            label: "Jam Dihemat",
+            value: formatNumber(metrics.hours_saved_total),
+            unit: "jam",
+            footer: "kumulatif",
+          },
+          {
+            label: "Use Case Diterima",
+            value: `${metrics.accepted_use_cases}`,
+            footer: `+${metrics.accepted_use_cases_this_month} bulan ini`,
+          },
+        ],
+      },
+    ];
+    const levels = distributionQ.data?.levels ?? [];
+    if (levels.length > 0) {
+      sections.push({
+        type: "table",
+        title: "Distribusi Level",
+        columns: ["Level", "Karyawan", "%"],
+        align: ["left", "right", "right"],
+        rows: levels.map((l) => [
+          `${l.code} · ${l.name}`,
+          formatNumber(l.count),
+          `${l.percent}%`,
+        ]),
+      });
+    }
+    const useCases = topUseCasesQ.data?.use_cases ?? [];
+    if (useCases.length > 0) {
+      sections.push({
+        type: "table",
+        title: "Top Use Case",
+        columns: ["Use case", "Level", "Submit", "%"],
+        align: ["left", "left", "right", "right"],
+        rows: useCases.map((u) => [
+          u.name,
+          u.level_name,
+          formatNumber(u.count),
+          `${u.percent}%`,
+        ]),
+      });
+    }
+    const members = attentionQ.data?.members ?? [];
+    if (members.length > 0) {
+      sections.push({
+        type: "table",
+        title: "Karyawan Perlu Perhatian",
+        columns: ["Karyawan", "Jabatan", "Level", "Status", "UC"],
+        align: ["left", "left", "right", "left", "right"],
+        rows: members.map((m) => [
+          m.full_name,
+          m.job_title,
+          `L${m.level_number}`,
+          m.status,
+          formatNumber(m.accepted_use_cases),
+        ]),
+      });
+    }
+    return {
+      org: AILENE_ORG_NAME || undefined,
+      program: AILENE_PROGRAM_NAME,
+      title: `Departemen ${group.name}`,
+      subtitle: `${metrics.total_members} karyawan · Champion ${group.champion.full_name} · ${metrics.beginner_percent}% pemula`,
+      generatedAt: dayjs().format("D MMMM YYYY"),
+      sections,
+    };
+  };
 
   return (
     <PageContainerAILN>
@@ -107,9 +201,16 @@ export default function GroupDetailsSponsorAILN({
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
-            <ButtonAILN variant="light" size="medium">
+            <ButtonAILN
+              variant="light"
+              size="medium"
+              onClick={() =>
+                pdf.generate(buildReport(), `departemen-${group.name}.pdf`)
+              }
+              disabled={pdf.exporting}
+            >
               <Download className="size-4" />
-              Export
+              {pdf.exporting ? "Menyiapkan…" : "Export"}
             </ButtonAILN>
           </div>
         </div>

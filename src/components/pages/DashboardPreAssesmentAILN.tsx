@@ -1,6 +1,20 @@
 "use client";
+import { AILENE_ORG_NAME, AILENE_PROGRAM_NAME } from "@/lib/ailene-config";
+import {
+  usePdfReport,
+  type ReportProps,
+} from "@/components/reports/AileneReportPDF";
 import ButtonAILN from "@/components/buttons/ButtonAILN";
+import ScorecardAILN from "@/components/cards/ScorecardAILN";
 import PageContainerAILN from "@/components/pages/PageContainerAILN";
+import {
+  ShareBarList,
+  ShareBarListContent,
+  ShareBarListFill,
+  ShareBarListItem,
+  ShareBarListLabel,
+  ShareBarListValue,
+} from "@/components/share-bar-list";
 import { setSessionToken, trpc } from "@/trpc/client";
 import {
   Chart as ChartJS,
@@ -44,6 +58,7 @@ export default function DashboardPreAssesmentAILN({
     setSessionToken(sessionToken);
   }, [sessionToken]);
 
+  const pdf = usePdfReport();
   const [groupId, setGroupId] = useState<number | undefined>(undefined);
   const filter = { group_id: groupId };
 
@@ -64,6 +79,103 @@ export default function DashboardPreAssesmentAILN({
   const measuredLabel = overview?.measured_at
     ? dayjs(overview.measured_at).locale("id").format("D MMMM YYYY")
     : "—";
+
+  const buildReport = (): ReportProps => {
+    const sections: ReportProps["sections"] = [];
+    if (overview) {
+      sections.push({
+        type: "kpi",
+        title: "Ringkasan Kondisi Awal",
+        items: [
+          {
+            label: "Partisipasi",
+            value: `${overview.participation_percent}%`,
+            footer: `${overview.completed_count} dari ${overview.total_members} karyawan`,
+          },
+          {
+            label: "Pengguna Rutin AI",
+            value: `${overview.routine_users_percent}%`,
+            footer: "pakai AI rutin (q1)",
+          },
+          {
+            label: "Literasi Dasar",
+            value: `${overview.basic_literacy_percent}%`,
+            footer: "paham dasar AI",
+          },
+          {
+            label: "Skor Pilar (rata-rata)",
+            value: pillarsQ.data ? formatScore(pillarsQ.data.org_avg) : "—",
+            unit: "/ 5",
+            footer: "6 pilar kompetensi",
+          },
+        ],
+      });
+    }
+    if (pillarsQ.data) {
+      sections.push({
+        type: "table",
+        title: "Skor 6 Pilar Kompetensi",
+        columns: ["Pilar", "Skor / 5"],
+        align: ["left", "right"],
+        rows: pillarsQ.data.pillars.map((p) => [p.name, formatScore(p.score)]),
+      });
+    }
+    if (frequencyQ.data) {
+      sections.push({
+        type: "table",
+        title: "Frekuensi Pemakaian AI",
+        columns: ["Kategori", "%"],
+        align: ["left", "right"],
+        rows: frequencyQ.data.buckets.map((b) => [b.label, `${b.percent}%`]),
+      });
+    }
+    if (toolsQ.data && toolsQ.data.tools.length > 0) {
+      sections.push({
+        type: "table",
+        title: "Tools AI Terpakai",
+        columns: ["Tool", "%"],
+        align: ["left", "right"],
+        rows: toolsQ.data.tools.map((t) => [t.label, `${t.percent}%`]),
+      });
+    }
+    if (maturityQ.data) {
+      sections.push({
+        type: "table",
+        title: "Kematangan Tim",
+        columns: ["Kategori", "%"],
+        align: ["left", "right"],
+        rows: maturityQ.data.buckets.map((b) => [b.label, `${b.percent}%`]),
+      });
+    }
+    if (safetyQ.data && safetyQ.data.gaps.length > 0) {
+      sections.push({
+        type: "table",
+        title: "Gap Praktik Keamanan",
+        columns: ["Praktik", "Gap %"],
+        align: ["left", "right"],
+        rows: safetyQ.data.gaps.map((g) => [g.label, `${g.gap_percent}%`]),
+      });
+    }
+    if (useCasesQ.data && useCasesQ.data.useCases.length > 0) {
+      sections.push({
+        type: "table",
+        title: "Use Case Paling Diincar",
+        columns: ["Use case", "%"],
+        align: ["left", "right"],
+        rows: useCasesQ.data.useCases.map((u) => [u.label, `${u.percent}%`]),
+      });
+    }
+    return {
+      org: AILENE_ORG_NAME || undefined,
+      program: AILENE_PROGRAM_NAME,
+      title: "Laporan Pre-Assessment",
+      subtitle: overview
+        ? `${overview.completed_count} dari ${overview.total_members} karyawan · diukur ${measuredLabel}`
+        : undefined,
+      generatedAt: dayjs().locale("id").format("D MMMM YYYY"),
+      sections,
+    };
+  };
 
   return (
     <PageContainerAILN>
@@ -86,9 +198,16 @@ export default function DashboardPreAssesmentAILN({
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
-            <ButtonAILN variant="light" size="medium">
+            <ButtonAILN
+              variant="light"
+              size="medium"
+              onClick={() =>
+                pdf.generate(buildReport(), "pre-assessment-report.pdf")
+              }
+              disabled={pdf.exporting || !overview}
+            >
               <Download className="size-4" />
-              Export PDF
+              {pdf.exporting ? "Menyiapkan…" : "Export PDF"}
             </ButtonAILN>
           </div>
         </div>
@@ -108,55 +227,47 @@ export default function DashboardPreAssesmentAILN({
           </div>
         </div>
 
-        {/* 4 KPI tiles */}
+        {/* 4 KPI tiles — same ScorecardAILN cards as the executive summary */}
         <div className="grid grid-cols-2 gap-4 xl:grid-cols-4">
-          <KpiTile
-            label="PARTISIPASI PRE-ASSESSMENT"
+          <ScorecardAILN
+            title="Partisipasi Pre-assessment"
             value={overview ? `${overview.participation_percent}` : "—"}
             unit="%"
-            sub={
-              overview
+          >
+            <KpiCaption>
+              {overview
                 ? `${overview.completed_count} dari ${overview.total_members} karyawan`
-                : "—"
-            }
-            percent={overview?.participation_percent ?? 0}
-            barClass="bg-emerald-600 dark:bg-emerald-500"
-            loading={overviewQ.isLoading}
-          />
-          <KpiTile
-            label="PEMAKAI AI RUTIN"
+                : "—"}
+            </KpiCaption>
+          </ScorecardAILN>
+          <ScorecardAILN
+            title="Pemakai AI Rutin"
             value={overview ? `${overview.routine_users_percent}` : "—"}
             unit="%"
-            sub="harian atau lebih sering (q1)"
-            percent={overview?.routine_users_percent ?? 0}
-            barClass="bg-gray-800 dark:bg-gray-200"
-            loading={overviewQ.isLoading}
-          />
-          <KpiTile
-            label="LITERASI DASAR MEMADAI"
+          >
+            <KpiCaption>harian atau lebih sering (q1)</KpiCaption>
+          </ScorecardAILN>
+          <ScorecardAILN
+            title="Literasi Dasar Memadai"
             value={overview ? `${overview.basic_literacy_percent}` : "—"}
             unit="%"
-            sub="paham konsep dasar ke atas (q4)"
-            percent={overview?.basic_literacy_percent ?? 0}
-            barClass="bg-gray-800 dark:bg-gray-200"
-            loading={overviewQ.isLoading}
-          />
-          <KpiTile
-            label="KESIAPAN RATA-RATA PILLAR"
+          >
+            <KpiCaption>paham konsep dasar ke atas (q4)</KpiCaption>
+          </ScorecardAILN>
+          <ScorecardAILN
+            title="Kesiapan Rata-rata Pillar"
             value={pillarsQ.data ? formatScore(pillarsQ.data.org_avg) : "—"}
             unit="/ 5"
-            sub="self-rating 6 pillar"
-            percent={pillarsQ.data ? (pillarsQ.data.org_avg / 5) * 100 : 0}
-            barClass="bg-gray-800 dark:bg-gray-200"
-            loading={pillarsQ.isLoading}
-          />
+          >
+            <KpiCaption>self-rating 6 pillar</KpiCaption>
+          </ScorecardAILN>
         </div>
 
         {/* Pillars radar + usage frequency */}
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
           <Section
             title="Kesiapan 6 pillar — rata-rata organisasi"
-            subtitle="Titik nol yang akan diukur lagi di akhir program (SP-05)"
+            subtitle="Titik nol yang akan diukur lagi di akhir program"
             badge="T0"
           >
             {pillarsQ.isLoading || !pillarsQ.data ? (
@@ -188,26 +299,23 @@ export default function DashboardPreAssesmentAILN({
             {frequencyQ.isLoading || !frequencyQ.data ? (
               <SkeletonRows />
             ) : (
-              <div className="flex flex-col gap-2.5">
+              <ShareBarList>
                 {frequencyQ.data.buckets.map((b) => (
                   <BarRow
                     key={b.key}
                     label={b.label}
                     percent={b.percent}
-                    barClass={
-                      b.highlight
-                        ? "bg-emerald-600 dark:bg-emerald-500"
-                        : "bg-gray-400 dark:bg-gray-600"
-                    }
+                    tone={b.highlight ? "highlight" : "neutral"}
                   />
                 ))}
-              </div>
+              </ShareBarList>
             )}
           </Section>
         </div>
 
-        {/* Tools penetration + team maturity */}
-        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+        {/* Penetrasi tools · Kematangan adopsi · Kesadaran keamanan · Use case
+            — 1 kolom (HP) → 2+2 (tablet) → 4 sejajar (desktop) */}
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
           <Section
             title="Penetrasi tools AI"
             subtitle={`Pernah dipakai · multi-pilih · % responden (q2)`}
@@ -217,16 +325,16 @@ export default function DashboardPreAssesmentAILN({
             ) : toolsQ.data.tools.length === 0 ? (
               <EmptyHint />
             ) : (
-              <div className="flex flex-col gap-2.5">
+              <ShareBarList>
                 {toolsQ.data.tools.map((t) => (
                   <BarRow
                     key={t.label}
                     label={t.label}
                     percent={t.percent}
-                    barClass="bg-gray-700 dark:bg-gray-300"
+                    tone="neutral"
                   />
                 ))}
-              </div>
+              </ShareBarList>
             )}
           </Section>
 
@@ -242,26 +350,19 @@ export default function DashboardPreAssesmentAILN({
             {maturityQ.isLoading || !maturityQ.data ? (
               <SkeletonRows />
             ) : (
-              <div className="flex flex-col gap-2.5">
+              <ShareBarList>
                 {maturityQ.data.buckets.map((b) => (
                   <BarRow
                     key={b.key}
                     label={b.label}
                     percent={b.percent}
-                    barClass={
-                      b.highlight
-                        ? "bg-emerald-600 dark:bg-emerald-500"
-                        : "bg-gray-400 dark:bg-gray-600"
-                    }
+                    tone={b.highlight ? "highlight" : "neutral"}
                   />
                 ))}
-              </div>
+              </ShareBarList>
             )}
           </Section>
-        </div>
 
-        {/* Safety gaps + top use cases */}
-        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
           <Section
             title="Kesadaran keamanan — gap"
             subtitle="% karyawan yang BELUM menyadari praktik aman (q11)"
@@ -272,18 +373,16 @@ export default function DashboardPreAssesmentAILN({
             {safetyQ.isLoading || !safetyQ.data ? (
               <SkeletonRows />
             ) : (
-              <div className="flex flex-col gap-2.5">
+              <ShareBarList>
                 {safetyQ.data.gaps.map((g) => (
                   <BarRow
                     key={g.label}
                     label={g.label}
                     percent={g.gap_percent}
-                    barClass="bg-amber-500 dark:bg-amber-500"
-                    valueClass="text-amber-600 dark:text-amber-400"
-                    labelWidth="minmax(0,230px)"
+                    tone="warn"
                   />
                 ))}
-              </div>
+              </ShareBarList>
             )}
           </Section>
 
@@ -297,7 +396,7 @@ export default function DashboardPreAssesmentAILN({
             ) : useCasesQ.data.useCases.length === 0 ? (
               <EmptyHint />
             ) : (
-              <div className="flex flex-col gap-2.5">
+              <ShareBarList>
                 {useCasesQ.data.useCases.map((u) => (
                   <BarRow
                     key={u.label}
@@ -308,14 +407,10 @@ export default function DashboardPreAssesmentAILN({
                     }
                     label={u.label}
                     percent={u.percent}
-                    barClass={
-                      u.highlight
-                        ? "bg-emerald-600 dark:bg-emerald-500"
-                        : "bg-gray-400 dark:bg-gray-600"
-                    }
+                    tone={u.highlight ? "highlight" : "neutral"}
                   />
                 ))}
-              </div>
+              </ShareBarList>
             )}
           </Section>
         </div>
@@ -474,44 +569,14 @@ function DeptItem({
   );
 }
 
-// ---------- KPI tile ----------
+// ---------- KPI caption ----------
 
-function KpiTile({
-  label,
-  value,
-  unit,
-  sub,
-  percent,
-  barClass,
-  loading,
-}: {
-  label: string;
-  value: string;
-  unit: string;
-  sub: string;
-  percent: number;
-  barClass: string;
-  loading: boolean;
-}) {
+// Footer caption inside ScorecardAILN's divided zone (matches executive view).
+function KpiCaption({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex flex-col rounded-lg border border-dashboard-border bg-white p-4 shadow-sm dark:bg-card-bg dark:shadow-[0_0_16px_rgba(0,53,157,0.06)]">
-      <div className="text-[10px] font-semibold tracking-widest text-gray-500 dark:text-gray-400">
-        {label}
-      </div>
-      <div className="mt-2 flex items-baseline gap-1">
-        <span className="text-4xl font-bold leading-none text-gray-900 dark:text-white">
-          {value}
-        </span>
-        <span className="text-sm text-gray-400 dark:text-gray-500">{unit}</span>
-      </div>
-      <div className="mt-2 text-xs text-gray-500 dark:text-gray-400">{sub}</div>
-      <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-gray-100 dark:bg-dashboard-border">
-        <div
-          className={`h-full rounded-full ${barClass} transition-[width] duration-500`}
-          style={{ width: `${loading ? 0 : Math.min(100, Math.max(0, percent))}%` }}
-        />
-      </div>
-    </div>
+    <span className="text-xs font-medium text-gray-500 dark:text-gray-400">
+      {children}
+    </span>
   );
 }
 
@@ -540,7 +605,7 @@ function Section({
             {title}
           </div>
           {subtitle && (
-            <p className="text-xs text-gray-500 dark:text-gray-400">
+            <p className="text-sm text-gray-500 dark:text-gray-400">
               {subtitle}
             </p>
           )}
@@ -567,50 +632,45 @@ function Section({
   );
 }
 
-// ---------- Bar row ----------
+// ---------- Bar row (Efferd ShareBarList style: label overlaid on a
+// length-proportional bar, value pinned right, single color per tone) ----------
+
+const BAR_TONE: Record<"highlight" | "neutral" | "warn", string> = {
+  highlight: "#1f5f4e", // brand deep green — routine/positive rows
+  neutral: "#64748b", // slate — default
+  warn: "#f59e0b", // amber — risk lens
+};
 
 function BarRow({
   leading,
   label,
   percent,
-  barClass,
-  valueClass,
-  labelWidth = "minmax(0,150px)",
+  tone = "neutral",
 }: {
   leading?: React.ReactNode;
   label: string;
   percent: number;
-  barClass: string;
-  valueClass?: string;
-  labelWidth?: string;
+  tone?: "highlight" | "neutral" | "warn";
 }) {
   return (
-    <div
-      className="grid items-center gap-3 text-sm"
-      style={{
-        gridTemplateColumns: leading
-          ? `auto ${labelWidth} 1fr auto`
-          : `${labelWidth} 1fr auto`,
-      }}
+    <ShareBarListItem
+      value={percent}
+      title={label}
+      style={{ "--share-bar-color": BAR_TONE[tone] } as React.CSSProperties}
     >
-      {leading}
-      <span className="truncate text-gray-700 dark:text-gray-300" title={label}>
-        {label}
-      </span>
-      <div className="h-2.5 w-full overflow-hidden rounded-sm bg-gray-100 dark:bg-dashboard-border">
-        <div
-          className={`h-full rounded-sm ${barClass}`}
-          style={{ width: `${Math.min(100, Math.max(0, percent))}%` }}
-        />
-      </div>
-      <span
-        className={`w-9 text-right text-xs font-semibold tabular-nums ${
-          valueClass ?? "text-gray-900 dark:text-white"
-        }`}
-      >
-        {percent}%
-      </span>
-    </div>
+      <ShareBarListContent>
+        <span className="flex min-w-0 items-center gap-2">
+          {leading}
+          <ShareBarListLabel className="truncate text-gray-700 dark:text-gray-200">
+            {label}
+          </ShareBarListLabel>
+        </span>
+        <ShareBarListValue className="shrink-0 text-gray-900 dark:text-white">
+          {percent}%
+        </ShareBarListValue>
+      </ShareBarListContent>
+      <ShareBarListFill />
+    </ShareBarListItem>
   );
 }
 
@@ -749,9 +809,9 @@ function Skeleton({ className }: { className?: string }) {
 
 function SkeletonRows() {
   return (
-    <div className="flex flex-col gap-2.5">
+    <div className="flex flex-col gap-0.5">
       {Array.from({ length: 5 }).map((_, i) => (
-        <Skeleton key={i} className="h-5 w-full" />
+        <Skeleton key={i} className="h-12 w-full" />
       ))}
     </div>
   );

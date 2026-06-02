@@ -1,4 +1,9 @@
 "use client";
+import { AILENE_ORG_NAME, AILENE_PROGRAM_NAME } from "@/lib/ailene-config";
+import {
+  usePdfReport,
+  type ReportProps,
+} from "@/components/reports/AileneReportPDF";
 import ButtonAILN from "@/components/buttons/ButtonAILN";
 import ScorecardAILN from "@/components/cards/ScorecardAILN";
 import LevelDistributionSponsorAILN from "@/components/charts/LevelDistributionSponsorAILN";
@@ -7,79 +12,26 @@ import OrganizationLeaderboardAILN from "@/components/indexes/OrganizationLeader
 import PageContainerAILN from "@/components/pages/PageContainerAILN";
 import AppErrorComponents from "@/components/states/AppErrorComponents";
 import { setSessionToken, trpc } from "@/trpc/client";
+import dayjs from "dayjs";
 import { Download } from "lucide-react";
 import { useEffect } from "react";
 
-const BLUE_DARK = "#1F2937";
+// Ailene brand accent — used for the activity timeline so the dashboard carries
+// brand identity, not just gray.
+const AILN_ACCENT = "#ee2333";
 
-const HEALTH_CARDS: {
-  label: string;
-  value: string;
-  target: string;
-  hint: string;
-  tone: "good" | "warn";
-}[] = [
-  {
-    label: "LULUS L1",
-    value: "84%",
-    target: "vs 80%",
-    hint: "Di atas target",
-    tone: "good",
-  },
-  {
-    label: "LULUS L2",
-    value: "61%",
-    target: "vs 65%",
-    hint: "Slight gap",
-    tone: "warn",
-  },
-  {
-    label: "SUBMISSION ACCEPTED",
-    value: "92%",
-    target: "vs 85%",
-    hint: "Comment loop sehat",
-    tone: "good",
-  },
-  {
-    label: "NPS CHAMPION",
-    value: "+48",
-    target: "vs +30",
-    hint: "11 dari 12 respond",
-    tone: "good",
-  },
-];
-
-const ACTIVITY: {
-  actor: string;
-  action: string;
-  meta: string;
-  time: string;
-}[] = [
-  {
-    actor: "Champion Adi P.",
-    action: "submit report bulanan",
-    meta: "Product · Mei 2026",
-    time: "12 mnt",
-  },
-  {
-    actor: "Sistem",
-    action: "auto-promote 4 staff ke L2",
-    meta: "Operations, CS, Eng",
-    time: "1j",
-  },
-  {
-    actor: "Champion Bunga S.",
-    action: "accept 6 use case",
-    meta: "Marketing · ROI +84j",
-    time: "2j",
-  },
-  {
-    actor: "Indah Maharani",
-    action: "selesai pre-assessment",
-    meta: "Joined cohort · Research",
-    time: "3j",
-  },
-];
+// Floor an avg level (0..4) to its tier name for the card caption.
+function tierLabel(level: number): string {
+  const names = [
+    "Assessment",
+    "AI Foundation",
+    "AI Operator",
+    "AI Intermediate",
+    "AI Advanced",
+  ];
+  const idx = Math.min(Math.max(Math.floor(level), 0), names.length - 1);
+  return `Level ${idx} · ${names[idx]}`;
+}
 
 // ---------- Component ----------
 
@@ -92,7 +44,15 @@ export default function DashboardSponsorAILN({
     setSessionToken(sessionToken);
   }, [sessionToken]);
 
+  const pdf = usePdfReport();
   const executiveQ = trpc.ailene.read.executiveView.useQuery();
+  const orgStatsQ = trpc.ailene.read.organizationStats.useQuery();
+  const healthQ = trpc.ailene.read.programHealth.useQuery();
+  const activityQ = trpc.ailene.read.recentActivity.useQuery();
+  // For the PDF report: data the on-page charts render via child components.
+  const levelDistQ = trpc.ailene.read.levelDistribution.useQuery();
+  const trendsQ = trpc.ailene.read.weeklyTrends.useQuery();
+  const leaderboardQ = trpc.ailene.read.organizationLeaderboard.useQuery();
 
   if (executiveQ.isLoading) {
     return (
@@ -116,37 +76,142 @@ export default function DashboardSponsorAILN({
       ? "0"
       : metrics.staff_active_weekly_percent.toLocaleString("id-ID");
   const roi = formatCompactIdr(metrics.roi_cohort_to_date);
-  const kpiCards = [
+  const workdaysSaved = Math.round(metrics.hours_saved_total / 8);
+
+  const healthMetrics = healthQ.data?.metrics ?? [];
+  const activity = activityQ.data?.activity ?? [];
+  const orgStats = orgStatsQ.data;
+  const orgName = AILENE_ORG_NAME || "Ringkasan Organisasi";
+  const orgSubline = orgStats
+    ? `${orgStats.member_count.toLocaleString("id-ID")} staff aktif · ${orgStats.group_count.toLocaleString("id-ID")} departemen · ${AILENE_PROGRAM_NAME}`
+    : AILENE_PROGRAM_NAME;
+
+  const kpiCards: {
+    title: string;
+    value: string;
+    unit: string;
+    footer: string;
+  }[] = [
     {
-      title: "AVG LEVEL ORGANISASI",
+      title: "Avg Level Organisasi",
       value: metrics.avg_level.toLocaleString("id-ID", {
         minimumFractionDigits: 1,
         maximumFractionDigits: 1,
       }),
       unit: "/ 4",
-      spark: [0, metrics.avg_level],
+      footer: tierLabel(metrics.avg_level),
     },
     {
-      title: "JAM DIHEMAT (KUMULATIF)",
+      title: "Jam Dihemat (Kumulatif)",
       value: metrics.hours_saved_total.toLocaleString("id-ID", {
         maximumFractionDigits: 1,
       }),
       unit: "jam",
-      spark: [0, metrics.hours_saved_total],
+      footer: `≈ ${workdaysSaved.toLocaleString("id-ID")} hari kerja`,
     },
     {
-      title: "ROI (COHORT-TO-DATE)",
+      title: "ROI (Cohort-to-date)",
       value: roi.value,
       unit: roi.unit,
-      spark: [0, metrics.roi_cohort_to_date],
+      footer: `dari ${metrics.hours_saved_total.toLocaleString("id-ID")} jam dihemat`,
     },
     {
-      title: "STAFF AKTIF MINGGUAN",
+      title: "Staff Aktif Mingguan",
       value: staffActiveWeeklyValue,
       unit: "%",
-      spark: [0, metrics.staff_active_weekly_percent],
+      footer: `${metrics.staff_active_weekly_count.toLocaleString("id-ID")} dari ${metrics.member_count.toLocaleString("id-ID")} staff aktif`,
     },
   ];
+
+  const report: ReportProps = {
+    org: AILENE_ORG_NAME || undefined,
+    program: AILENE_PROGRAM_NAME,
+    title: "Ringkasan Eksekutif",
+    subtitle: orgStats
+      ? `${orgStats.member_count.toLocaleString("id-ID")} staff · ${orgStats.group_count.toLocaleString("id-ID")} departemen`
+      : undefined,
+    generatedAt: dayjs().format("D MMMM YYYY"),
+    sections: [
+      {
+        type: "kpi",
+        title: "Indikator Utama",
+        items: kpiCards.map((k) => ({
+          label: k.title,
+          value: k.value,
+          unit: k.unit,
+          footer: k.footer,
+        })),
+      },
+      {
+        type: "kpi",
+        title: "Kesehatan Program",
+        items: healthMetrics.map((h) => ({
+          label: h.label,
+          value: `${h.percent}%`,
+          footer: h.detail,
+        })),
+      },
+      ...(levelDistQ.data && levelDistQ.data.levels.length > 0
+        ? [
+            {
+              type: "bar" as const,
+              title: "Distribusi Level Organisasi",
+              items: levelDistQ.data.levels.map((l) => ({
+                label: `${l.code} · ${l.name}`,
+                value: l.count,
+                display: `${l.count} (${l.percent}%)`,
+              })),
+            },
+          ]
+        : []),
+      ...(trendsQ.data && trendsQ.data.weeks.length > 0
+        ? [
+            {
+              type: "trend" as const,
+              title: "Tren Mingguan (12 minggu)",
+              barName: "Jam dihemat",
+              lineName: "Adopsi %",
+              points: trendsQ.data.weeks.map((w) => ({
+                label: w.label,
+                bar: w.hours_saved,
+                line: w.adoption_percent,
+              })),
+            },
+          ]
+        : []),
+      ...(leaderboardQ.data && leaderboardQ.data.list.length > 0
+        ? [
+            {
+              type: "table" as const,
+              title: "Top Departemen (jam dihemat bulan ini)",
+              columns: ["#", "Departemen", "Anggota", "Jam"],
+              align: ["right", "left", "right", "right"] as (
+                | "left"
+                | "right"
+              )[],
+              rows: leaderboardQ.data.list.map((g) => [
+                g.rank,
+                g.name,
+                g.member_count.toLocaleString("id-ID"),
+                g.hours.toLocaleString("id-ID"),
+              ]),
+            },
+          ]
+        : []),
+      {
+        type: "list",
+        title: "Aktivitas Terkini",
+        items:
+          activity.length > 0
+            ? activity.map((a) => ({
+                primary: `${a.actor} — ${a.action}`,
+                secondary: a.meta || undefined,
+                trailing: a.time,
+              }))
+            : [{ primary: "Belum ada aktivitas." }],
+      },
+    ],
+  };
 
   return (
     <PageContainerAILN>
@@ -158,18 +223,22 @@ export default function DashboardSponsorAILN({
               SPONSOR · EXECUTIVE VIEW
             </div>
             <h1 className="mt-1 text-3xl font-bold leading-tight text-gray-900 dark:text-white">
-              Hutama Karya
+              {orgName}
             </h1>
             <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-              240 staff aktif · 18 departemen · cohort Q2-2026 berjalan
-              ke-bulan-2.
+              {orgSubline}
             </p>
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
-            <ButtonAILN variant="light" size="medium">
+            <ButtonAILN
+              variant="light"
+              size="medium"
+              onClick={() => pdf.generate(report, "ringkasan-eksekutif.pdf")}
+              disabled={pdf.exporting}
+            >
               <Download className="size-4" />
-              Export PDF
+              {pdf.exporting ? "Menyiapkan…" : "Export PDF"}
             </ButtonAILN>
           </div>
         </div>
@@ -183,7 +252,9 @@ export default function DashboardSponsorAILN({
               value={k.value}
               unit={k.unit}
             >
-              <Sparkline data={k.spark} color={BLUE_DARK} />
+              <span className="text-xs font-medium text-gray-500 dark:text-gray-400">
+                {k.footer}
+              </span>
             </ScorecardAILN>
           ))}
         </div>
@@ -201,52 +272,91 @@ export default function DashboardSponsorAILN({
         {/* Kesehatan Program + Aktivitas terkini */}
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
           {/* Kesehatan Program */}
-          <div className="rounded-lg border border-dashboard-border bg-white p-5 shadow-sm dark:bg-card-bg dark:shadow-[0_0_16px_rgba(0,53,157,0.06)]">
-            <div className="flex items-start justify-between gap-2">
+          <div className="ailn-card overflow-hidden">
+            <div className="border-b border-gray-100 p-5 dark:border-dashboard-border">
               <div className="text-base font-bold text-gray-900 dark:text-white">
                 Kesehatan Program
               </div>
-              <span className="text-xs text-gray-500 dark:text-gray-400">
-                Update real-time
-              </span>
+              <p className="mt-0.5 text-sm text-gray-500 dark:text-gray-400">
+                Capaian program vs target · update real-time.
+              </p>
             </div>
-
-            <div className="mt-4 grid grid-cols-2 gap-3 xl:grid-cols-4">
-              {HEALTH_CARDS.map((h) => (
-                <HealthCard key={h.label} {...h} />
-              ))}
+            <div className="p-5">
+              {healthQ.isLoading ? (
+                <ul className="grid grid-cols-2 gap-6 lg:grid-cols-4">
+                  {[0, 1, 2, 3].map((i) => (
+                    <li key={i} className="flex flex-col gap-2">
+                      <div className="h-3 w-20 animate-pulse rounded bg-gray-200 dark:bg-dashboard-border" />
+                      <div className="h-3 w-16 animate-pulse rounded bg-gray-100 dark:bg-dashboard-border/60" />
+                      <div className="mt-1 h-7 w-16 animate-pulse rounded bg-gray-200 dark:bg-dashboard-border" />
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <ul className="grid grid-cols-2 gap-6 lg:grid-cols-4">
+                  {healthMetrics.map((h) => (
+                    <HealthMetric
+                      key={h.key}
+                      label={h.label}
+                      name={h.name}
+                      percent={h.percent}
+                      detail={h.detail}
+                    />
+                  ))}
+                </ul>
+              )}
             </div>
           </div>
 
           {/* Aktivitas terkini */}
-          <div className="rounded-lg border border-dashboard-border bg-white p-5 shadow-sm dark:bg-card-bg dark:shadow-[0_0_16px_rgba(0,53,157,0.06)]">
+          <div className="ailn-card p-5">
             <div className="text-base font-bold text-gray-900 dark:text-white">
               Aktivitas terkini
             </div>
-            <ul className="mt-3 flex flex-col gap-3 text-sm">
-              {ACTIVITY.map((a, i) => (
-                <li key={i} className="flex items-start gap-3">
-                  <span
-                    className="mt-1.5 inline-block size-1.5 shrink-0 rounded-full"
-                    style={{ backgroundColor: BLUE_DARK }}
-                  />
-                  <div className="min-w-0 flex-1">
-                    <div className="text-sm text-gray-900 dark:text-white">
-                      <span className="font-semibold">{a.actor}</span>{" "}
-                      <span className="text-gray-700 dark:text-gray-300">
-                        {a.action}
-                      </span>
+            {activityQ.isLoading ? (
+              <ul className="mt-3 flex flex-col gap-3">
+                {[0, 1, 2, 3].map((i) => (
+                  <li key={i} className="flex items-start gap-3">
+                    <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-gray-200 dark:bg-dashboard-border" />
+                    <div className="flex-1 space-y-1.5">
+                      <div className="h-3 w-3/4 animate-pulse rounded bg-gray-200 dark:bg-dashboard-border" />
+                      <div className="h-2.5 w-1/2 animate-pulse rounded bg-gray-100 dark:bg-dashboard-border/60" />
                     </div>
-                    <div className="text-xs text-gray-500 dark:text-gray-400">
-                      {a.meta}
+                  </li>
+                ))}
+              </ul>
+            ) : activity.length === 0 ? (
+              <p className="mt-3 text-sm text-gray-500 dark:text-gray-400">
+                Belum ada aktivitas.
+              </p>
+            ) : (
+              <ul className="mt-3 flex flex-col gap-3 text-sm">
+                {activity.map((a, i) => (
+                  <li key={i} className="flex items-start gap-3">
+                    <span
+                      className="mt-1.5 inline-block size-1.5 shrink-0 rounded-full"
+                      style={{ backgroundColor: AILN_ACCENT }}
+                    />
+                    <div className="min-w-0 flex-1">
+                      <div className="text-sm text-gray-900 dark:text-white">
+                        <span className="font-semibold">{a.actor}</span>{" "}
+                        <span className="text-gray-700 dark:text-gray-300">
+                          {a.action}
+                        </span>
+                      </div>
+                      {a.meta && (
+                        <div className="text-xs text-gray-500 dark:text-gray-400">
+                          {a.meta}
+                        </div>
+                      )}
                     </div>
-                  </div>
-                  <span className="shrink-0 text-xs text-gray-400 dark:text-gray-500">
-                    {a.time}
-                  </span>
-                </li>
-              ))}
-            </ul>
+                    <span className="shrink-0 text-xs text-gray-400 dark:text-gray-500">
+                      {a.time}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
         </div>
       </div>
@@ -292,7 +402,7 @@ function DashboardSponsorSkeleton() {
         {[0, 1, 2, 3].map((i) => (
           <div
             key={i}
-            className="min-h-40 rounded-lg border border-dashboard-border bg-white p-4 dark:bg-card-bg"
+            className="ailn-card min-h-40 p-4"
           >
             <div className="h-3 w-36 rounded bg-gray-200 dark:bg-dashboard-border" />
             <div className="mt-4 h-10 w-24 rounded bg-gray-200 dark:bg-dashboard-border" />
@@ -302,107 +412,39 @@ function DashboardSponsorSkeleton() {
       </div>
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1.7fr)_minmax(0,1fr)]">
-        <div className="h-96 rounded-lg border border-dashboard-border bg-white dark:bg-card-bg" />
+        <div className="ailn-card h-96" />
         <div className="flex flex-col gap-4">
-          <div className="h-48 rounded-lg border border-dashboard-border bg-white dark:bg-card-bg" />
-          <div className="h-48 rounded-lg border border-dashboard-border bg-white dark:bg-card-bg" />
+          <div className="ailn-card h-48" />
+          <div className="ailn-card h-48" />
         </div>
       </div>
     </div>
   );
 }
 
-function Sparkline({ data, color }: { data: number[]; color: string }) {
-  const W = 200;
-  const H = 44;
-  const PAD = 2;
-  const min = Math.min(...data);
-  const max = Math.max(...data);
-  const range = max - min || 1;
-  const stepX = (W - PAD * 2) / (data.length - 1);
-
-  const points = data.map((v, i) => {
-    const x = PAD + i * stepX;
-    const y = PAD + (1 - (v - min) / range) * (H - PAD * 2);
-    return [x, y] as const;
-  });
-
-  const linePath = points
-    .map(([x, y], i) => `${i === 0 ? "M" : "L"}${x.toFixed(1)},${y.toFixed(1)}`)
-    .join(" ");
-
-  const areaPath = `${linePath} L${points[points.length - 1][0].toFixed(1)},${H} L${points[0][0].toFixed(1)},${H} Z`;
-
-  const gradId = `sparkGrad-${color.replace("#", "")}`;
-  const last = points[points.length - 1];
-
-  return (
-    <svg
-      viewBox={`0 0 ${W} ${H}`}
-      preserveAspectRatio="none"
-      className="h-11 w-full"
-    >
-      <defs>
-        <linearGradient id={gradId} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor={color} stopOpacity="0.22" />
-          <stop offset="100%" stopColor={color} stopOpacity="0" />
-        </linearGradient>
-      </defs>
-      <path d={areaPath} fill={`url(#${gradId})`} />
-      <path
-        d={linePath}
-        fill="none"
-        stroke={color}
-        strokeWidth="1.8"
-        strokeLinejoin="round"
-        strokeLinecap="round"
-      />
-      <circle cx={last[0]} cy={last[1]} r="2.5" fill={color} />
-    </svg>
-  );
-}
-
-function HealthCard({
+// One metric, Core-Web-Vitals layout: label, sub-label, big percent value, and
+// a real "X dari Y" detail (no fabricated target/delta — no baseline yet).
+function HealthMetric({
   label,
-  value,
-  target,
-  hint,
-  tone,
+  name,
+  percent,
+  detail,
 }: {
   label: string;
-  value: string;
-  target: string;
-  hint: string;
-  tone: "good" | "warn";
+  name: string;
+  percent: number;
+  detail: string;
 }) {
-  const dotClass =
-    tone === "good"
-      ? "bg-emerald-500 dark:bg-emerald-400"
-      : "bg-amber-500 dark:bg-amber-400";
-  const pillClass =
-    tone === "good"
-      ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300"
-      : "bg-amber-50 text-amber-700 dark:bg-amber-500/15 dark:text-amber-300";
-
   return (
-    <div className="flex flex-col rounded-md border border-dashboard-border bg-white p-3 dark:bg-card-inside-bg">
-      <div className="text-[10px] font-semibold tracking-widest text-gray-500 dark:text-gray-400">
+    <li className="flex flex-col gap-1">
+      <p className="text-sm font-medium text-gray-900 dark:text-white">
         {label}
-      </div>
-      <div className="mt-2 flex items-baseline gap-1.5">
-        <span className="text-2xl font-bold text-gray-900 dark:text-white">
-          {value}
-        </span>
-        <span className="text-xs text-gray-500 dark:text-gray-400">
-          {target}
-        </span>
-      </div>
-      <span
-        className={`mt-3 inline-flex w-fit items-center gap-1.5 rounded-full px-2 py-0.5 text-[11px] font-medium ${pillClass}`}
-      >
-        <span className={`inline-block size-1.5 rounded-full ${dotClass}`} />
-        {hint}
-      </span>
-    </div>
+      </p>
+      <p className="text-xs text-gray-500 dark:text-gray-400">{name}</p>
+      <p className="font-geist-mono text-2xl font-bold tabular-nums text-gray-900 dark:text-white">
+        {percent.toLocaleString("id-ID")}%
+      </p>
+      <p className="text-xs text-gray-500 dark:text-gray-400">{detail}</p>
+    </li>
   );
 }
