@@ -266,6 +266,14 @@ enum B2BStageEnum {
   @@map("b2b_stage_enum")
 }
 
+enum B2BProbabilityStatusEnum {
+  COLD @map("cold")
+  WARM @map("warm")
+  HOT  @map("hot")
+
+  @@map("b2b_probability_status_enum")
+}
+
 enum B2BActivityTypeEnum {
   CHAT_WHATSAPP     @map("chat_whatsapp")
   COLD_EMAIL        @map("cold_email")
@@ -1203,25 +1211,26 @@ model WAAlert {
 // B2B Sales Pipeline //
 
 model B2BPipeline {
-  id                  Int            @id @default(autoincrement())
-  name                String         @db.VarChar()
-  industry            Industry       @relation(fields: [industry_id], references: [id])
-  industry_id         Int            @db.SmallInt
-  pic_name            String?        @db.VarChar()
-  pic_job_title       String?        @db.VarChar()
-  pic_wa              String?        @db.VarChar()
-  pic_email           String?        @db.VarChar()
+  id                  Int                      @id @default(autoincrement())
+  name                String                   @db.VarChar()
+  industry            Industry                 @relation(fields: [industry_id], references: [id])
+  industry_id         Int                      @db.SmallInt
+  pic_name            String?                  @db.VarChar()
+  pic_job_title       String?                  @db.VarChar()
+  pic_wa              String?                  @db.VarChar()
+  pic_email           String?                  @db.VarChar()
   product             B2BProductEnum
   source              B2BSourceEnum
-  stage               B2BStageEnum   @default(LEAD_IDENTIFIED)
-  probability         Int            @default(0) @db.SmallInt
-  project_value       Decimal        @default(0) @db.Decimal(15, 2)
-  project_start_month DateTime?      @db.Date
-  project_end_month   DateTime?      @db.Date
-  owner               User           @relation(fields: [owner_id], references: [id])
-  owner_id            String         @db.Uuid
-  created_at          DateTime       @default(now()) @db.Timestamptz()
-  updated_at          DateTime       @default(now()) @updatedAt @db.Timestamptz()
+  stage               B2BStageEnum             @default(LEAD_IDENTIFIED)
+  probability         Int                      @default(0) @db.SmallInt
+  probability_status  B2BProbabilityStatusEnum @default(COLD)
+  project_value       Decimal                  @default(0) @db.Decimal(15, 2)
+  project_start_month DateTime?                @db.Date
+  project_end_month   DateTime?                @db.Date
+  owner               User                     @relation(fields: [owner_id], references: [id])
+  owner_id            String                   @db.Uuid
+  created_at          DateTime                 @default(now()) @db.Timestamptz()
+  updated_at          DateTime                 @default(now()) @updatedAt @db.Timestamptz()
   actions             B2BAction[]
 
   @@map("b2b_pipeline")

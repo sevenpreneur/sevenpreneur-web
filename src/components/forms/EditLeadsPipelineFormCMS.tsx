@@ -2,6 +2,7 @@
 import { trpc } from "@/trpc/client";
 import {
   B2BActivityTypeEnum,
+  B2BProbabilityStatusEnum,
   B2BProductEnum,
   B2BSourceEnum,
   B2BStageEnum,
@@ -55,6 +56,12 @@ const STAGE_OPTIONS = [
   { label: "On Hold", value: B2BStageEnum.ON_HOLD },
 ];
 
+const PROBABILITY_STATUS_OPTIONS = [
+  { label: "Cold", value: B2BProbabilityStatusEnum.COLD },
+  { label: "Warm", value: B2BProbabilityStatusEnum.WARM },
+  { label: "Hot", value: B2BProbabilityStatusEnum.HOT },
+];
+
 const ACTIVITY_TYPE_OPTIONS = [
   { label: "WhatsApp Chat", value: B2BActivityTypeEnum.CHAT_WHATSAPP },
   { label: "Cold Email", value: B2BActivityTypeEnum.COLD_EMAIL },
@@ -106,6 +113,7 @@ export default function EditLeadsPipelineFormCMS(
     source: B2BSourceEnum | "";
     stage: B2BStageEnum | "";
     probability: string;
+    probability_status: B2BProbabilityStatusEnum | "";
     project_value: string;
     project_start_month: string;
     project_end_month: string;
@@ -120,6 +128,7 @@ export default function EditLeadsPipelineFormCMS(
     source: initialData?.source || "",
     stage: initialData?.stage || "",
     probability: initialData ? String(initialData.probability) : "",
+    probability_status: initialData?.probability_status || "",
     project_value: initialData ? String(initialData.project_value) : "",
     project_start_month: initialData?.project_start_month
       ? dayjs(initialData.project_start_month).format("YYYY-MM")
@@ -143,6 +152,7 @@ export default function EditLeadsPipelineFormCMS(
         source: initialData.source,
         stage: initialData.stage,
         probability: String(initialData.probability),
+        probability_status: initialData.probability_status,
         project_value: String(initialData.project_value),
         project_start_month: initialData.project_start_month
           ? dayjs(initialData.project_start_month).format("YYYY-MM")
@@ -171,6 +181,11 @@ export default function EditLeadsPipelineFormCMS(
       probability > 100
     ) {
       toast.error("Probability must be an integer between 0 and 100.");
+      setIsSubmitting(false);
+      return;
+    }
+    if (!formData.probability_status) {
+      toast.error("Pick a probability status.");
       setIsSubmitting(false);
       return;
     }
@@ -213,6 +228,8 @@ export default function EditLeadsPipelineFormCMS(
         source: formData.source as B2BSourceEnum,
         stage: formData.stage as B2BStageEnum,
         probability,
+        probability_status:
+          formData.probability_status as B2BProbabilityStatusEnum,
         project_value: projectValue,
         project_start_month: formData.project_start_month
           ? `${formData.project_start_month}-01`
@@ -310,6 +327,16 @@ export default function EditLeadsPipelineFormCMS(
                 inputType="number"
                 value={formData.probability}
                 onInputChange={handleInputChange("probability")}
+                required
+              />
+              <AppSelect
+                variant="CMS"
+                selectId="lead-probability-status"
+                selectName="Probability Status"
+                selectPlaceholder="Pick probability status"
+                value={formData.probability_status}
+                onChange={handleInputChange("probability_status")}
+                options={PROBABILITY_STATUS_OPTIONS}
                 required
               />
               <AppInput

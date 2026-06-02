@@ -25,6 +25,7 @@ import AppInput from "../fields/AppInput";
 import AppSelect from "../fields/AppSelect";
 import CreateLeadsPipelineFormCMS from "../forms/CreateLeadsPipelineFormCMS";
 import EditLeadsPipelineFormCMS from "../forms/EditLeadsPipelineFormCMS";
+import B2BProbabilityStatusLabelCMS from "../labels/B2BProbabilityStatusLabelCMS";
 import B2BProductLabelCMS from "../labels/B2BProductLabelCMS";
 import B2BStageLabelCMS from "../labels/B2BStageLabelCMS";
 import AppAlertConfirmDialog from "../modals/AppAlertConfirmDialog";
@@ -247,7 +248,7 @@ export default function B2BPipelineListCMS(props: B2BPipelineListCMSProps) {
                   <TableHeadCMS>{`Industry`.toUpperCase()}</TableHeadCMS>
                   <TableHeadCMS>{`Product`.toUpperCase()}</TableHeadCMS>
                   <TableHeadCMS>{`Stage`.toUpperCase()}</TableHeadCMS>
-                  <TableHeadCMS>{`Prob%`.toUpperCase()}</TableHeadCMS>
+                  <TableHeadCMS>{`Status`.toUpperCase()}</TableHeadCMS>
                   <TableHeadCMS>{`Value`.toUpperCase()}</TableHeadCMS>
                   <TableHeadCMS>{`Owner`.toUpperCase()}</TableHeadCMS>
                   <TableHeadCMS>{`Action`.toUpperCase()}</TableHeadCMS>
@@ -276,9 +277,9 @@ export default function B2BPipelineListCMS(props: B2BPipelineListCMSProps) {
                       <B2BStageLabelCMS variants={post.stage} />
                     </TableCellCMS>
                     <TableCellCMS>
-                      <span className="font-bodycopy font-medium text-sm">
-                        {post.probability}%
-                      </span>
+                      <B2BProbabilityStatusLabelCMS
+                        variants={post.probability_status}
+                      />
                     </TableCellCMS>
                     <TableCellCMS>
                       <span className="font-bodycopy font-semibold text-sm whitespace-nowrap">

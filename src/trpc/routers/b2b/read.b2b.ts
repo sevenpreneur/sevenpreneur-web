@@ -33,6 +33,7 @@ export const readB2B = {
           source: thePipeline.source,
           stage: thePipeline.stage,
           probability: thePipeline.probability,
+          probability_status: thePipeline.probability_status,
           project_value: thePipeline.project_value,
           project_start_month: thePipeline.project_start_month,
           project_end_month: thePipeline.project_end_month,

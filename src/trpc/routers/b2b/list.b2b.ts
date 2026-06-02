@@ -10,6 +10,7 @@ import {
 } from "@/trpc/utils/validation";
 import {
   B2BActivityTypeEnum,
+  B2BProbabilityStatusEnum,
   B2BProductEnum,
   B2BSourceEnum,
   B2BStageEnum,
@@ -24,6 +25,7 @@ export const listB2B = {
         product: z.enum(B2BProductEnum).optional(),
         source: z.enum(B2BSourceEnum).optional(),
         stage: z.enum(B2BStageEnum).optional(),
+        probability_status: z.enum(B2BProbabilityStatusEnum).optional(),
         owner_id: stringIsUUID().optional(),
         keyword: stringNotBlank().optional(),
         year: z.number().int().min(2020).max(2100).optional(),
@@ -36,6 +38,7 @@ export const listB2B = {
         product: opts.input.product,
         source: opts.input.source,
         stage: opts.input.stage,
+        probability_status: opts.input.probability_status,
         owner_id: opts.input.owner_id,
         OR: undefined as Optional<
           [
@@ -108,6 +111,7 @@ export const listB2B = {
         product: entry.product,
         stage: entry.stage,
         probability: entry.probability,
+        probability_status: entry.probability_status,
         project_value: entry.project_value,
         project_start_month: entry.project_start_month,
         project_end_month: entry.project_end_month,

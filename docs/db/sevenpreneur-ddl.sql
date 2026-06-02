@@ -209,6 +209,12 @@ CREATE TYPE b2b_stage_enum AS ENUM (
   'on_hold'
 );
 
+CREATE TYPE b2b_probability_status_enum AS ENUM (
+  'cold',
+  'warm',
+  'hot'
+);
+
 -- Enumeration for the b2b_actions table (b2ba_*)
 
 CREATE TYPE b2ba_activity_type_enum AS ENUM (
@@ -836,6 +842,7 @@ CREATE TABLE b2b_pipeline (
   source               b2b_source_enum   NOT NULL,
   stage                b2b_stage_enum    NOT NULL  DEFAULT 'lead_identified',
   probability          SMALLINT          NOT NULL  DEFAULT 0,
+  probability_status   b2b_probability_status_enum  NOT NULL  DEFAULT 'cold',
   project_value        DECIMAL(15, 2)    NOT NULL  DEFAULT 0,
   project_start_month  DATE                  NULL,
   project_end_month    DATE                  NULL,

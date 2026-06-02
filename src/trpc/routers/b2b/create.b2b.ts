@@ -8,6 +8,7 @@ import {
 } from "@/trpc/utils/validation";
 import {
   B2BActivityTypeEnum,
+  B2BProbabilityStatusEnum,
   B2BProductEnum,
   B2BSourceEnum,
   B2BStageEnum,
@@ -32,6 +33,7 @@ export const createB2B = {
         source: z.enum(B2BSourceEnum),
         stage: z.enum(B2BStageEnum).optional(),
         probability: z.number().int().min(0).max(100).optional(),
+        probability_status: z.enum(B2BProbabilityStatusEnum).optional(),
         project_value: z.number().nonnegative().optional(),
         project_start_month: monthDate.nullable().optional(),
         project_end_month: monthDate.nullable().optional(),
@@ -63,6 +65,7 @@ export const createB2B = {
           source: opts.input.source,
           stage: opts.input.stage,
           probability: opts.input.probability,
+          probability_status: opts.input.probability_status,
           project_value: opts.input.project_value,
           project_start_month: project_start_month
             ? new Date(project_start_month)

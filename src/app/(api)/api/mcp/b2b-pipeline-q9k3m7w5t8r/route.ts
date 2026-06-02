@@ -2,6 +2,7 @@ import GetPrismaClient from "@/lib/prisma";
 import { createSevenpreneurMcp, mcpJsonText as jsonText } from "@/lib/mcp";
 import {
   B2BActivityTypeEnum,
+  B2BProbabilityStatusEnum,
   B2BProductEnum,
   B2BSourceEnum,
   B2BStageEnum,
@@ -23,6 +24,7 @@ const dateString = z
 const PRODUCT_ENUM = z.enum(B2BProductEnum);
 const SOURCE_ENUM = z.enum(B2BSourceEnum);
 const STAGE_ENUM = z.enum(B2BStageEnum);
+const PROBABILITY_STATUS_ENUM = z.enum(B2BProbabilityStatusEnum);
 const ACTIVITY_TYPE_ENUM = z.enum(B2BActivityTypeEnum);
 
 // Month-precision input. Accepts "YYYY-MM" (e.g. "2026-06") — converts to
@@ -61,6 +63,7 @@ function serializePipeline(p: PipelineWithRelations) {
     source: p.source,
     stage: p.stage,
     probability: p.probability,
+    probability_status: p.probability_status,
     project_value: Number(p.project_value),
     project_start_month: p.project_start_month
       ? dayjs(p.project_start_month).format("YYYY-MM")
@@ -97,6 +100,7 @@ function buildPipelineWhere(args: {
   product?: B2BProductEnum;
   source?: B2BSourceEnum;
   stage?: B2BStageEnum;
+  probability_status?: B2BProbabilityStatusEnum;
   owner_id?: string;
   industry_id?: number;
   keyword?: string;
@@ -107,6 +111,8 @@ function buildPipelineWhere(args: {
   if (args.product) where.product = args.product;
   if (args.source) where.source = args.source;
   if (args.stage) where.stage = args.stage;
+  if (args.probability_status)
+    where.probability_status = args.probability_status;
   if (args.owner_id) where.owner_id = args.owner_id;
   if (args.industry_id) where.industry_id = args.industry_id;
   if (args.from || args.to) {
@@ -139,6 +145,7 @@ const handler = createSevenpreneurMcp(
         product: PRODUCT_ENUM.optional(),
         source: SOURCE_ENUM.optional(),
         stage: STAGE_ENUM.optional(),
+        probability_status: PROBABILITY_STATUS_ENUM.optional(),
         owner_id: z
           .uuid()
           .optional()
@@ -241,6 +248,7 @@ const handler = createSevenpreneurMcp(
         source: SOURCE_ENUM,
         stage: STAGE_ENUM.optional(),
         probability: z.number().int().min(0).max(100).optional(),
+        probability_status: PROBABILITY_STATUS_ENUM.optional(),
         project_value: z
           .number()
           .nonnegative()
@@ -274,6 +282,7 @@ const handler = createSevenpreneurMcp(
             source: args.source,
             stage: args.stage,
             probability: args.probability,
+            probability_status: args.probability_status,
             project_value: args.project_value,
             project_start_month: args.project_start_month
               ? parseMonthToDate(args.project_start_month)
@@ -309,6 +318,7 @@ const handler = createSevenpreneurMcp(
         source: SOURCE_ENUM.optional(),
         stage: STAGE_ENUM.optional(),
         probability: z.number().int().min(0).max(100).optional(),
+        probability_status: PROBABILITY_STATUS_ENUM.optional(),
         project_value: z.number().nonnegative().optional(),
         project_start_month: monthInput.nullable().optional(),
         project_end_month: monthInput.nullable().optional(),
@@ -340,6 +350,8 @@ const handler = createSevenpreneurMcp(
         if (rest.source !== undefined) data.source = rest.source;
         if (rest.stage !== undefined) data.stage = rest.stage;
         if (rest.probability !== undefined) data.probability = rest.probability;
+        if (rest.probability_status !== undefined)
+          data.probability_status = rest.probability_status;
         if (rest.project_value !== undefined)
           data.project_value = rest.project_value;
         if (rest.project_start_month !== undefined)

@@ -49,6 +49,7 @@ export async function POST(req: NextRequest) {
     source: p.source,
     stage: p.stage,
     probability: p.probability,
+    probability_status: p.probability_status,
     project_value: Number(p.project_value),
     project_start_month: p.project_start_month,
     project_end_month: p.project_end_month,

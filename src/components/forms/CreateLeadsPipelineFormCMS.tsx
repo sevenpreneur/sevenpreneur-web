@@ -1,6 +1,7 @@
 "use client";
 import { trpc } from "@/trpc/client";
 import {
+  B2BProbabilityStatusEnum,
   B2BProductEnum,
   B2BSourceEnum,
   B2BStageEnum,
@@ -47,6 +48,12 @@ const STAGE_OPTIONS = [
   { label: "On Hold", value: B2BStageEnum.ON_HOLD },
 ];
 
+const PROBABILITY_STATUS_OPTIONS = [
+  { label: "Cold", value: B2BProbabilityStatusEnum.COLD },
+  { label: "Warm", value: B2BProbabilityStatusEnum.WARM },
+  { label: "Hot", value: B2BProbabilityStatusEnum.HOT },
+];
+
 export default function CreateLeadsPipelineFormCMS(props: CreateLeadsPipelineFormCMSProps) {
   const utils = trpc.useUtils();
   const createPipeline = trpc.create.b2b.pipeline.useMutation();
@@ -74,6 +81,8 @@ export default function CreateLeadsPipelineFormCMS(props: CreateLeadsPipelineFor
     source: "" as B2BSourceEnum | "",
     stage: B2BStageEnum.LEAD_IDENTIFIED as B2BStageEnum,
     probability: "50",
+    probability_status:
+      B2BProbabilityStatusEnum.COLD as B2BProbabilityStatusEnum,
     project_value: "",
     project_start_month: "",
     project_end_month: "",
@@ -119,6 +128,11 @@ export default function CreateLeadsPipelineFormCMS(props: CreateLeadsPipelineFor
       setIsSubmitting(false);
       return;
     }
+    if (!formData.probability_status) {
+      toast.error("Pick a probability status.");
+      setIsSubmitting(false);
+      return;
+    }
     const projectValue = Number(formData.project_value);
     if (!Number.isFinite(projectValue) || projectValue < 0) {
       toast.error("Project value must be a non-negative number.");
@@ -152,6 +166,7 @@ export default function CreateLeadsPipelineFormCMS(props: CreateLeadsPipelineFor
         source: formData.source as B2BSourceEnum,
         stage: formData.stage,
         probability,
+        probability_status: formData.probability_status,
         project_value: projectValue,
         project_start_month: formData.project_start_month
           ? `${formData.project_start_month}-01`
@@ -247,6 +262,16 @@ export default function CreateLeadsPipelineFormCMS(props: CreateLeadsPipelineFor
               inputPlaceholder="e.g. 50"
               value={formData.probability}
               onInputChange={handleInputChange("probability")}
+              required
+            />
+            <AppSelect
+              variant="CMS"
+              selectId="lead-probability-status"
+              selectName="Probability Status"
+              selectPlaceholder="Pick probability status"
+              value={formData.probability_status}
+              onChange={handleInputChange("probability_status")}
+              options={PROBABILITY_STATUS_OPTIONS}
               required
             />
             <AppInput
