@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 import { supabase } from "@/lib/supabase";
 import { trpc } from "@/trpc/client";
 import { ArrowLeft, ArrowUp, Loader2, Upload, X } from "lucide-react";
@@ -136,7 +136,7 @@ export default function WAImagePickerModal({
       >
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-dashboard-border">
-          <h2 className="font-bodycopy font-bold text-sm dark:text-sevenpreneur-white">
+          <h2 className=" font-bold text-sm dark:text-sevenpreneur-white">
             {selectedUrl ? "Add Caption" : "Choose Image"}
           </h2>
           <AppButton
@@ -155,7 +155,7 @@ export default function WAImagePickerModal({
             <div className="p-4">
               {isFetchingAssets && <AppLoadingComponents />}
               {!isFetchingAssets && !data?.list.length && (
-                <p className="font-bodycopy text-center text-sm text-emphasis py-10">
+                <p className=" text-center text-sm text-emphasis py-10">
                   No images available
                 </p>
               )}

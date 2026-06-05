@@ -123,7 +123,7 @@ export default function CompetitorGradingReportLMS(
       <Link href="/ai" className="flex items-center justify-center size-8 rounded-full hover:bg-card-inside-bg transition-colors">
         <ChevronLeft className="size-5" />
       </Link>
-      <h1 className="font-brand font-bold text-lg truncate">Competitor Grading</h1>
+      <h1 className=" font-bold text-lg truncate">Competitor Grading</h1>
     </div>
   );
 
@@ -146,7 +146,7 @@ export default function CompetitorGradingReportLMS(
           {mobileHeader}
           <div className="flex flex-col items-center justify-center flex-1 gap-3 p-8 text-center">
             <Loader2 className="size-8 animate-spin text-tertiary" />
-            <p className="font-bodycopy font-medium text-emphasis text-sm">
+            <p className=" font-medium text-emphasis text-sm">
               Generating your report...
             </p>
           </div>
@@ -172,10 +172,10 @@ export default function CompetitorGradingReportLMS(
           <main className="main-industry-analysis flex flex-col flex-2 gap-4 w-full">
             <div className="cagr-projection flex flex-col gap-2 w-full bg-card-bg p-5 rounded-lg border border-dashboard-border">
               <div className="section-title flex flex-col">
-                <h3 className="title font-bodycopy font-bold text-lg">
+                <h3 className="title  font-bold text-lg">
                   Proyeksi Pertumbuhan Tahunan Industri (CAGR)
                 </h3>
-                <p className="remarks font-bodycopy font-medium text-[15px] text-emphasis">
+                <p className="remarks  font-medium text-[15px] text-emphasis">
                   dalam persen (%)
                 </p>
               </div>
@@ -193,9 +193,9 @@ export default function CompetitorGradingReportLMS(
                 }}
               />
             </div>
-            <div className="market-maturity flex flex-col gap-4 w-full bg-linear-to-bl from-0% from-[#EFEDF9] to-50% to-white dark:to-[#11141b] p-5 rounded-lg border border-dashboard-border font-bodycopy dark:from-sevenpreneur-blue-midnight/50">
+            <div className="market-maturity flex flex-col gap-4 w-full bg-linear-to-bl from-0% from-[#EFEDF9] to-50% to-white dark:to-[#11141b] p-5 rounded-lg border border-dashboard-border  dark:from-sevenpreneur-blue-midnight/50">
               <h3 className="text-lg font-bold">Fase Perkembangan Industri</h3>
-              <h4 className={`font-brand font-bold text-3xl ${maturity.color}`}>
+              <h4 className={` font-bold text-3xl ${maturity.color}`}>
                 {maturity.label} {maturity.icon}
               </h4>
               <div className="market-maturity-reason flex flex-col gap-2">
@@ -211,7 +211,7 @@ export default function CompetitorGradingReportLMS(
                 />
               </div>
             </div>
-            <div className="competitor-analysis flex flex-col gap-4 w-full bg-card-bg p-5 rounded-lg border border-dashboard-border font-bodycopy">
+            <div className="competitor-analysis flex flex-col gap-4 w-full bg-card-bg p-5 rounded-lg border border-dashboard-border ">
               <h3 className="text-lg font-bold">Kompetitor Utama</h3>
               <div className="flex flex-col gap-2">
                 {props.competitorList
@@ -243,7 +243,7 @@ export default function CompetitorGradingReportLMS(
           </main>
           <aside className="aside-industry-analisis flex flex-col flex-[1.2] gap-4 w-full">
             <div className="current-condition flex flex-col gap-2 w-full bg-linear-to-br from-0% from-[#D2E5FC] dark:from-sevenpreneur-blue-midnight/50 to-20% to-white dark:to-[#11141b] p-5 rounded-lg border border-dashboard-border">
-              <h3 className="section-title font-bodycopy font-bold text-lg">
+              <h3 className="section-title  font-bold text-lg">
                 Lanskap Persaingan Industri
               </h3>
               <div
@@ -258,7 +258,7 @@ export default function CompetitorGradingReportLMS(
               confidenceLevel={props.confidenceLevel}
             />
             <div className="room-of-growth flex flex-col gap-2 w-full bg-linear-to-br from-0% from-[#D2E5FC] dark:from-sevenpreneur-blue-midnight/50 to-20% to-white dark:to-[#11141b] p-5 rounded-lg border border-dashboard-border">
-              <h3 className="section-title text-lg font-bold font-bodycopy">
+              <h3 className="section-title text-lg font-bold ">
                 Celah Kompetitif
               </h3>
               <div
@@ -279,8 +279,8 @@ export default function CompetitorGradingReportLMS(
       <div className="flex flex-col gap-4 p-4">
         <div className="flex flex-col gap-2 p-4 bg-card-bg border border-dashboard-border rounded-lg">
           <div className="flex flex-col">
-            <h3 className="font-bodycopy font-bold text-base">Proyeksi Pertumbuhan Tahunan Industri (CAGR)</h3>
-            <p className="text-sm text-emphasis font-bodycopy font-medium">dalam persen (%)</p>
+            <h3 className=" font-bold text-base">Proyeksi Pertumbuhan Tahunan Industri (CAGR)</h3>
+            <p className="text-sm text-emphasis  font-medium">dalam persen (%)</p>
           </div>
           <div className="w-full overflow-x-auto">
             <BarChart
@@ -291,13 +291,13 @@ export default function CompetitorGradingReportLMS(
           </div>
           <div className={styles.report} dangerouslySetInnerHTML={{ __html: industryCAGRReason }} />
         </div>
-        <div className={`flex flex-col gap-3 p-4 bg-linear-to-bl from-0% from-[#EFEDF9] to-50% to-white dark:to-[#11141b] border border-dashboard-border rounded-lg font-bodycopy dark:from-sevenpreneur-blue-midnight/50`}>
+        <div className={`flex flex-col gap-3 p-4 bg-linear-to-bl from-0% from-[#EFEDF9] to-50% to-white dark:to-[#11141b] border border-dashboard-border rounded-lg  dark:from-sevenpreneur-blue-midnight/50`}>
           <h3 className="text-base font-bold">Fase Perkembangan Industri</h3>
-          <h4 className={`font-brand font-bold text-2xl ${maturity.color}`}>{maturity.label} {maturity.icon}</h4>
+          <h4 className={` font-bold text-2xl ${maturity.color}`}>{maturity.label} {maturity.icon}</h4>
           <div className={styles.report} dangerouslySetInnerHTML={{ __html: industryMarketMaturityReason }} />
         </div>
         <div className="flex flex-col gap-3 p-4 bg-card-bg border border-dashboard-border rounded-lg">
-          <h3 className="text-base font-bold font-bodycopy">Kompetitor Utama</h3>
+          <h3 className="text-base font-bold ">Kompetitor Utama</h3>
           <div className="flex flex-col gap-2">
             {props.competitorList
               .sort((a, b) => b.market_score - a.market_score)
@@ -314,11 +314,11 @@ export default function CompetitorGradingReportLMS(
           </div>
         </div>
         <div className="flex flex-col gap-2 p-4 bg-linear-to-br from-0% from-[#D2E5FC] dark:from-sevenpreneur-blue-midnight/50 to-20% to-white dark:to-[#11141b] border border-dashboard-border rounded-lg">
-          <h3 className="font-bodycopy font-bold text-base">Lanskap Persaingan Industri</h3>
+          <h3 className=" font-bold text-base">Lanskap Persaingan Industri</h3>
           <div className={styles.report} dangerouslySetInnerHTML={{ __html: industryCurrentCondition }} />
         </div>
         <div className="flex flex-col gap-2 p-4 bg-linear-to-br from-0% from-[#D2E5FC] dark:from-sevenpreneur-blue-midnight/50 to-20% to-white dark:to-[#11141b] border border-dashboard-border rounded-lg">
-          <h3 className="font-bodycopy font-bold text-base">Celah Kompetitif</h3>
+          <h3 className=" font-bold text-base">Celah Kompetitif</h3>
           <div className={styles.report} dangerouslySetInnerHTML={{ __html: growthOpportunity }} />
         </div>
         <AICitationLMS sources={props.sources} confidenceLevel={props.confidenceLevel} />

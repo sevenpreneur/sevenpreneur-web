@@ -309,7 +309,7 @@ export default function CreateLeadsPipelineFormCMS(props: CreateLeadsPipelineFor
           </div>
 
           <div className="group-input flex flex-col gap-4 pt-2 border-t border-dashboard-border">
-            <h4 className="text-sm font-bodycopy font-bold pt-3">
+            <h4 className="text-sm  font-bold pt-3">
               Person in Charge (optional)
             </h4>
             <AppInput

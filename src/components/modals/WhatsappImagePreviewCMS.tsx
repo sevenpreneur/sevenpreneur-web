@@ -59,7 +59,7 @@ export default function WhatsappImagePreviewCMS(
           />
         </div>
         {!!props.imageCaption && (
-          <p className="fixed w-full max-w-[700px] bottom-10 left-1/2 -translate-x-1/2 text-[15px] text-white/75 text-center font-bodycopy line-clamp-3">
+          <p className="fixed w-full max-w-[700px] bottom-10 left-1/2 -translate-x-1/2 text-[15px] text-white/75 text-center  line-clamp-3">
             {props.imageCaption}
           </p>
         )}

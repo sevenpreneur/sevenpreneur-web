@@ -1,4 +1,4 @@
-ï»¿"use client";
+"use client";
 import { Switch } from "@/components/ui/switch";
 import { trpc } from "@/trpc/client";
 import { Loader2 } from "lucide-react";
@@ -89,12 +89,12 @@ export default function AddCohortMemberFormCMS(
 
     // Required field checking
     if (!formData.email) {
-      toast.error("Donâ€™t forget to select a user");
+      toast.error("Don’t forget to select a user");
       setIsSubmitting(false);
       return;
     }
     if (!formData.cohortPriceId) {
-      toast.error("Donâ€™t forget to select a access tier");
+      toast.error("Don’t forget to select a access tier");
       setIsSubmitting(false);
       return;
     }
@@ -142,7 +142,7 @@ export default function AddCohortMemberFormCMS(
       >
         {isLoading && <AppLoadingComponents />}
         {isError && (
-          <div className="flex w-full h-full py-10 items-center justify-center text-emphasis font-bodycopy font-medium">
+          <div className="flex w-full h-full py-10 items-center justify-center text-emphasis  font-medium">
             No Data
           </div>
         )}
@@ -196,7 +196,7 @@ export default function AddCohortMemberFormCMS(
               <div className="fill-user-method flex flex-col gap-2">
                 <label
                   htmlFor={"fill-user-method"}
-                  className="flex pl-1 gap-0.5 text-sm text-foreground font-bodycopy font-semibold"
+                  className="flex pl-1 gap-0.5 text-sm text-foreground  font-semibold"
                 >
                   User not found?<span className="text-red-700">*</span>
                 </label>
@@ -208,7 +208,7 @@ export default function AddCohortMemberFormCMS(
                       setFillUserMethod(checked ? "INPUT" : "SELECT")
                     }
                   />
-                  <p className="font-bodycopy font-medium text-sm">
+                  <p className=" font-medium text-sm">
                     Manually enter User Email
                   </p>
                 </div>

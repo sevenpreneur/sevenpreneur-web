@@ -19,7 +19,7 @@ export default function PageHeaderLMS(props: PageHeaderLMSProps) {
             >
               {props.headerIcon}
             </div>
-            <h1 className="header-title font-bodycopy font-bold text-xl">
+            <h1 className="header-title  font-bold text-xl">
               {props.headerTitle}
             </h1>
           </div>

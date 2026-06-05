@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 import AppButton from "@/components/buttons/AppButton";
 import PageHeaderCMS from "@/components/titles/PageHeaderCMS";
 import { RolesUser, StatusType } from "@/lib/app-types";
@@ -224,11 +224,11 @@ export default function UserListCMS(props: UserListCMSProps) {
                       </div>
                       <div className="user-name-email flex flex-col">
                         <Link href={`/users/${post.id}`}>
-                          <h2 className="user-name font-bold font-bodycopy line-clamp-1 dark:text-sevenpreneur-white">
+                          <h2 className="user-name font-bold  line-clamp-1 dark:text-sevenpreneur-white">
                             {post.full_name}
                           </h2>
                         </Link>
-                        <p className="user-email flex items-center gap-2 text-emphasis font-bodycopy text-sm">
+                        <p className="user-email flex items-center gap-2 text-emphasis  text-sm">
                           {post.email}
                         </p>
                       </div>
@@ -304,7 +304,7 @@ export default function UserListCMS(props: UserListCMSProps) {
           </table>
         )}
         {userList?.length === 0 && (
-          <p className="empty-state mt-2 font-bodycopy text-center text-emphasis">{`Looks like there are no results for "${debouncedKeyword}"`}</p>
+          <p className="empty-state mt-2  text-center text-emphasis">{`Looks like there are no results for "${debouncedKeyword}"`}</p>
         )}
         {!isLoading && !isError && (
           <div className="pagination flex flex-col w-full items-center gap-3">
@@ -312,7 +312,7 @@ export default function UserListCMS(props: UserListCMSProps) {
               currentPage={currentPage}
               totalPages={data?.metapaging.total_page ?? 1}
             />
-            <p className="text-sm text-emphasis text-center font-bodycopy font-medium">{`Showing all ${data?.metapaging.total_data} users`}</p>
+            <p className="text-sm text-emphasis text-center  font-medium">{`Showing all ${data?.metapaging.total_data} users`}</p>
           </div>
         )}
       </div>

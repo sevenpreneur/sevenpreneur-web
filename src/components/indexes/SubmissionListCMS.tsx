@@ -148,7 +148,7 @@ export default function SubmissionListCMS(props: SubmissionListCMSProps) {
                 />
               </div>
               <div className="submission-list flex flex-col gap-2">
-                <h3 className="font-bold font-bodycopy">Users Submission</h3>
+                <h3 className="font-bold ">Users Submission</h3>
                 <table className="table-submission relative w-full rounded-sm">
                   <TableHeaderCMS>
                     <TableRowCMS>
@@ -194,7 +194,7 @@ export default function SubmissionListCMS(props: SubmissionListCMSProps) {
                                 />
                               </div>
                               <div className="user-name-email flex flex-col">
-                                <h2 className="user-name font-semibold font-bodycopy text-black line-clamp-1">
+                                <h2 className="user-name font-semibold  text-black line-clamp-1">
                                   {post.full_name}
                                 </h2>
                               </div>

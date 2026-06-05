@@ -67,10 +67,10 @@ export default function HeroLearningDetailsLMS({
           </div>
         )}
         <div className="flex flex-col">
-          <h2 className="learning-name font-bodycopy font-bold text-[22px]">
+          <h2 className="learning-name  font-bold text-[22px]">
             {learningSessionName}
           </h2>
-          <p className="learning-date font-bodycopy font-medium text-[15px]">
+          <p className="learning-date  font-medium text-[15px]">
             {`${dayjs(learningSessionDate).format(
               "ddd[,] DD MMM YYYY [-] HH:mm"
             )} ${learningPlace ? `@ ${learningPlace}` : ""}`}

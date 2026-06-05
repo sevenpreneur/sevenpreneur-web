@@ -41,7 +41,7 @@ export default function FileResultUploadingCMS({
             />
           </div>
           <div className="file-attribute flex flex-col">
-            <h3 className="file-name font-bodycopy font-semibold text-black text-[15px] line-clamp-1">
+            <h3 className="file-name  font-semibold text-black text-[15px] line-clamp-1">
               {fileName}
             </h3>
             {isUploading ? (
@@ -49,7 +49,7 @@ export default function FileResultUploadingCMS({
                 <Progress value={uploadProgress} />
               </div>
             ) : (
-              <p className="file-upload-status font-bodycopy font-medium text-emphasis text-sm">
+              <p className="file-upload-status  font-medium text-emphasis text-sm">
                 Completed
               </p>
             )}

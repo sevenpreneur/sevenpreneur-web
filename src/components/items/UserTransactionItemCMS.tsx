@@ -101,21 +101,21 @@ export default function UserTransactionItemCMS({
           </div>
         </div>
         <div className="flex flex-col">
-          <p className="font-bodycopy font-medium text-[15px] text-[#333333] dark:text-sevenpreneur-white line-clamp-1">
+          <p className=" font-medium text-[15px] text-[#333333] dark:text-sevenpreneur-white line-clamp-1">
             {productName}
           </p>
-          <p className="font-bodycopy font-medium text-sm text-emphasis line-clamp-1">
+          <p className=" font-medium text-sm text-emphasis line-clamp-1">
             {productPriceName}
           </p>
         </div>
       </div>
       <div className="flex flex-col items-end shrink-0">
         <div
-          className={`net-transaction-amount font-bodycopy font-semibold text-sm ${statusIcon.amount_color}`}
+          className={`net-transaction-amount  font-semibold text-sm ${statusIcon.amount_color}`}
         >
           +{getRupiahCurrency(Math.round(Number(netTransactionAmount)))}
         </div>
-        <p className="font-bodycopy text-xs text-emphasis">
+        <p className=" text-xs text-emphasis">
           {dayjs(transactionCreatedAt).format("D MMM YYYY")}
         </p>
       </div>

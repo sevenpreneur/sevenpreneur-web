@@ -267,7 +267,7 @@ export default function DiscountListCMS({
             </table>
           )}
           {discountList?.length === 0 && (
-            <p className="empty-state mt-2 font-bodycopy text-center text-emphasis">{`Looks like there are no results for "${debouncedKeyword}"`}</p>
+            <p className="empty-state mt-2  text-center text-emphasis">{`Looks like there are no results for "${debouncedKeyword}"`}</p>
           )}
           {!isLoading && !isError && (
             <div className="pagination flex flex-col w-full items-center gap-3">
@@ -275,7 +275,7 @@ export default function DiscountListCMS({
                 currentPage={currentPage}
                 totalPages={data?.metapaging.total_page ?? 1}
               />
-              <p className="text-sm text-emphasis text-center font-bodycopy font-medium">{`Showing all ${data?.metapaging.total_data} discounts`}</p>
+              <p className="text-sm text-emphasis text-center  font-medium">{`Showing all ${data?.metapaging.total_data} discounts`}</p>
             </div>
           )}
         </div>

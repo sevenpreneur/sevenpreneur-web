@@ -43,7 +43,7 @@ export default function LeadStatusLabelCMS(props: LeadStatusLabelCMSProps) {
 
   return (
     <div
-      className={`label-container inline-flex py-0.5 px-2 rounded-full items-center justify-center gap-1 text-sm font-semibold font-bodycopy truncate ${labelColor}`}
+      className={`label-container inline-flex py-0.5 px-2 rounded-full items-center justify-center gap-1 text-sm font-semibold  truncate ${labelColor}`}
     >
       {labelIcon}
       {name}

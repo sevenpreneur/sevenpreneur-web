@@ -25,7 +25,7 @@ export default function BottomNavLMS() {
           <Link
             key={item.href}
             href={item.href}
-            className={`nav-item flex flex-col items-center justify-center flex-1 py-3 gap-0.5 font-bodycopy text-[11px] font-medium transition-colors ${
+            className={`nav-item flex flex-col items-center justify-center flex-1 py-3 gap-0.5  text-[11px] font-medium transition-colors ${
               isActive ? "text-tertiary" : "text-emphasis"
             }`}
           >

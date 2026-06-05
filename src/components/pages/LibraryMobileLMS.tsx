@@ -25,8 +25,8 @@ export default function LibraryMobileLMS({
     <div className="root-page relative flex flex-col w-full min-h-screen pb-20 lg:hidden">
       <div className="header flex items-center justify-between w-full px-5 pt-12 pb-8 bg-tertiary text-white">
         <div className="greeting flex flex-col gap-0.5">
-          <p className="font-bodycopy font-bold text-xl">Library</p>
-          <p className="font-bodycopy font-medium text-sm text-white/70">
+          <p className=" font-bold text-xl">Library</p>
+          <p className=" font-medium text-sm text-white/70">
             Business Templates &amp; Resources
           </p>
         </div>
@@ -42,7 +42,7 @@ export default function LibraryMobileLMS({
       </div>
 
       <div className="content flex flex-col gap-4 p-5">
-        <h2 className="text-base font-bodycopy font-bold">
+        <h2 className="text-base  font-bold">
           Business Templates
         </h2>
         {hasTemplateAccess ? (

@@ -15,7 +15,7 @@ export default function AppBreadcrumbItem({
 }: AppBreadcrumbItemProps) {
   if (isCurrentPage || !href) {
     return (
-      <span className="items-center font-bodycopy text-[13px] font-semibold">
+      <span className="items-center  text-[13px] font-semibold">
         {children}
       </span>
     );
@@ -24,7 +24,7 @@ export default function AppBreadcrumbItem({
   return (
     <Link
       href={href}
-      className="items-center font-bodycopy text-[13px] max-w-40 line-clamp-1 hover:underline underline-offset-2"
+      className="items-center  text-[13px] max-w-40 line-clamp-1 hover:underline underline-offset-2"
     >
       {children}
     </Link>

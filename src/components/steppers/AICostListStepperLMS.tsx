@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 import AppButton from "../buttons/AppButton";
 import { PlusIcon, X } from "lucide-react";
 import AppNumberInputSVP from "../fields/AppNumberInput";
@@ -56,16 +56,16 @@ export default function AICostListStepperLMS(props: AICostListStepperLMSProps) {
   return (
     <div className="cost-list flex flex-col gap-2 bg-card-bg p-3 border border-dashboard-border rounded-md transform transition-all">
       <div className="cost-header flex w-full gap-2 items-center">
-        <p className="font-bodycopy text-foreground/60 font-medium text-[15px] w-full flex-3">
+        <p className=" text-foreground/60 font-medium text-[15px] w-full flex-3">
           Nama Biaya
         </p>
-        <p className="font-bodycopy text-foreground/60 font-medium text-[15px] w-full flex-1">
+        <p className=" text-foreground/60 font-medium text-[15px] w-full flex-1">
           Kuantitas
         </p>
-        <p className="font-bodycopy text-foreground/60 font-medium text-[15px] w-full flex-1">
+        <p className=" text-foreground/60 font-medium text-[15px] w-full flex-1">
           Unit
         </p>
-        <p className="font-bodycopy text-foreground/60 font-medium text-[15px] w-full flex-2">
+        <p className=" text-foreground/60 font-medium text-[15px] w-full flex-2">
           Harga
         </p>
       </div>

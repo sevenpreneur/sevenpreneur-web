@@ -49,8 +49,8 @@ function KpiCard({
   }
   return (
     <div className="flex flex-col gap-1 p-4 bg-card-bg border border-dashboard-border rounded-lg">
-      <p className="font-bodycopy text-xs text-emphasis font-medium">{label}</p>
-      <p className="font-bodycopy font-bold text-xl">{value}</p>
+      <p className=" text-xs text-emphasis font-medium">{label}</p>
+      <p className=" font-bold text-xl">{value}</p>
     </div>
   );
 }
@@ -68,7 +68,7 @@ function ChartCard({
 }) {
   return (
     <div className="flex flex-col gap-2 p-4 bg-card-bg border border-dashboard-border rounded-lg">
-      <p className="font-bodycopy font-bold text-sm">{title}</p>
+      <p className=" font-bold text-sm">{title}</p>
       {loading ? (
         <div
           className="animate-pulse bg-gray-100 dark:bg-gray-800 rounded-lg"
@@ -83,7 +83,7 @@ function ChartCard({
 
 function InlineError({ message }: { message: string }) {
   return (
-    <div className="flex items-center gap-2 p-3 bg-destructive/10 border border-destructive/30 rounded-lg text-sm font-bodycopy text-destructive">
+    <div className="flex items-center gap-2 p-3 bg-destructive/10 border border-destructive/30 rounded-lg text-sm  text-destructive">
       ⚠️ {message}
     </div>
   );
@@ -91,7 +91,7 @@ function InlineError({ message }: { message: string }) {
 
 function NotConfiguredBadge() {
   return (
-    <span className="text-xs font-bodycopy text-emphasis bg-secondary-soft-background px-2 py-0.5 rounded-full">
+    <span className="text-xs  text-emphasis bg-secondary-soft-background px-2 py-0.5 rounded-full">
       Not configured — set env vars
     </span>
   );
@@ -166,10 +166,10 @@ export default function HomeCMS(props: HomeCMSProps) {
         {/* Hero Banner */}
         <div className="relative flex w-full items-center aspect-panorama-leaderboard rounded-lg overflow-hidden">
           <div className="flex flex-col pl-8 gap-1 z-10">
-            <h1 className="font-brand font-bold text-2xl text-white">
+            <h1 className=" font-bold text-2xl text-white">
               Hello, {props.sessionUserName}
             </h1>
-            <h1 className="font-bodycopy font-bold text-xl text-white">
+            <h1 className=" font-bold text-xl text-white">
               Welcome to Content Management System of Sevenpreneur
             </h1>
           </div>
@@ -184,10 +184,10 @@ export default function HomeCMS(props: HomeCMSProps) {
         {/* ---- Marketing Dashboard Header ---- */}
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="font-bodycopy font-bold text-xl">
+            <h2 className=" font-bold text-xl">
               Marketing Overview
             </h2>
-            <p className="font-bodycopy text-sm text-emphasis">
+            <p className=" text-sm text-emphasis">
               Meta Ads &amp; Google Analytics metrics
             </p>
           </div>
@@ -197,7 +197,7 @@ export default function HomeCMS(props: HomeCMSProps) {
               <button
                 key={opt.value}
                 onClick={() => setDateRange(opt.value)}
-                className={`px-3 py-1.5 rounded-md text-sm font-bodycopy font-medium transition-colors ${
+                className={`px-3 py-1.5 rounded-md text-sm  font-medium transition-colors ${
                   dateRange === opt.value
                     ? "bg-cms-primary text-white"
                     : "text-emphasis hover:bg-sb-item-hover"
@@ -213,7 +213,7 @@ export default function HomeCMS(props: HomeCMSProps) {
         <div className="flex flex-col gap-4">
           <div className="flex items-center gap-2">
             <div className="w-2 h-5 bg-blue-500 rounded-full shrink-0" />
-            <h3 className="font-bodycopy font-bold text-[15px]">
+            <h3 className=" font-bold text-[15px]">
               Meta Ads Performance
             </h3>
             {metaData && !metaData.is_configured && <NotConfiguredBadge />}

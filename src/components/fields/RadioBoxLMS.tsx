@@ -25,7 +25,7 @@ export default function RadioBoxLMS(props: RadioBoxLMSProps) {
         checked={isSelected}
         onChange={() => props.onChange(props.value)}
       />
-      <div className="input-attributes flex-col font-bodycopy text-sm">
+      <div className="input-attributes flex-col  text-sm">
         <p
           className={`input-label font-bold ${
             isSelected ? "text-primary" : "text-foreground"

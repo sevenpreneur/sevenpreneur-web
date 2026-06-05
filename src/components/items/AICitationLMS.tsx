@@ -25,16 +25,16 @@ export default function AICitationLMS(props: AICitationLMSProps) {
 
   return (
     <div className="data-confidence flex flex-col gap-4 w-full bg-card-bg p-5 rounded-lg border border-dashboard-border">
-      <h3 className="section-title font-bold text-lg font-bodycopy">
+      <h3 className="section-title font-bold text-lg ">
         Confidence Index
       </h3>
       <div className="confidence-level flex flex-col gap-2">
         <Progress value={props.confidenceLevel} />
-        <p className="confidence-status font-semibold font-bodycopy text-sm">
+        <p className="confidence-status font-semibold  text-sm">
           {confidenceStatus}
         </p>
       </div>
-      <div className="sources-data flex flex-col gap-2 font-bodycopy">
+      <div className="sources-data flex flex-col gap-2 ">
         <p className="font-semibold">Referenced Sources</p>
         {props.sources.map((post, index) => (
           <div className="source-item flex flex-col gap-0.5" key={index}>

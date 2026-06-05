@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 import PageHeaderCMS from "@/components/titles/PageHeaderCMS";
 import { useClipboard } from "@/lib/use-clipboard";
 import { setSessionToken, trpc } from "@/trpc/client";
@@ -163,12 +163,12 @@ export default function ArticleListCMS(props: ArticleListCMSProps) {
                     </TableCellCMS>
                     <TableCellCMS>
                       <div className="metadata flex flex-col max-w-72 gap-1.5 xl:max-w-96 2xl:max-w-[502px]">
-                        <h2 className="article-title font-bold font-bodycopy text-[15px] line-clamp-2 leading-snug dark:text-sevenpreneur-white">
+                        <h2 className="article-title font-bold  text-[15px] line-clamp-2 leading-snug dark:text-sevenpreneur-white">
                           {post.title}
                         </h2>
                         <div className="flex items-center gap-2">
                           <div
-                            className={`article-categories flex rounded-full items-center text-xs py-[2px] px-[10px] text-white font-bodycopy font-medium`}
+                            className={`article-categories flex rounded-full items-center text-xs py-[2px] px-[10px] text-white  font-medium`}
                             style={{
                               backgroundImage:
                                 "linear-gradient(to right, rgb(37, 98, 231) 0%, rgb(110, 0, 255) 100%)",
@@ -177,7 +177,7 @@ export default function ArticleListCMS(props: ArticleListCMSProps) {
                             {post.category.name}
                           </div>
                           <div
-                            className={`article-id flex rounded-full items-center text-xs py-[2px] px-[10px] text-emphasis border border-dashboard-border font-bodycopy font-medium`}
+                            className={`article-id flex rounded-full items-center text-xs py-[2px] px-[10px] text-emphasis border border-dashboard-border  font-medium`}
                             style={{
                               backgroundImage: "#FAFAFA",
                             }}
@@ -186,10 +186,10 @@ export default function ArticleListCMS(props: ArticleListCMSProps) {
                           </div>
                         </div>
                         <div className="flex flex-col">
-                          <p className="article-keywords font-bodycopy font-[440] text-emphasis text-sm line-clamp-1">
+                          <p className="article-keywords  font-[440] text-emphasis text-sm line-clamp-1">
                             Keywords: {post.keywords}
                           </p>
-                          <p className="article-keywords font-bodycopy font-[440] text-emphasis text-sm line-clamp-1">
+                          <p className="article-keywords  font-[440] text-emphasis text-sm line-clamp-1">
                             Published at{" "}
                             {dayjs(post.published_at).format(
                               "dddd, D MMM YYYY - HH:mm"
@@ -201,7 +201,7 @@ export default function ArticleListCMS(props: ArticleListCMSProps) {
                     <TableCellCMS>
                       <div className="author flex flex-col gap-3">
                         <div className="author flex flex-col gap-1">
-                          <p className="text-sm font-bodycopy font-semibold">
+                          <p className="text-sm  font-semibold">
                             Author:
                           </p>
                           <div className="flex items-center gap-2">
@@ -217,13 +217,13 @@ export default function ArticleListCMS(props: ArticleListCMSProps) {
                                 height={300}
                               />
                             </div>
-                            <p className="text-sm font-bodycopy font-medium line-clamp-1">
+                            <p className="text-sm  font-medium line-clamp-1">
                               {post.author.full_name}
                             </p>
                           </div>
                         </div>
                         <div className="reviewer flex flex-col gap-1">
-                          <p className="text-sm font-bodycopy font-semibold">
+                          <p className="text-sm  font-semibold">
                             Reviewer:
                           </p>
                           <div className="flex items-center gap-2">
@@ -239,7 +239,7 @@ export default function ArticleListCMS(props: ArticleListCMSProps) {
                                 height={300}
                               />
                             </div>
-                            <p className="text-sm font-bodycopy font-medium line-clamp-1">
+                            <p className="text-sm  font-medium line-clamp-1">
                               {post.reviewer.full_name}
                             </p>
                           </div>
@@ -276,7 +276,7 @@ export default function ArticleListCMS(props: ArticleListCMSProps) {
             </table>
           )}
           {articleList?.length === 0 && (
-            <p className="empty-state mt-2 font-bodycopy text-center text-emphasis">{`Looks like there are no results for "${debouncedKeyword}"`}</p>
+            <p className="empty-state mt-2  text-center text-emphasis">{`Looks like there are no results for "${debouncedKeyword}"`}</p>
           )}
           {!isLoading && !isError && (
             <div className="pagination flex flex-col w-full items-center gap-3">
@@ -284,7 +284,7 @@ export default function ArticleListCMS(props: ArticleListCMSProps) {
                 currentPage={currentPage}
                 totalPages={data?.metapaging.total_page ?? 1}
               />
-              <p className="text-sm text-emphasis text-center font-bodycopy font-medium">{`Showing all ${data?.metapaging.total_data} articles`}</p>
+              <p className="text-sm text-emphasis text-center  font-medium">{`Showing all ${data?.metapaging.total_data} articles`}</p>
             </div>
           )}
         </div>

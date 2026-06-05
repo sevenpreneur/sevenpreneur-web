@@ -231,7 +231,7 @@ export default function ChatConversationLMS(props: ChatConversationLMSProps) {
         className="relative h-screen overflow-y-auto"
       >
         <div className="header-conversation sticky flex w-full items-center justify-center top-0 inset-x-0 bg-dashboard-bg border-b border-dashboard-border text-foreground z-10">
-          <div className="conversation-name flex w-full max-w-[calc(100%-4rem)] items-center gap-2 py-3 font-bodycopy font-semibold">
+          <div className="conversation-name flex w-full max-w-[calc(100%-4rem)] items-center gap-2 py-3  font-semibold">
             <MessageCircleMore className="size-5" />
             {conversationName}
           </div>
@@ -259,7 +259,7 @@ export default function ChatConversationLMS(props: ChatConversationLMSProps) {
         ref={mobileConversationRef}
         className="root-page relative flex flex-col w-full h-screen overflow-y-auto lg:hidden"
       >
-        <div className="header-conversation sticky flex w-full items-center gap-2 top-0 px-4 py-3 bg-dashboard-bg border-b border-dashboard-border text-foreground z-10 font-bodycopy font-semibold">
+        <div className="header-conversation sticky flex w-full items-center gap-2 top-0 px-4 py-3 bg-dashboard-bg border-b border-dashboard-border text-foreground z-10  font-semibold">
           <MessageCircleMore className="size-5 shrink-0" />
           <span className="truncate">{conversationName}</span>
         </div>

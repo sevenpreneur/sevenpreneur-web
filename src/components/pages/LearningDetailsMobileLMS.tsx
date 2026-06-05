@@ -115,10 +115,10 @@ export default function LearningDetailsMobileLMS(
             />
           </div>
           <div className="flex flex-col gap-1">
-            <h1 className="learning-session-name font-bodycopy font-bold text-white text-lg leading-snug line-clamp-2">
+            <h1 className="learning-session-name  font-bold text-white text-lg leading-snug line-clamp-2">
               {props.learningSessionName}
             </h1>
-            <p className="educator-name font-bodycopy font-medium text-sm text-white/80 leading-snug">
+            <p className="educator-name  font-medium text-sm text-white/80 leading-snug">
               {props.learningEducatorName}
             </p>
           </div>

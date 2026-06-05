@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 import { trpc } from "@/trpc/client";
 import { Loader2 } from "lucide-react";
 import { FormEvent, useEffect, useState } from "react";
@@ -123,13 +123,13 @@ export default function UpdateVideoRecordingFormCMS({
   return (
     <AppSheet
       sheetName="Update Video Recording"
-      sheetDescription="Add or update the session’s video recording to ensure learners can revisit the content anytime."
+      sheetDescription="Add or update the session�s video recording to ensure learners can revisit the content anytime."
       isOpen={isOpen}
       onClose={onClose}
     >
       {isLoading && <AppLoadingComponents />}
       {isError && (
-        <div className="flex w-full h-full py-10 items-center justify-center text-emphasis font-bodycopy font-medium">
+        <div className="flex w-full h-full py-10 items-center justify-center text-emphasis  font-medium">
           No Data
         </div>
       )}

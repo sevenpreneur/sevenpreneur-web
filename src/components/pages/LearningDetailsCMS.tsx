@@ -134,17 +134,17 @@ export default function LearningDetailsCMS(props: LearningDetailsCMSProps) {
               {/* Row 1: Header */}
               <div className="flex items-start justify-between gap-4">
                 <div className="flex flex-col gap-2">
-                  <h1 className="font-bodycopy font-bold text-xl text-foreground line-clamp-2 dark:text-sevenpreneur-white">
+                  <h1 className=" font-bold text-xl text-foreground line-clamp-2 dark:text-sevenpreneur-white">
                     {learningDetailsData.learning.name}
                   </h1>
                   <div className="flex items-center flex-wrap gap-2.5">
-                    <div className="flex items-center gap-1.5 text-sm font-bodycopy font-medium text-emphasis">
+                    <div className="flex items-center gap-1.5 text-sm  font-medium text-emphasis">
                       <CalendarFold className="size-3.5" />
                       {dayjs(learningDetailsData.learning.meeting_date).format(
                         "ddd, DD MMM YYYY"
                       )}
                     </div>
-                    <div className="flex items-center gap-1.5 text-sm font-bodycopy font-medium text-emphasis">
+                    <div className="flex items-center gap-1.5 text-sm  font-medium text-emphasis">
                       <Clock className="size-3.5" />
                       {dayjs(learningDetailsData.learning.meeting_date).format(
                         "HH:mm"
@@ -189,7 +189,7 @@ export default function LearningDetailsCMS(props: LearningDetailsCMSProps) {
                           }}
                         />
                       </div>
-                      <p className="text-xs font-bodycopy text-emphasis">
+                      <p className="text-xs  text-emphasis">
                         {pct(attendanceCount, registeredCount)}% of{" "}
                         {registeredCount} registered
                       </p>
@@ -213,7 +213,7 @@ export default function LearningDetailsCMS(props: LearningDetailsCMSProps) {
                           }}
                         />
                       </div>
-                      <p className="text-xs font-bodycopy text-emphasis">
+                      <p className="text-xs  text-emphasis">
                         {pct(checkInCount, attendanceCount)}% of{" "}
                         {attendanceCount} present
                       </p>
@@ -237,7 +237,7 @@ export default function LearningDetailsCMS(props: LearningDetailsCMSProps) {
                           }}
                         />
                       </div>
-                      <p className="text-xs font-bodycopy text-emphasis">
+                      <p className="text-xs  text-emphasis">
                         {pct(checkOutCount, checkInCount)}% of {checkInCount}{" "}
                         checked in
                       </p>
@@ -261,7 +261,7 @@ export default function LearningDetailsCMS(props: LearningDetailsCMSProps) {
                           }}
                         />
                       </div>
-                      <p className="text-xs font-bodycopy text-emphasis">
+                      <p className="text-xs  text-emphasis">
                         {pct(ratingCount, checkInCount)}% response rate
                       </p>
                     </div>
@@ -363,12 +363,12 @@ export default function LearningDetailsCMS(props: LearningDetailsCMSProps) {
               {/* Row 6: Attendance Details */}
               <SectionContainerCMS title="Attendance Details">
                 {!statsData || statsData.attendees.length === 0 ? (
-                  <p className="text-sm font-bodycopy text-emphasis">
+                  <p className="text-sm  text-emphasis">
                     No attendees have checked in yet.
                   </p>
                 ) : (
                   <div className="overflow-x-auto rounded-md border border-dashboard-border">
-                    <table className="w-full text-sm font-bodycopy">
+                    <table className="w-full text-sm ">
                       <TableHeaderCMS>
                         <tr>
                           <th className="text-left px-3 py-2.5 text-xs font-semibold uppercase tracking-wider">

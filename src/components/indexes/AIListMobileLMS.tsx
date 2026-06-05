@@ -25,8 +25,8 @@ export default function AIListMobileLMS({
     <div className="root-page relative flex flex-col w-full min-h-screen pb-20 lg:hidden">
       <div className="header flex items-center justify-between w-full px-5 pt-12 pb-8 bg-tertiary text-white">
         <div className="greeting flex flex-col gap-0.5">
-          <p className="font-bodycopy font-bold text-xl">AI Business Tools</p>
-          <p className="font-bodycopy font-medium text-sm text-white/70">
+          <p className=" font-bold text-xl">AI Business Tools</p>
+          <p className=" font-medium text-sm text-white/70">
             Powered by AI to grow your business
           </p>
         </div>
@@ -59,7 +59,7 @@ export default function AIListMobileLMS({
       </div>
 
       <div className="flex items-center gap-2 px-5 pb-4 opacity-60">
-        <p className="font-bodycopy font-medium text-emphasis text-sm">
+        <p className=" font-medium text-emphasis text-sm">
           Powered by
         </p>
         <div className="logo-open-ai w-[70px]">

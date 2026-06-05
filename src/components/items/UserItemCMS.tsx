@@ -31,7 +31,7 @@ export default function UserItemCMS(props: UserItemCMSProps) {
             height={80}
           />
         </div>
-        <div className="user-attributes flex flex-col text-sm font-bodycopy leading-snug min-w-0">
+        <div className="user-attributes flex flex-col text-sm  leading-snug min-w-0">
           <p className="user-name font-semibold line-clamp-1 break-all dark:text-sevenpreneur-white">
             {props.userName}
           </p>

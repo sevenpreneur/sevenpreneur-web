@@ -28,9 +28,9 @@ export default function ReceiptLineItemCMS({
 
   return (
     <div className="line-item flex items-center justify-between">
-      <p className={`font-bodycopy text-sm ${nameClass}`}>{receiptName}</p>
+      <p className={` text-sm ${nameClass}`}>{receiptName}</p>
       <p
-        className={`font-bodycopy text-sm text-right dark:text-sevenpreneur-white ${valueClass}`}
+        className={` text-sm text-right dark:text-sevenpreneur-white ${valueClass}`}
       >
         {receiptValue}
       </p>

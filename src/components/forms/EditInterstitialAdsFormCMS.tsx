@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 import { Switch } from "@/components/ui/switch";
 import { StatusType } from "@/lib/app-types";
 import { trpc } from "@/trpc/client";
@@ -127,7 +127,7 @@ export default function EditInterstitialAdsFormCMS(
 
     // Required field checking
     if (!formData.interstitialTitle) {
-      toast.error("Oops, title can’t be empty");
+      toast.error("Oops, title can�t be empty");
       setIsSubmitting(false);
       return;
     }
@@ -219,7 +219,7 @@ export default function EditInterstitialAdsFormCMS(
     >
       {isLoading && <AppLoadingComponents />}
       {isError && (
-        <div className="flex w-full h-full items-center py-5 justify-center text-emphasis font-bodycopy font-medium">
+        <div className="flex w-full h-full items-center py-5 justify-center text-emphasis  font-medium">
           No Data
         </div>
       )}
@@ -244,7 +244,7 @@ export default function EditInterstitialAdsFormCMS(
                 <div className="flex flex-col w-full gap-1">
                   <label
                     htmlFor="interstitial-image"
-                    className="label-input flex pl-1 gap-0.5 text-sm text-foreground font-bodycopy font-semibold"
+                    className="label-input flex pl-1 gap-0.5 text-sm text-foreground  font-semibold"
                   >
                     Key Visuals
                     <span className="label-required text-destructive">*</span>
@@ -305,7 +305,7 @@ export default function EditInterstitialAdsFormCMS(
                 <div className="interstitial-status flex flex-col gap-1">
                   <label
                     htmlFor="interstitial-status"
-                    className="flex pl-1 gap-0.5 text-sm text-foreground font-bodycopy font-semibold"
+                    className="flex pl-1 gap-0.5 text-sm text-foreground  font-semibold"
                   >
                     Status <span className="text-red-700">*</span>
                   </label>

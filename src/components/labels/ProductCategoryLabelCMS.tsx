@@ -57,7 +57,7 @@ export default function ProductCategoryLabelCMS({
 
   return (
     <div
-      className={`label-container inline-flex w-fit py-0.5 px-2 rounded-sm items-center justify-center gap-1 text-[13px] font-semibold font-bodycopy truncate ${labelColor} ${backgroundColor}`}
+      className={`label-container inline-flex w-fit py-0.5 px-2 rounded-sm items-center justify-center gap-1 text-[13px] font-semibold  truncate ${labelColor} ${backgroundColor}`}
     >
       {labelIcon}
       {labelName}

@@ -31,7 +31,7 @@ export default function LearningMethodLabelCMS({
 
   return (
     <div
-      className={`label-container inline-flex py-1 px-2 rounded-sm items-center justify-center text-center gap-1 text-xs font-bold font-bodycopy truncate ${themeColor}`}
+      className={`label-container inline-flex py-1 px-2 rounded-sm items-center justify-center text-center gap-1 text-xs font-bold  truncate ${themeColor}`}
     >
       {labelName}
     </div>

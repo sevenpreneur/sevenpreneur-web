@@ -19,7 +19,7 @@ export default function AvatarBadgeCMS(props: AvatarBadgeCMSProps) {
           height={200}
         />
       </div>
-      <div className="user-attributes flex flex-col gap-0 font-bodycopy">
+      <div className="user-attributes flex flex-col gap-0 ">
         <p className="user-name text-sm font-semibold line-clamp-1">
           {props.userName}
         </p>

@@ -101,7 +101,7 @@ export default function UploadImageCMS(props: UploadImageCMSProps) {
       >
         {/* Upload message */}
         {!props.fileValue && (
-          <div className="upload-helper flex flex-col w-full font-bodycopy items-center text-center justify-center text-sb-text-strong z-10">
+          <div className="upload-helper flex flex-col w-full  items-center text-center justify-center text-sb-text-strong z-10">
             <div className="flex max-w-[86px] aspect-square">
               <Image
                 className="object-cover w-full h-full"
@@ -162,7 +162,7 @@ export default function UploadImageCMS(props: UploadImageCMSProps) {
           onChange={handleUploadFiles}
         />
       </div>
-      <div className="flex items-center justify-between font-bodycopy font-medium text-sm text-emphasis">
+      <div className="flex items-center justify-between  font-medium text-sm text-emphasis">
         <p>Supported Formats: JPG, JPEG, PNG, WEBP, AVIF</p>
       </div>
     </div>

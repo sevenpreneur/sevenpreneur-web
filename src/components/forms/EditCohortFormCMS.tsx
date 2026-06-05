@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 import { Switch } from "@/components/ui/switch";
 import { StatusType } from "@/lib/app-types";
 import { trpc } from "@/trpc/client";
@@ -201,8 +201,8 @@ export default function EditCohortFormCMS(props: EditCohortFormCMSProps) {
       // Update & Create Cohort Prices
       await Promise.all(
         formData.cohortPriceTiers.map(async (tier) => {
-          // existing → update
-          // If the tier has an id → it means this is old data, so do an update.
+          // existing ? update
+          // If the tier has an id ? it means this is old data, so do an update.
           if (tier.id) {
             await editCohortPrices.mutateAsync({
               cohort_id: props.cohortId,
@@ -212,8 +212,8 @@ export default function EditCohortFormCMS(props: EditCohortFormCMSProps) {
               status: tier.status,
             });
           } else {
-            // new → create
-            // If the id doesn't exist → it means this is new data, so create it.
+            // new ? create
+            // If the id doesn't exist ? it means this is new data, so create it.
             await createCohortPrices.mutateAsync({
               cohort_id: props.cohortId,
               name: tier.name.trim(),
@@ -223,7 +223,7 @@ export default function EditCohortFormCMS(props: EditCohortFormCMSProps) {
           }
         })
       );
-      // Get all id of tier that are on change in current form → This is the list that should remain in the database.
+      // Get all id of tier that are on change in current form ? This is the list that should remain in the database.
       const currentIds = formData.cohortPriceTiers
         .filter((tier) => tier.id)
         .map((tier) => tier.id);
@@ -268,7 +268,7 @@ export default function EditCohortFormCMS(props: EditCohortFormCMSProps) {
         </div>
       )}
       {isErrorInitial && (
-        <div className="flex w-full h-full py-10 items-center justify-center text-emphasis font-bodycopy font-medium">
+        <div className="flex w-full h-full py-10 items-center justify-center text-emphasis  font-medium">
           No Data
         </div>
       )}
@@ -309,7 +309,7 @@ export default function EditCohortFormCMS(props: EditCohortFormCMSProps) {
               <div className="cohort-status flex flex-col gap-1">
                 <label
                   htmlFor={"cohort-status"}
-                  className="flex pl-1 gap-0.5 text-sm text-foreground font-bodycopy font-semibold"
+                  className="flex pl-1 gap-0.5 text-sm text-foreground  font-semibold"
                 >
                   Status <span className="text-red-700">*</span>
                 </label>

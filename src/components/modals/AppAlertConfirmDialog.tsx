@@ -42,10 +42,10 @@ export default function AppAlertConfirmDialog({
         onClick={(e) => e.stopPropagation()}
       >
         <div className="dialog-text flex flex-col">
-          <h2 className="text-lg font-brand font-semibold">
+          <h2 className="text-lg  font-semibold">
             {alertDialogHeader}
           </h2>
-          <p className="text-emphasis text-sm font-bodycopy font-medium">
+          <p className="text-emphasis text-sm  font-medium">
             {alertDialogMessage}
           </p>
         </div>

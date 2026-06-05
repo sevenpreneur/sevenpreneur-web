@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 import AppButton from "@/components/buttons/AppButton";
 import PageHeaderCMS from "@/components/titles/PageHeaderCMS";
 import { ProductCategory } from "@/lib/app-types";
@@ -274,7 +274,7 @@ export default function TransactionListCMS({
                   isSelectOpen ? "h-[321px]" : ""
                 }`}
               >
-                <p className="font-bold font-bodycopy text-sm pl-1">
+                <p className="font-bold  text-sm pl-1">
                   Filter by Product
                 </p>
                 <AppSelect variant="CMS"
@@ -297,7 +297,7 @@ export default function TransactionListCMS({
           <div className="table-transactions flex flex-col">
             {filterData.productId && (
               <div className="applied-filter flex w-full bg-[#FAFAFA] items-center gap-2 p-2 border-b/25">
-                <p className="text-sm text-emphasis font-medium font-bodycopy">
+                <p className="text-sm text-emphasis font-medium ">
                   Active filter:
                 </p>
                 <FilterLabelCMS
@@ -384,7 +384,7 @@ export default function TransactionListCMS({
             </div>
           )}
           {isErrorTransactionsData && (
-            <div className="flex w-full h-full py-10 items-center justify-center text-emphasis font-bodycopy font-medium">
+            <div className="flex w-full h-full py-10 items-center justify-center text-emphasis  font-medium">
               No Data
             </div>
           )}
@@ -395,7 +395,7 @@ export default function TransactionListCMS({
                 currentPage={currentPage}
                 totalPages={transactionsData?.metapaging.total_page ?? 1}
               />
-              <p className="text-sm text-emphasis text-center font-bodycopy font-medium">{`Showing all ${transactionsData?.metapaging.total_data} transactions`}</p>
+              <p className="text-sm text-emphasis text-center  font-medium">{`Showing all ${transactionsData?.metapaging.total_data} transactions`}</p>
             </div>
           )}
         </div>

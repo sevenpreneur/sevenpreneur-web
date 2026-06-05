@@ -25,14 +25,14 @@ export default function ParticipantAttendanceCMS({
       title="Participants Attendance"
       headerAction={
         <div className="flex items-center gap-3">
-          <span className="flex items-center gap-1.5 text-[11px] font-bodycopy text-emphasis">
+          <span className="flex items-center gap-1.5 text-[11px]  text-emphasis">
             <span
               className="inline-block size-2 rounded-sm"
               style={{ background: "#0165fc" }}
             />
             Attendance
           </span>
-          <span className="flex items-center gap-1.5 text-[11px] font-bodycopy text-emphasis">
+          <span className="flex items-center gap-1.5 text-[11px]  text-emphasis">
             <span
               className="inline-block size-2 rounded-sm"
               style={{ background: "#e74d79" }}
@@ -83,7 +83,7 @@ export default function ParticipantAttendanceCMS({
               }}
             />
           ) : (
-            <div className="flex items-center justify-center h-[240px] text-sm text-emphasis font-bodycopy">
+            <div className="flex items-center justify-center h-[240px] text-sm text-emphasis ">
               No session data yet
             </div>
           )}

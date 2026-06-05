@@ -18,10 +18,10 @@ export default function HeroGreetingsLMS(props: HeroGreetingsLMSProps) {
         height={800}
       />
       <div className="greetings-content absolute flex flex-col w-full text-white top-1/2 -translate-y-1/2 left-10 z-20">
-        <p className="greetings-for font-bodycopy font-medium">
+        <p className="greetings-for  font-medium">
           Hello, {props.sessionUserName}!👋
         </p>
-        <h2 className="greetings-word font-bodycopy font-bold text-[22px]">
+        <h2 className="greetings-word  font-bold text-[22px]">
           Welcome to Agora LMS
         </h2>
       </div>

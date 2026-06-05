@@ -67,7 +67,7 @@ export default function B2BStageLabelCMS({ variants }: B2BStageLabelCMSProps) {
   const { labelColor, labelIcon, labelName } = variantStyles[variants];
   return (
     <div
-      className={`label-container inline-flex w-fit py-0.5 px-2 rounded-sm items-center justify-center gap-1 text-[13px] font-semibold font-bodycopy truncate ${labelColor}`}
+      className={`label-container inline-flex w-fit py-0.5 px-2 rounded-sm items-center justify-center gap-1 text-[13px] font-semibold  truncate ${labelColor}`}
     >
       {labelIcon}
       {labelName}

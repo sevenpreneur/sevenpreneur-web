@@ -28,7 +28,7 @@ function RatingBar({ value }: { value: number | null | undefined }) {
           style={{ width: `${pct}%` }}
         />
       </div>
-      <span className="text-xs font-bodycopy font-semibold w-7 text-right text-foreground">
+      <span className="text-xs  font-semibold w-7 text-right text-foreground">
         {v.toFixed(1)}
       </span>
     </div>
@@ -71,15 +71,15 @@ export default function RatingDetailsCMS({
         ) : (
           <div className="flex flex-col gap-2">
             <div className="flex items-baseline gap-1.5">
-              <span className="font-brand font-bold text-4xl text-foreground">
+              <span className=" font-bold text-4xl text-foreground">
                 {overallAvg != null ? overallAvg.toFixed(2) : "0.00"}
               </span>
-              <span className="font-bodycopy font-medium text-emphasis text-lg">
+              <span className=" font-medium text-emphasis text-lg">
                 / 5
               </span>
             </div>
             <StarDisplay value={overallAvg ?? 0} />
-            <p className="text-sm font-bodycopy text-emphasis mt-1">
+            <p className="text-sm  text-emphasis mt-1">
               Dari {ratingCount} feedback
             </p>
           </div>
@@ -94,7 +94,7 @@ export default function RatingDetailsCMS({
             <div className="flex flex-col gap-3">
               {RATING_DIMENSIONS_LEFT.map((d) => (
                 <div key={d.key} className="flex flex-col gap-1">
-                  <span className="text-xs font-bodycopy text-emphasis">
+                  <span className="text-xs  text-emphasis">
                     {d.label}
                   </span>
                   <RatingBar value={avgScores?.[d.key] as number | null} />
@@ -104,7 +104,7 @@ export default function RatingDetailsCMS({
             <div className="flex flex-col gap-3">
               {RATING_DIMENSIONS_RIGHT.map((d) => (
                 <div key={d.key} className="flex flex-col gap-1">
-                  <span className="text-xs font-bodycopy text-emphasis">
+                  <span className="text-xs  text-emphasis">
                     {d.label}
                   </span>
                   <RatingBar value={avgScores?.[d.key] as number | null} />

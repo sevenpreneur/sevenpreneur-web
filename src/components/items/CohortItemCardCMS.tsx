@@ -126,12 +126,12 @@ export default function CohortItemCardCMS({
             />
           </div>
           <div className="cohort-attributes flex flex-col gap-2 h-[92px]">
-            <h3 className="cohort-title text-base font-bodycopy font-bold line-clamp-2 xl:text-[17px] 2xl:text-lg">
+            <h3 className="cohort-title text-base  font-bold line-clamp-2 xl:text-[17px] 2xl:text-lg">
               {cohortName}
             </h3>
             <div className="cohort-timeline flex gap-1.5 items-center text-emphasis">
               <FontAwesomeIcon icon={faCalendar} className="xs" />
-              <div className="flex font-bodycopy font-medium text-sm items-center gap-1">
+              <div className="flex  font-medium text-sm items-center gap-1">
                 {dateString}
               </div>
             </div>

@@ -24,7 +24,7 @@ export default function RadioBoxCMS(props: RadioBoxCMSProps) {
         checked={isSelected}
         onChange={() => props.onChange(props.value)}
       />
-      <div className="flex flex-col font-bodycopy text-sm">
+      <div className="flex flex-col  text-sm">
         <p className="text-black font-bold">{props.radioName}</p>
         <p className="text-emphasis font-medium">{props.radioDescription}</p>
       </div>

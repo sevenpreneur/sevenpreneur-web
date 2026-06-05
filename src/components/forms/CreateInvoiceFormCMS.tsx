@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 import { ProductCategory } from "@/lib/app-types";
 import { getRupiahCurrency } from "@/lib/currency";
 import { trpc } from "@/trpc/client";
@@ -300,7 +300,7 @@ export default function CreateInvoiceFormCMS({
       return;
     }
     if (!formData.invoiceUserPhone) {
-      toast.error("Phone number’s still empty");
+      toast.error("Phone number�s still empty");
       setIsSubmitting(false);
       return;
     }
@@ -412,7 +412,7 @@ export default function CreateInvoiceFormCMS({
       >
         {isLoading && <AppLoadingComponents />}
         {isError && (
-          <div className="flex w-full h-full py-10 items-center justify-center text-emphasis font-bodycopy font-medium">
+          <div className="flex w-full h-full py-10 items-center justify-center text-emphasis  font-medium">
             No Data
           </div>
         )}
@@ -445,7 +445,7 @@ export default function CreateInvoiceFormCMS({
                 required
               />
               <div className="bg-card-inside-bg border flex flex-col gap-2 p-4 rounded-md">
-                <h5 className="font-bodycopy font-bold text-sm">Order Item</h5>
+                <h5 className=" font-bold text-sm">Order Item</h5>
                 <AppSelect variant="CMS"
                   selectId="invoice-product-category"
                   selectName="Product Category"
@@ -551,7 +551,7 @@ export default function CreateInvoiceFormCMS({
                   )}
                 </div>
                 {errorMessage && (
-                  <p className="text-xs text-destructive font-bodycopy">
+                  <p className="text-xs text-destructive ">
                     {errorMessage}
                   </p>
                 )}
@@ -560,7 +560,7 @@ export default function CreateInvoiceFormCMS({
               {/* Payment Details */}
               {formData.paymentChannelId && formData.invoiceProductItem && (
                 <div className="flex flex-col bg-card-inside-bg gap-2 p-3 border rounded-md">
-                  <h5 className="font-bodycopy font-bold text-sm">
+                  <h5 className=" font-bold text-sm">
                     Payment Details
                   </h5>
                   <ReceiptLineItemCMS

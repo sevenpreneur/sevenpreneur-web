@@ -22,7 +22,7 @@ export default function SubmissionItemAccordionLMS(
       onClick={handleOpen}
     >
       <div className="submission-attributes flex justify-between items-center gap-2">
-        <p className="learning-session-name font-semibold font-bodycopy text-sm truncate">
+        <p className="learning-session-name font-semibold  text-sm truncate">
           {props.projectName}
         </p>
         <div className="submission-status flex items-center gap-1 shrink-0">
@@ -47,9 +47,9 @@ export default function SubmissionItemAccordionLMS(
           <div className="created-at flex items-center justify-between">
             <div className="flex items-center gap-1 text-emphasis">
               <TimerIcon className="size-4" />
-              <p className="font-bodycopy font-medium text-sm">Submitted at</p>
+              <p className=" font-medium text-sm">Submitted at</p>
             </div>
-            <p className="font-bodycopy font-medium text-sm text-emphasis shrink-0">
+            <p className=" font-medium text-sm text-emphasis shrink-0">
               {!!props.submittedAt
                 ? dayjs(props.submittedAt).format("DD/MMM/YY [-] HH:mm")
                 : "-"}

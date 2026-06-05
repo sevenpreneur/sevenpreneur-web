@@ -1,4 +1,4 @@
-ï»¿"use client";
+"use client";
 import { EditSubmission } from "@/lib/actions";
 import { getFileVariantFromURL } from "@/lib/file-variants";
 import { Loader2 } from "lucide-react";
@@ -92,7 +92,7 @@ export default function EditSubmissionFormLMS({
     if (!initialData.id) {
       toast.error("Submission Not Found", {
         description:
-          "We couldnâ€™t identify this submission. Please try again later.",
+          "We couldn’t identify this submission. Please try again later.",
       });
       setIsSubmitting(false);
       return;
@@ -123,7 +123,7 @@ export default function EditSubmissionFormLMS({
         toast.error("Update Failed", {
           description:
             editSubmission?.message ||
-            "We couldnâ€™t update your submission. Please check your input and try again.",
+            "We couldn’t update your submission. Please check your input and try again.",
         });
       }
     } catch (error) {
@@ -151,7 +151,7 @@ export default function EditSubmissionFormLMS({
       {submitMode === null && (
         <div className="divider flex items-center gap-6">
           <hr className="w-full border-b" />
-          <p className="text-emphasis text-sm font-bodycopy font-medium">
+          <p className="text-emphasis text-sm  font-medium">
             OR
           </p>
           <hr className="w-full border-b " />
@@ -162,7 +162,7 @@ export default function EditSubmissionFormLMS({
           inputId="submission-url"
           inputName="Provide Document Link"
           inputType="url"
-          inputPlaceholder="Paste the documentâ€™s shareable link here"
+          inputPlaceholder="Paste the document’s shareable link here"
           value={formData.submissionURL}
           onInputChange={handleInputChange}
           characterLength={1000}

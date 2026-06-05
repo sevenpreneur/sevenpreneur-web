@@ -83,7 +83,7 @@ export default async function AgoraLayout({ children }: AgoraLayoutProps) {
     <TRPCProvider baseURL={baseURL}>
       <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
         <SidebarProvider>
-          <div className="root relative w-full min-h-screen bg-dashboard-bg">
+          <div className="root relative w-full min-h-screen bg-dashboard-bg font-bodycopy">
             <SidebarLMS
               sessionToken={sessionToken}
               aiResultList={aiResultList}

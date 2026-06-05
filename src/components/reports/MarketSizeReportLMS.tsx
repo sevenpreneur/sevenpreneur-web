@@ -68,7 +68,7 @@ export default function MarketSizeReportLMS(props: MarketSizeReportLMSProps) {
       <Link href="/ai" className="flex items-center justify-center size-8 rounded-full hover:bg-card-inside-bg transition-colors">
         <ChevronLeft className="size-5" />
       </Link>
-      <h1 className="font-brand font-bold text-lg truncate">Market Size</h1>
+      <h1 className=" font-bold text-lg truncate">Market Size</h1>
     </div>
   );
 
@@ -91,7 +91,7 @@ export default function MarketSizeReportLMS(props: MarketSizeReportLMSProps) {
           {mobileHeader}
           <div className="flex flex-col items-center justify-center flex-1 gap-3 p-8 text-center">
             <Loader2 className="size-8 animate-spin text-tertiary" />
-            <p className="font-bodycopy font-medium text-emphasis text-sm">
+            <p className=" font-medium text-emphasis text-sm">
               Generating your report...
             </p>
           </div>
@@ -115,31 +115,31 @@ export default function MarketSizeReportLMS(props: MarketSizeReportLMSProps) {
       <div className="body-contents max-w-[calc(100%-4rem)] w-full flex flex-col justify-between gap-4">
         <div className="market-analysis flex w-full gap-4">
           <div className="market-size-chart flex flex-col flex-2 items-center gap-8 w-full bg-card-bg p-5 pb-10 rounded-lg border border-dashboard-border">
-            <h2 className="section-title font-bold text-lg font-bodycopy">
+            <h2 className="section-title font-bold text-lg ">
               Market Size Analysis
             </h2>
             <div className="flex flex-col w-full items-center justify-center gap-10 xl:flex-row xl:items-end">
               <div className="tam-chart flex flex-col size-52 bg-primary outline-[12px] outline-primary/50 items-center justify-center rounded-full overflow-hidden">
-                <p className="font-bodycopy font-bold text-white text-xl">
+                <p className=" font-bold text-white text-xl">
                   TAM
                 </p>
-                <p className="font-bodycopy font-bold text-white text-2xl text-center">
+                <p className=" font-bold text-white text-2xl text-center">
                   {getShortRupiahCurrency(props.tamValue)}
                 </p>
               </div>
               <div className="sam-chart flex flex-col size-40 bg-[#FBBF24] outline-[12px] outline-[#FBBF24]/50 items-center justify-center rounded-full overflow-hidden">
-                <p className="font-bodycopy font-bold text-white text-lg">
+                <p className=" font-bold text-white text-lg">
                   SAM
                 </p>
-                <p className="font-bodycopy font-bold text-white text-2xl text-center">
+                <p className=" font-bold text-white text-2xl text-center">
                   {getShortRupiahCurrency(props.samValue)}
                 </p>
               </div>
               <div className="som-chart flex flex-col size-32 bg-[#EF4444] outline-[12px] outline-[#EF4444]/50 items-center justify-center rounded-full overflow-hidden">
-                <p className="font-bodycopy font-bold text-white text-lg">
+                <p className=" font-bold text-white text-lg">
                   SOM
                 </p>
-                <p className="font-bodycopy font-bold text-white text-lg text-center">
+                <p className=" font-bold text-white text-lg text-center">
                   {getShortRupiahCurrency(somValue)}
                 </p>
               </div>
@@ -154,10 +154,10 @@ export default function MarketSizeReportLMS(props: MarketSizeReportLMSProps) {
         </div>
 
         <div className="market-size-insights flex flex-col gap-4 w-full bg-card-bg p-5 rounded-lg border border-dashboard-border">
-          <h2 className="section-title font-bold text-lg font-bodycopy">
+          <h2 className="section-title font-bold text-lg ">
             Detail & Insights
           </h2>
-          <div className="flex gap-6 font-bodycopy">
+          <div className="flex gap-6 ">
             <div className="tam-details flex flex-col flex-1 gap-4">
               <div className="tam-description flex flex-col gap-1">
                 <h3 className="text-lg font-bold">
@@ -223,12 +223,12 @@ export default function MarketSizeReportLMS(props: MarketSizeReportLMSProps) {
           </div>
         </div>
         <div className="market-size-insights flex flex-col gap-4 w-full bg-card-bg p-5 rounded-lg border border-dashboard-border">
-          <h2 className="section-title font-bold text-lg font-bodycopy">
+          <h2 className="section-title font-bold text-lg ">
             Scenario Analysis (SOM)
           </h2>
-          <div className="flex gap-6 font-bodycopy">
+          <div className="flex gap-6 ">
             <div className="conservative-scenario flex flex-col flex-1 gap-1">
-              <p className="text-3xl text-primary font-brand font-bold">
+              <p className="text-3xl text-primary  font-bold">
                 {getShortRupiahCurrency(conservativeScenario)}
               </p>
               <h3 className="text-lg font-bold">Conservative Scenario</h3>
@@ -241,7 +241,7 @@ export default function MarketSizeReportLMS(props: MarketSizeReportLMSProps) {
             </div>
             <div className="divider border-l self-stretch" />
             <div className="conservative-scenario flex flex-col flex-1 gap-1">
-              <p className="text-3xl text-primary font-brand font-bold">
+              <p className="text-3xl text-primary  font-bold">
                 {getShortRupiahCurrency(somValue)}
               </p>
               <h3 className="text-lg font-bold">Normal Scenario</h3>
@@ -254,7 +254,7 @@ export default function MarketSizeReportLMS(props: MarketSizeReportLMSProps) {
             </div>
             <div className="divider border-l self-stretch" />
             <div className="conservative-scenario flex flex-col flex-1 gap-1">
-              <p className="text-3xl text-primary font-brand font-bold">
+              <p className="text-3xl text-primary  font-bold">
                 {getShortRupiahCurrency(aggresiveScenario)}
               </p>
               <h3 className="text-lg font-bold">Aggresive Scenario</h3>
@@ -275,26 +275,26 @@ export default function MarketSizeReportLMS(props: MarketSizeReportLMSProps) {
       {mobileHeader}
       <div className="flex flex-col gap-4 p-4">
         <div className="flex flex-col items-center gap-6 p-4 bg-card-bg border border-dashboard-border rounded-lg">
-          <h2 className="font-bold text-base font-bodycopy self-start">Market Size Analysis</h2>
+          <h2 className="font-bold text-base  self-start">Market Size Analysis</h2>
           <div className="flex flex-col items-center gap-6">
             <div className="tam-chart flex flex-col size-44 bg-primary outline-[12px] outline-primary/50 items-center justify-center rounded-full overflow-hidden">
-              <p className="font-bodycopy font-bold text-white text-lg">TAM</p>
-              <p className="font-bodycopy font-bold text-white text-xl text-center">{getShortRupiahCurrency(props.tamValue)}</p>
+              <p className=" font-bold text-white text-lg">TAM</p>
+              <p className=" font-bold text-white text-xl text-center">{getShortRupiahCurrency(props.tamValue)}</p>
             </div>
             <div className="sam-chart flex flex-col size-36 bg-[#FBBF24] outline-[12px] outline-[#FBBF24]/50 items-center justify-center rounded-full overflow-hidden">
-              <p className="font-bodycopy font-bold text-white text-base">SAM</p>
-              <p className="font-bodycopy font-bold text-white text-xl text-center">{getShortRupiahCurrency(props.samValue)}</p>
+              <p className=" font-bold text-white text-base">SAM</p>
+              <p className=" font-bold text-white text-xl text-center">{getShortRupiahCurrency(props.samValue)}</p>
             </div>
             <div className="som-chart flex flex-col size-28 bg-[#EF4444] outline-[12px] outline-[#EF4444]/50 items-center justify-center rounded-full overflow-hidden">
-              <p className="font-bodycopy font-bold text-white text-base">SOM</p>
-              <p className="font-bodycopy font-bold text-white text-base text-center">{getShortRupiahCurrency(somValue)}</p>
+              <p className=" font-bold text-white text-base">SOM</p>
+              <p className=" font-bold text-white text-base text-center">{getShortRupiahCurrency(somValue)}</p>
             </div>
           </div>
         </div>
         <AICitationLMS sources={props.sources} confidenceLevel={props.confidenceLevel} />
         <div className="flex flex-col gap-4 p-4 bg-card-bg border border-dashboard-border rounded-lg">
-          <h2 className="font-bold text-base font-bodycopy">Detail &amp; Insights</h2>
-          <div className="flex flex-col gap-4 font-bodycopy">
+          <h2 className="font-bold text-base ">Detail &amp; Insights</h2>
+          <div className="flex flex-col gap-4 ">
             <div className="flex flex-col gap-2">
               <h3 className="text-base font-bold">Total Addressable Market (TAM)</h3>
               <p className="text-emphasis text-[15px]">TAM adalah total permintaan pasar untuk produk/jasa Anda, mengasumsikan Anda menguasai 100% pasar.</p>
@@ -315,22 +315,22 @@ export default function MarketSizeReportLMS(props: MarketSizeReportLMSProps) {
           </div>
         </div>
         <div className="flex flex-col gap-4 p-4 bg-card-bg border border-dashboard-border rounded-lg">
-          <h2 className="font-bold text-base font-bodycopy">Scenario Analysis (SOM)</h2>
-          <div className="flex flex-col gap-4 font-bodycopy">
+          <h2 className="font-bold text-base ">Scenario Analysis (SOM)</h2>
+          <div className="flex flex-col gap-4 ">
             <div className="flex flex-col gap-1">
-              <p className="text-2xl text-primary font-brand font-bold">{getShortRupiahCurrency(conservativeScenario)}</p>
+              <p className="text-2xl text-primary  font-bold">{getShortRupiahCurrency(conservativeScenario)}</p>
               <h3 className="text-base font-bold">Conservative Scenario</h3>
               <p className="text-emphasis text-[15px]">Menggambarkan hasil dengan pendekatan kehati-hatian tinggi.</p>
             </div>
             <hr className="border-b" />
             <div className="flex flex-col gap-1">
-              <p className="text-2xl text-primary font-brand font-bold">{getShortRupiahCurrency(somValue)}</p>
+              <p className="text-2xl text-primary  font-bold">{getShortRupiahCurrency(somValue)}</p>
               <h3 className="text-base font-bold">Normal Scenario</h3>
               <p className="text-emphasis text-[15px]">Menunjukkan estimasi paling rasional dan seimbang berdasarkan tren.</p>
             </div>
             <hr className="border-b" />
             <div className="flex flex-col gap-1">
-              <p className="text-2xl text-primary font-brand font-bold">{getShortRupiahCurrency(aggresiveScenario)}</p>
+              <p className="text-2xl text-primary  font-bold">{getShortRupiahCurrency(aggresiveScenario)}</p>
               <h3 className="text-base font-bold">Aggresive Scenario</h3>
               <p className="text-emphasis text-[15px]">Merepresentasikan potensi tertinggi yang dapat dicapai apabila seluruh faktor pertumbuhan berjalan optimal.</p>
             </div>

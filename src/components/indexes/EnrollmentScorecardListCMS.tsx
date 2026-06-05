@@ -42,7 +42,7 @@ export default function EnrollmentScorecardListCMS(
   return (
     <div className="enrolled-user flex flex-col gap-3 p-3 bg-section-background rounded-md">
       <div className="section-name flex justify-between items-center">
-        <h2 className="label-name font-brand font-bold">Enrolled Users</h2>
+        <h2 className="label-name  font-bold">Enrolled Users</h2>
         {isAllowedManageUser && (
           <Link href={`/cohorts/${props.cohortId}/members`}>
             <AppButton variant="neutral" size="small">

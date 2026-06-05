@@ -1,4 +1,4 @@
-ï»¿"use client";
+"use client";
 import { Switch } from "@/components/ui/switch";
 import { ProductCategory, StatusType } from "@/lib/app-types";
 import { setSessionToken, trpc } from "@/trpc/client";
@@ -148,7 +148,7 @@ export default function CreateDiscountFormCMS({
 
     // Required field checking
     if (!formData.discountName) {
-      toast.error("Oops! Donâ€™t forget to give your discount a name.");
+      toast.error("Oops! Don’t forget to give your discount a name.");
       setIsSubmitting(false);
       return;
     }
@@ -168,7 +168,7 @@ export default function CreateDiscountFormCMS({
       return;
     }
     if (isNaN(Number(formData.discountRate))) {
-      toast.error("Hmmâ€¦ that doesnâ€™t look like a valid number for the rate");
+      toast.error("Hmm… that doesn’t look like a valid number for the rate");
       setIsSubmitting(false);
       return;
     }
@@ -321,7 +321,7 @@ export default function CreateDiscountFormCMS({
             <div className="status flex flex-col gap-1">
               <label
                 htmlFor={"discount-status"}
-                className="flex pl-1 gap-0.5 text-sm text-foreground font-bodycopy font-semibold"
+                className="flex pl-1 gap-0.5 text-sm text-foreground  font-semibold"
               >
                 Status <span className="text-red-700">*</span>
               </label>
@@ -339,7 +339,7 @@ export default function CreateDiscountFormCMS({
               </div>
             </div>
             <div className="flex flex-col bg-card-inside-bg border gap-4 p-4 rounded-md">
-              <h5 className="font-bodycopy font-bold text-sm">
+              <h5 className=" font-bold text-sm">
                 Applies Discount to Product
               </h5>
               <AppSelect variant="CMS"

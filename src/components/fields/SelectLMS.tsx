@@ -65,7 +65,7 @@ export default function SelectLMS({
       {selectName && (
         <label
           htmlFor={selectId}
-          className="select-label flex pl-1 gap-0.5 text-[15px] text-sb-text-strong font-bodycopy font-semibold"
+          className="select-label flex pl-1 gap-0.5 text-[15px] text-sb-text-strong  font-semibold"
         >
           {selectName}
           {required && (
@@ -75,7 +75,7 @@ export default function SelectLMS({
       )}
 
       <div
-        className={`select-container relative flex w-full p-2 pt-1 bg-transparent font-bodycopy font-medium text-[15px] border-b-2 transform transition-all ${
+        className={`select-container relative flex w-full p-2 pt-1 bg-transparent  font-medium text-[15px] border-b-2 transform transition-all ${
           isOpen ? "border-primary-deep" : ""
         } ${disabled ? "cursor-not-allowed" : "cursor-pointer"}`}
         onClick={() => {
@@ -111,7 +111,7 @@ export default function SelectLMS({
 
         {isOpen && !disabled && (
           <div className="dropdown-container absolute top-full mt-2 left-0 w-full z-30 bg-card-bg border border-dashboard-border rounded-md shadow-md overflow-hidden">
-            <ul className="dropdown-options flex flex-col text-sm font-bodycopy font-medium max-h-60 overflow-auto">
+            <ul className="dropdown-options flex flex-col text-sm  font-medium max-h-60 overflow-auto">
               {options.map((opt, index) => (
                 <div
                   key={index}

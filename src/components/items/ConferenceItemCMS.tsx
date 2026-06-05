@@ -25,12 +25,12 @@ export default function ConferenceItemCMS(props: ConferenceItemCMSProps) {
         />
       </div>
       <div className="conference-attributes flex flex-col">
-        <h3 className="font-bodycopy font-semibold text-black text-[15px] line-clamp-1">
+        <h3 className=" font-semibold text-black text-[15px] line-clamp-1">
           Meeting Link
         </h3>
         <a
           href={props.conferenceURL}
-          className="conference-url font-bodycopy font-medium line-clamp-1 text-tertiary text-sm hover:underline hover:underline-offset-4"
+          className="conference-url  font-medium line-clamp-1 text-tertiary text-sm hover:underline hover:underline-offset-4"
           target="_blank"
           rel="noopenner noreferrer"
         >

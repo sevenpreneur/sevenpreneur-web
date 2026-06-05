@@ -20,18 +20,18 @@ export default function HeaderAIResultDetailsLMS(
           <div className="header-page-data flex flex-col gap-3">
             <div className="header-breadcrumb flex items-center gap-4">
               <AppBreadcrumb className="text-emphasis">
-                <p className="slash font-bodycopy">/</p>
+                <p className="slash ">/</p>
                 <AppBreadcrumbItem href="/ai">AI</AppBreadcrumbItem>
-                <p className="slash font-bodycopy">/</p>
+                <p className="slash ">/</p>
                 <AppBreadcrumbItem isCurrentPage>Result</AppBreadcrumbItem>
               </AppBreadcrumb>
             </div>
             <div className="header-information flex flex-col gap-2">
-              <h1 className="header-title font-brand font-bold text-2xl">
+              <h1 className="header-title  font-bold text-2xl">
                 {props.headerTitle}
               </h1>
               {props.headerDescription && (
-                <p className="font-bodycopy font-medium text-emphasis">
+                <p className=" font-medium text-emphasis">
                   {props.headerDescription}
                 </p>
               )}

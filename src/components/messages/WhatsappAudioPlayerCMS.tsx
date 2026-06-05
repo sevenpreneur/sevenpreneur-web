@@ -163,7 +163,7 @@ export default function WhatsappAudioPlayerCMS({
 
       {/* Timestamp pill */}
       <div className="flex shrink-0 px-1.5 py-1 items-center justify-center rounded-full bg-primary-soft-background">
-        <span className="text-[10px] font-medium text-primary-soft-foreground font-bodycopy leading-none">
+        <span className="text-[10px] font-medium text-primary-soft-foreground  leading-none">
           {isLoading ? "--:--" : formatTime(displayTime)}
         </span>
       </div>

@@ -356,7 +356,7 @@ export default function GenerateAICOGSPricesLMS(
               id="product-information"
               className="product-information bg-card-bg w-full flex flex-col gap-4 p-5 border border-dashboard-border rounded-lg scroll-mt-28"
             >
-              <h2 className="section-title font-bold font-bodycopy">
+              <h2 className="section-title font-bold ">
                 Product Information
               </h2>
               <InputLMS
@@ -378,7 +378,7 @@ export default function GenerateAICOGSPricesLMS(
                 required
               />
               <div className="product-category flex flex-col gap-2">
-                <h3 className="text-[15px] text-sb-text-strong font-bodycopy font-semibold">
+                <h3 className="text-[15px] text-sb-text-strong  font-semibold">
                   Pilih Kategori Produk
                   <span className="label-required text-destructive">*</span>
                 </h3>
@@ -449,10 +449,10 @@ export default function GenerateAICOGSPricesLMS(
               className="variable-cost bg-card-bg w-full flex flex-col gap-4 p-5 border border-dashboard-border rounded-lg scroll-mt-28"
             >
               <div className="section-attributes flex flex-col">
-                <h2 className="section-title font-bold font-bodycopy">
+                <h2 className="section-title font-bold ">
                   Variable Cost
                 </h2>
-                <p className="section-description text-[15px] text-emphasis font-medium font-bodycopy">
+                <p className="section-description text-[15px] text-emphasis font-medium ">
                   Variable cost adalah biaya yang melekat pada setiap unit
                   produk seperti bahan baku atau komponen produk.
                 </p>
@@ -467,10 +467,10 @@ export default function GenerateAICOGSPricesLMS(
               className="fixed-cost bg-card-bg w-full flex flex-col gap-4 p-5 border border-dashboard-border rounded-lg scroll-mt-28"
             >
               <div className="section-attributes flex flex-col">
-                <h2 className="section-title font-bold font-bodycopy">
+                <h2 className="section-title font-bold ">
                   Fixed Cost
                 </h2>
-                <p className="section-description text-[15px] text-emphasis font-medium font-bodycopy">
+                <p className="section-description text-[15px] text-emphasis font-medium ">
                   Fixed cost adalah biaya tetap yang tidak terikat pada jumlah
                   produk.
                 </p>
@@ -481,7 +481,7 @@ export default function GenerateAICOGSPricesLMS(
               id="target-volume-per-month"
               className="target-volume-per-month bg-card-bg w-full flex flex-col gap-4 p-5 border border-dashboard-border rounded-lg scroll-mt-28"
             >
-              <h2 className="section-title font-bold font-bodycopy">
+              <h2 className="section-title font-bold ">
                 Volume Production per Month
               </h2>
               <AppNumberInputSVP
@@ -514,14 +514,14 @@ export default function GenerateAICOGSPricesLMS(
           <Link href="/ai" className="flex items-center justify-center size-8 rounded-full hover:bg-card-inside-bg transition-colors">
             <ChevronLeft className="size-5" />
           </Link>
-          <h1 className="font-brand font-bold text-lg">COGS &amp; Prices Calculator</h1>
+          <h1 className=" font-bold text-lg">COGS &amp; Prices Calculator</h1>
         </div>
         <form
           className="flex flex-col gap-4 p-4 items-end"
           onSubmit={handleAIGenerate}
         >
           <section className="bg-card-bg w-full flex flex-col gap-4 p-5 border border-dashboard-border rounded-lg">
-            <h2 className="section-title font-bold font-bodycopy">
+            <h2 className="section-title font-bold ">
               Product Information
             </h2>
             <InputLMS
@@ -543,7 +543,7 @@ export default function GenerateAICOGSPricesLMS(
               required
             />
             <div className="product-category flex flex-col gap-2">
-              <h3 className="text-[15px] text-sb-text-strong font-bodycopy font-semibold">
+              <h3 className="text-[15px] text-sb-text-strong  font-semibold">
                 Pilih Kategori Produk
                 <span className="label-required text-destructive">*</span>
               </h3>
@@ -596,10 +596,10 @@ export default function GenerateAICOGSPricesLMS(
           </section>
           <section className="bg-card-bg w-full flex flex-col gap-4 p-5 border border-dashboard-border rounded-lg">
             <div className="section-attributes flex flex-col">
-              <h2 className="section-title font-bold font-bodycopy">
+              <h2 className="section-title font-bold ">
                 Variable Cost
               </h2>
-              <p className="section-description text-[15px] text-emphasis font-medium font-bodycopy">
+              <p className="section-description text-[15px] text-emphasis font-medium ">
                 Variable cost adalah biaya yang melekat pada setiap unit produk
                 seperti bahan baku atau komponen produk.
               </p>
@@ -608,10 +608,10 @@ export default function GenerateAICOGSPricesLMS(
           </section>
           <section className="bg-card-bg w-full flex flex-col gap-4 p-5 border border-dashboard-border rounded-lg">
             <div className="section-attributes flex flex-col">
-              <h2 className="section-title font-bold font-bodycopy">
+              <h2 className="section-title font-bold ">
                 Fixed Cost
               </h2>
-              <p className="section-description text-[15px] text-emphasis font-medium font-bodycopy">
+              <p className="section-description text-[15px] text-emphasis font-medium ">
                 Fixed cost adalah biaya tetap yang tidak terikat pada jumlah
                 produk.
               </p>
@@ -619,7 +619,7 @@ export default function GenerateAICOGSPricesLMS(
             <AICostListStepperLMS costs={fixedCost} setCosts={setFixedCost} />
           </section>
           <section className="bg-card-bg w-full flex flex-col gap-4 p-5 border border-dashboard-border rounded-lg">
-            <h2 className="section-title font-bold font-bodycopy">
+            <h2 className="section-title font-bold ">
               Volume Production per Month
             </h2>
             <AppNumberInputSVP

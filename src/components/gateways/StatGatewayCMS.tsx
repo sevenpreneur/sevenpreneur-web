@@ -25,10 +25,10 @@ export default function StatGatewayCMS(props: StatGatewayCMSProps) {
           <FontAwesomeIcon icon={props.statsIcon} size="lg" />
         </div>
         <div className="attribute-data flex flex-col">
-          <h3 className="font-bodycopy font-medium text-sm">
+          <h3 className=" font-medium text-sm">
             {props.statsName}
           </h3>
-          <p className="font-bodycopy font-bold text-xl">{props.statsValue}</p>
+          <p className=" font-bold text-xl">{props.statsValue}</p>
         </div>
       </div>
       <ChevronRight className="size-6" />

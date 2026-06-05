@@ -98,7 +98,7 @@ export default function TransactionDetailsCMS({
         </div>
       )}
       {isError && (
-        <div className="flex w-full h-full items-center justify-center text-emphasis font-bodycopy">
+        <div className="flex w-full h-full items-center justify-center text-emphasis ">
           No Data
         </div>
       )}
@@ -115,7 +115,7 @@ export default function TransactionDetailsCMS({
             )}
           </SheetLineItemCMS>
           <div className="customer-details flex flex-col gap-2 p-3 border border-dashboard-border rounded-md">
-            <h5 className="font-bodycopy font-bold text-sm">
+            <h5 className=" font-bold text-sm">
               Customer Details
             </h5>
             <UserItemCMS
@@ -188,7 +188,7 @@ export default function TransactionDetailsCMS({
             )}
           </div>
           <div className="payment-details flex flex-col gap-2 p-3 border border-dashboard-border rounded-md">
-            <h5 className="font-bodycopy font-bold text-sm dark:text-sevenpreneur-white">
+            <h5 className=" font-bold text-sm dark:text-sevenpreneur-white">
               Payment Details
             </h5>
             <ReceiptLineItemCMS

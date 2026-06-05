@@ -114,14 +114,14 @@ export default function LearningSessionItemCMS({
       <div className="session-item flex items-center justify-between bg-card-inside-bg gap-2 rounded-md hover:cursor-pointer hover:bg-card-inside-bg/50">
         <Link
           href={`/cohorts/${cohortId}/learnings/${learningSessionId}`}
-          className="session-box flex w-full p-3.5 max-w-[calc(90%)] items-center font-bodycopy"
+          className="session-box flex w-full p-3.5 max-w-[calc(90%)] items-center "
         >
           <div className="session-container flex items-center gap-4">
             <div className="session-date flex flex-col w-14 items-center aspect-square shrink-0">
               <p className="session-day font-medium text-sm">
                 {dayjs(learningSessionDate).format("ddd")}
               </p>
-              <p className="session-date font-brand font-semibold text-3xl">
+              <p className="session-date  font-semibold text-3xl">
                 {dayjs(learningSessionDate).format("D")}
               </p>
             </div>
@@ -129,7 +129,7 @@ export default function LearningSessionItemCMS({
             {attendanceCount !== undefined &&
               noAttendanceCount !== undefined && (
                 <>
-                  <div className="flex flex-col gap-1.5 w-16 shrink-0 font-bodycopy">
+                  <div className="flex flex-col gap-1.5 w-16 shrink-0 ">
                     <span className="flex items-center gap-2">
                       <FontAwesomeIcon
                         icon={faUserCheck}

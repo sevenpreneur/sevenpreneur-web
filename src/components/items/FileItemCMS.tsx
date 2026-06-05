@@ -140,10 +140,10 @@ export default function FileItemCMS({
             />
           </div>
           <div className="file-attribute flex flex-col">
-            <h3 className="file-name font-bodycopy font-semibold text-[15px] line-clamp-1 dark:text-sevenpreneur-white">
+            <h3 className="file-name  font-semibold text-[15px] line-clamp-1 dark:text-sevenpreneur-white">
               {fileName}
             </h3>
-            <p className="file-type font-bodycopy font-medium text-emphasis text-sm">
+            <p className="file-type  font-medium text-emphasis text-sm">
               {fileType}
             </p>
           </div>

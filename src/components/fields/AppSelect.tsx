@@ -39,7 +39,7 @@ const variantStyles: Record<
       "bg-tertiary/5 text-tertiary dark:text-white dark:bg-card-inside-bg",
     itemHover:
       "hover:bg-tertiary/5 hover:text-tertiary dark:hover:text-white dark:hover:bg-card-inside-bg",
-    font: "font-bodycopy",
+    font: "",
   },
   CMS: {
     focus: "outline-4 outline-tertiary/15 border-tertiary",
@@ -51,7 +51,7 @@ const variantStyles: Record<
       "bg-tertiary/5 text-tertiary dark:text-white dark:bg-card-inside-bg",
     itemHover:
       "hover:bg-tertiary/5 hover:text-tertiary dark:hover:text-white dark:hover:bg-card-inside-bg",
-    font: "font-bodycopy",
+    font: "",
   },
 };
 

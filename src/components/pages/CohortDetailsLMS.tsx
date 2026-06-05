@@ -95,7 +95,7 @@ export default function CohortDetailsLMS(props: CohortDetailsLMSProps) {
                   height={600}
                 />
                 <div className="absolute flex flex-col top-1/2 -translate-y-1/2 left-4 text-white gap-3 z-10">
-                  <h4 className="font-bodycopy font-semibold max-w-32 leading-tight">
+                  <h4 className=" font-semibold max-w-32 leading-tight">
                     Certificate of Completion
                   </h4>
                   <a

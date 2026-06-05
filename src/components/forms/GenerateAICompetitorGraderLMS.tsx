@@ -106,7 +106,7 @@ export default function GenerateAICompetitorGraderLMS(
       id="business-profile"
       className="business-profile bg-card-bg w-full flex flex-col gap-4 p-5 border border-dashboard-border rounded-lg"
     >
-      <h2 className="section-title font-bold font-bodycopy">
+      <h2 className="section-title font-bold ">
         Business Profile
       </h2>
       <InputLMS
@@ -213,7 +213,7 @@ export default function GenerateAICompetitorGraderLMS(
           <Link href="/ai" className="flex items-center justify-center size-8 rounded-full hover:bg-card-inside-bg transition-colors">
             <ChevronLeft className="size-5" />
           </Link>
-          <h1 className="font-brand font-bold text-lg">Competitor Grader</h1>
+          <h1 className=" font-bold text-lg">Competitor Grader</h1>
         </div>
         <form
           className="flex flex-col gap-4 p-4 items-end"

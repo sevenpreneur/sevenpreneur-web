@@ -131,7 +131,7 @@ export default function WhatsappLeadDetailsCMS(
             {/* AI / Human Mode card */}
             <div className="ai-mode-card flex flex-col gap-3 p-4 bg-card-bg border border-dashboard-border rounded-lg">
               <div className="flex items-center gap-1.5">
-                <h5 className="font-bodycopy text-[15px] font-bold dark:text-sevenpreneur-white">
+                <h5 className=" text-[15px] font-bold dark:text-sevenpreneur-white">
                   AI / Human Mode
                 </h5>
               </div>
@@ -140,7 +140,7 @@ export default function WhatsappLeadDetailsCMS(
                   type="button"
                   onClick={() => handleChangeMode("AI")}
                   disabled={updateConversation.isPending}
-                  className={`flex flex-1 items-center justify-center gap-1.5 py-2 text-sm font-bodycopy font-semibold rounded-md transition-colors disabled:cursor-not-allowed ${
+                  className={`flex flex-1 items-center justify-center gap-1.5 py-2 text-sm  font-semibold rounded-md transition-colors disabled:cursor-not-allowed ${
                     currentMode === "AI"
                       ? "bg-tertiary text-tertiary-foreground shadow-sm"
                       : "text-emphasis hover:bg-sb-item-active-bg dark:hover:bg-card-bg"
@@ -153,7 +153,7 @@ export default function WhatsappLeadDetailsCMS(
                   type="button"
                   onClick={() => handleChangeMode("HUMAN")}
                   disabled={updateConversation.isPending}
-                  className={`flex flex-1 items-center justify-center gap-1.5 py-2 text-sm font-bodycopy font-semibold rounded-md transition-colors disabled:cursor-not-allowed ${
+                  className={`flex flex-1 items-center justify-center gap-1.5 py-2 text-sm  font-semibold rounded-md transition-colors disabled:cursor-not-allowed ${
                     currentMode === "HUMAN"
                       ? "bg-tertiary text-tertiary-foreground shadow-sm"
                       : "text-emphasis hover:bg-sb-item-active-bg dark:hover:bg-card-bg"
@@ -178,21 +178,21 @@ export default function WhatsappLeadDetailsCMS(
                     />
                   ) : (
                     <div className="flex w-full h-full items-center justify-center bg-secondary-soft-background text-secondary-soft-foreground dark:bg-sevenpreneur-pink-midgnight dark:text-sevenpreneur-pink-blush">
-                      <p className="font-bodycopy font-medium text-base">
+                      <p className=" font-medium text-base">
                         {initialName}
                       </p>
                     </div>
                   )}
                 </div>
                 <div className="flex flex-col gap-0.5 min-w-0">
-                  <p className="lead-name text-base font-bold font-bodycopy leading-snug line-clamp-2 dark:text-sevenpreneur-white">
+                  <p className="lead-name text-base font-bold  leading-snug line-clamp-2 dark:text-sevenpreneur-white">
                     {leadName}
                   </p>
-                  <p className="lead-phone-number text-sm text-emphasis font-semibold font-bodycopy leading-snug line-clamp-1">
+                  <p className="lead-phone-number text-sm text-emphasis font-semibold  leading-snug line-clamp-1">
                     {leadDetails.user?.phone_number || leadDetails.phone_number}
                   </p>
                   {leadDetails.user?.email && (
-                    <p className="lead-email text-sm text-emphasis font-semibold font-bodycopy leading-snug line-clamp-1">
+                    <p className="lead-email text-sm text-emphasis font-semibold  leading-snug line-clamp-1">
                       {leadDetails.user.email}
                     </p>
                   )}
@@ -212,7 +212,7 @@ export default function WhatsappLeadDetailsCMS(
             {/* Lead Details card */}
             <div className="lead-details flex flex-col gap-3 p-4 bg-card-bg border border-dashboard-border rounded-lg">
               <div className="flex w-full justify-between items-center leading-snug">
-                <h5 className="font-bodycopy text-[15px] font-bold dark:text-white">
+                <h5 className=" text-[15px] font-bold dark:text-white">
                   Lead Details
                 </h5>
                 <AppButton
@@ -227,7 +227,7 @@ export default function WhatsappLeadDetailsCMS(
               </div>
               <div className="flex flex-col gap-2">
                 <div className="flex w-full items-center">
-                  <p className="label w-32 text-sm text-emphasis font-bodycopy font-medium">
+                  <p className="label w-32 text-sm text-emphasis  font-medium">
                     Handled by
                   </p>
                   <div className="flex w-full">
@@ -245,7 +245,7 @@ export default function WhatsappLeadDetailsCMS(
                             height={500}
                           />
                         </div>
-                        <p className="text-sm text-[#333333] font-bodycopy font-semibold line-clamp-1 dark:text-sevenpreneur-white">
+                        <p className="text-sm text-[#333333]  font-semibold line-clamp-1 dark:text-sevenpreneur-white">
                           {leadDetails.handler?.full_name}
                         </p>
                         <AppButton
@@ -263,14 +263,14 @@ export default function WhatsappLeadDetailsCMS(
                         </AppButton>
                       </div>
                     ) : (
-                      <p className="py-1 px-2 text-sm bg-secondary-soft-background text-secondary-soft-foreground dark:bg-sevenpreneur-pink-midgnight dark:text-sevenpreneur-pink-rose font-bodycopy font-semibold rounded-full">
+                      <p className="py-1 px-2 text-sm bg-secondary-soft-background text-secondary-soft-foreground dark:bg-sevenpreneur-pink-midgnight dark:text-sevenpreneur-pink-rose  font-semibold rounded-full">
                         Unassigned
                       </p>
                     )}
                   </div>
                 </div>
                 <div className="flex w-full items-center">
-                  <p className="label w-32 text-sm text-emphasis font-bodycopy font-medium">
+                  <p className="label w-32 text-sm text-emphasis  font-medium">
                     Status
                   </p>
                   <div className="input w-full">
@@ -286,7 +286,7 @@ export default function WhatsappLeadDetailsCMS(
             <div className="lead-progress flex flex-col gap-3 p-4 bg-card-bg border border-dashboard-border rounded-lg">
               <div className="flex items-center gap-2">
                 <Loader className="size-4 text-emphasis" />
-                <h5 className="font-bodycopy text-[15px] font-bold dark:text-white">
+                <h5 className=" text-[15px] font-bold dark:text-white">
                   Winning Rate
                 </h5>
               </div>
@@ -298,7 +298,7 @@ export default function WhatsappLeadDetailsCMS(
                   onValueChange={handleWinningRateChange}
                   disabled={currentMode === "AI"}
                 />
-                <div className="input w-fit text-sm text-emphasis font-bodycopy font-medium">
+                <div className="input w-fit text-sm text-emphasis  font-medium">
                   {winningRate}%
                 </div>
               </div>
@@ -308,7 +308,7 @@ export default function WhatsappLeadDetailsCMS(
             <div className="notes flex flex-col gap-3 p-4 bg-card-bg border border-dashboard-border rounded-lg">
               <div className="flex items-center gap-2">
                 <TextAlignStart className="size-4 text-emphasis" />
-                <h5 className="font-bodycopy text-[15px] font-bold dark:text-sevenpreneur-white">
+                <h5 className=" text-[15px] font-bold dark:text-sevenpreneur-white">
                   Notes
                 </h5>
               </div>

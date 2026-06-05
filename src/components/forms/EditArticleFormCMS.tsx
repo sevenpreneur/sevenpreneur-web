@@ -1,4 +1,4 @@
-ï»¿"use client";
+"use client";
 import AppButton from "@/components/buttons/AppButton";
 import PageHeaderCMS from "@/components/titles/PageHeaderCMS";
 import { ArticleStatus } from "@/lib/app-types";
@@ -400,7 +400,7 @@ export default function EditArticleForm(props: EditArticleFormProps) {
 
         {isLoading && <AppLoadingComponents />}
         {isError && (
-          <div className="flex w-full h-full py-10 items-center justify-center text-emphasis font-bodycopy font-medium">
+          <div className="flex w-full h-full py-10 items-center justify-center text-emphasis  font-medium">
             No Data
           </div>
         )}
@@ -436,7 +436,7 @@ export default function EditArticleForm(props: EditArticleFormProps) {
                         variant="CMS"
                         inputId="publish-date"
                         inputName="Sub-Heading"
-                        inputPlaceholder="Write section sub-titleâ€¦"
+                        inputPlaceholder="Write section sub-title…"
                         inputType="text"
                         value={post.sub_heading || ""}
                         onInputChange={handleChangeBodyContent(
@@ -487,7 +487,7 @@ export default function EditArticleForm(props: EditArticleFormProps) {
               <div className="flex flex-col w-full gap-4 border rounded-lg">
                 <div className="section-title flex gap-3 px-6 py-3 items-center bg-card-inside-bg text-foreground border-b border-dashboard-border rounded-t-lg">
                   <ListMinus />
-                  <h2 className="font-bodycopy font-semibold text-sm">
+                  <h2 className=" font-semibold text-sm">
                     Metadata Settings
                   </h2>
                 </div>
@@ -496,7 +496,7 @@ export default function EditArticleForm(props: EditArticleFormProps) {
                     variant="CMS"
                     textAreaId="insight"
                     textAreaName="Content Summary"
-                    textAreaPlaceholder="Write a 3-sentence summary that captures the articleâ€™s main topic and overall takeaway"
+                    textAreaPlaceholder="Write a 3-sentence summary that captures the article’s main topic and overall takeaway"
                     textAreaHeight="h-44"
                     value={formData.articleInsight}
                     onTextAreaChange={handleInputChange("articleInsight")}

@@ -255,10 +255,10 @@ export default function CohortMembersPerformanceCMS({
                             />
                           </div>
                           <div className="flex flex-col">
-                            <p className="font-semibold font-bodycopy text-sm line-clamp-1 dark:text-sevenpreneur-white">
+                            <p className="font-semibold  text-sm line-clamp-1 dark:text-sevenpreneur-white">
                               {post.full_name}
                             </p>
-                            <p className="text-emphasis text-sm font-bodycopy line-clamp-1">
+                            <p className="text-emphasis text-sm  line-clamp-1">
                               {post.email}
                             </p>
                           </div>
@@ -304,7 +304,7 @@ export default function CohortMembersPerformanceCMS({
               </table>
 
               {filtered.length === 0 && (
-                <p className="text-sm text-center text-emphasis font-bodycopy py-4">
+                <p className="text-sm text-center text-emphasis  py-4">
                   {debouncedKeyword
                     ? `No results for "${debouncedKeyword}"`
                     : "No students enrolled yet"}
@@ -318,7 +318,7 @@ export default function CohortMembersPerformanceCMS({
                     totalPages={totalPages}
                     onPageChange={setCurrentPage}
                   />
-                  <p className="text-xs text-emphasis font-bodycopy">
+                  <p className="text-xs text-emphasis ">
                     Showing {paged.length} of {filtered.length} students
                   </p>
                 </div>

@@ -261,12 +261,12 @@ export default function B2BPipelineListCMS(props: B2BPipelineListCMSProps) {
                       {(currentPage - 1) * pageSize + index + 1}
                     </TableCellCMS>
                     <TableCellCMS>
-                      <p className="font-bodycopy font-semibold text-sm line-clamp-2 max-w-64 dark:text-sevenpreneur-white">
+                      <p className=" font-semibold text-sm line-clamp-2 max-w-64 dark:text-sevenpreneur-white">
                         {post.name}
                       </p>
                     </TableCellCMS>
                     <TableCellCMS>
-                      <span className="font-bodycopy text-sm text-emphasis line-clamp-2 max-w-40">
+                      <span className=" text-sm text-emphasis line-clamp-2 max-w-40">
                         {post.industry_name}
                       </span>
                     </TableCellCMS>
@@ -282,7 +282,7 @@ export default function B2BPipelineListCMS(props: B2BPipelineListCMSProps) {
                       />
                     </TableCellCMS>
                     <TableCellCMS>
-                      <span className="font-bodycopy font-semibold text-sm whitespace-nowrap">
+                      <span className=" font-semibold text-sm whitespace-nowrap">
                         {getRupiahCurrency(post.project_value)}
                       </span>
                     </TableCellCMS>
@@ -299,7 +299,7 @@ export default function B2BPipelineListCMS(props: B2BPipelineListCMSProps) {
                             />
                           )}
                         </div>
-                        <p className="font-bodycopy font-medium text-sm line-clamp-1 max-w-40">
+                        <p className=" font-medium text-sm line-clamp-1 max-w-40">
                           {post.owner_name}
                         </p>
                       </div>
@@ -353,7 +353,7 @@ export default function B2BPipelineListCMS(props: B2BPipelineListCMSProps) {
           )}
 
           {pipelineList?.length === 0 && (
-            <p className="empty-state mt-2 font-bodycopy text-center text-emphasis">
+            <p className="empty-state mt-2  text-center text-emphasis">
               {debouncedKeyword
                 ? `Looks like there are no results for "${debouncedKeyword}"`
                 : "No leads yet. Click Add Leads to create the first one."}
@@ -366,7 +366,7 @@ export default function B2BPipelineListCMS(props: B2BPipelineListCMSProps) {
                 currentPage={currentPage}
                 totalPages={data?.metapaging.total_page ?? 1}
               />
-              <p className="text-sm text-emphasis text-center font-bodycopy font-medium">{`Showing all ${data?.metapaging.total_data ?? 0} leads`}</p>
+              <p className="text-sm text-emphasis text-center  font-medium">{`Showing all ${data?.metapaging.total_data ?? 0} leads`}</p>
             </div>
           )}
         </div>
@@ -426,7 +426,7 @@ function ScorecardProgress({
           style={{ width: `${percent}%` }}
         />
       </div>
-      <p className="text-[11px] font-bodycopy text-emphasis">
+      <p className="text-[11px]  text-emphasis">
         {percent.toFixed(1)}% dari target {getShortRupiahCurrency(target)}
       </p>
     </div>

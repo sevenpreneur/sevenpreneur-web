@@ -108,16 +108,16 @@ export default function ProjectItemCMS(props: ProjectItemCMSProps) {
                 value={props.submissionPercentage}
               />
               <div className="absolute inset-0 flex items-center justify-center">
-                <span className="text-xs font-bold bg-card-bg font-bodycopy">
+                <span className="text-xs font-bold bg-card-bg ">
                   {props.submissionPercentage}%
                 </span>
               </div>
             </div>
             <div className="attribute-data flex flex-col">
-              <h3 className="font-bodycopy font-semibold text-[15px] line-clamp-1 dark:text-sevenpreneur-white">
+              <h3 className=" font-semibold text-[15px] line-clamp-1 dark:text-sevenpreneur-white">
                 {props.projectName}
               </h3>
-              <p className="font-bodycopy font-medium text-emphasis text-[13px] ">
+              <p className=" font-medium text-emphasis text-[13px] ">
                 Last submission:{" "}
                 {dayjs(props.lastSubmission).format("D MMM YYYY")}
               </p>

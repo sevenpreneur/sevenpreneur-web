@@ -11,7 +11,7 @@ export default function SheetLineItemCMS({
   children,
 }: SheetLineItemCMSProps) {
   return (
-    <div className="flex flex-col gap-1.5 font-bodycopy text-sm font-medium">
+    <div className="flex flex-col gap-1.5  text-sm font-medium">
       <p className="text-emphasis">{itemName}</p>
       <div className="dark:text-sevenpreneur-white">{children}</div>
     </div>

@@ -373,7 +373,7 @@ export default function EditLeadsPipelineFormCMS(
             </div>
 
             <div className="group-input flex flex-col gap-4 pt-2 border-t border-dashboard-border">
-              <h4 className="text-sm font-bodycopy font-bold pt-3">
+              <h4 className="text-sm  font-bold pt-3">
                 Person in Charge
               </h4>
               <AppInput
@@ -545,7 +545,7 @@ function ActionsSection({ pipelineId }: ActionsSectionProps) {
 
   return (
     <div className="group-input flex flex-col gap-4 pt-2 border-t border-dashboard-border">
-      <h4 className="text-sm font-bodycopy font-bold pt-3">Activities</h4>
+      <h4 className="text-sm  font-bold pt-3">Activities</h4>
 
       {/* Add new activity */}
       <div className="p-4 bg-card-inside-bg border border-dashboard-border rounded-md flex flex-col gap-3">
@@ -598,7 +598,7 @@ function ActionsSection({ pipelineId }: ActionsSectionProps) {
       {data && !isLoading && !isError && (
         <div className="flex flex-col gap-2">
           {data.list.length === 0 && (
-            <p className="text-sm text-center text-emphasis font-bodycopy py-2">
+            <p className="text-sm text-center text-emphasis  py-2">
               No activities yet
             </p>
           )}
@@ -694,10 +694,10 @@ function ActionsSection({ pipelineId }: ActionsSectionProps) {
                         </AppButton>
                       </div>
                     </div>
-                    <p className="font-bodycopy text-sm text-foreground whitespace-pre-wrap">
+                    <p className=" text-sm text-foreground whitespace-pre-wrap">
                       {action.summary}
                     </p>
-                    <p className="text-xs text-emphasis font-bodycopy">
+                    <p className="text-xs text-emphasis ">
                       {dayjs(action.created_at).format("D MMM YYYY HH:mm")}
                     </p>
                   </>

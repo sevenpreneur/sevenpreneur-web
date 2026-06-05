@@ -192,7 +192,7 @@ export default function AppDiscussionStarterItem(
         </div>
         <div className="discussion-starter-item flex flex-col gap-3 w-full">
           <div className="flex flex-col">
-            <div className="discussion-starter-attributes flex items-center gap-2 font-bodycopy text-sm">
+            <div className="discussion-starter-attributes flex items-center gap-2  text-sm">
               <p className="discussion-starter-author-name font-bold">
                 {props.discussionStarterAuthorName}
               </p>
@@ -200,11 +200,11 @@ export default function AppDiscussionStarterItem(
                 {dayjs(props.discussionStarterCreatedAt).fromNow()}
               </p>
             </div>
-            <p className="discussion-starter-message font-bodycopy text-sm whitespace-pre-line">
+            <p className="discussion-starter-message  text-sm whitespace-pre-line">
               {props.discussionStarterMessage}
             </p>
           </div>
-          <div className="discussion-starter-action flex font-bodycopy text-sm items-center gap-3">
+          <div className="discussion-starter-action flex  text-sm items-center gap-3">
             <p
               className="discussion-starter-reply font-semibold text-primary hover:cursor-pointer"
               onClick={() => handleWriteReply()}

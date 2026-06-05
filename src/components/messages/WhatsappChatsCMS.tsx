@@ -182,10 +182,10 @@ export default function WhatsappChatsCMS(props: WhatsappChatsCMSProps) {
     <div className="hidden lg:flex flex-col w-full h-full min-h-0">
       <div className="chat-header flex items-center gap-3 p-4 border-b border-dashboard-border shrink-0 bg-card-bg">
         <div className="flex flex-col min-w-0">
-          <p className="font-bodycopy font-bold text-base leading-snug line-clamp-1 dark:text-sevenpreneur-white">
+          <p className=" font-bold text-base leading-snug line-clamp-1 dark:text-sevenpreneur-white">
             {props.headerName}
           </p>
-          <p className="text-sm text-emphasis font-bodycopy font-medium leading-snug">
+          <p className="text-sm text-emphasis  font-medium leading-snug">
             {props.headerPhoneNumber}
           </p>
         </div>
@@ -212,7 +212,7 @@ export default function WhatsappChatsCMS(props: WhatsappChatsCMSProps) {
                   <React.Fragment key={index}>
                     {showDateLabel && (
                       <div className="flex w-full justify-center my-1">
-                        <p className="flex w-fit px-3 py-1 text-xs font-medium font-bodycopy text-[#333333]/70 bg-white/70 rounded-full">
+                        <p className="flex w-fit px-3 py-1 text-xs font-medium  text-[#333333]/70 bg-white/70 rounded-full">
                           {dayjs(post.created_at).format("ddd, DD MMM YYYY")}
                         </p>
                       </div>
@@ -248,7 +248,7 @@ export default function WhatsappChatsCMS(props: WhatsappChatsCMSProps) {
             </div>
           )}
           {props.mode === "AI" ? (
-            <div className="ai-mode-notice sticky bottom-3 flex items-center gap-2 w-full p-3 px-4 bg-card-bg border border-dashboard-border rounded-xl text-sm text-emphasis font-bodycopy font-medium z-10">
+            <div className="ai-mode-notice sticky bottom-3 flex items-center gap-2 w-full p-3 px-4 bg-card-bg border border-dashboard-border rounded-xl text-sm text-emphasis  font-medium z-10">
               <Bot className="size-4 shrink-0 text-tertiary" />
               <p>
                 AI is currently handling this chat. Switch to Human mode to send
@@ -264,12 +264,12 @@ export default function WhatsappChatsCMS(props: WhatsappChatsCMSProps) {
                 <div className="reply-preview flex items-stretch w-full bg-white dark:bg-card-bg border border-dashboard-border rounded-xl overflow-hidden">
                   <div className="w-1 bg-primary shrink-0" />
                   <div className="flex flex-col flex-1 min-w-0 py-2 px-3">
-                    <p className="text-xs font-bodycopy font-semibold text-primary leading-snug">
+                    <p className="text-xs  font-semibold text-primary leading-snug">
                       {replyTarget.direction === "INBOUND"
                         ? `Replying to ${props.headerName}`
                         : "Replying to yourself"}
                     </p>
-                    <p className="text-sm font-bodycopy text-emphasis line-clamp-1 break-words">
+                    <p className="text-sm  text-emphasis line-clamp-1 break-words">
                       {replyTarget.message?.trim() ||
                         (replyTarget.type === "IMAGE"
                           ? "Photo"

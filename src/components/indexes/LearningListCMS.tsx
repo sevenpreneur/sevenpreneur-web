@@ -84,7 +84,7 @@ export default function LearningListCMS({
 
           {allLearnings.length > 3 && (
             <button
-              className="flex items-center justify-center gap-1.5 w-full py-2 text-sm font-bodycopy font-medium text-emphasis hover:text-foreground hover:bg-card-inside-bg rounded-lg transition"
+              className="flex items-center justify-center gap-1.5 w-full py-2 text-sm  font-medium text-emphasis hover:text-foreground hover:bg-card-inside-bg rounded-lg transition"
               onClick={() => setShowAll((p) => !p)}
             >
               {showAll ? (
@@ -102,7 +102,7 @@ export default function LearningListCMS({
           )}
         </div>
       ) : (
-        <p className="text-sm text-center text-emphasis font-bodycopy py-4">
+        <p className="text-sm text-center text-emphasis  py-4">
           No sessions yet
         </p>
       )}

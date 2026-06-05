@@ -101,7 +101,7 @@ export default function PlaylistDetailsMobileLMS(
             </div>
           )}
         </div>
-        <h1 className="video-title font-bodycopy font-bold w-full px-5 text-lg">
+        <h1 className="video-title  font-bold w-full px-5 text-lg">
           {selectedVideoData ? selectedVideoData.name : props.playlistName}
         </h1>
         <div
@@ -110,7 +110,7 @@ export default function PlaylistDetailsMobileLMS(
             isExpanded ? "max-h-[4000px]" : "max-h-24"
           }`}
         >
-          <p className="font-bodycopy font-medium text-sm text-[#333333] whitespace-pre-line">
+          <p className=" font-medium text-sm text-[#333333] whitespace-pre-line">
             {selectedVideoData
               ? selectedVideoData.description
               : props.playlistDescription}
@@ -135,7 +135,7 @@ export default function PlaylistDetailsMobileLMS(
         )}
       </div>
       <div className="other-videos flex flex-col gap-3 p-5 pt-8">
-        <h3 className="section-title font-bodycopy font-bold">
+        <h3 className="section-title  font-bold">
           Other Episodes
         </h3>
         <div className="video-list flex flex-col gap-4">

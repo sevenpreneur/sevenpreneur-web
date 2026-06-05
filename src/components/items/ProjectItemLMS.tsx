@@ -27,12 +27,12 @@ export default function ProjectItemLMS(props: ProjectItemLMSProps) {
             height={80}
           />
         </div>
-        <div className="project-attributes flex flex-col gap-1.5 font-bodycopy leading-snug">
+        <div className="project-attributes flex flex-col gap-1.5  leading-snug">
           <p className="text-[15px] text-foreground font-semibold line-clamp-1">
             {props.projectName}
           </p>
           <div className="flex items-center gap-2">
-            {/* <span className="w-fit text-xs text-[#42359B] bg-[#E0DAFF] font-bodycopy font-semibold px-2 py-0.5 rounded-full">
+            {/* <span className="w-fit text-xs text-[#42359B] bg-[#E0DAFF]  font-semibold px-2 py-0.5 rounded-full">
               SUBMITTED
             </span> */}
             <p className="project-deadline text-sm text-emphasis font-medium">

@@ -1,4 +1,4 @@
-ï»¿"use client";
+"use client";
 import { Switch } from "@/components/ui/switch";
 import { ProductCategory, StatusType } from "@/lib/app-types";
 import { trpc } from "@/trpc/client";
@@ -187,7 +187,7 @@ export default function EditDiscountFormCMS({
 
     // Required field checking
     if (!formData.discountName) {
-      toast.error("Oops! Donâ€™t forget to give your discount a name.");
+      toast.error("Oops! Don’t forget to give your discount a name.");
       setIsSubmitting(false);
       return;
     }
@@ -207,7 +207,7 @@ export default function EditDiscountFormCMS({
       return;
     }
     if (isNaN(Number(formData.discountRate))) {
-      toast.error("Hmmâ€¦ that doesnâ€™t look like a valid number for the rate");
+      toast.error("Hmm… that doesn’t look like a valid number for the rate");
       setIsSubmitting(false);
       return;
     }
@@ -302,7 +302,7 @@ export default function EditDiscountFormCMS({
             </div>
           )}
           {isErrorInitialData && (
-            <div className="flex w-full h-full py-4 items-center justify-center text-emphasis font-bodycopy font-medium">
+            <div className="flex w-full h-full py-4 items-center justify-center text-emphasis  font-medium">
               No Data
             </div>
           )}
@@ -370,7 +370,7 @@ export default function EditDiscountFormCMS({
               <div className="status flex flex-col gap-1">
                 <label
                   htmlFor={"discount-status"}
-                  className="flex pl-1 gap-0.5 text-sm text-foreground font-bodycopy font-semibold"
+                  className="flex pl-1 gap-0.5 text-sm text-foreground  font-semibold"
                 >
                   Status <span className="text-red-700">*</span>
                 </label>
@@ -390,7 +390,7 @@ export default function EditDiscountFormCMS({
                 </div>
               </div>
               <div className="flex flex-col bg-card-inside-bg border gap-4 p-4 rounded-md">
-                <h5 className="font-bodycopy font-bold text-sm">
+                <h5 className=" font-bold text-sm">
                   Applies Discount to Product
                 </h5>
                 <AppSelect variant="CMS"
@@ -417,7 +417,7 @@ export default function EditDiscountFormCMS({
                 />
                 {isLoading && <AppLoadingComponents />}
                 {isError && (
-                  <div className="flex w-full h-full py-4 items-center justify-center text-emphasis font-bodycopy font-medium">
+                  <div className="flex w-full h-full py-4 items-center justify-center text-emphasis  font-medium">
                     No Data
                   </div>
                 )}

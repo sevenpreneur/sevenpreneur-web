@@ -23,11 +23,11 @@ export default function PageHeaderCMS({
           <Icon className="size-7 text-white" />
         </div>
         <div className="flex flex-col">
-          <h1 className="font-bodycopy font-bold text-lg leading-snug dark:text-sevenpreneur-white lg:text-2xl">
+          <h1 className=" font-bold text-lg leading-snug dark:text-sevenpreneur-white lg:text-2xl">
             {name}
           </h1>
           {desc && (
-            <p className="font-bodycopy font-medium text-sm text-emphasis max-w-[420px]">
+            <p className=" font-medium text-sm text-emphasis max-w-[420px]">
               {desc}
             </p>
           )}

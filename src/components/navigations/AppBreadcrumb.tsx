@@ -12,7 +12,7 @@ export default function AppBreadcrumb({
 }: AppBreadcrumbProps) {
   return (
     <div
-      className={`breadcrumb flex text-[13px] font-bodycopy font-medium gap-1.5 items-center ${className}`}
+      className={`breadcrumb flex text-[13px]  font-medium gap-1.5 items-center ${className}`}
     >
       <Link
         href={"/"}

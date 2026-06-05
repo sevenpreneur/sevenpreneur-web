@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 import { Switch } from "@/components/ui/switch";
 import { generateCohortCertificate } from "@/lib/generate-pdf";
 import { supabase } from "@/lib/supabase";
@@ -196,14 +196,14 @@ export default function EditCohortMemberFormCMS(
     >
       {isLoading && <AppLoadingComponents />}
       {isError && (
-        <div className="flex w-full h-full items-center justify-center text-emphasis font-bodycopy">
+        <div className="flex w-full h-full items-center justify-center text-emphasis ">
           No Data
         </div>
       )}
       {!isLoading && !isError && memberDetails && (
         <div className="container flex flex-col h-full px-6 pb-20 gap-5 overflow-y-auto">
           <div className="user-details flex flex-col gap-2 p-3 border rounded-md">
-            <h5 className="font-bodycopy font-bold text-[15px]">
+            <h5 className=" font-bold text-[15px]">
               User Details
             </h5>
             <UserItemCMS
@@ -220,12 +220,12 @@ export default function EditCohortMemberFormCMS(
           <div className="scout-status flex items-center justify-between gap-3 p-4 border border-dashboard-border rounded-md bg-card-bg">
             <div className="flex flex-col gap-1 min-w-0">
               <div className="flex items-center gap-1.5">
-                <h5 className="font-bodycopy font-bold text-[15px]">
+                <h5 className=" font-bold text-[15px]">
                   Scout Status
                 </h5>
                 <Info className="size-3.5 text-emphasis" />
               </div>
-              <p className="text-sm text-emphasis font-bodycopy">
+              <p className="text-sm text-emphasis ">
                 Tandai apakah user ini merupakan Scout.
               </p>
             </div>
@@ -235,7 +235,7 @@ export default function EditCohortMemberFormCMS(
                 checked={isScout}
                 onCheckedChange={setIsScout}
               />
-              <div className="flex items-center gap-1 text-sm font-bodycopy font-semibold">
+              <div className="flex items-center gap-1 text-sm  font-semibold">
                 <Star
                   className={`size-4 ${isScout ? "fill-warning-foreground text-warning-foreground" : "text-emphasis"}`}
                 />
@@ -244,7 +244,7 @@ export default function EditCohortMemberFormCMS(
             </div>
           </div>
           <div className="attendances flex flex-col gap-2.5">
-            <h3 className="font-bold font-bodycopy">Attendances</h3>
+            <h3 className="font-bold ">Attendances</h3>
             {memberDetails.attendances.map((post) => (
               <AttendanceItemAccordionLMS
                 key={post.learning_id}
@@ -271,7 +271,7 @@ export default function EditCohortMemberFormCMS(
           </div>
           {memberDetails.projects.length > 0 && (
             <div className="projects flex flex-col gap-2.5">
-              <h3 className="font-bold font-bodycopy">Task & Assignment</h3>
+              <h3 className="font-bold ">Task & Assignment</h3>
               {memberDetails.projects.map((post) => (
                 <SubmissionItemAccordionLMS
                   key={post.name}
@@ -284,7 +284,7 @@ export default function EditCohortMemberFormCMS(
           )}
           {certificateURL ? (
             <div className="certificate flex flex-col gap-2 p-3 border rounded-md">
-              <h3 className="font-bold font-bodycopy">Certificate</h3>
+              <h3 className="font-bold ">Certificate</h3>
               <div className="certificate-file relative w-full text-[15px]">
                 <FileItemLMS
                   fileName="Completion Certificate"
@@ -303,7 +303,7 @@ export default function EditCohortMemberFormCMS(
             </div>
           ) : (
             <div className="upload-certificate flex flex-col gap-3 pt-4">
-              <h3 className="font-bold font-bodycopy">Certificate</h3>
+              <h3 className="font-bold ">Certificate</h3>
               <div className="relative overflow-hidden rounded-2xl border-2 border-dashed border-tertiary/25 bg-card-bg p-5">
                 <div
                   className="pointer-events-none absolute right-5 top-5 grid grid-cols-6 gap-1.5 opacity-60"
@@ -326,10 +326,10 @@ export default function EditCohortMemberFormCMS(
                     <Award className="size-5 text-tertiary" />
                   </div>
                   <div className="flex flex-col min-w-0">
-                    <h4 className="font-bodycopy font-bold text-lg text-foreground">
+                    <h4 className=" font-bold text-lg text-foreground">
                       Generate Certificate
                     </h4>
-                    <p className="text-sm text-emphasis font-bodycopy">
+                    <p className="text-sm text-emphasis ">
                       Create members certificate in seconds.
                     </p>
                   </div>

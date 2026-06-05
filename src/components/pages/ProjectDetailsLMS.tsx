@@ -183,14 +183,14 @@ export default function ProjectDetailsLMS(props: ProjectDetailsLMS) {
         <div className="body-project max-w-[calc(100%-4rem)] w-full flex gap-4">
           <main className="w-full flex flex-col flex-2 gap-4">
             <div className="project-attributes flex flex-col w-full gap-3 p-4 bg-card-bg border border-dashboard-border rounded-lg">
-              <h2 className="project-name font-bodycopy font-bold text-2xl">
+              <h2 className="project-name  font-bold text-2xl">
                 {props.projectName}
               </h2>
               <div className="project-description flex flex-col gap-1">
-                <p className="font-bold font-bodycopy text-[15px]">
+                <p className="font-bold  text-[15px]">
                   Assignment Brief
                 </p>
-                <p className="font-bodycopy text-[15px] whitespace-pre-line">
+                <p className=" text-[15px] whitespace-pre-line">
                   {props.projectDescription}
                 </p>
               </div>
@@ -204,8 +204,8 @@ export default function ProjectDetailsLMS(props: ProjectDetailsLMS) {
 
             <div className="flex flex-col w-full bg-card-bg p-4 gap-3 border border-dashboard-border rounded-xl">
               <div className="flex flex-col">
-                <h2 className="font-bold font-bodycopy">Submission</h2>
-                <p className="text-emphasis text-sm font-medium font-bodycopy">
+                <h2 className="font-bold ">Submission</h2>
+                <p className="text-emphasis text-sm font-medium ">
                   Upload your finalized task file to complete your submission.
                   Once submitted, your document will be reviewed as part of the
                   assessment process.
@@ -220,7 +220,7 @@ export default function ProjectDetailsLMS(props: ProjectDetailsLMS) {
               {props.submissionDocumentURL && !isOpenEditForm && (
                 <div className="project flex flex-col w-full gap-3">
                   <div className="project-document flex flex-col gap-2">
-                    <p className="font-bold font-bodycopy text-[15px]">
+                    <p className="font-bold  text-[15px]">
                       Submitted File
                     </p>
                     <FileItemLMS
@@ -267,7 +267,7 @@ export default function ProjectDetailsLMS(props: ProjectDetailsLMS) {
                   className={`flex size-2.5 m-1.5 justify-center items-center rounded-full bg-[#D99E00]`}
                 />
                 <div className="flex flex-col gap-2">
-                  <p className="font-bold font-bodycopy text-[15px]">Status</p>
+                  <p className="font-bold  text-[15px]">Status</p>
                   <SubmissionStatusLabelLMS variant={submissionStatus} />
                 </div>
               </div>
@@ -276,10 +276,10 @@ export default function ProjectDetailsLMS(props: ProjectDetailsLMS) {
                   className={`flex size-2.5 m-1.5 justify-center items-center rounded-full bg-secondary`}
                 />
                 <div className="flex flex-col">
-                  <p className="font-bold font-bodycopy text-[15px]">
+                  <p className="font-bold  text-[15px]">
                     Due Date
                   </p>
-                  <p className="font-medium font-bodycopy text-sm">
+                  <p className="font-medium  text-sm">
                     {dayjs(props.projectDeadline).format(
                       "DD MMM YYYY [at] HH:mm"
                     )}
@@ -291,17 +291,17 @@ export default function ProjectDetailsLMS(props: ProjectDetailsLMS) {
                   className={`flex size-2.5 m-1.5 justify-center items-center rounded-full bg-[#499E95]`}
                 />
                 <div className="flex flex-col">
-                  <p className="font-bold font-bodycopy text-[15px]">
+                  <p className="font-bold  text-[15px]">
                     Submitted at
                   </p>
-                  <p className="font-medium font-bodycopy text-sm">
+                  <p className="font-medium  text-sm">
                     {props.submissionCreatedAt
                       ? dayjs(props.submissionCreatedAt).format(
                           "DD MMM YYYY [at] HH:mm"
                         )
                       : "-"}
                   </p>
-                  <p className="font-medium font-bodycopy text-sm">
+                  <p className="font-medium  text-sm">
                     {props.submissionDocumentURL
                       ? submittedTime
                       : deadlineStatus}
@@ -310,7 +310,7 @@ export default function ProjectDetailsLMS(props: ProjectDetailsLMS) {
               </div>
             </div>
             <div className="submission-comment flex flex-col w-full p-4 bg-card-bg border border-dashboard-border gap-3 rounded-lg">
-              <h3 className="section-name font-bodycopy font-bold text-[15px]">
+              <h3 className="section-name  font-bold text-[15px]">
                 Feedback from us
               </h3>
               {props.submissionComment ? (
@@ -327,16 +327,16 @@ export default function ProjectDetailsLMS(props: ProjectDetailsLMS) {
                         height={200}
                       />
                     </div>
-                    <p className="comment-author-name font-semibold font-bodycopy text-sm">
+                    <p className="comment-author-name font-semibold  text-sm">
                       Sevenpreneur Team
                     </p>
                   </div>
-                  <p className="comment font-medium font-bodycopy text-sm whitespace-pre-line">
+                  <p className="comment font-medium  text-sm whitespace-pre-line">
                     {props.submissionComment}
                   </p>
                 </div>
               ) : (
-                <p className="text-emphasis font-medium font-bodycopy text-sm whitespace-pre-line">
+                <p className="text-emphasis font-medium  text-sm whitespace-pre-line">
                   Feedback will show up here once it’s ready!
                 </p>
               )}

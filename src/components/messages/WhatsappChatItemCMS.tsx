@@ -54,7 +54,7 @@ function MediaDownloadingState() {
   return (
     <div className="flex flex-col items-center justify-center w-[200px] max-w-full">
       <AppLoadingComponents />
-      <span className="text-xs text-muted-foreground italic font-bodycopy pb-2">
+      <span className="text-xs text-muted-foreground italic  pb-2">
         Downloading...
       </span>
     </div>
@@ -238,10 +238,10 @@ export default function WhatsappChatItemCMS(props: WhatsappChatItemCMSProps) {
 
             {/* File info */}
             <div className="flex flex-col flex-1 min-w-0">
-              <p className="text-sm font-medium font-bodycopy truncate leading-snug">
+              <p className="text-sm font-medium  truncate leading-snug">
                 {fileName}
               </p>
-              <p className="text-xs text-muted-foreground font-bodycopy">
+              <p className="text-xs text-muted-foreground ">
                 {ext}
               </p>
             </div>
@@ -286,7 +286,7 @@ export default function WhatsappChatItemCMS(props: WhatsappChatItemCMSProps) {
           )}
           <div className="flex items-center gap-1 justify-end">
             {props.chatDirection === "OUTBOUND" && iconStatus}
-            <span className="text-xs text-[#333333]/80 font-bodycopy font-[450] leading-snug dark:text-foreground/60">
+            <span className="text-xs text-[#333333]/80  font-[450] leading-snug dark:text-foreground/60">
               {dayjs(props.createdAt).format("HH:mm")}
             </span>
           </div>

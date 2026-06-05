@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 import { trpc } from "@/trpc/client";
 import { WALeadStatus } from "@prisma/client";
 import { Loader2, X } from "lucide-react";
@@ -125,7 +125,7 @@ export default function EditLeadStatusFormCMS(
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex flex-col w-full gap-5">
-          <h2 className="font-bodycopy font-bold text-lg">Edit Status Lead</h2>
+          <h2 className=" font-bold text-lg">Edit Status Lead</h2>
           {isLoading ? (
             <div className="flex w-full justify-center py-6">
               <Loader2 className="animate-spin size-5 text-emphasis" />

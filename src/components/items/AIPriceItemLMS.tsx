@@ -48,7 +48,7 @@ export default function AIPriceItemLMS(props: AIPriceItemLMSProps) {
 
   return (
     <div
-      className={`value-based-price flex flex-col w-full font-bodycopy p-4 gap-2 rounded-lg hover:cursor-pointer ${
+      className={`value-based-price flex flex-col w-full  p-4 gap-2 rounded-lg hover:cursor-pointer ${
         props.isSelected ? `border ${priceVar.background}` : "bg-card-bg border border-dashboard-border"
       }`}
       onClick={props.onSelect}
@@ -63,7 +63,7 @@ export default function AIPriceItemLMS(props: AIPriceItemLMSProps) {
           <p className="text-[15px] text-foreground/80">{priceVar.desc}</p>
         </div>
         <h2
-          className={`font-brand font-bold text-2xl shrink-0 ${
+          className={` font-bold text-2xl shrink-0 ${
             props.isSelected ? `${priceVar.color}` : "text-foreground"
           }`}
         >

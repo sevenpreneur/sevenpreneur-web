@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 import { Switch } from "@/components/ui/switch";
 import { SessionMethod, StatusType } from "@/lib/app-types";
 import { trpc } from "@/trpc/client";
@@ -294,7 +294,7 @@ export default function CreateEventFormCMS(props: CreateEventFormCMSProps) {
             <div className="event-status flex flex-col gap-1">
               <label
                 htmlFor={"event-status"}
-                className="flex pl-1 gap-0.5 text-sm text-foreground font-bodycopy font-semibold"
+                className="flex pl-1 gap-0.5 text-sm text-foreground  font-semibold"
               >
                 Status <span className="text-red-700">*</span>
               </label>

@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 import { getSubmissionTiming } from "@/lib/date-time-manipulation";
 import { trpc } from "@/trpc/client";
 import { AIResultSubmissionAnalysis } from "@/trpc/routers/ai_tool/prompt.ai_tool";
@@ -170,7 +170,7 @@ export default function EditSubmissionFormCMS(
         },
         {
           onSuccess: () => {
-            toast.success("Feedback updated successfully 🎉");
+            toast.success("Feedback updated successfully ??");
             utils.read.submission.invalidate({ id: props.submissionId });
             utils.list.submissions.invalidate();
             props.onClose();
@@ -198,14 +198,14 @@ export default function EditSubmissionFormCMS(
     >
       {isLoading && <AppLoadingComponents />}
       {isError && (
-        <div className="flex w-full h-full items-center justify-center text-emphasis font-bodycopy">
+        <div className="flex w-full h-full items-center justify-center text-emphasis ">
           No Data
         </div>
       )}
       {!isLoading && !isError && submissionDetails && (
         <div className="container flex flex-col h-full px-6 pb-20 gap-5 overflow-y-auto">
           <div className="submitter-details flex flex-col gap-2 p-3 border rounded-md">
-            <h5 className="font-bodycopy font-bold text-[15px]">
+            <h5 className=" font-bold text-[15px]">
               Submitter Details
             </h5>
             <UserItemCMS
@@ -219,7 +219,7 @@ export default function EditSubmissionFormCMS(
             />
           </div>
           <div className="submission-documents flex flex-col gap-2">
-            <h5 className="font-bodycopy font-bold text-[15px]">
+            <h5 className=" font-bold text-[15px]">
               Submission Document
             </h5>
             <FileItemLMS

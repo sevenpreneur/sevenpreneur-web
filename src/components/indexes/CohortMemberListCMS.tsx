@@ -268,7 +268,7 @@ export default function CohortMemberListCMS(props: CohortMemberListCMSProps) {
             </div>
           )}
           {cohortMemberList?.length === 0 && (
-            <p className="empty-state mt-2 font-bodycopy text-center text-emphasis">
+            <p className="empty-state mt-2  text-center text-emphasis">
               {debouncedKeyword
                 ? `Looks like there are no results for "${debouncedKeyword}"`
                 : "No members found in this cohort."}
@@ -280,7 +280,7 @@ export default function CohortMemberListCMS(props: CohortMemberListCMSProps) {
                 currentPage={currentPage}
                 totalPages={data?.metapaging.total_page ?? 1}
               />
-              <p className="text-sm text-emphasis text-center font-bodycopy font-medium">{`Showing all ${data?.metapaging.total_data} members`}</p>
+              <p className="text-sm text-emphasis text-center  font-medium">{`Showing all ${data?.metapaging.total_data} members`}</p>
             </div>
           )}
         </div>

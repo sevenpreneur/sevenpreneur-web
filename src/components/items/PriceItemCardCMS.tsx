@@ -29,16 +29,16 @@ export default function PriceItemCardCMS({
       {/* Foreground content */}
       <div className="price-data flex w-full h-3/4 z-10">
         <div className="flex flex-col px-5 py-4 gap-1">
-          <p className="font-bodycopy font-semibold text-emphasis text-sm line-clamp-2">
+          <p className=" font-semibold text-emphasis text-sm line-clamp-2">
             TIER {priceIndex}
           </p>
-          <p className="font-brand font-semibold text-black line-clamp-2">
+          <p className=" font-semibold text-black line-clamp-2">
             {priceName}
           </p>
         </div>
       </div>
       <div className="price-amount flex w-full h-1/4 z-10">
-        <p className="px-5 font-bodycopy text-sm font-semibold text-tertiary line-clamp-2">
+        <p className="px-5  text-sm font-semibold text-tertiary line-clamp-2">
           {getRupiahCurrency(priceAmount)}
         </p>
       </div>

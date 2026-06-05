@@ -61,7 +61,7 @@ function RatingBar({ value }: { value: number }) {
           style={{ width: `${pct}%` }}
         />
       </div>
-      <span className="text-xs font-bodycopy font-semibold w-7 text-right text-foreground">
+      <span className="text-xs  font-semibold w-7 text-right text-foreground">
         {value.toFixed(2)}
       </span>
     </div>
@@ -130,20 +130,20 @@ export default function RatingDetailsCMS({
                 className="rounded-full object-cover size-10 shrink-0"
               />
               <div className="flex flex-col">
-                <p className="text-sm font-bodycopy font-semibold text-foreground">
+                <p className="text-sm  font-semibold text-foreground">
                   {data.full_name}
                 </p>
                 {overallAvg !== null ? (
                   <div className="flex items-baseline gap-1">
-                    <span className="font-bodycopy font-bold text-base text-foreground">
+                    <span className=" font-bold text-base text-foreground">
                       {overallAvg.toFixed(2)}
                     </span>
-                    <span className="text-emphasis font-bodycopy text-xs">
+                    <span className="text-emphasis  text-xs">
                       / 5
                     </span>
                   </div>
                 ) : (
-                  <p className="text-xs font-bodycopy text-emphasis">
+                  <p className="text-xs  text-emphasis">
                     No rating submitted
                   </p>
                 )}
@@ -155,7 +155,7 @@ export default function RatingDetailsCMS({
                 {/* Quantitative */}
                 {(["Coach", "Material"] as const).map((group) => (
                   <div key={group} className="flex flex-col gap-2">
-                    <p className="text-xs font-bodycopy font-semibold uppercase tracking-wider text-emphasis">
+                    <p className="text-xs  font-semibold uppercase tracking-wider text-emphasis">
                       {group}
                     </p>
                     {RATING_DIMENSIONS.filter((d) => d.group === group).map(
@@ -164,7 +164,7 @@ export default function RatingDetailsCMS({
                           key={d.key}
                           className="flex flex-col gap-1.5 p-2.5 rounded-md border border-dashboard-border bg-card-inside-bg"
                         >
-                          <span className="text-xs font-bodycopy text-emphasis">
+                          <span className="text-xs  text-emphasis">
                             {d.label}
                           </span>
                           <RatingBar value={r[d.key]} />
@@ -177,7 +177,7 @@ export default function RatingDetailsCMS({
                 {/* Qualitative */}
                 {hasQualitative && (
                   <div className="flex flex-col gap-2">
-                    <p className="text-xs font-bodycopy font-semibold uppercase tracking-wider text-emphasis">
+                    <p className="text-xs  font-semibold uppercase tracking-wider text-emphasis">
                       Written Feedback
                     </p>
                     {QUALITATIVE_FIELDS.filter((f) => !!r[f.key]).map((f) => (
@@ -185,10 +185,10 @@ export default function RatingDetailsCMS({
                         key={f.key}
                         className="flex flex-col gap-1 p-2.5 rounded-md border border-dashboard-border bg-card-inside-bg"
                       >
-                        <span className="text-xs font-bodycopy font-semibold text-emphasis">
+                        <span className="text-xs  font-semibold text-emphasis">
                           {f.label}
                         </span>
-                        <p className="text-sm font-bodycopy text-foreground">
+                        <p className="text-sm  text-foreground">
                           {r[f.key]}
                         </p>
                       </div>

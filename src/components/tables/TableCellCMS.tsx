@@ -12,7 +12,7 @@ export default function TableCellCMS({
 }: TableCellCMSProps) {
   return (
     <td
-      className={`p-2 font-bodycopy font-medium text-sm align-middle ${className}`}
+      className={`p-2  font-medium text-sm align-middle ${className}`}
       {...props}
     >
       {children}

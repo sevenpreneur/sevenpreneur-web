@@ -132,12 +132,12 @@ export default function PerformanceSnapshotCMS({
               <div key={label} className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <div className={`size-2 rounded-full ${color}`} />
-                  <p className="text-xs font-bodycopy text-emphasis">{label}</p>
+                  <p className="text-xs  text-emphasis">{label}</p>
                 </div>
                 <div className="flex items-center gap-1">
-                  <p className="text-xs font-bodycopy font-bold">{value}</p>
+                  <p className="text-xs  font-bold">{value}</p>
                   {totalStudents > 0 && (
-                    <p className="text-[10px] text-emphasis font-bodycopy">
+                    <p className="text-[10px] text-emphasis ">
                       ({Math.round((value / totalStudents) * 100)}%)
                     </p>
                   )}
@@ -147,7 +147,7 @@ export default function PerformanceSnapshotCMS({
           </div>
         </>
       ) : (
-        <p className="text-xs text-emphasis font-bodycopy text-center py-3">
+        <p className="text-xs text-emphasis  text-center py-3">
           No sessions have run yet
         </p>
       )}

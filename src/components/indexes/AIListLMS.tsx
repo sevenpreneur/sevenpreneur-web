@@ -90,7 +90,7 @@ export default function AIListLMS({
         )}
       </div>
       <div className="remarks-open-ai flex items-center pt-5 gap-2 opacity-60">
-        <p className="font-bodycopy font-medium text-emphasis text-sm">
+        <p className=" font-medium text-emphasis text-sm">
           Powered by
         </p>
         <div className="logo-open-ai w-[70px] h-full">

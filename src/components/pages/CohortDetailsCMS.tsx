@@ -184,10 +184,10 @@ export default function CohortDetailsCMS(props: CohortDetailsCMSProps) {
                   <div className="relative z-[2] flex flex-col justify-between p-6 w-[62%] gap-4 min-h-[210px]">
                     <StatusLabelCMS variants={cohort.status as StatusType} />
                     <div className="flex flex-col gap-2">
-                      <h1 className="font-bodycopy font-bold text-[22px] text-white leading-snug line-clamp-2">
+                      <h1 className=" font-bold text-[22px] text-white leading-snug line-clamp-2">
                         {cohort.name}
                       </h1>
-                      <div className="flex items-center gap-2 text-white/55 text-[13px] font-bodycopy">
+                      <div className="flex items-center gap-2 text-white/55 text-[13px] ">
                         <CalendarDays className="size-3.5 shrink-0" />
                         <span>
                           {dayjs(cohort.start_date).format("D MMM YYYY")} –{" "}
@@ -195,7 +195,7 @@ export default function CohortDetailsCMS(props: CohortDetailsCMSProps) {
                         </span>
                       </div>
                       {cohort.description && (
-                        <p className="text-white/45 text-[12px] font-bodycopy line-clamp-2 leading-relaxed">
+                        <p className="text-white/45 text-[12px]  line-clamp-2 leading-relaxed">
                           {cohort.description}
                         </p>
                       )}
@@ -223,15 +223,15 @@ export default function CohortDetailsCMS(props: CohortDetailsCMSProps) {
                       <div className="flex items-center justify-center size-8 rounded-lg bg-primary/10">
                         <Users className="size-4 text-primary" />
                       </div>
-                      <p className="text-[11px] font-semibold text-emphasis font-bodycopy leading-tight">
+                      <p className="text-[11px] font-semibold text-emphasis  leading-tight">
                         Total Students
                       </p>
                     </div>
-                    <p className="font-bodycopy font-bold text-2xl leading-none">
+                    <p className=" font-bold text-2xl leading-none">
                       {totalStudents}
                     </p>
                     <div className="flex flex-col gap-1">
-                      <div className="flex justify-between text-[10px] text-emphasis font-bodycopy">
+                      <div className="flex justify-between text-[10px] text-emphasis ">
                         <span>of {maxCapacity} max</span>
                         <span>{studentCapacityPct}%</span>
                       </div>
@@ -249,14 +249,14 @@ export default function CohortDetailsCMS(props: CohortDetailsCMSProps) {
                       <div className="flex items-center justify-center size-8 rounded-lg bg-success/10">
                         <TrendingUp className="size-4 text-success-foreground" />
                       </div>
-                      <p className="text-[11px] font-semibold text-emphasis font-bodycopy leading-tight">
+                      <p className="text-[11px] font-semibold text-emphasis  leading-tight">
                         Attendance Rate
                       </p>
                     </div>
-                    <p className="font-bodycopy font-bold text-2xl leading-none">
+                    <p className=" font-bold text-2xl leading-none">
                       {Math.round(avgAttendanceRate * 100)}%
                     </p>
-                    <p className="text-[10px] text-emphasis font-bodycopy">
+                    <p className="text-[10px] text-emphasis ">
                       Avg. over {pastLearnings.length} session
                       {pastLearnings.length !== 1 ? "s" : ""}
                     </p>
@@ -267,14 +267,14 @@ export default function CohortDetailsCMS(props: CohortDetailsCMSProps) {
                       <div className="flex items-center justify-center size-8 rounded-lg bg-warning/10">
                         <BookOpen className="size-4 text-warning" />
                       </div>
-                      <p className="text-[11px] font-semibold text-emphasis font-bodycopy leading-tight">
+                      <p className="text-[11px] font-semibold text-emphasis  leading-tight">
                         Completion Rate
                       </p>
                     </div>
-                    <p className="font-bodycopy font-bold text-2xl leading-none">
+                    <p className=" font-bold text-2xl leading-none">
                       {completionRate}%
                     </p>
-                    <p className="text-[10px] text-emphasis font-bodycopy">
+                    <p className="text-[10px] text-emphasis ">
                       Session {pastLearnings.length}/{totalSessions}
                     </p>
                   </div>
@@ -284,14 +284,14 @@ export default function CohortDetailsCMS(props: CohortDetailsCMSProps) {
                       <div className="flex items-center justify-center size-8 rounded-lg bg-warning/10">
                         <Star className="size-4 text-warning" />
                       </div>
-                      <p className="text-[11px] font-semibold text-emphasis font-bodycopy leading-tight">
+                      <p className="text-[11px] font-semibold text-emphasis  leading-tight">
                         Avg. Rating
                       </p>
                     </div>
                     {isLoadingRating ? (
                       <div className="h-3 w-10 rounded-md bg-dashboard-border animate-pulse" />
                     ) : (
-                      <p className="font-bodycopy font-bold text-2xl leading-none">
+                      <p className=" font-bold text-2xl leading-none">
                         {ratingStats?.overall_avg != null ? (
                           <>
                             {ratingStats.overall_avg.toFixed(1)}
@@ -304,7 +304,7 @@ export default function CohortDetailsCMS(props: CohortDetailsCMSProps) {
                         )}
                       </p>
                     )}
-                    <p className="text-[10px] text-emphasis font-bodycopy">
+                    <p className="text-[10px] text-emphasis ">
                       {isLoadingRating
                         ? "Loading..."
                         : ratingStats?.rating_count
@@ -350,10 +350,10 @@ export default function CohortDetailsCMS(props: CohortDetailsCMSProps) {
                             <UserCog className="size-4 text-tertiary" />
                           </div>
                           <div className="flex flex-col gap-0.5 min-w-0">
-                            <p className="text-sm font-bodycopy font-semibold leading-tight">
+                            <p className="text-sm  font-semibold leading-tight">
                               Manage Access
                             </p>
-                            <p className="text-xs font-bodycopy text-emphasis leading-tight">
+                            <p className="text-xs  text-emphasis leading-tight">
                               Atur akses instructor & student
                             </p>
                           </div>
@@ -368,10 +368,10 @@ export default function CohortDetailsCMS(props: CohortDetailsCMSProps) {
                           <BookOpen className="size-4 text-primary" />
                         </div>
                         <div className="flex flex-col gap-0.5 min-w-0">
-                          <p className="text-sm font-bodycopy font-semibold leading-tight">
+                          <p className="text-sm  font-semibold leading-tight">
                             Add Learning Session
                           </p>
-                          <p className="text-xs font-bodycopy text-emphasis leading-tight">
+                          <p className="text-xs  text-emphasis leading-tight">
                             Buat sesi pembelajaran baru
                           </p>
                         </div>
@@ -385,10 +385,10 @@ export default function CohortDetailsCMS(props: CohortDetailsCMSProps) {
                           <ClipboardList className="size-4 text-secondary" />
                         </div>
                         <div className="flex flex-col gap-0.5 min-w-0">
-                          <p className="text-sm font-bodycopy font-semibold leading-tight">
+                          <p className="text-sm  font-semibold leading-tight">
                             Add Project / Assignment
                           </p>
-                          <p className="text-xs font-bodycopy text-emphasis leading-tight">
+                          <p className="text-xs  text-emphasis leading-tight">
                             Buat project atau tugas baru
                           </p>
                         </div>
@@ -402,10 +402,10 @@ export default function CohortDetailsCMS(props: CohortDetailsCMSProps) {
                           <Upload className="size-4 text-success-foreground" />
                         </div>
                         <div className="flex flex-col gap-0.5 min-w-0">
-                          <p className="text-sm font-bodycopy font-semibold leading-tight">
+                          <p className="text-sm  font-semibold leading-tight">
                             Upload Module
                           </p>
-                          <p className="text-xs font-bodycopy text-emphasis leading-tight">
+                          <p className="text-xs  text-emphasis leading-tight">
                             Tambah materi atau file baru
                           </p>
                         </div>
@@ -445,10 +445,10 @@ export default function CohortDetailsCMS(props: CohortDetailsCMSProps) {
                         key={label}
                         className="flex items-center justify-between gap-3 py-2.5"
                       >
-                        <p className="text-xs font-bodycopy text-emphasis font-medium shrink-0">
+                        <p className="text-xs  text-emphasis font-medium shrink-0">
                           {label}
                         </p>
-                        <div className="text-xs font-bodycopy font-semibold text-right">
+                        <div className="text-xs  font-semibold text-right">
                           {value}
                         </div>
                       </div>
@@ -485,11 +485,11 @@ export default function CohortDetailsCMS(props: CohortDetailsCMSProps) {
                         >
                           <div className="flex items-center gap-2">
                             <div className={`size-2.5 rounded-full ${color}`} />
-                            <p className="text-sm font-bodycopy font-medium">
+                            <p className="text-sm  font-medium">
                               {label}
                             </p>
                           </div>
-                          <p className="font-bodycopy font-bold text-sm">
+                          <p className=" font-bold text-sm">
                             {count}
                           </p>
                         </div>

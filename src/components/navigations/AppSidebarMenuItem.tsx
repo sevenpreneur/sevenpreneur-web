@@ -44,12 +44,12 @@ export default function AppSidebarMenuItem({
         </div>
       )}
       {!isCollapsed && (
-        <p className="font-bodycopy text-[13px] line-clamp-1 flex-1">
+        <p className=" text-[13px] line-clamp-1 flex-1">
           {menuName}
         </p>
       )}
       {!isCollapsed && badge && (
-        <span className="font-bodycopy text-[10px] font-semibold px-1.5 py-0.5 rounded-full bg-primary/10 text-primary shrink-0">
+        <span className=" text-[10px] font-semibold px-1.5 py-0.5 rounded-full bg-primary/10 text-primary shrink-0">
           {badge}
         </span>
       )}

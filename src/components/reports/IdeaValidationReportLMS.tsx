@@ -194,7 +194,7 @@ export default function IdeaValidationReportLMS(
       <Link href="/ai" className="flex items-center justify-center size-8 rounded-full hover:bg-card-inside-bg transition-colors">
         <ChevronLeft className="size-5" />
       </Link>
-      <h1 className="font-brand font-bold text-lg truncate">Idea Validation</h1>
+      <h1 className=" font-bold text-lg truncate">Idea Validation</h1>
     </div>
   );
 
@@ -217,7 +217,7 @@ export default function IdeaValidationReportLMS(
           {mobileHeader}
           <div className="flex flex-col items-center justify-center flex-1 gap-3 p-8 text-center">
             <Loader2 className="size-8 animate-spin text-tertiary" />
-            <p className="font-bodycopy font-medium text-emphasis text-sm">
+            <p className=" font-medium text-emphasis text-sm">
               Generating your report...
             </p>
           </div>
@@ -238,12 +238,12 @@ export default function IdeaValidationReportLMS(
         headerResultName={props.resultName}
       />
       <div className="body-contents max-w-[calc(100%-4rem)] w-full flex flex-col justify-between gap-4">
-        <h2 className="section-title font-bold font-brand text-xl">
+        <h2 className="section-title font-bold  text-xl">
           Problem-Fit Analysis
         </h2>
         <div className="problem-fit flex w-full h-[420px] gap-4 bg-linear-to-bl from-0% from-[#EFEDF9] dark:from-[#1a1640] to-50% to-white dark:to-[#11141b] p-5 border border-dashboard-border rounded-lg xl:h-[320px]">
           <div className="discovery relative flex flex-col flex-2 gap-2 shrink-0 bg-linear-to-br from-0% from-[#D2E5FC] dark:from-sevenpreneur-blue-midnight/50 to-40% to-white dark:to-[#11141b] p-4 border border-dashboard-border rounded-lg">
-            <h3 className="section-title sticky top-0 left-0 font-bodycopy font-bold text-lg">
+            <h3 className="section-title sticky top-0 left-0  font-bold text-lg">
               Ringkasan Temuan Penelitian
             </h3>
             <div
@@ -254,7 +254,7 @@ export default function IdeaValidationReportLMS(
             />
           </div>
           <div className="problem-frequency flex flex-col flex-1 w-full p-2 items-center gap-4">
-            <h3 className="section-title font-bodycopy font-bold text-lg text-center">
+            <h3 className="section-title  font-bold text-lg text-center">
               Frekuensi Masalah
             </h3>
             <div className="indicator flex flex-col items-center gap-4">
@@ -263,16 +263,16 @@ export default function IdeaValidationReportLMS(
               >
                 {freq.icon}
               </div>
-              <p className={`font-brand font-bold text-3xl ${freq.color}`}>
+              <p className={` font-bold text-3xl ${freq.color}`}>
                 {props.problemFrequency.toUpperCase()}
               </p>
             </div>
-            <p className="description font-bodycopy font-medium text-[15px] text-emphasis text-center">
+            <p className="description  font-medium text-[15px] text-emphasis text-center">
               Masalah yang kamu identifikasi {freq.description}
             </p>
           </div>
           <div className="problem-fit-score flex flex-col flex-1 w-full p-2 items-center gap-2">
-            <h3 className="section-title font-bodycopy font-bold text-lg text-center">
+            <h3 className="section-title  font-bold text-lg text-center">
               Kelayakan Masalah
             </h3>
             <div className="indicator relative flex max-w-[124px] items-center justify-center">
@@ -293,11 +293,11 @@ export default function IdeaValidationReportLMS(
                   },
                 })}
               />
-              <p className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-3xl font-brand font-bold">
+              <p className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-3xl  font-bold">
                 {props.problemFitScore}
               </p>
             </div>
-            <p className="description font-bodycopy font-medium text-[15px] text-emphasis text-center">
+            <p className="description  font-medium text-[15px] text-emphasis text-center">
               Skor {props.problemFitScore} menunjukkan bahwa masalah ini{" "}
               {problemScoreDesc}
             </p>
@@ -305,7 +305,7 @@ export default function IdeaValidationReportLMS(
         </div>
         <div className="problem-fit flex w-full gap-4">
           <div className="affected-segments flex flex-col flex-2 gap-2 w-full bg-card-bg p-5 rounded-lg border border-dashboard-border">
-            <h3 className="section-title font-bodycopy font-bold text-lg">
+            <h3 className="section-title  font-bold text-lg">
               Segmen yang Terdampak
             </h3>
             <div className="segment-list flex flex-col gap-4">
@@ -328,7 +328,7 @@ export default function IdeaValidationReportLMS(
             />
           </div>
         </div>
-        <div className="problem-fit flex gap-6 font-bodycopy w-full bg-linear-to-br from-0% from-[#D2E5FC] dark:from-sevenpreneur-blue-midnight/50 to-20% to-white dark:to-[#11141b] p-5 rounded-lg border border-dashboard-border">
+        <div className="problem-fit flex gap-6  w-full bg-linear-to-br from-0% from-[#D2E5FC] dark:from-sevenpreneur-blue-midnight/50 to-20% to-white dark:to-[#11141b] p-5 rounded-lg border border-dashboard-border">
           <div className="problem-factors flex flex-col flex-1 gap-4">
             <div className="flex flex-col gap-1">
               <h3 className="section-title text-lg font-bold">
@@ -351,12 +351,12 @@ export default function IdeaValidationReportLMS(
             </div>
           </div>
         </div>
-        <h2 className="section-title font-bold font-brand text-xl">
+        <h2 className="section-title font-bold  text-xl">
           Solution-Fit Analysis
         </h2>
         <div className="solution-fit flex w-full h-[420px] gap-4 bg-linear-to-bl from-0% from-[#EFEDF9] dark:from-[#1a1640] to-50% to-white dark:to-[#11141b] p-5 border border-dashboard-border rounded-lg xl:h-[300px]">
           <div className="value-proposition relative flex flex-col flex-2 gap-2 shrink-0 bg-linear-to-br from-0% from-[#D2E5FC] dark:from-sevenpreneur-blue-midnight/50 to-40% to-white dark:to-[#11141b] p-4 border border-dashboard-border rounded-lg">
-            <h3 className="section-title sticky top-0 left-0 font-bodycopy font-bold text-lg">
+            <h3 className="section-title sticky top-0 left-0  font-bold text-lg">
               Nilai Utama Solusi
             </h3>
             <div
@@ -367,7 +367,7 @@ export default function IdeaValidationReportLMS(
             />
           </div>
           <div className="solution-fit-score flex flex-col flex-[1.5] w-full p-2 items-center justify-between">
-            <h3 className="section-title font-bodycopy font-bold text-lg text-center">
+            <h3 className="section-title  font-bold text-lg text-center">
               Kecocokan Solusi
             </h3>
             <div className="indicator relative flex max-w-[124px] items-center justify-center">
@@ -388,11 +388,11 @@ export default function IdeaValidationReportLMS(
                   },
                 })}
               />
-              <p className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-3xl font-brand font-bold">
+              <p className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-3xl  font-bold">
                 {props.solutionFitScore}
               </p>
             </div>
-            <p className="description font-bodycopy font-medium text-[15px] text-emphasis text-center">
+            <p className="description  font-medium text-[15px] text-emphasis text-center">
               Skor {props.solutionFitScore} menunjukkan solusi ini{" "}
               {solutionScoreDesc}
             </p>
@@ -401,7 +401,7 @@ export default function IdeaValidationReportLMS(
         <div className="solution-fit flex w-full gap-4">
           <div className="affected-segments flex flex-col flex-2 gap-4 w-full bg-card-bg p-5 rounded-lg border border-dashboard-border">
             <div className="solution-feasibility flex flex-col gap-2">
-              <h3 className="section-title font-bodycopy font-bold text-lg">
+              <h3 className="section-title  font-bold text-lg">
                 Kemungkinan Pengembangan
               </h3>
               <div
@@ -412,7 +412,7 @@ export default function IdeaValidationReportLMS(
               />
             </div>
             <div className="industry-direction flex flex-col gap-2">
-              <h3 className="section-title font-bodycopy font-bold text-lg">
+              <h3 className="section-title  font-bold text-lg">
                 Tren Industri ke Depan
               </h3>
               <div
@@ -429,7 +429,7 @@ export default function IdeaValidationReportLMS(
             >
               <p className="text-[72px] leading-snug">{longevity.icon}</p>
             </div>
-            <p className="section-title font-bold text-lg font-bodycopy">
+            <p className="section-title font-bold text-lg ">
               {longevity.name}
             </p>
             <div
@@ -440,12 +440,12 @@ export default function IdeaValidationReportLMS(
             />
           </div>
         </div>
-        <h2 className="section-title font-bold font-brand text-xl">
+        <h2 className="section-title font-bold  text-xl">
           Idea Refinement
         </h2>
         <div className="idea-refinement flex w-full gap-4">
           <div className="suggestions flex flex-col flex-2 gap-2 w-full bg-linear-to-br from-0% from-[#D2E5FC] dark:from-sevenpreneur-blue-midnight/50 to-20% to-white dark:to-[#11141b] p-5 rounded-lg border border-dashboard-border">
-            <h3 className="section-title font-bodycopy font-bold text-lg">
+            <h3 className="section-title  font-bold text-lg">
               Rekomendasi & Saran
             </h3>
             <div className="suggestion-list flex flex-col gap-3">
@@ -484,7 +484,7 @@ export default function IdeaValidationReportLMS(
             </div>
           </div>
           <div className="data-confidence flex flex-col flex-1 gap-4 w-full bg-linear-to-bl from-0% from-[#EFEDF9] dark:from-[#1a1640] to-50% to-white dark:to-[#11141b] p-5 rounded-lg border border-dashboard-border">
-            <h3 className="section-title font-bold text-lg font-bodycopy">
+            <h3 className="section-title font-bold text-lg ">
               Next Step Actions
             </h3>
             <div className="step-list relative flex flex-col gap-4 pb-2">
@@ -494,7 +494,7 @@ export default function IdeaValidationReportLMS(
                   className="step-item flex items-center gap-6 z-10"
                 >
                   <div className="step-point bg-primary size-3 rounded-full shrink-0 outline-primary-light/60 outline-4" />
-                  <p className="step-action font-bodycopy font-medium text-[15px] text-emphasis">
+                  <p className="step-action  font-medium text-[15px] text-emphasis">
                     {item}
                   </p>
                 </div>
@@ -516,27 +516,27 @@ export default function IdeaValidationReportLMS(
     <div className="root-page relative flex flex-col w-full min-h-screen pb-20 lg:hidden">
       {mobileHeader}
       <div className="flex flex-col gap-4 p-4">
-        <h2 className="font-bold font-brand text-lg">Problem-Fit Analysis</h2>
+        <h2 className="font-bold  text-lg">Problem-Fit Analysis</h2>
         <div className={`flex flex-col gap-3 p-4 bg-linear-to-bl from-0% from-[#EFEDF9] dark:from-[#1a1640] to-50% to-white dark:to-[#11141b] border border-dashboard-border rounded-lg`}>
-          <h3 className="font-bodycopy font-bold text-base">Ringkasan Temuan Penelitian</h3>
+          <h3 className=" font-bold text-base">Ringkasan Temuan Penelitian</h3>
           <div className={styles.report} dangerouslySetInnerHTML={{ __html: problemDiscovery }} />
         </div>
         <div className={`flex flex-col items-center gap-3 p-4 text-center ${freq.icon_background} border border-dashboard-border rounded-lg`}>
-          <h3 className="font-bodycopy font-bold text-base">Frekuensi Masalah</h3>
+          <h3 className=" font-bold text-base">Frekuensi Masalah</h3>
           <div className={`p-2 rounded-xl ${freq.icon_background}`}>{freq.icon}</div>
-          <p className={`font-brand font-bold text-2xl ${freq.color}`}>{props.problemFrequency.toUpperCase()}</p>
-          <p className="font-bodycopy font-medium text-[15px] text-emphasis">{freq.description}</p>
+          <p className={` font-bold text-2xl ${freq.color}`}>{props.problemFrequency.toUpperCase()}</p>
+          <p className=" font-medium text-[15px] text-emphasis">{freq.description}</p>
         </div>
         <div className="flex flex-col items-center gap-3 p-4 bg-card-bg border border-dashboard-border rounded-lg text-center">
-          <h3 className="font-bodycopy font-bold text-base">Kelayakan Masalah</h3>
+          <h3 className=" font-bold text-base">Kelayakan Masalah</h3>
           <div className="relative flex max-w-[124px] items-center justify-center">
             <Gauge value={props.problemFitScore} width={124} height={124} cornerRadius={50} sx={() => ({ [`& .${gaugeClasses.valueText}`]: { display: "none" }, [`& .${gaugeClasses.valueArc}`]: { fill: "#0165FC" }, [`& .${gaugeClasses.referenceArc}`]: { fill: "B8C9DD" } })} />
-            <p className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-3xl font-brand font-bold">{props.problemFitScore}</p>
+            <p className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-3xl  font-bold">{props.problemFitScore}</p>
           </div>
-          <p className="font-bodycopy font-medium text-[15px] text-emphasis">Skor {props.problemFitScore} menunjukkan bahwa masalah ini {problemScoreDesc}</p>
+          <p className=" font-medium text-[15px] text-emphasis">Skor {props.problemFitScore} menunjukkan bahwa masalah ini {problemScoreDesc}</p>
         </div>
         <div className="flex flex-col gap-3 p-4 bg-card-bg border border-dashboard-border rounded-lg">
-          <h3 className="font-bodycopy font-bold text-base">Segmen yang Terdampak</h3>
+          <h3 className=" font-bold text-base">Segmen yang Terdampak</h3>
           <div className="flex flex-col gap-4">
             {props.affectedSegments.map((post) => (
               <AISegmentItemLMS key={post.segment_name} segmentName={post.segment_name} segmentDescription={post.segment_description} segmentSize={post.segment_size} segmentPercentage={post.severity_percentage} segmentPainPoints={post.pain_points} />
@@ -544,43 +544,43 @@ export default function IdeaValidationReportLMS(
           </div>
         </div>
         <div className="flex flex-col gap-2 p-4 bg-linear-to-br from-0% from-[#D2E5FC] dark:from-sevenpreneur-blue-midnight/50 to-20% to-white dark:to-[#11141b] border border-dashboard-border rounded-lg">
-          <h3 className="font-bodycopy font-bold text-base">Mengapa Masalah Ini Terjadi?</h3>
-          <p className="text-emphasis text-[15px] font-bodycopy">{props.problemFactor}</p>
+          <h3 className=" font-bold text-base">Mengapa Masalah Ini Terjadi?</h3>
+          <p className="text-emphasis text-[15px] ">{props.problemFactor}</p>
         </div>
         <div className="flex flex-col gap-2 p-4 bg-linear-to-br from-0% from-[#D2E5FC] dark:from-sevenpreneur-blue-midnight/50 to-20% to-white dark:to-[#11141b] border border-dashboard-border rounded-lg">
-          <h3 className="font-bodycopy font-bold text-base">Alternatif yang Tersedia</h3>
-          <p className="text-emphasis text-[15px] font-bodycopy">{props.existingAlternatives}</p>
+          <h3 className=" font-bold text-base">Alternatif yang Tersedia</h3>
+          <p className="text-emphasis text-[15px] ">{props.existingAlternatives}</p>
         </div>
         <AICitationLMS sources={props.sources} confidenceLevel={props.confidenceLevel} />
 
-        <h2 className="font-bold font-brand text-lg">Solution-Fit Analysis</h2>
+        <h2 className="font-bold  text-lg">Solution-Fit Analysis</h2>
         <div className={`flex flex-col gap-3 p-4 bg-linear-to-bl from-0% from-[#EFEDF9] dark:from-[#1a1640] to-50% to-white dark:to-[#11141b] border border-dashboard-border rounded-lg`}>
-          <h3 className="font-bodycopy font-bold text-base">Nilai Utama Solusi</h3>
+          <h3 className=" font-bold text-base">Nilai Utama Solusi</h3>
           <div className={styles.report} dangerouslySetInnerHTML={{ __html: solutionValue }} />
         </div>
         <div className="flex flex-col items-center gap-3 p-4 bg-card-bg border border-dashboard-border rounded-lg text-center">
-          <h3 className="font-bodycopy font-bold text-base">Kecocokan Solusi</h3>
+          <h3 className=" font-bold text-base">Kecocokan Solusi</h3>
           <div className="relative flex max-w-[124px] items-center justify-center">
             <Gauge value={props.solutionFitScore} width={124} height={124} cornerRadius={50} sx={() => ({ [`& .${gaugeClasses.valueText}`]: { display: "none" }, [`& .${gaugeClasses.valueArc}`]: { fill: "#0165FC" }, [`& .${gaugeClasses.referenceArc}`]: { fill: "B8C9DD" } })} />
-            <p className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-3xl font-brand font-bold">{props.solutionFitScore}</p>
+            <p className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-3xl  font-bold">{props.solutionFitScore}</p>
           </div>
-          <p className="font-bodycopy font-medium text-[15px] text-emphasis">Skor {props.solutionFitScore} menunjukkan solusi ini {solutionScoreDesc}</p>
+          <p className=" font-medium text-[15px] text-emphasis">Skor {props.solutionFitScore} menunjukkan solusi ini {solutionScoreDesc}</p>
         </div>
         <div className="flex flex-col gap-3 p-4 bg-card-bg border border-dashboard-border rounded-lg">
-          <h3 className="font-bodycopy font-bold text-base">Kemungkinan Pengembangan</h3>
+          <h3 className=" font-bold text-base">Kemungkinan Pengembangan</h3>
           <div className={styles.report} dangerouslySetInnerHTML={{ __html: solutionFeasibility }} />
-          <h3 className="font-bodycopy font-bold text-base">Tren Industri ke Depan</h3>
+          <h3 className=" font-bold text-base">Tren Industri ke Depan</h3>
           <div className={styles.report} dangerouslySetInnerHTML={{ __html: industryDirection }} />
         </div>
         <div className={`flex flex-col items-center gap-3 p-4 text-center ${longevity.icon_background} border border-dashboard-border rounded-lg`}>
           <p className="text-[72px] leading-snug">{longevity.icon}</p>
-          <p className="font-bodycopy font-bold text-base">{longevity.name}</p>
+          <p className=" font-bold text-base">{longevity.name}</p>
           <div className={styles.report} dangerouslySetInnerHTML={{ __html: longevityReason }} />
         </div>
 
-        <h2 className="font-bold font-brand text-lg">Idea Refinement</h2>
+        <h2 className="font-bold  text-lg">Idea Refinement</h2>
         <div className="flex flex-col gap-3 p-4 bg-linear-to-br from-0% from-[#D2E5FC] dark:from-sevenpreneur-blue-midnight/50 to-20% to-white dark:to-[#11141b] border border-dashboard-border rounded-lg">
-          <h3 className="font-bodycopy font-bold text-base">Rekomendasi &amp; Saran</h3>
+          <h3 className=" font-bold text-base">Rekomendasi &amp; Saran</h3>
           <div className="flex flex-col gap-3">
             <div className="bg-card-inside-bg p-3 rounded-lg border border-dashboard-border"><div className={styles.report} dangerouslySetInnerHTML={{ __html: props.ideaMarketRecommendation }} /></div>
             <div className="bg-card-inside-bg p-3 rounded-lg border border-dashboard-border"><div className={styles.report} dangerouslySetInnerHTML={{ __html: props.ideaCompetitiveRecommendation }} /></div>
@@ -589,12 +589,12 @@ export default function IdeaValidationReportLMS(
           </div>
         </div>
         <div className="flex flex-col gap-4 p-4 bg-linear-to-bl from-0% from-[#EFEDF9] dark:from-[#1a1640] to-50% to-white dark:to-[#11141b] border border-dashboard-border rounded-lg">
-          <h3 className="font-bodycopy font-bold text-base">Next Step Actions</h3>
+          <h3 className=" font-bold text-base">Next Step Actions</h3>
           <div className="relative flex flex-col gap-4 pb-2">
             {props.ideaNextStep.map((item) => (
               <div key={item} className="flex items-center gap-6 z-10">
                 <div className="bg-primary size-3 rounded-full shrink-0 outline-primary-light/60 outline-4" />
-                <p className="font-bodycopy font-medium text-[15px] text-emphasis">{item}</p>
+                <p className=" font-medium text-[15px] text-emphasis">{item}</p>
               </div>
             ))}
             <div className="absolute left-1 w-[2px] h-full" style={{ backgroundImage: "repeating-linear-gradient(to bottom, #B8C9DD 0, #B8C9DD 6px, transparent 6px, transparent 12px)" }} />

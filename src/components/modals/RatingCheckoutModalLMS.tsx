@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 import { trpc } from "@/trpc/client";
 import {
   BookOpen,
@@ -176,7 +176,7 @@ function StarRating({
           </button>
         ))}
       </div>
-      <div className="flex justify-between text-[11px] font-bodycopy text-emphasis px-0.5">
+      <div className="flex justify-between text-[11px]  text-emphasis px-0.5">
         <span>Sangat Buruk</span>
         <span>Sangat Baik</span>
       </div>
@@ -261,10 +261,10 @@ function ModalContent(props: RatingCheckoutModalLMSProps) {
         <div className="bg-sb-bg sm:w-[220px] sm:shrink-0 flex flex-col p-5 gap-5 sm:overflow-y-auto">
           {/* Header */}
           <div>
-            <p className="text-[10px] font-bold font-bodycopy uppercase tracking-widest text-[#7C3AED]/60 mb-1">
+            <p className="text-[10px] font-bold  uppercase tracking-widest text-[#7C3AED]/60 mb-1">
               Checkout & Feedback
             </p>
-            <p className="text-sm font-bold font-bodycopy text-[#111] dark:text-foreground">
+            <p className="text-sm font-bold  text-[#111] dark:text-foreground">
               Isi semua pertanyaan di bawah ini
             </p>
           </div>
@@ -277,10 +277,10 @@ function ModalContent(props: RatingCheckoutModalLMSProps) {
                     <Icon className="size-4 text-[#7C3AED]" />
                   </div>
                   <div>
-                    <p className="text-[13px] font-semibold font-bodycopy text-[#111] dark:text-foreground leading-tight">
+                    <p className="text-[13px] font-semibold  text-[#111] dark:text-foreground leading-tight">
                       {section.title}
                     </p>
-                    <p className="text-[11px] font-bodycopy text-emphasis mt-0.5 leading-tight">
+                    <p className="text-[11px]  text-emphasis mt-0.5 leading-tight">
                       {section.description}
                     </p>
                   </div>
@@ -289,21 +289,21 @@ function ModalContent(props: RatingCheckoutModalLMSProps) {
             })}
           </div>
 
-          {/* Motivational card — desktop only */}
+          {/* Motivational card � desktop only */}
           <div className="hidden sm:block mt-auto">
             <div className="bg-white dark:bg-card-inside-bg rounded-xl p-3.5 border border-[#EDE9FE] dark:border-dashboard-border">
-              <p className="text-xl mb-1">⭐</p>
-              <p className="text-xs font-bold font-bodycopy text-[#111] dark:text-foreground">
+              <p className="text-xl mb-1">?</p>
+              <p className="text-xs font-bold  text-[#111] dark:text-foreground">
                 Feedback-mu berarti!
               </p>
-              <p className="text-[11px] text-emphasis font-bodycopy mt-1 leading-relaxed">
+              <p className="text-[11px] text-emphasis  mt-1 leading-relaxed">
                 Bantu kami jadi lebih baik untuk semua peserta Sevenpreneur.
               </p>
             </div>
           </div>
         </div>
 
-        {/* ── Right Panel ────────────────────────────────── */}
+        {/* -- Right Panel ---------------------------------- */}
         <form
           onSubmit={handleSubmit}
           className="flex flex-col flex-1 overflow-hidden"
@@ -315,10 +315,10 @@ function ModalContent(props: RatingCheckoutModalLMSProps) {
                 <Star className="size-5 fill-[#FFB21D] stroke-[#FFB21D]" />
               </div>
               <div>
-                <h2 className="font-bodycopy font-bold text-[15px] text-[#111] dark:text-foreground">
+                <h2 className=" font-bold text-[15px] text-[#111] dark:text-foreground">
                   Checkout &amp; Feedback
                 </h2>
-                <p className="font-bodycopy text-[12px] text-emphasis">
+                <p className=" text-[12px] text-emphasis">
                   Bantu kami meningkatkan kualitas program
                 </p>
               </div>
@@ -344,10 +344,10 @@ function ModalContent(props: RatingCheckoutModalLMSProps) {
                       <Icon className="size-5 text-[#7C3AED]" />
                     </div>
                     <div>
-                      <h3 className="font-bold font-bodycopy text-[#111] dark:text-foreground text-sm">
+                      <h3 className="font-bold  text-[#111] dark:text-foreground text-sm">
                         {section.title}
                       </h3>
-                      <p className="text-[12px] text-emphasis font-bodycopy">
+                      <p className="text-[12px] text-emphasis ">
                         {section.description}
                       </p>
                     </div>
@@ -362,10 +362,10 @@ function ModalContent(props: RatingCheckoutModalLMSProps) {
                           className="bg-white dark:bg-card-inside-bg border border-gray-200 dark:border-dashboard-border rounded-xl p-4 flex flex-col gap-3"
                         >
                           <div className="flex items-start gap-3">
-                            <span className="size-6 rounded-full bg-[#7C3AED] text-white text-[10px] font-bold font-bodycopy flex items-center justify-center shrink-0 mt-0.5">
+                            <span className="size-6 rounded-full bg-[#7C3AED] text-white text-[10px] font-bold  flex items-center justify-center shrink-0 mt-0.5">
                               {String(index + 1).padStart(2, "0")}
                             </span>
-                            <p className="text-sm font-medium font-bodycopy text-[#111] dark:text-foreground">
+                            <p className="text-sm font-medium  text-[#111] dark:text-foreground">
                               {field.label}
                             </p>
                           </div>

@@ -38,7 +38,7 @@ const variantStyles: Record<
     border: "border border-dashboard-border",
     background: "bg-card-inside-bg",
     disabled: "bg-card-inside-bg text-muted-foreground dark:text-foreground/30",
-    font: "font-bodycopy",
+    font: "",
   },
   CMS: {
     focus: "focus:outline-tertiary/15 focus:border-tertiary",
@@ -47,7 +47,7 @@ const variantStyles: Record<
     border: "border border-dashboard-border",
     background: "bg-background",
     disabled: "bg-card-inside-bg text-muted-foreground dark:text-foreground/30",
-    font: "font-bodycopy",
+    font: "",
   },
 };
 

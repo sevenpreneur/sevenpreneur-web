@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 import { trpc } from "@/trpc/client";
 import dayjs from "dayjs";
 import { Loader2, X } from "lucide-react";
@@ -81,7 +81,7 @@ export default function CreateWhatsappAlertFormCMS(
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex flex-col w-full gap-5">
-          <h2 className="font-bodycopy font-bold text-lg">
+          <h2 className=" font-bold text-lg">
             Set alert reminder
           </h2>
           <div className="flex flex-col gap-4">

@@ -31,14 +31,14 @@ export default function LearningSessionItemLMS(
   return (
     <Link
       href={`/cohorts/${props.cohortId}/learnings/${props.learningSessionId}`}
-      className="session-box flex w-full bg-card-inside-bg p-3.5 items-center justify-between font-bodycopy rounded-md transform transition hover:cursor-pointer active:scale-95 hover:bg-card-inside-bg/70"
+      className="session-box flex w-full bg-card-inside-bg p-3.5 items-center justify-between  rounded-md transform transition hover:cursor-pointer active:scale-95 hover:bg-card-inside-bg/70"
     >
       <div className="session-container flex items-center gap-4">
         <div className="session-date flex flex-col w-14 items-center aspect-square shrink-0">
           <p className="session-day font-medium text-sm">
             {dayjs(props.learningSessionDate).format("ddd")}
           </p>
-          <p className="session-date font-brand font-semibold text-3xl">
+          <p className="session-date  font-semibold text-3xl">
             {dayjs(props.learningSessionDate).format("D")}
           </p>
         </div>

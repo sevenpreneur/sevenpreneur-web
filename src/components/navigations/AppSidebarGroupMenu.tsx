@@ -27,7 +27,7 @@ export default function AppSidebarGroupMenu({
         onClick={() => setIsOpen((o) => !o)}
         className="sb-group-hover flex items-center justify-between px-2 py-1.5 rounded-md w-full transition-colors hover:cursor-pointer"
       >
-        <p className="sb-group-text text-sb-group-text font-bodycopy text-[11px] font-semibold tracking-widest line-clamp-1">
+        <p className="sb-group-text text-sb-group-text  text-[11px] font-semibold tracking-widest line-clamp-1">
           {groupName.toUpperCase()}
         </p>
         <ChevronDown

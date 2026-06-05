@@ -33,7 +33,7 @@ export default function GenerateAIChatLMS({
 
   const chatContent = (
     <>
-      <div className="ai-persona flex flex-col w-full max-w-[450px] items-center text-center gap-2 font-bodycopy">
+      <div className="ai-persona flex flex-col w-full max-w-[450px] items-center text-center gap-2 ">
         <div className="ai-image size-16 rounded-full overflow-hidden">
           <Image
             className="object-cover w-full h-full"
@@ -43,7 +43,7 @@ export default function GenerateAIChatLMS({
             height={600}
           />
         </div>
-        <h2 className="ai-name font-bodycopy font-semibold text-2xl">
+        <h2 className="ai-name  font-semibold text-2xl">
           Sevenpreneur Virtual Coach
         </h2>
         <p className="ai-description text-emphasis text-[15px] font-[450]">
@@ -52,7 +52,7 @@ export default function GenerateAIChatLMS({
         </p>
       </div>
       <div className="ai-chat flex flex-col w-full items-center justify-center text-center gap-4">
-        <h1 className="greetings-chat font-bodycopy font-semibold text-3xl">
+        <h1 className="greetings-chat  font-semibold text-3xl">
           What&apos;s your next move, {nickName}?
         </h1>
         <form

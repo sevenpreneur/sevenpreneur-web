@@ -48,7 +48,7 @@ export default function TextAreaRichEditorCMS(
     // Styling Text Area
     editorProps: {
       attributes: {
-        class: `font-bodycopy font-medium text-sm h-52 overflow-y-auto focus:outline-none text-foreground`,
+        class: ` font-medium text-sm h-52 overflow-y-auto focus:outline-none text-foreground`,
       },
     },
 
@@ -209,7 +209,7 @@ export default function TextAreaRichEditorCMS(
       {props.textAreaName && (
         <label
           htmlFor={props.textAreaId}
-          className="label-input flex pl-1 gap-0.5 text-sm text-sb-text-strong font-bodycopy font-semibold"
+          className="label-input flex pl-1 gap-0.5 text-sm text-sb-text-strong  font-semibold"
         >
           {props.textAreaName}
           {props.required && (
@@ -235,7 +235,7 @@ export default function TextAreaRichEditorCMS(
                       </ToggleGroupItem>
                     </TooltipTrigger>
                     <TooltipContent>
-                      <p className="font-bodycopy">{post.label}</p>
+                      <p className="">{post.label}</p>
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
@@ -257,7 +257,7 @@ export default function TextAreaRichEditorCMS(
                       </ToggleGroupItem>
                     </TooltipTrigger>
                     <TooltipContent>
-                      <p className="font-bodycopy">{post.label}</p>
+                      <p className="">{post.label}</p>
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
@@ -279,7 +279,7 @@ export default function TextAreaRichEditorCMS(
                       </ToggleGroupItem>
                     </TooltipTrigger>
                     <TooltipContent>
-                      <p className="font-bodycopy">{post.label}</p>
+                      <p className="">{post.label}</p>
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
@@ -301,7 +301,7 @@ export default function TextAreaRichEditorCMS(
                       </ToggleGroupItem>
                     </TooltipTrigger>
                     <TooltipContent>
-                      <p className="font-bodycopy">{post.label}</p>
+                      <p className="">{post.label}</p>
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>

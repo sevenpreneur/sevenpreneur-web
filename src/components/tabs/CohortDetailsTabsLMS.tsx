@@ -81,7 +81,7 @@ export default function CohortDetailsTabsLMS(props: CohortDetailsTabsLMSProps) {
         {tabOptions.map((post) => (
           <div className="tab-item relative w-full" key={post.id}>
             <div
-              className={`tab-item w-full p-3 text-center text-sm font-bodycopy transform transition hover:cursor-pointer ${
+              className={`tab-item w-full p-3 text-center text-sm  transform transition hover:cursor-pointer ${
                 activeTab === post.id
                   ? "bg-gradient-to-t from-0% from-primary-soft/50 to-60% to-primary-soft/0 text-primary font-bold dark:from-sevenpreneur-blue-midnight/70 dark:to-sevenpreneur-blue-midnight/0"
                   : "bg-card-bg font-medium"

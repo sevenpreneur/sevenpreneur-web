@@ -203,7 +203,7 @@ export default function LearningDetailsLMS(props: LearningDetailsLMSProps) {
         <div className="learning-contents w-full flex gap-4">
           <main className="main-contents w-full flex flex-col flex-2 gap-4">
             <SectionContainerLMS title="What's on this sessions?">
-              <p className="text-[#333333] font-sm font-bodycopy text-[15px] whitespace-pre-line dark:text-foreground">
+              <p className="text-[#333333] font-sm  text-[15px] whitespace-pre-line dark:text-foreground">
                 {props.learningSessionDescription}
               </p>
             </SectionContainerLMS>
@@ -285,7 +285,7 @@ export default function LearningDetailsLMS(props: LearningDetailsLMSProps) {
                     height={80}
                   />
                 </div>
-                <div className="flex flex-col font-bodycopy">
+                <div className="flex flex-col ">
                   <p className="text-[15px] font-semibold line-clamp-1 dark:text-sevenpreneur-white">
                     {props.learningEducatorName}
                   </p>

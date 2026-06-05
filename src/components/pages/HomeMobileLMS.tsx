@@ -44,8 +44,8 @@ export default function HomeMobileLMS(props: HomeMobileLMSProps) {
       {/* Header */}
       <div className="header flex items-center justify-between w-full px-5 pt-12 pb-8 bg-tertiary text-white">
         <div className="greeting flex flex-col gap-0.5">
-          <p className="font-bodycopy font-bold text-xl">Hi, {nickName}! 👋</p>
-          <p className="font-bodycopy font-medium text-sm text-white/70">
+          <p className=" font-bold text-xl">Hi, {nickName}! 👋</p>
+          <p className=" font-medium text-sm text-white/70">
             Let&apos;s drive your business forward
           </p>
         </div>
@@ -65,12 +65,12 @@ export default function HomeMobileLMS(props: HomeMobileLMSProps) {
         {/* Upcoming Sessions */}
         <div className="section flex flex-col gap-3">
           <div className="section-header flex items-center justify-between">
-            <h2 className="text-base font-bodycopy font-bold">
+            <h2 className="text-base  font-bold">
               Upcoming Sessions
             </h2>
             <Link
               href="/cohorts"
-              className="text-sm text-tertiary font-bodycopy font-semibold"
+              className="text-sm text-tertiary  font-semibold"
             >
               See all
             </Link>
@@ -84,20 +84,20 @@ export default function HomeMobileLMS(props: HomeMobileLMSProps) {
                   className="session-item flex items-center gap-3 p-3 bg-card-bg border border-dashboard-border rounded-lg transition active:scale-95"
                 >
                   <div className="date-block flex flex-col items-center justify-center bg-tertiary text-white rounded-md px-3 py-2 shrink-0 min-w-[52px]">
-                    <p className="text-[10px] font-bold font-bodycopy uppercase leading-none">
+                    <p className="text-[10px] font-bold  uppercase leading-none">
                       {dayjs(session.meeting_date).format("MMM")}
                     </p>
-                    <p className="text-2xl font-bold font-bodycopy leading-tight">
+                    <p className="text-2xl font-bold  leading-tight">
                       {dayjs(session.meeting_date).format("D")}
                     </p>
                   </div>
                   <div className="session-info flex flex-col flex-1 min-w-0 gap-0.5">
-                    <h3 className="font-bodycopy font-bold text-sm line-clamp-1">
+                    <h3 className=" font-bold text-sm line-clamp-1">
                       {session.name}
                     </h3>
                     <div className="flex items-center gap-1 text-emphasis">
                       <CalendarFold className="size-3 shrink-0" />
-                      <p className="text-xs font-bodycopy font-medium">
+                      <p className="text-xs  font-medium">
                         {dayjs(session.meeting_date).format(
                           "ddd, D MMM YYYY · HH:mm"
                         )}{" "}
@@ -109,7 +109,7 @@ export default function HomeMobileLMS(props: HomeMobileLMSProps) {
               ))}
             </div>
           ) : (
-            <p className="text-sm text-emphasis font-bodycopy font-medium py-2">
+            <p className="text-sm text-emphasis  font-medium py-2">
               No upcoming sessions
             </p>
           )}
@@ -117,23 +117,23 @@ export default function HomeMobileLMS(props: HomeMobileLMSProps) {
 
         {/* Stats */}
         <div className="section flex flex-col gap-3">
-          <h2 className="text-base font-bodycopy font-bold">
+          <h2 className="text-base  font-bold">
             Your Learning Overview
           </h2>
           <div className="stats-grid grid grid-cols-2 gap-3">
             <div className="stat-card flex flex-col gap-1 bg-card-bg p-4 border border-dashboard-border rounded-lg">
-              <p className="text-2xl font-bold font-bodycopy text-tertiary">
+              <p className="text-2xl font-bold  text-tertiary">
                 {props.courses.length}
               </p>
-              <p className="text-sm font-bodycopy font-medium text-emphasis">
+              <p className="text-sm  font-medium text-emphasis">
                 Courses Enrolled
               </p>
             </div>
             <div className="stat-card flex flex-col gap-1 bg-card-bg p-4 border border-dashboard-border rounded-lg">
-              <p className="text-2xl font-bold font-bodycopy text-tertiary">
+              <p className="text-2xl font-bold  text-tertiary">
                 {props.totalAttendanceCount}
               </p>
-              <p className="text-sm font-bodycopy font-medium text-emphasis">
+              <p className="text-sm  font-medium text-emphasis">
                 Sessions Attended
               </p>
             </div>
@@ -141,15 +141,15 @@ export default function HomeMobileLMS(props: HomeMobileLMSProps) {
           {props.totalSessionCount > 0 && (
             <div className="attendance-stat flex flex-col gap-2 bg-card-bg p-4 border border-dashboard-border rounded-lg">
               <div className="flex items-center justify-between">
-                <p className="text-sm font-bodycopy font-bold">
+                <p className="text-sm  font-bold">
                   Overall Attendance
                 </p>
-                <p className="text-sm font-bodycopy font-bold text-tertiary">
+                <p className="text-sm  font-bold text-tertiary">
                   {attendanceRate}%
                 </p>
               </div>
               <Progress value={attendanceRate} />
-              <p className="text-xs text-emphasis font-bodycopy">
+              <p className="text-xs text-emphasis ">
                 {props.totalAttendanceCount} of {props.totalSessionCount}{" "}
                 sessions
               </p>
@@ -160,7 +160,7 @@ export default function HomeMobileLMS(props: HomeMobileLMSProps) {
         {/* My Learning */}
         <div className="section flex flex-col gap-3">
           <div className="section-header flex items-center justify-between">
-            <h2 className="text-base font-bodycopy font-bold">My Learning</h2>
+            <h2 className="text-base  font-bold">My Learning</h2>
           </div>
           {props.courses.length > 0 ? (
             <div className="course-list flex flex-col gap-2">
@@ -187,18 +187,18 @@ export default function HomeMobileLMS(props: HomeMobileLMSProps) {
                       />
                     </div>
                     <div className="course-info flex flex-col flex-1 min-w-0 gap-0.5">
-                      <p className="text-[11px] font-bodycopy font-semibold text-tertiary uppercase tracking-wide">
+                      <p className="text-[11px]  font-semibold text-tertiary uppercase tracking-wide">
                         {course.category === "COHORT"
                           ? "Bootcamp"
                           : "Video Series"}
                       </p>
-                      <h3 className="font-bodycopy font-bold text-sm line-clamp-2">
+                      <h3 className=" font-bold text-sm line-clamp-2">
                         {course.name}
                       </h3>
                       {progressRate !== null && (
                         <div className="progress-section flex flex-col gap-1 mt-1">
                           <Progress value={progressRate} />
-                          <p className="text-xs text-emphasis font-bodycopy">
+                          <p className="text-xs text-emphasis ">
                             {progressRate}% completed
                           </p>
                         </div>
@@ -209,7 +209,7 @@ export default function HomeMobileLMS(props: HomeMobileLMSProps) {
               })}
             </div>
           ) : (
-            <p className="text-sm text-emphasis font-bodycopy font-medium py-2">
+            <p className="text-sm text-emphasis  font-medium py-2">
               No active courses
             </p>
           )}

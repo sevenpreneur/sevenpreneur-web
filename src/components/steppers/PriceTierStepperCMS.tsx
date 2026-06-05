@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 import { StatusType } from "@/lib/app-types";
 import AppButton from "../buttons/AppButton";
 import AppInput from "../fields/AppInput";
@@ -49,8 +49,8 @@ export default function PriceTierStepperCMS({
   return (
     <div className="group-input flex flex-col gap-4">
       <div className="flex flex-col">
-        <h3 className="section-title font-bold font-brand">Prices</h3>
-        <p className="section-desc font-bodycopy font-medium text-sm text-emphasis">
+        <h3 className="section-title font-bold ">Prices</h3>
+        <p className="section-desc  font-medium text-sm text-emphasis">
           Max. 5 price tiers allowed
         </p>
       </div>
@@ -101,7 +101,7 @@ export default function PriceTierStepperCMS({
           <div className="price-status flex flex-col gap-1">
             <label
               htmlFor="price-status"
-              className="flex pl-1 gap-0.5 text-sm text-black font-bodycopy font-semibold"
+              className="flex pl-1 gap-0.5 text-sm text-black  font-semibold"
             >
               Status <span className="text-red-700">*</span>
             </label>

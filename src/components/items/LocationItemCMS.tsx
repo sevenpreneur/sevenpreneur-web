@@ -25,12 +25,12 @@ export default function LocationItemCMS({
         />
       </div>
       <div className="attribute-data flex flex-col">
-        <h3 className="font-bodycopy font-semibold text-black text-[15px] line-clamp-1">
+        <h3 className=" font-semibold text-black text-[15px] line-clamp-1">
           {locationName}
         </h3>
         <Link
           href={locationURL}
-          className="font-bodycopy font-medium line-clamp-1 text-tertiary text-sm hover:underline hover:underline-offset-4"
+          className=" font-medium line-clamp-1 text-tertiary text-sm hover:underline hover:underline-offset-4"
         >
           {locationURL}
         </Link>

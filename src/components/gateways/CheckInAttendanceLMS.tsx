@@ -92,10 +92,10 @@ export default function CheckInAttendanceLMS(props: CheckInAttendanceLMSProps) {
           />
         </div>
         <div className="flex flex-col z-10">
-          <h3 className="font-bold font-bodycopy text-[15px] leading-tight text-sb-text-strong">
+          <h3 className="font-bold  text-[15px] leading-tight text-sb-text-strong">
             Check In
           </h3>
-          <p className="font-bodycopy font-medium text-emphasis text-sm leading-tight">
+          <p className=" font-medium text-emphasis text-sm leading-tight">
             For attendance entry
           </p>
         </div>

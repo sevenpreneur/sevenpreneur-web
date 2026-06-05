@@ -120,7 +120,7 @@ export default function AppDiscussionReplyItem(
         </div>
         <div className="discussion-reply-item flex flex-col gap-2 w-full">
           <div className="flex flex-col">
-            <div className="discussion-reply-attributes flex items-center gap-2 font-bodycopy text-sm">
+            <div className="discussion-reply-attributes flex items-center gap-2  text-sm">
               <p className="discussion-reply-author-name font-bold">
                 {props.discussionReplyAuthorName}
               </p>
@@ -128,11 +128,11 @@ export default function AppDiscussionReplyItem(
                 {dayjs(props.discussionReplyCreatedAt).fromNow()}
               </p>
             </div>
-            <p className="discussion-reply-message font-bodycopy text-sm whitespace-pre-line">
+            <p className="discussion-reply-message  text-sm whitespace-pre-line">
               {props.discussionReplyMessage}
             </p>
           </div>
-          <div className="discussion-reply-action flex font-bodycopy text-sm items-center gap-3">
+          <div className="discussion-reply-action flex  text-sm items-center gap-3">
             <p
               className="discussion-reply font-semibold text-primary hover:cursor-pointer"
               onClick={handleWriteReply}

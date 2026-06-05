@@ -64,7 +64,7 @@ export default function RolesLabelCMS({
 
   return (
     <div
-      className={`label-container inline-flex py-0.5 px-2 rounded-md items-center justify-center gap-1 text-xs font-semibold font-bodycopy truncate ${labelColor} ${backgroundColor}`}
+      className={`label-container inline-flex py-0.5 px-2 rounded-md items-center justify-center gap-1 text-xs font-semibold  truncate ${labelColor} ${backgroundColor}`}
     >
       {labelIcon}
       {labelName}

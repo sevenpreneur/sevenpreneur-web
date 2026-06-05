@@ -1,4 +1,4 @@
-ï»¿"use client";
+"use client";
 import { CreateSubmission } from "@/lib/actions";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -91,7 +91,7 @@ export default function CreateSubmissionFormLMS({
 
       if (createSubmission.code === "CREATED") {
         toast.success("Successfully Submitted", {
-          description: "Got It! Weâ€™ve Received Your Submission.",
+          description: "Got It! We’ve Received Your Submission.",
         });
         setFormData({ submissionURL: "" });
         setSubmitMode(null);
@@ -127,7 +127,7 @@ export default function CreateSubmissionFormLMS({
       {submitMode === null && (
         <div className="divider flex items-center gap-6">
           <hr className="w-full border-b" />
-          <p className="text-emphasis text-sm font-bodycopy font-medium">
+          <p className="text-emphasis text-sm  font-medium">
             OR
           </p>
           <hr className="w-full border-b " />
@@ -138,7 +138,7 @@ export default function CreateSubmissionFormLMS({
           inputId="submission-url"
           inputName="Provide Document Link"
           inputType="url"
-          inputPlaceholder="Paste the documentâ€™s shareable link here"
+          inputPlaceholder="Paste the document’s shareable link here"
           value={formData.submissionURL}
           onInputChange={handleInputChange}
           characterLength={1000}

@@ -152,11 +152,11 @@ export default function EmptyComponentsLMS(props: EmptyComponentsLMSProps) {
         )}
         <div className="state-captions flex flex-col gap-1 items-center">
           {!!title && (
-            <h2 className="flex font-bold font-bodycopy text-center tracking-tight text-base lg:text-xl">
+            <h2 className="flex font-bold  text-center tracking-tight text-base lg:text-xl">
               {title}
             </h2>
           )}
-          <p className="font-bodycopy text-center font-medium text-emphasis text-sm lg:text-[15px]">
+          <p className=" text-center font-medium text-emphasis text-sm lg:text-[15px]">
             {message}
           </p>
         </div>

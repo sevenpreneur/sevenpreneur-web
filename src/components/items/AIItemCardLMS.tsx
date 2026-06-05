@@ -43,7 +43,7 @@ export default function AIItemCardLMS({
       <div className="ai-icon flex items-center justify-center size-11 border border-dashboard-border rounded-lg">
         {aiIcon}
       </div>
-      <div className="ai-attributes relative flex flex-col gap-1 font-bodycopy">
+      <div className="ai-attributes relative flex flex-col gap-1 ">
         <h3 className="ai-name text-base font-bold line-clamp-1 2xl:text-lg">
           {aiName}
         </h3>

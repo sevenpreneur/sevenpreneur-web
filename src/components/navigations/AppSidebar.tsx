@@ -88,7 +88,7 @@ export default function AppSidebar({
               )}
             </div>
             {!isCollapsed && (
-              <div className="font-bodycopy font-semibold text-[13px] leading-snug line-clamp-2 transition-all duration-300 ease-in-out text-sb-text-strong">
+              <div className=" font-semibold text-[13px] leading-snug line-clamp-2 transition-all duration-300 ease-in-out text-sb-text-strong">
                 {logoLabelDisplay ?? logoLabel}
               </div>
             )}
@@ -151,10 +151,10 @@ export default function AppSidebar({
               </div>
               {!isCollapsed && (
                 <div className="flex flex-col flex-1 min-w-0">
-                  <p className="font-bodycopy font-semibold text-[13px] text-sb-text-strong truncate">
+                  <p className=" font-semibold text-[13px] text-sb-text-strong truncate">
                     {avatarName}
                   </p>
-                  <p className="font-bodycopy text-xs text-sb-text truncate font-medium">
+                  <p className=" text-xs text-sb-text truncate font-medium">
                     {avatarRole}
                   </p>
                 </div>

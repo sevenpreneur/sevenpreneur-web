@@ -80,7 +80,7 @@ export default function WhatsappConvItemCMS(props: WhatsappConvItemCMSProps) {
               />
             ) : (
               <div className="flex w-full h-full items-center justify-center bg-secondary-soft-background text-secondary-soft-foreground dark:bg-sevenpreneur-pink-midgnight dark:text-sevenpreneur-pink-blush">
-                <p className="font-bodycopy font-medium">{initialName}</p>
+                <p className=" font-medium">{initialName}</p>
               </div>
             )}
           </div>
@@ -92,7 +92,7 @@ export default function WhatsappConvItemCMS(props: WhatsappConvItemCMSProps) {
         </div>
         <div className="flex flex-col min-w-0">
           <div className="flex items-center gap-1.5">
-            <p className="conv-full-name text-[15px] font-semibold font-bodycopy leading-snug line-clamp-1">
+            <p className="conv-full-name text-[15px] font-semibold  leading-snug line-clamp-1">
               {props.convUserFullName}
             </p>
             <BooleanLabelCMS
@@ -106,7 +106,7 @@ export default function WhatsappConvItemCMS(props: WhatsappConvItemCMSProps) {
             )}
             <div className="flex items-center gap-1 min-w-0">
               {props.convLastMessageType !== "TEXT" && <div>{iconType}</div>}
-              <p className="conv-last-message text-sm text-emphasis font-bodycopy font-[450] line-clamp-1">
+              <p className="conv-last-message text-sm text-emphasis  font-[450] line-clamp-1">
                 {props.convLastMessageType === "TEXT"
                   ? props.convLastMessage
                   : labelType}
@@ -117,12 +117,12 @@ export default function WhatsappConvItemCMS(props: WhatsappConvItemCMSProps) {
       </div>
       <div className="flex flex-col gap-0.5 items-center shrink-0">
         <p
-          className={`conv-last-message-at text-[13px] font-bodycopy font-medium line-clamp-1 ${props.convUnreadMessage > 0 ? "text-cms-primary" : ""}`}
+          className={`conv-last-message-at text-[13px]  font-medium line-clamp-1 ${props.convUnreadMessage > 0 ? "text-cms-primary" : ""}`}
         >
           {dayjs(props.convLastMessageAt).format("HH:mm")}
         </p>
         {props.convUnreadMessage > 0 && (
-          <p className="conv-unread-messages w-fit text-[10px] text-tertiary-foreground bg-tertiary-background font-bodycopy font-bold py-0.5 px-2 rounded-full">
+          <p className="conv-unread-messages w-fit text-[10px] text-tertiary-foreground bg-tertiary-background  font-bold py-0.5 px-2 rounded-full">
             {props.convUnreadMessage}
           </p>
         )}

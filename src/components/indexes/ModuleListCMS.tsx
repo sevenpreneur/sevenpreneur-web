@@ -66,7 +66,7 @@ export default function ModuleListCMS({
           ))}
         </div>
       ) : (
-        <p className="text-[13px] text-center text-emphasis font-bodycopy py-2">
+        <p className="text-[13px] text-center text-emphasis  py-2">
           No modules yet
         </p>
       )}

@@ -207,14 +207,14 @@ export default function WhatsappConvsCMS(props: WhatsappConvsCMSProps) {
             {/* Filters card */}
             <div className="filters-card flex flex-col gap-3 p-4 bg-card-bg border border-dashboard-border rounded-lg shrink-0">
               <div className="flex items-center justify-between">
-                <h5 className="font-bodycopy font-bold text-[15px] dark:text-sevenpreneur-white">
+                <h5 className=" font-bold text-[15px] dark:text-sevenpreneur-white">
                   Filters
                 </h5>
                 <button
                   type="button"
                   onClick={resetFilters}
                   disabled={!hasActiveFilter}
-                  className="text-tertiary text-sm font-bodycopy font-semibold hover:underline disabled:opacity-40 disabled:cursor-not-allowed disabled:no-underline"
+                  className="text-tertiary text-sm  font-semibold hover:underline disabled:opacity-40 disabled:cursor-not-allowed disabled:no-underline"
                 >
                   Reset
                 </button>
@@ -257,7 +257,7 @@ export default function WhatsappConvsCMS(props: WhatsappConvsCMSProps) {
 
             {/* Conversations list card */}
             <div className="convs-panels flex flex-col flex-1 min-h-0 shrink-0 bg-card-bg border border-dashboard-border rounded-lg overflow-hidden">
-              <div className="column-title flex items-center justify-between p-3 bg-card-bg font-bodycopy border-b border-dashboard-border shrink-0">
+              <div className="column-title flex items-center justify-between p-3 bg-card-bg  border-b border-dashboard-border shrink-0">
                 <p className="font-bold text-[15px] dark:text-sevenpreneur-white">
                   Chats{" "}
                   {convList && (
@@ -327,10 +327,10 @@ export default function WhatsappConvsCMS(props: WhatsappConvsCMSProps) {
                   />
                 </div>
                 <div className="flex flex-col gap-1.5 text-center">
-                  <h3 className="font-bodycopy font-bold text-2xl">
+                  <h3 className=" font-bold text-2xl">
                     Siap Cuan Hari Ini?
                   </h3>
-                  <p className="font-bodycopy font-medium text-emphasis max-w-sm">
+                  <p className=" font-medium text-emphasis max-w-sm">
                     Pilih chat di sebelah kiri dan ubah setiap percakapan jadi
                     closing deals!
                   </p>

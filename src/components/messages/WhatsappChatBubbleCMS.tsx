@@ -53,7 +53,7 @@ export default function WhatsappChatBubbleCMS(
     <div className="chat-container flex flex-col w-fit max-w-[min(70%,560px)] my-1 gap-1 items-end">
       <div className="flex items-center gap-1">
         <div
-          className={`chat-message flex flex-col w-fit max-w-full p-2 font-bodycopy text-[15px] font-[450] break-words whitespace-pre-wrap ${props.chatDirection === "INBOUND" ? "bg-white text-[#333333] dark:bg-card-inside-bg dark:text-foreground rounded-r-md rounded-bl-md" : "bg-[#eff6ff] text-[#1e293b] dark:bg-[#1e3a5f] dark:text-foreground rounded-l-md rounded-br-md"}`}
+          className={`chat-message flex flex-col w-fit max-w-full p-2  text-[15px] font-[450] break-words whitespace-pre-wrap ${props.chatDirection === "INBOUND" ? "bg-white text-[#333333] dark:bg-card-inside-bg dark:text-foreground rounded-r-md rounded-bl-md" : "bg-[#eff6ff] text-[#1e293b] dark:bg-[#1e3a5f] dark:text-foreground rounded-l-md rounded-br-md"}`}
         >
           {props.replyTo && (
             <div className="reply-quote flex items-stretch rounded-md overflow-hidden bg-black/5 dark:bg-white/10 mb-1 max-w-full">
@@ -94,7 +94,7 @@ export default function WhatsappChatBubbleCMS(
         <div className="status-information flex items-center gap-1 justify-end">
           {props.iconStatus}
           {props.chatStatus && (
-            <p className="text-sm font-bodycopy font-medium text-[#333333]/80 dark:text-foreground/60">
+            <p className="text-sm  font-medium text-[#333333]/80 dark:text-foreground/60">
               {toCapitalizeEachWord(props.chatStatus)}{" "}
               {dayjs(props.timestampStatus).format("HH:mm")}
             </p>

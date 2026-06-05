@@ -197,7 +197,7 @@ export default function GenerateAIMarketSizeLMS(
               id={tableofContents[0].url}
               className="product-overview bg-card-bg w-full flex flex-col gap-4 p-5 border border-dashboard-border rounded-lg scroll-mt-28"
             >
-              <h2 className="section-title font-bold font-bodycopy">
+              <h2 className="section-title font-bold ">
                 {tableofContents[0].name}
               </h2>
               <InputLMS
@@ -247,7 +247,7 @@ export default function GenerateAIMarketSizeLMS(
               id={tableofContents[1].url}
               className="customer-targeting bg-card-bg w-full flex flex-col gap-4 p-5 border border-dashboard-border rounded-lg"
             >
-              <h2 className="section-title font-bold font-bodycopy">
+              <h2 className="section-title font-bold ">
                 {tableofContents[1].name}
               </h2>
               <InputLMS
@@ -286,13 +286,13 @@ export default function GenerateAIMarketSizeLMS(
               id={tableofContents[2].url}
               className="sales-distribution bg-card-bg w-full flex flex-col gap-4 p-5 border border-dashboard-border rounded-lg"
             >
-              <h2 className="section-title font-bold font-bodycopy">
+              <h2 className="section-title font-bold ">
                 {tableofContents[2].name}
               </h2>
               <div className="sales-channel-options grid grid-cols-3 gap-y-4">
                 {salesChannelOptions.map((item, index) => (
                   <div
-                    className="checkbox-item flex gap-2 items-center font-bodycopy font-medium text-sm"
+                    className="checkbox-item flex gap-2 items-center  font-medium text-sm"
                     key={index}
                   >
                     <Checkbox
@@ -331,14 +331,14 @@ export default function GenerateAIMarketSizeLMS(
           <Link href="/ai" className="flex items-center justify-center size-8 rounded-full hover:bg-card-inside-bg transition-colors">
             <ChevronLeft className="size-5" />
           </Link>
-          <h1 className="font-brand font-bold text-lg">Market Size</h1>
+          <h1 className=" font-bold text-lg">Market Size</h1>
         </div>
         <form
           className="flex flex-col gap-4 p-4 items-end"
           onSubmit={handleAIGenerate}
         >
           <section className="bg-card-bg w-full flex flex-col gap-4 p-5 border border-dashboard-border rounded-lg">
-            <h2 className="section-title font-bold font-bodycopy">
+            <h2 className="section-title font-bold ">
               {tableofContents[0].name}
             </h2>
             <InputLMS
@@ -374,7 +374,7 @@ export default function GenerateAIMarketSizeLMS(
             />
           </section>
           <section className="bg-card-bg w-full flex flex-col gap-4 p-5 border border-dashboard-border rounded-lg">
-            <h2 className="section-title font-bold font-bodycopy">
+            <h2 className="section-title font-bold ">
               {tableofContents[1].name}
             </h2>
             <InputLMS
@@ -401,13 +401,13 @@ export default function GenerateAIMarketSizeLMS(
             />
           </section>
           <section className="bg-card-bg w-full flex flex-col gap-4 p-5 border border-dashboard-border rounded-lg">
-            <h2 className="section-title font-bold font-bodycopy">
+            <h2 className="section-title font-bold ">
               {tableofContents[2].name}
             </h2>
             <div className="sales-channel-options grid grid-cols-2 gap-y-4">
               {salesChannelOptions.map((item, index) => (
                 <div
-                  className="checkbox-item flex gap-2 items-center font-bodycopy font-medium text-sm"
+                  className="checkbox-item flex gap-2 items-center  font-medium text-sm"
                   key={index}
                 >
                   <Checkbox

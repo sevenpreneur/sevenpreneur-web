@@ -124,7 +124,7 @@ export default function LearningDetailsTabsMobileLMS(
         {tabOptions.map((post) => (
           <div className="tab-item relative w-full" key={post.id}>
             <div
-              className={`tab-item w-full p-3 text-center text-sm font-bodycopy transform transition hover:cursor-pointer ${
+              className={`tab-item w-full p-3 text-center text-sm  transform transition hover:cursor-pointer ${
                 activeTab === post.id
                   ? "bg-gradient-to-t from-0% from-primary-light/50 to-60% to-primary-light/0 text-primary font-bold"
                   : "bg-card-bg font-medium"
@@ -146,7 +146,7 @@ export default function LearningDetailsTabsMobileLMS(
       {activeTab === "details" && (
         <div className="tab-content flex flex-col w-full gap-1">
           <div className="learning-place-date flex flex-col gap-3 bg-card-bg p-5">
-            <h2 className="section-title font-bodycopy font-bold">
+            <h2 className="section-title  font-bold">
               Class Information
             </h2>
             <div className="learning-place-date-box flex flex-col gap-3">
@@ -161,10 +161,10 @@ export default function LearningDetailsTabsMobileLMS(
                   />
                 </div>
                 <div className="flex flex-col">
-                  <h2 className="learning-place-name font-bodycopy font-bold text-[15px]">
+                  <h2 className="learning-place-name  font-bold text-[15px]">
                     {learningPlaceName}
                   </h2>
-                  <p className="learning-session-date font-bodycopy font-medium text-sm text-emphasis">
+                  <p className="learning-session-date  font-medium text-sm text-emphasis">
                     {dayjs(props.learningSessionDate).format(
                       "ddd[,] DD MMM YYYY [-] HH:mm"
                     )}
@@ -224,7 +224,7 @@ export default function LearningDetailsTabsMobileLMS(
             />
           </div>
           <div className="learning-description relative flex flex-col gap-3 bg-card-bg p-5">
-            <h2 className="section-title font-bodycopy font-bold">
+            <h2 className="section-title  font-bold">
               What&apos;s on this sessions?
             </h2>
             <div
@@ -233,7 +233,7 @@ export default function LearningDetailsTabsMobileLMS(
                 isExpanded ? "max-h-[4000px]" : "max-h-32"
               }`}
             >
-              <p className="font-bodycopy font-medium text-sm text-emphasis whitespace-pre-line">
+              <p className=" font-medium text-sm text-emphasis whitespace-pre-line">
                 {props.learningSessionDescription}
               </p>
             </div>
@@ -261,7 +261,7 @@ export default function LearningDetailsTabsMobileLMS(
       {activeTab === "discussions" && (
         <div className="tab-content flex flex-col w-full gap-1 pb-11">
           <div className="video-recording relative flex flex-col gap-3 bg-card-bg p-5">
-            <h2 className="section-title font-bodycopy font-bold">
+            <h2 className="section-title  font-bold">
               Discussions
             </h2>
             <div className="discussions-thread flex flex-col gap-6">
@@ -301,7 +301,7 @@ export default function LearningDetailsTabsMobileLMS(
       {activeTab === "materials" && (
         <div className="tab-content flex flex-col w-full gap-1">
           <div className="video-recording relative flex flex-col gap-3 bg-card-bg p-5">
-            <h2 className="section-title font-bodycopy font-bold">
+            <h2 className="section-title  font-bold">
               Video Recording
             </h2>
             {props.learningRecordingCloudflare && (
@@ -326,7 +326,7 @@ export default function LearningDetailsTabsMobileLMS(
             {!learningVideoKey && <EmptyComponentsLMS variant="RECORDING" />}
           </div>
           <div className="learning-materials relative flex flex-col gap-3 bg-card-bg p-5">
-            <h2 className="section-title font-bodycopy font-bold">Materials</h2>
+            <h2 className="section-title  font-bold">Materials</h2>
             {activeMaterials.length > 0 ? (
               <div className="material-list flex flex-col gap-2">
                 {activeMaterials.map((post, index) => (
@@ -338,7 +338,7 @@ export default function LearningDetailsTabsMobileLMS(
                 ))}
               </div>
             ) : (
-              <p className="text-emphasis text-sm font-bodycopy font-medium">
+              <p className="text-emphasis text-sm  font-medium">
                 The session materials are being prepared and will be available
                 soon.
               </p>

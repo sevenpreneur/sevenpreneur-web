@@ -29,13 +29,13 @@ export default function UserItemLMS({
           height={80}
         />
       </div>
-      <div className="user-attributes flex flex-col font-bodycopy leading-snug">
+      <div className="user-attributes flex flex-col  leading-snug">
         <div className="user-name flex gap-2 items-center">
           <p className="text-[15px] text-foreground font-semibold line-clamp-1">
             {userName}
           </p>
           {currentUser && (
-            <span className="text-xs text-success-foreground bg-success-background font-bodycopy font-semibold px-2 py-[1px] rounded-full">
+            <span className="text-xs text-success-foreground bg-success-background  font-semibold px-2 py-[1px] rounded-full">
               YOU
             </span>
           )}

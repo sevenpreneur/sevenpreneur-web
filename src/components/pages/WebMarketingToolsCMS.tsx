@@ -68,19 +68,19 @@ export default function WebMarketingToolsCMS(props: WebMarketingToolsCMSProps) {
                   <div className="flex flex-col gap-2">
                     <div className="tools-name flex flex-col">
                       <div className="tool-name flex items-center gap-3">
-                        <h2 className="font-bodycopy font-bold text-lg dark:text-sevenpreneur-white">
+                        <h2 className=" font-bold text-lg dark:text-sevenpreneur-white">
                           Ticker Running Text
                         </h2>
                         <StatusLabelCMS
                           variants={tickerDetailsData.status as StatusType}
                         />
                       </div>
-                      <h3 className="text-emphasis font-bodycopy font-medium">
+                      <h3 className="text-emphasis  font-medium">
                         a short running text at the top of the screen for quick
                         updates.
                       </h3>
                     </div>
-                    <div className="tools-data flex flex-col font-bodycopy text-[15px] gap-1.5">
+                    <div className="tools-data flex flex-col  text-[15px] gap-1.5">
                       <div className="flex items-center">
                         <div className="flex w-36 items-center gap-2 text-emphasis">
                           <p className="font-medium">Headline:</p>
@@ -129,7 +129,7 @@ export default function WebMarketingToolsCMS(props: WebMarketingToolsCMSProps) {
                   <div className="flex flex-col gap-2">
                     <div className="flex flex-col">
                       <div className="tool-name flex items-center gap-3">
-                        <h2 className="font-bodycopy font-bold text-lg dark:text-sevenpreneur-white">
+                        <h2 className=" font-bold text-lg dark:text-sevenpreneur-white">
                           Interstitial Ads
                         </h2>
                         <StatusLabelCMS
@@ -138,12 +138,12 @@ export default function WebMarketingToolsCMS(props: WebMarketingToolsCMSProps) {
                           }
                         />
                       </div>
-                      <h3 className="tool-desc text-emphasis font-bodycopy font-medium">
+                      <h3 className="tool-desc text-emphasis  font-medium">
                         a full-screen ad shown between content transitions for
                         maximum visibility.
                       </h3>
                     </div>
-                    <div className="tools-data flex flex-col font-bodycopy text-[15px] gap-1.5">
+                    <div className="tools-data flex flex-col  text-[15px] gap-1.5">
                       <div className="flex items-center">
                         <div className="flex w-36 items-center gap-2 text-emphasis">
                           <p className="font-medium">Title:</p>

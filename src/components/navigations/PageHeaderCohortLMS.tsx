@@ -20,11 +20,11 @@ export default function PageHeaderCohortLMS(props: PageHeaderCohortLMSProps) {
           <div className="header-page-data flex flex-col gap-1">
             <div className="header-breadcrumb flex items-center gap-2">
               <AppBreadcrumb className="">
-                <p className="slash font-bodycopy text-sm">/</p>
+                <p className="slash  text-sm">/</p>
                 <AppBreadcrumbItem href={`/cohorts/${props.cohortId}`}>
                   {props.cohortName}
                 </AppBreadcrumbItem>
-                <p className="slash font-bodycopy text-sm">/</p>
+                <p className="slash  text-sm">/</p>
                 <AppBreadcrumbItem isCurrentPage>
                   {props.headerTitle}
                 </AppBreadcrumbItem>
@@ -36,7 +36,7 @@ export default function PageHeaderCohortLMS(props: PageHeaderCohortLMSProps) {
               >
                 {props.headerIcon}
               </div>
-              <h1 className="header-title font-bodycopy font-bold text-xl">
+              <h1 className="header-title  font-bold text-xl">
                 {props.headerTitle}
               </h1>
             </div>

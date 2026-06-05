@@ -43,10 +43,10 @@ export default function ProductItemMobileLMS(props: ProductItemMobileLMSProps) {
         />
       </div>
       <div className="product-attributes relative flex flex-col gap-1">
-        <h3 className="product-title text-base font-bodycopy font-bold line-clamp-2">
+        <h3 className="product-title text-base  font-bold line-clamp-2">
           {props.productName}
         </h3>
-        <p className="product-category text-emphasis font-bodycopy font-medium text-sm">
+        <p className="product-category text-emphasis  font-medium text-sm">
           {labelCategory?.toUpperCase()}
         </p>
       </div>

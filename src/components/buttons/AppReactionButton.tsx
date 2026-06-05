@@ -55,7 +55,7 @@ export default function AppReactionButton(props: AppReactionButtonProps) {
         fill={props.isSelected ? iconColor : "none"}
         strokeWidth={props.isSelected ? 0 : 2}
       />
-      <p className="font-bodycopy font-medium text-sm">
+      <p className=" font-medium text-sm">
         {props.isSelected ? activeLabel : inactiveLabel}
       </p>
     </button>

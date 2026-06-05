@@ -55,7 +55,7 @@ const AppButton = forwardRef<HTMLButtonElement, AppButtonProps>(
       children,
       variant = "primary",
       size = "default",
-      font = "bodycopy",
+      font,
       disabled = false,
       className,
       featureName,
@@ -151,7 +151,7 @@ const AppButton = forwardRef<HTMLButtonElement, AppButtonProps>(
       baseClasses,
       variantClasses[variant],
       sizeClasses[size],
-      fontClasses[font],
+      font ? fontClasses[font] : undefined,
       className,
     ].join(" ");
 

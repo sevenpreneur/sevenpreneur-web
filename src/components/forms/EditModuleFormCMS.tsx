@@ -1,4 +1,4 @@
-ï»¿"use client";
+"use client";
 import { Switch } from "@/components/ui/switch";
 import { StatusType } from "@/lib/app-types";
 import { trpc } from "@/trpc/client";
@@ -118,7 +118,7 @@ export default function EditModuleFormCMS({
     setIsSubmitting(true);
 
     if (!formData.moduleName) {
-      toast.error("Letâ€™s give this document a proper title before saving.");
+      toast.error("Let’s give this document a proper title before saving.");
       setIsSubmitting(false);
       return;
     }
@@ -177,7 +177,7 @@ export default function EditModuleFormCMS({
     >
       {isLoading && <AppLoadingComponents />}
       {isError && (
-        <div className="flex w-full h-full items-center justify-center text-emphasis font-bodycopy font-medium">
+        <div className="flex w-full h-full items-center justify-center text-emphasis  font-medium">
           <Loader2 className="animate-spin size-5 " />
         </div>
       )}
@@ -208,7 +208,7 @@ export default function EditModuleFormCMS({
               <div className="module-status flex flex-col gap-1">
                 <label
                   htmlFor={"module-status"}
-                  className="flex pl-1 gap-0.5 text-sm text-foreground font-bodycopy font-semibold"
+                  className="flex pl-1 gap-0.5 text-sm text-foreground  font-semibold"
                 >
                   Status <span className="text-red-700">*</span>
                 </label>
@@ -229,9 +229,9 @@ export default function EditModuleFormCMS({
               </div>
               <div className="flex flex-col gap-5 pt-4">
                 <div className="flex flex-col">
-                  <h3 className="font-bold font-brand">Upload Document</h3>
-                  <p className="font-bodycopy font-medium text-sm text-emphasis">
-                    Choose how youâ€™d like to add the document
+                  <h3 className="font-bold ">Upload Document</h3>
+                  <p className=" font-medium text-sm text-emphasis">
+                    Choose how you’d like to add the document
                   </p>
                 </div>
                 <div className="flex flex-col gap-3">
@@ -255,7 +255,7 @@ export default function EditModuleFormCMS({
                     inputId="learning-name"
                     inputName="Document Link"
                     inputType="url"
-                    inputPlaceholder="Paste the documentâ€™s shareable link here"
+                    inputPlaceholder="Paste the document’s shareable link here"
                     value={formData.moduleURL}
                     onInputChange={handleInputChange("moduleURL")}
                     characterLength={1000}

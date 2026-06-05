@@ -62,7 +62,7 @@ export default function ParticipationFunnelCMS({
             return (
               <div
                 key={step.label}
-                className="flex items-center justify-between font-bodycopy text-sm"
+                className="flex items-center justify-between  text-sm"
               >
                 <span className="text-emphasis font-medium">{step.label}</span>
                 <div className="flex items-center gap-1.5">

@@ -31,7 +31,7 @@ export default function AttendanceItemAccordionLMS(
       onClick={handleOpen}
     >
       <div className="attendance-attributes flex justify-between items-center gap-2">
-        <p className="learning-session-name font-semibold font-bodycopy text-sm truncate">
+        <p className="learning-session-name font-semibold  text-sm truncate">
           {props.learningSessionName}
         </p>
         <div className="attendance-status flex items-center gap-1 shrink-0">
@@ -56,9 +56,9 @@ export default function AttendanceItemAccordionLMS(
           <div className="check-in-at flex items-center justify-between">
             <div className="flex items-center gap-1 text-emphasis">
               <TimerIcon className="size-4" />
-              <p className="font-bodycopy font-medium text-sm">Check In</p>
+              <p className=" font-medium text-sm">Check In</p>
             </div>
-            <p className="font-bodycopy font-medium text-sm text-emphasis shrink-0">
+            <p className=" font-medium text-sm text-emphasis shrink-0">
               {!!props.attendanceCheckInAt
                 ? dayjs(props.attendanceCheckInAt).format("DD/MMM/YY [-] HH:mm")
                 : "-"}
@@ -67,9 +67,9 @@ export default function AttendanceItemAccordionLMS(
           <div className="check-out-at flex items-center justify-between">
             <div className="flex items-center gap-1 text-emphasis">
               <TimerIcon className="size-4" />
-              <p className="font-bodycopy font-medium text-sm">Check Out</p>
+              <p className=" font-medium text-sm">Check Out</p>
             </div>
-            <p className="font-bodycopy font-medium text-sm text-emphasis shrink-0">
+            <p className=" font-medium text-sm text-emphasis shrink-0">
               {!!props.attendanceCheckOutAt
                 ? dayjs(props.attendanceCheckOutAt).format(
                     "DD/MMM/YY [-] HH:mm"

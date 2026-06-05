@@ -27,7 +27,7 @@ export default function HeaderMobileLMS(props: HeaderMobileLMSProps) {
           <ChevronLeft className="size-5" />
         </AppButton>
       </Link>
-      <h1 className="font-bodycopy font-bold line-clamp-1 text-center">
+      <h1 className=" font-bold line-clamp-1 text-center">
         {props.headerTitle}
       </h1>
       <AppButton

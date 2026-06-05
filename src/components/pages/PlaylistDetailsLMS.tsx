@@ -125,12 +125,12 @@ export default function PlaylistDetailsLMS(props: PlaylistDetailsLMSProps) {
               )}
             </div>
             <div className="flex flex-col gap-4 px-4 pb-4">
-              <h1 className="video-name font-bodycopy font-bold w-full text-xl">
+              <h1 className="video-name  font-bold w-full text-xl">
                 {selectedVideoData
                   ? selectedVideoData.name
                   : "Teaser RE:START Conference 2025"}
               </h1>
-              <p className="video-description font-bodycopy text-[15px] text-emphasis whitespace-pre-line dark:text-foreground">
+              <p className="video-description  text-[15px] text-emphasis whitespace-pre-line dark:text-foreground">
                 {selectedVideoData
                   ? selectedVideoData.description
                   : props.playlistDescription}

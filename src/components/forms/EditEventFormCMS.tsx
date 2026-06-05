@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 import { Switch } from "@/components/ui/switch";
 import { SessionMethod, StatusType } from "@/lib/app-types";
 import { trpc } from "@/trpc/client";
@@ -295,8 +295,8 @@ export default function EditEventFormCMS(props: EditEventFormCMSProps) {
       // Update & Create Event Prices
       await Promise.all(
         formData.eventPriceTiers.map(async (tier) => {
-          // existing → update
-          // If the tier has an id → it means this is old data, so do an update.
+          // existing ? update
+          // If the tier has an id ? it means this is old data, so do an update.
           if (tier.id) {
             await editEventPrices.mutateAsync({
               event_id: props.eventId,
@@ -306,8 +306,8 @@ export default function EditEventFormCMS(props: EditEventFormCMSProps) {
               status: tier.status,
             });
           } else {
-            // new → create
-            // If the id doesn't exist → it means this is new data, so create it.
+            // new ? create
+            // If the id doesn't exist ? it means this is new data, so create it.
             await createEventPrices.mutateAsync({
               event_id: props.eventId,
               name: tier.name.trim(),
@@ -317,7 +317,7 @@ export default function EditEventFormCMS(props: EditEventFormCMSProps) {
           }
         })
       );
-      // Get all id of tier that are on change in current form → This is the list that should remain in the database.
+      // Get all id of tier that are on change in current form ? This is the list that should remain in the database.
       const currentIds = formData.eventPriceTiers
         .filter((tier) => tier.id)
         .map((tier) => tier.id);
@@ -362,7 +362,7 @@ export default function EditEventFormCMS(props: EditEventFormCMSProps) {
         </div>
       )}
       {isErrorInitial && (
-        <div className="flex w-full h-full py-10 items-center justify-center text-emphasis font-bodycopy font-medium">
+        <div className="flex w-full h-full py-10 items-center justify-center text-emphasis  font-medium">
           No Data
         </div>
       )}
@@ -403,7 +403,7 @@ export default function EditEventFormCMS(props: EditEventFormCMSProps) {
               <div className="event-status flex flex-col gap-1">
                 <label
                   htmlFor={"event-status"}
-                  className="flex pl-1 gap-0.5 text-sm text-foreground font-bodycopy font-semibold"
+                  className="flex pl-1 gap-0.5 text-sm text-foreground  font-semibold"
                 >
                   Status <span className="text-red-700">*</span>
                 </label>

@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 import { StatusType } from "@/lib/app-types";
 import { useClipboard } from "@/lib/use-clipboard";
 import { trpc } from "@/trpc/client";
@@ -140,14 +140,14 @@ export default function UserDetailsCMS(props: UserDetailsCMSProps) {
                     />
                   </div>
                   <div className="user-name-login flex flex-col">
-                    <h2 className="user-name font-brand text-lg font-bold dark:text-sevenpreneur-white">
+                    <h2 className="user-name  text-lg font-bold dark:text-sevenpreneur-white">
                       {userDetailData.user.full_name}
                     </h2>
-                    <p className="last-login font-bodycopy font-medium text-emphasis text-sm">
+                    <p className="last-login  font-medium text-emphasis text-sm">
                       Last login{" "}
                       {dayjs(userDetailData.user.last_login).fromNow()}
                     </p>
-                    <div className="user-id flex font-bodycopy items-center gap-1 rounded-full text-sm">
+                    <div className="user-id flex  items-center gap-1 rounded-full text-sm">
                       <p className="font-medium text-emphasis">
                         User ID: {userDetailData.user.id}
                       </p>
@@ -241,7 +241,7 @@ export default function UserDetailsCMS(props: UserDetailsCMSProps) {
                   <div className="select-group-component flex flex-col gap-1">
                     <label
                       htmlFor={"status"}
-                      className="flex pl-1 gap-0.5 text-sm font-bodycopy font-semibold"
+                      className="flex pl-1 gap-0.5 text-sm  font-semibold"
                     >
                       Status <span className="text-red-700">*</span>{" "}
                     </label>
@@ -271,7 +271,7 @@ export default function UserDetailsCMS(props: UserDetailsCMSProps) {
                     ))}
                   </div>
                 ) : (
-                  <div className="flex w-full h-full py-10 items-center justify-center text-emphasis font-bodycopy font-medium">
+                  <div className="flex w-full h-full py-10 items-center justify-center text-emphasis  font-medium">
                     No Transactions
                   </div>
                 )}
@@ -448,7 +448,7 @@ export default function UserDetailsCMS(props: UserDetailsCMSProps) {
                     inputId="average-selling-price"
                     inputName="Average Selling Price"
                     inputIcon={
-                      <p className="font-bodycopy text-sm font-medium">Rp</p>
+                      <p className=" text-sm font-medium">Rp</p>
                     }
                     inputPlaceholder="None"
                     inputType={"text"}

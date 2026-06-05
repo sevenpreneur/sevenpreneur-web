@@ -11,7 +11,7 @@ export default function SectionContainerLMS({
 }: SectionContainerLMSProps) {
   return (
     <div className="flex flex-col gap-3 p-4 border border-dashboard-border rounded-lg bg-card-bg">
-      <h3 className="font-bold font-bodycopy text-base dark:text-sevenpreneur-white">
+      <h3 className="font-bold  text-base dark:text-sevenpreneur-white">
         {title}
       </h3>
       {children}

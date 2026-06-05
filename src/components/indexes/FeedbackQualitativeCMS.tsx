@@ -27,17 +27,17 @@ function ThemeCard({
   return (
     <div className={`flex flex-col gap-1 p-2.5 rounded-md border ${cardClass}`}>
       <div className="flex items-start justify-between gap-2">
-        <span className="text-sm font-bodycopy font-semibold text-foreground capitalize leading-snug">
+        <span className="text-sm  font-semibold text-foreground capitalize leading-snug">
           {theme.theme}
         </span>
         <span
-          className={`text-xs font-bodycopy font-bold px-1.5 py-0.5 rounded-full shrink-0 ${badgeClass}`}
+          className={`text-xs  font-bold px-1.5 py-0.5 rounded-full shrink-0 ${badgeClass}`}
         >
           {theme.count}×
         </span>
       </div>
       {theme.example_quotes[0] && (
-        <p className="text-xs font-bodycopy text-emphasis italic line-clamp-2">
+        <p className="text-xs  text-emphasis italic line-clamp-2">
           &ldquo;{theme.example_quotes[0]}&rdquo;
         </p>
       )}
@@ -47,7 +47,7 @@ function ThemeCard({
 
 function EmptyTheme() {
   return (
-    <p className="text-xs font-bodycopy text-emphasis">
+    <p className="text-xs  text-emphasis">
       Tidak ada tema terdeteksi.
     </p>
   );
@@ -73,10 +73,10 @@ export default function FeedbackQualitativeCMS({
               <div className="flex items-center justify-center size-7 bg-success-background rounded-full">
                 <ThumbsUp className="size-3.5" />
               </div>
-              <span className="text-sm font-bodycopy font-semibold">
+              <span className="text-sm  font-semibold">
                 Positif
               </span>
-              <span className="text-xs text-emphasis ml-auto font-bodycopy">
+              <span className="text-xs text-emphasis ml-auto ">
                 {feedbackData?.positive.length ?? 0} tema
               </span>
             </div>
@@ -99,10 +99,10 @@ export default function FeedbackQualitativeCMS({
               <div className="flex items-center justify-center size-7 bg-destructive-soft-background rounded-full">
                 <ThumbsDown className="size-3.5" />
               </div>
-              <span className="text-sm font-bodycopy font-semibold">
+              <span className="text-sm  font-semibold">
                 Negatif
               </span>
-              <span className="text-xs text-emphasis ml-auto font-bodycopy">
+              <span className="text-xs text-emphasis ml-auto ">
                 {feedbackData?.negative.length ?? 0} tema
               </span>
             </div>
@@ -125,10 +125,10 @@ export default function FeedbackQualitativeCMS({
               <div className="flex items-center justify-center size-7 bg-warning-background rounded-full">
                 <Lightbulb className="size-3.5" />
               </div>
-              <span className="text-sm font-bodycopy font-semibold">
+              <span className="text-sm  font-semibold">
                 Netral / Saran
               </span>
-              <span className="text-xs text-emphasis ml-auto font-bodycopy">
+              <span className="text-xs text-emphasis ml-auto ">
                 {feedbackData?.neutral.length ?? 0} tema
               </span>
             </div>

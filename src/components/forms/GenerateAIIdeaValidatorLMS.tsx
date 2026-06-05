@@ -114,7 +114,7 @@ export default function GenerateAIIdeaValidatorLMS(
   const formSections = (
     <>
       <section className="bg-card-bg w-full flex flex-col gap-4 p-5 border border-dashboard-border rounded-lg">
-        <h2 className="section-title font-bold font-bodycopy">
+        <h2 className="section-title font-bold ">
           {tableofContents[0].name}
         </h2>
         <TextAreaLMS
@@ -137,7 +137,7 @@ export default function GenerateAIIdeaValidatorLMS(
         />
       </section>
       <section className="bg-card-bg w-full flex flex-col gap-4 p-5 border border-dashboard-border rounded-lg">
-        <h2 className="section-title font-bold font-bodycopy">
+        <h2 className="section-title font-bold ">
           {tableofContents[1].name}
         </h2>
         <TextAreaLMS
@@ -207,7 +207,7 @@ export default function GenerateAIIdeaValidatorLMS(
                 id={tableofContents[0].url}
                 className="bg-card-bg w-full flex flex-col gap-4 p-5 border border-dashboard-border rounded-lg scroll-mt-28"
               >
-                <h2 className="section-title font-bold font-bodycopy">
+                <h2 className="section-title font-bold ">
                   {tableofContents[0].name}
                 </h2>
                 <TextAreaLMS
@@ -233,7 +233,7 @@ export default function GenerateAIIdeaValidatorLMS(
                 id={tableofContents[1].url}
                 className="bg-card-bg w-full flex flex-col gap-4 p-5 border border-dashboard-border rounded-lg"
               >
-                <h2 className="section-title font-bold font-bodycopy">
+                <h2 className="section-title font-bold ">
                   {tableofContents[1].name}
                 </h2>
                 <TextAreaLMS
@@ -279,7 +279,7 @@ export default function GenerateAIIdeaValidatorLMS(
           <Link href="/ai" className="flex items-center justify-center size-8 rounded-full hover:bg-card-inside-bg transition-colors">
             <ChevronLeft className="size-5" />
           </Link>
-          <h1 className="font-brand font-bold text-lg">Idea Validator</h1>
+          <h1 className=" font-bold text-lg">Idea Validator</h1>
         </div>
         <form
           className="flex flex-col gap-4 p-4 items-end"

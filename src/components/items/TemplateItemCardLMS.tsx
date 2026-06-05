@@ -46,14 +46,14 @@ export default function TemplateItemCardLMS({
             {templateTagList.map((tag, index) => (
               <p
                 key={index}
-                className="template-tag flex w-fit px-2 py-1 bg-primary-light/50 text-primary text-xs font-bodycopy font-semibold rounded-full"
+                className="template-tag flex w-fit px-2 py-1 bg-primary-light/50 text-primary text-xs  font-semibold rounded-full"
               >
                 {tag}
               </p>
             ))}
           </div>
         )}
-        <h3 className="template-title text-base font-bodycopy font-bold line-clamp-2 xl:text-base 2xl:text-lg">
+        <h3 className="template-title text-base  font-bold line-clamp-2 xl:text-base 2xl:text-lg">
           {templateName}
         </h3>
       </div>

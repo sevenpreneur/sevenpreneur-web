@@ -48,29 +48,29 @@ export default function CourseItemLMS(props: CourseItemLMSProps) {
             color="#FFFFFF"
           />
         )}
-        <div className="course-category absolute flex top-3 right-3 w-fit px-2 py-1 items-center gap-1 bg-white text-black text-xs font-bodycopy font-semibold rounded-full z-20">
+        <div className="course-category absolute flex top-3 right-3 w-fit px-2 py-1 items-center gap-1 bg-white text-black text-xs  font-semibold rounded-full z-20">
           {props.courseCategory === "COHORT" ? "Bootcamp" : "Video Series"}
         </div>
       </div>
       <div className="metadata relative flex flex-col gap-2 h-[112px] bg-sevenpreneur-surface-black px-4">
         <div className="flex flex-col gap-2">
-          <h3 className="course-name text-white font-bodycopy font-bold leading-snug line-clamp-2 lg:text-base xl:text-lg">
+          <h3 className="course-name text-white  font-bold leading-snug line-clamp-2 lg:text-base xl:text-lg">
             {props.courseName}
           </h3>
           <div className="course-attributes flex gap-2">
-            <p className="course-category flex w-fit px-2.5 py-1 bg-white/15 text-sevenpreneur-dust text-xs font-bodycopy font-semibold rounded-full">
+            <p className="course-category flex w-fit px-2.5 py-1 bg-white/15 text-sevenpreneur-dust text-xs  font-semibold rounded-full">
               {props.courseItems}{" "}
               {props.courseCategory === "COHORT" ? "Sessions" : "Episodes"}
             </p>
             {props.courseCategory === "COHORT" && (
-              <div className="cohort-date flex w-fit items-center gap-1 px-2.5 py-1 bg-white/15 text-sevenpreneur-dust text-xs font-bodycopy font-semibold rounded-full">
+              <div className="cohort-date flex w-fit items-center gap-1 px-2.5 py-1 bg-white/15 text-sevenpreneur-dust text-xs  font-semibold rounded-full">
                 <FontAwesomeIcon icon={faCalendar} size="sm" />
                 <p>{dateString}</p>
               </div>
             )}
             {props.courseCategory === "PLAYLIST" &&
               !!props.playlistDuration && (
-                <div className="playlist-duration flex w-fit items-center gap-1 px-2.5 py-1 bg-white/15 text-sevenpreneur-dust text-xs font-bodycopy font-semibold rounded-full">
+                <div className="playlist-duration flex w-fit items-center gap-1 px-2.5 py-1 bg-white/15 text-sevenpreneur-dust text-xs  font-semibold rounded-full">
                   <FontAwesomeIcon icon={faPlay} size="sm" />
                   <p>{formatDurationFromSeconds(props.playlistDuration)}</p>
                 </div>

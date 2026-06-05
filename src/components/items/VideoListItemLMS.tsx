@@ -26,7 +26,7 @@ export default function VideoListItemLMS(props: VideoListItemLMSProps) {
           width={500}
           height={500}
         />
-        <p className="video-duration absolute bottom-1 right-1 py-0.5 px-1.5 bg-black/60 text-white text-[11px] font-medium font-brand rounded-sm z-20">
+        <p className="video-duration absolute bottom-1 right-1 py-0.5 px-1.5 bg-black/60 text-white text-[11px] font-medium  rounded-sm z-20">
           {getDurationFromSeconds(props.videoDuration)}
         </p>
         {props.isLoading && (
@@ -36,7 +36,7 @@ export default function VideoListItemLMS(props: VideoListItemLMSProps) {
           </div>
         )}
       </div>
-      <div className="video-attributes flex flex-col font-bodycopy">
+      <div className="video-attributes flex flex-col ">
         <p className="video-episode font-medium text-xs text-emphasis">
           EPISODE {props.videoEpisode}
         </p>

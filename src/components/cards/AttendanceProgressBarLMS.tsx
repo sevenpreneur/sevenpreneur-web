@@ -19,9 +19,9 @@ export default function AttendanceProgressBarLMS(
 
   return (
     <div className="attendance-progress flex flex-col w-full bg-card-bg p-4 gap-3 border border-dashboard-border rounded-lg">
-      <p className="section-name font-bold font-bodycopy">Attendance</p>
+      <p className="section-name font-bold ">Attendance</p>
       <div className="progress-indikator flex flex-col w-full gap-2">
-        <div className="progress-number flex w-full items-center justify-between font-bodycopy text-sm">
+        <div className="progress-number flex w-full items-center justify-between  text-sm">
           <p className="font-bold">{`${attendedRate}%`}</p>
           <p className="text-emphasis">{`${props.attendanceCount} of ${props.learningCount} sessions`}</p>
         </div>

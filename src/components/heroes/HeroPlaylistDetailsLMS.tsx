@@ -27,7 +27,7 @@ export default function HeroPlaylistDetailsLMS(
       <div className="hero-container absolute flex w-full max-w-[calc(100%-4rem)] top-4 left-1/2 -translate-x-1/2 items-center justify-between px-0 py-4 z-20">
         <div className="hero-breadcrumb flex items-center gap-4">
           <AppBreadcrumb className="text-white">
-            <p className="slash font-bodycopy">/</p>
+            <p className="slash ">/</p>
             <AppBreadcrumbItem isCurrentPage>
               {props.playlistName}
             </AppBreadcrumbItem>

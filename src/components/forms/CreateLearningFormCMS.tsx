@@ -1,4 +1,4 @@
-ï»¿"use client";
+"use client";
 import { Switch } from "@/components/ui/switch";
 import { SessionMethod, StatusType } from "@/lib/app-types";
 import { trpc } from "@/trpc/client";
@@ -115,7 +115,7 @@ export default function CreateLearningFormCMS(
 
     // Required field checking
     if (!formData.learningName) {
-      toast.error("Donâ€™t leave the session untitled");
+      toast.error("Don’t leave the session untitled");
       setIsSubmitting(false);
       return;
     }
@@ -237,7 +237,7 @@ export default function CreateLearningFormCMS(
     >
       {isLoading && <AppLoadingComponents />}
       {isError && (
-        <div className="flex w-full h-full py-10 justify-center text-emphasis font-bodycopy font-medium">
+        <div className="flex w-full h-full py-10 justify-center text-emphasis  font-medium">
           No Data
         </div>
       )}
@@ -253,7 +253,7 @@ export default function CreateLearningFormCMS(
                 inputId="learning-name"
                 inputName="Session Topic"
                 inputType="text"
-                inputPlaceholder="Whatâ€™s the topic of this meeting?"
+                inputPlaceholder="What’s the topic of this meeting?"
                 value={formData.learningName}
                 onInputChange={handleInputChange("learningName")}
                 required
@@ -271,7 +271,7 @@ export default function CreateLearningFormCMS(
               <div className="learning-status flex flex-col gap-1">
                 <label
                   htmlFor={"learning-status"}
-                  className="flex pl-1 gap-0.5 text-sm text-foreground font-bodycopy font-semibold"
+                  className="flex pl-1 gap-0.5 text-sm text-foreground  font-semibold"
                 >
                   Status <span className="text-red-700">*</span>
                 </label>
@@ -371,13 +371,13 @@ export default function CreateLearningFormCMS(
                 }
               />
               <div className="attendance-settings flex flex-col gap-4 p-4 bg-card-inside-bg border rounded-md">
-                <h5 className="font-bodycopy font-bold text-sm">
+                <h5 className=" font-bold text-sm">
                   Attendance Settings
                 </h5>
                 <div className="check-in flex flex-col gap-1">
                   <label
                     htmlFor={"learning-check-in"}
-                    className="flex pl-1 gap-0.5 text-sm text-foreground font-bodycopy font-semibold"
+                    className="flex pl-1 gap-0.5 text-sm text-foreground  font-semibold"
                   >
                     Check-In Enabled
                   </label>
@@ -391,7 +391,7 @@ export default function CreateLearningFormCMS(
                         )
                       }
                     />
-                    <div className="font-bodycopy text-[15px] font-medium text-foreground">
+                    <div className=" text-[15px] font-medium text-foreground">
                       {formData.learningCheckIn ? (
                         <BooleanLabelCMS label="OPEN" value={true} />
                       ) : (
@@ -403,7 +403,7 @@ export default function CreateLearningFormCMS(
                 <div className="check-out flex flex-col gap-1">
                   <label
                     htmlFor={"learning-check-out"}
-                    className="flex pl-1 gap-0.5 text-sm text-foreground font-bodycopy font-semibold"
+                    className="flex pl-1 gap-0.5 text-sm text-foreground  font-semibold"
                   >
                     Check-Out Enabled
                   </label>
@@ -417,7 +417,7 @@ export default function CreateLearningFormCMS(
                         )
                       }
                     />
-                    <div className="font-bodycopy text-[15px] font-medium text-foreground">
+                    <div className=" text-[15px] font-medium text-foreground">
                       {formData.learningCheckOut ? (
                         <BooleanLabelCMS label="OPEN" value={true} />
                       ) : (

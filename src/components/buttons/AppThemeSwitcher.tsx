@@ -46,7 +46,7 @@ export default function AppThemeSwitcher({
             checked={isDark}
             onCheckedChange={(checked) => setTheme(checked ? "dark" : "light")}
           />
-          <label className="text-[15px] font-bodycopy font-medium">
+          <label className="text-[15px]  font-medium">
             {menuName}
           </label>
         </div>

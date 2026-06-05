@@ -24,10 +24,10 @@ export default function AppScorecardDashboard({
           {icon}
         </div>
         <div className="flex flex-col">
-          <p className="font-bodycopy text-sm font-semibold text-emphasis leading-tight">
+          <p className=" text-sm font-semibold text-emphasis leading-tight">
             {title}
           </p>
-          <p className="font-bodycopy font-bold text-base text-sevenpreneur-coal dark:text-white">
+          <p className=" font-bold text-base text-sevenpreneur-coal dark:text-white">
             {value}
           </p>
         </div>

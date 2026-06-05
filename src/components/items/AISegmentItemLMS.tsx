@@ -39,14 +39,14 @@ export default function AISegmentItemLMS(props: AISegmentItemLMSProps) {
         </div>
         <div className="flex flex-col">
           <div className="segment-number flex gap-2 items-end">
-            <p className="segment-percentage font-brand font-bold text-[#42359B] dark:text-[#9b93f0] text-3xl">
+            <p className="segment-percentage  font-bold text-[#42359B] dark:text-[#9b93f0] text-3xl">
               {props.segmentPercentage}%
             </p>
-            <p className="segment-size font-bodycopy font-medium text-emphasis text-[15px]">
+            <p className="segment-size  font-medium text-emphasis text-[15px]">
               dari {getShortNumber(props.segmentSize)}
             </p>
           </div>
-          <p className="segment-name flex flex-col font-bodycopy font-semibold text-emphasis">
+          <p className="segment-name flex flex-col  font-semibold text-emphasis">
             {props.segmentName}
           </p>
         </div>
@@ -57,11 +57,11 @@ export default function AISegmentItemLMS(props: AISegmentItemLMSProps) {
           isExpanded ? "max-h-[2000px]" : "max-h-11"
         }`}
       >
-        <p className="segment-description flex flex-col font-bodycopy font-medium text-emphasis text-[15px]">
+        <p className="segment-description flex flex-col  font-medium text-emphasis text-[15px]">
           <b>Characteristics:</b>
           {props.segmentDescription}
         </p>
-        <p className="segment-pain-points flex flex-col font-bodycopy font-medium text-emphasis text-[15px]">
+        <p className="segment-pain-points flex flex-col  font-medium text-emphasis text-[15px]">
           <b>Pain Points:</b> {props.segmentPainPoints}
         </p>
       </div>
