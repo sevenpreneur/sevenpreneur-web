@@ -211,8 +211,8 @@ export default function WhatsappChatsCMS(props: WhatsappChatsCMSProps) {
                 return (
                   <React.Fragment key={index}>
                     {showDateLabel && (
-                      <div className="flex w-full justify-center my-1">
-                        <p className="flex w-fit px-3 py-1 text-xs font-medium  text-[#333333]/70 bg-white/70 rounded-full">
+                      <div className="sticky top-3 z-20 flex w-full justify-center py-1 pointer-events-none">
+                        <p className="flex w-[138px] justify-center px-3 py-1 text-xs font-medium text-[#333333]/70 bg-white/80 border border-dashboard-border rounded-full backdrop-blur-sm dark:bg-card-bg/80 dark:text-sevenpreneur-white/70">
                           {dayjs(post.created_at).format("ddd, DD MMM YYYY")}
                         </p>
                       </div>

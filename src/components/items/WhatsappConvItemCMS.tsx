@@ -67,7 +67,7 @@ export default function WhatsappConvItemCMS(props: WhatsappConvItemCMSProps) {
       onClick={props.onClick}
       className={`conv-item flex gap-2 p-3 justify-between rounded-md overflow-hidden hover:cursor-pointer hover:bg-sb-item-hover ${isActive ? "bg-sb-item-active-bg/50" : ""}`}
     >
-      <div className="conv-metadata flex items-center gap-3">
+      <div className="conv-metadata flex min-w-0 flex-1 items-center gap-3">
         <div className="conv-sender-avatar relative flex">
           <div className="aspect-square size-10 shrink-0 rounded-full overflow-hidden">
             {props.convUserAvatar ? (
@@ -91,15 +91,9 @@ export default function WhatsappConvItemCMS(props: WhatsappConvItemCMSProps) {
           )}
         </div>
         <div className="flex flex-col min-w-0">
-          <div className="flex items-center gap-1.5">
-            <p className="conv-full-name text-[15px] font-semibold  leading-snug line-clamp-1">
-              {props.convUserFullName}
-            </p>
-            <BooleanLabelCMS
-              value={props.convIsAssigned}
-              label={props.convIsAssigned ? "Assigned" : "Unassigned"}
-            />
-          </div>
+          <p className="conv-full-name text-[15px] font-semibold  leading-snug line-clamp-1 dark:text-sevenpreneur-white">
+            {props.convUserFullName}
+          </p>
           <div className="flex items-center gap-1.5">
             {props.convLastMessageDirection === "OUTBOUND" && (
               <div>{iconStatus}</div>
@@ -113,9 +107,15 @@ export default function WhatsappConvItemCMS(props: WhatsappConvItemCMSProps) {
               </p>
             </div>
           </div>
+          <div className="mt-1">
+            <BooleanLabelCMS
+              value={props.convIsAssigned}
+              label={props.convIsAssigned ? "Assigned" : "Unassigned"}
+            />
+          </div>
         </div>
       </div>
-      <div className="flex flex-col gap-0.5 items-center shrink-0">
+      <div className="flex flex-col gap-1 items-end shrink-0">
         <p
           className={`conv-last-message-at text-[13px]  font-medium line-clamp-1 ${props.convUnreadMessage > 0 ? "text-cms-primary" : ""}`}
         >

@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { WhatsappChatDirection, WhatsappChatStatus } from "@/lib/app-types";
+import { WhatsappFormattedText } from "@/lib/whatsapp-text-format";
 import { resolveWhatsappChatStatus } from "@/lib/whatsapp-utils";
 import { WhatsAppTypeAttachmentPairUnion } from "@/lib/whatsapp-types";
 import WhatsappChatBubbleCMS, {
@@ -99,7 +100,7 @@ export default function WhatsappChatItemCMS(props: WhatsappChatItemCMSProps) {
         replyTo={props.replyTo}
         customerName={props.customerName}
       >
-        <p className="px-1">{props.chatMessage}</p>
+        <WhatsappFormattedText text={props.chatMessage} className="px-1" />
       </WhatsappChatBubbleCMS>
     );
   }
@@ -131,7 +132,10 @@ export default function WhatsappChatItemCMS(props: WhatsappChatItemCMSProps) {
               <MediaDownloadingState />
             )}
             {!!props.chat.attachment.caption && (
-              <p className="p-1">{props.chat.attachment.caption}</p>
+              <WhatsappFormattedText
+                text={props.chat.attachment.caption}
+                className="p-1"
+              />
             )}
           </div>
         </WhatsappChatBubbleCMS>
@@ -186,7 +190,10 @@ export default function WhatsappChatItemCMS(props: WhatsappChatItemCMSProps) {
             <MediaDownloadingState />
           )}
           {!!props.chat.attachment.caption && (
-            <p className="p-1 text-sm">{props.chat.attachment.caption}</p>
+            <WhatsappFormattedText
+              text={props.chat.attachment.caption}
+              className="p-1 text-sm"
+            />
           )}
         </div>
       </WhatsappChatBubbleCMS>
@@ -260,7 +267,10 @@ export default function WhatsappChatItemCMS(props: WhatsappChatItemCMSProps) {
           <MediaDownloadingState />
         )}
         {!!props.chat.attachment.caption && (
-          <p className="px-1 pb-1 text-sm">{props.chat.attachment.caption}</p>
+          <WhatsappFormattedText
+            text={props.chat.attachment.caption}
+            className="px-1 pb-1 text-sm"
+          />
         )}
       </WhatsappChatBubbleCMS>
     );

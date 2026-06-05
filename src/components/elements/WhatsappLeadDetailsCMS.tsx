@@ -1,4 +1,5 @@
 "use client";
+import { supabase } from "@/lib/supabase";
 import { trpc } from "@/trpc/client";
 import { WAMode } from "@prisma/client";
 import {
@@ -7,6 +8,7 @@ import {
   Loader,
   Loader2,
   PenBox,
+  Save,
   TextAlignStart,
   User,
   X,
@@ -15,6 +17,7 @@ import { useTheme } from "next-themes";
 import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
 import AppButton from "../buttons/AppButton";
+import SectionContainerCMS from "../cards/SectionContainerCMS";
 import AppTextArea from "../fields/AppTextArea";
 import CreateWhatsappAlertFormCMS from "../forms/CreateWhatsappAlertFormCMS";
 import EditLeadStatusFormCMS from "../forms/EditLeadStatusFormCMS";
@@ -22,6 +25,7 @@ import LeadStatusLabelCMS from "../labels/LeadStatusLabelCMS";
 import AppErrorComponents from "../states/AppErrorComponents";
 import AppLoadingComponents from "../states/AppLoadingComponents";
 import { Slider } from "../ui/slider";
+import { toast } from "sonner";
 
 interface WhatsappLeadDetailsCMSProps {
   sessionToken: string;
@@ -38,6 +42,7 @@ export default function WhatsappLeadDetailsCMS(
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isLoadingUnassign, setIsLoadingUnassign] = useState(false);
   const [createAlert, setCreateAlert] = useState(false);
+  const [noteValue, setNoteValue] = useState("");
 
   // Fetch tRPC Data
   const { data, isLoading, isError } = trpc.read.wa.conversation.useQuery(
@@ -45,6 +50,30 @@ export default function WhatsappLeadDetailsCMS(
     { enabled: !!props.sessionToken && !!props.convId }
   );
   const leadDetails = data?.conversation;
+
+  useEffect(() => {
+    if (!props.sessionToken || !props.convId) return;
+
+    const channel = supabase
+      .channel("wa_convs_change", { config: { private: true } })
+      .on("broadcast", { event: "*" }, () => {
+        utils.read.wa.conversation.invalidate({ id: props.convId });
+        utils.list.wa.conversations.invalidate();
+      })
+      .subscribe((status, err) => {
+        if (err) {
+          console.error("WA Conversation Details Subscription error:", err);
+        } else if (status === "CHANNEL_ERROR") {
+          console.error("WA Conversation Details channel encountered an error");
+        } else if (status === "TIMED_OUT") {
+          console.error("WA Conversation Details subscription timed out");
+        }
+      });
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [props.sessionToken, props.convId, utils]);
 
   // State for winning rate
   const [winningRate, setWinningRate] = useState(
@@ -55,6 +84,10 @@ export default function WhatsappLeadDetailsCMS(
   useEffect(() => {
     setWinningRate(leadDetails?.winning_rate ?? 0);
   }, [leadDetails?.winning_rate, props.convId]);
+
+  useEffect(() => {
+    setNoteValue(leadDetails?.note ?? "");
+  }, [leadDetails?.note, props.convId]);
 
   // Unassign handler
   const handleUnassigned = () => {
@@ -108,6 +141,24 @@ export default function WhatsappLeadDetailsCMS(
     );
   };
 
+  const handleSaveNote = () => {
+    updateConversation.mutate(
+      {
+        id: props.convId,
+        note: noteValue.trim() ? noteValue : null,
+      },
+      {
+        onSuccess: () => {
+          toast.success("Notes saved");
+          utils.read.wa.conversation.invalidate({ id: props.convId });
+        },
+        onError: () => {
+          toast.error("Failed to save notes");
+        },
+      }
+    );
+  };
+
   const leadName =
     leadDetails?.user?.full_name || leadDetails?.full_name || "-";
 
@@ -119,6 +170,7 @@ export default function WhatsappLeadDetailsCMS(
     .toUpperCase();
 
   const currentMode: WAMode = leadDetails?.mode ?? "AI";
+  const isNoteDirty = noteValue !== (leadDetails?.note ?? "");
 
   return (
     <React.Fragment>
@@ -129,12 +181,7 @@ export default function WhatsappLeadDetailsCMS(
         {leadDetails && !isLoading && !isError && (
           <div className="lead-informations flex flex-col w-full gap-4">
             {/* AI / Human Mode card */}
-            <div className="ai-mode-card flex flex-col gap-3 p-4 bg-card-bg border border-dashboard-border rounded-lg">
-              <div className="flex items-center gap-1.5">
-                <h5 className=" text-[15px] font-bold dark:text-sevenpreneur-white">
-                  AI / Human Mode
-                </h5>
-              </div>
+            <SectionContainerCMS title="AI / Human Mode" icon={Bot}>
               <div className="flex w-full p-1 bg-card-inside-bg border border-dashboard-border rounded-lg gap-1">
                 <button
                   type="button"
@@ -163,42 +210,41 @@ export default function WhatsappLeadDetailsCMS(
                   Human Mode
                 </button>
               </div>
-            </div>
+            </SectionContainerCMS>
 
             {/* Lead Identity card */}
-            <div className="lead-identity-card flex items-center gap-3 p-4 bg-card-bg border border-dashboard-border rounded-lg">
-              <div className="lead-identity flex items-center gap-3 flex-1 min-w-0">
-                <div className="lead-avatar size-12 rounded-full overflow-hidden shrink-0">
-                  {leadDetails.user?.avatar ? (
-                    <Image
-                      src={leadDetails.user.avatar}
-                      alt={leadName}
-                      width={500}
-                      height={500}
-                    />
-                  ) : (
-                    <div className="flex w-full h-full items-center justify-center bg-secondary-soft-background text-secondary-soft-foreground dark:bg-sevenpreneur-pink-midgnight dark:text-sevenpreneur-pink-blush">
-                      <p className=" font-medium text-base">
-                        {initialName}
-                      </p>
-                    </div>
-                  )}
-                </div>
-                <div className="flex flex-col gap-0.5 min-w-0">
-                  <p className="lead-name text-base font-bold  leading-snug line-clamp-2 dark:text-sevenpreneur-white">
-                    {leadName}
-                  </p>
-                  <p className="lead-phone-number text-sm text-emphasis font-semibold  leading-snug line-clamp-1">
-                    {leadDetails.user?.phone_number || leadDetails.phone_number}
-                  </p>
-                  {leadDetails.user?.email && (
-                    <p className="lead-email text-sm text-emphasis font-semibold  leading-snug line-clamp-1">
-                      {leadDetails.user.email}
+            <SectionContainerCMS title="Lead Identity" icon={User}>
+              <div className="flex w-full items-center justify-between">
+                <div className="lead-identity flex items-center gap-3 flex-1 min-w-0">
+                  <div className="lead-avatar size-10 rounded-full overflow-hidden shrink-0">
+                    {leadDetails.user?.avatar ? (
+                      <Image
+                        src={leadDetails.user.avatar}
+                        alt={leadName}
+                        width={500}
+                        height={500}
+                      />
+                    ) : (
+                      <div className="flex w-full h-full items-center justify-center bg-secondary-soft-background text-secondary-soft-foreground dark:bg-sevenpreneur-pink-midgnight dark:text-sevenpreneur-pink-blush">
+                        <p className=" font-medium text-base">{initialName}</p>
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex flex-col gap-0.5 min-w-0">
+                    <p className="lead-name text-[15px] font-bold leading-snug line-clamp-2 dark:text-sevenpreneur-white">
+                      {leadName}
                     </p>
-                  )}
+                    <p className="lead-phone-number text-sm text-emphasis leading-snug line-clamp-1">
+                      {leadDetails.user?.phone_number ||
+                        leadDetails.phone_number}
+                    </p>
+                    {leadDetails.user?.email && (
+                      <p className="lead-email text-sm text-emphasis font-semibold  leading-snug line-clamp-1">
+                        {leadDetails.user.email}
+                      </p>
+                    )}
+                  </div>
                 </div>
-              </div>
-              <div className="tool flex items-center gap-2 shrink-0">
                 <AppButton
                   variant={buttonVariant}
                   size="icon"
@@ -207,24 +253,23 @@ export default function WhatsappLeadDetailsCMS(
                   <BellPlus className="size-4.5" />
                 </AppButton>
               </div>
-            </div>
+            </SectionContainerCMS>
 
             {/* Lead Details card */}
-            <div className="lead-details flex flex-col gap-3 p-4 bg-card-bg border border-dashboard-border rounded-lg">
-              <div className="flex w-full justify-between items-center leading-snug">
-                <h5 className=" text-[15px] font-bold dark:text-white">
-                  Lead Details
-                </h5>
+            <SectionContainerCMS
+              title="Lead Details"
+              icon={PenBox}
+              headerAction={
                 <AppButton
-                  className="text-tertiary"
+                  variant={buttonVariant}
                   size="small"
-                  variant="ghost"
                   onClick={() => setIsEditModalOpen(true)}
                 >
                   <PenBox className="size-3.5" />
                   Edit
                 </AppButton>
-              </div>
+              }
+            >
               <div className="flex flex-col gap-2">
                 <div className="flex w-full items-center">
                   <p className="label w-32 text-sm text-emphasis  font-medium">
@@ -280,16 +325,10 @@ export default function WhatsappLeadDetailsCMS(
                   </div>
                 </div>
               </div>
-            </div>
+            </SectionContainerCMS>
 
             {/* Winning Rate card */}
-            <div className="lead-progress flex flex-col gap-3 p-4 bg-card-bg border border-dashboard-border rounded-lg">
-              <div className="flex items-center gap-2">
-                <Loader className="size-4 text-emphasis" />
-                <h5 className=" text-[15px] font-bold dark:text-white">
-                  Winning Rate
-                </h5>
-              </div>
+            <SectionContainerCMS title="Winning Rate" icon={Loader}>
               <div className="flex w-full items-center gap-2">
                 <Slider
                   value={[winningRate]}
@@ -302,26 +341,39 @@ export default function WhatsappLeadDetailsCMS(
                   {winningRate}%
                 </div>
               </div>
-            </div>
+            </SectionContainerCMS>
 
             {/* Notes card */}
-            <div className="notes flex flex-col gap-3 p-4 bg-card-bg border border-dashboard-border rounded-lg">
-              <div className="flex items-center gap-2">
-                <TextAlignStart className="size-4 text-emphasis" />
-                <h5 className=" text-[15px] font-bold dark:text-sevenpreneur-white">
-                  Notes
-                </h5>
-              </div>
+            <SectionContainerCMS
+              title="Notes"
+              icon={TextAlignStart}
+              headerAction={
+                <AppButton
+                  type="button"
+                  variant={buttonVariant}
+                  size="small"
+                  onClick={handleSaveNote}
+                  disabled={!isNoteDirty || updateConversation.isPending}
+                >
+                  {updateConversation.isPending ? (
+                    <Loader2 className="size-3.5 animate-spin" />
+                  ) : (
+                    <Save className="size-3.5" />
+                  )}
+                  Save
+                </AppButton>
+              }
+            >
               <AppTextArea
                 variant="CMS"
                 textAreaId="chat-notes"
                 textAreaPlaceholder="Take notes for important things"
                 textAreaHeight="h-32"
-                value={""}
-                // onTextAreaChange={handleInputChange("cohortDescription")}
-                required
+                value={noteValue}
+                onTextAreaChange={setNoteValue}
+                disabled={updateConversation.isPending}
               />
-            </div>
+            </SectionContainerCMS>
           </div>
         )}
       </div>

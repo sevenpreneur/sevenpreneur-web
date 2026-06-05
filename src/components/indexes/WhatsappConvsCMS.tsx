@@ -3,11 +3,14 @@ import { LeadStatus } from "@/lib/app-types";
 import { supabase } from "@/lib/supabase";
 import { trpc } from "@/trpc/client";
 import { WALeadStatus, WAMode } from "@prisma/client";
-import { ListFilter, MessageCircle } from "lucide-react";
+import { ListFilter, MessageCircle, RotateCcw } from "lucide-react";
+import { useTheme } from "next-themes";
 import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
-import AppSelect from "../fields/AppSelect";
+import AppButton from "../buttons/AppButton";
+import SectionContainerCMS from "../cards/SectionContainerCMS";
 import WhatsappLeadDetailsCMS from "../elements/WhatsappLeadDetailsCMS";
+import AppSelect from "../fields/AppSelect";
 import WhatsappConvItemCMS from "../items/WhatsappConvItemCMS";
 import WhatsappChatsCMS from "../messages/WhatsappChatsCMS";
 import PageContainerCMS from "../pages/PageContainerCMS";
@@ -33,6 +36,8 @@ type ConvHeaderSnapshot = {
 };
 
 export default function WhatsappConvsCMS(props: WhatsappConvsCMSProps) {
+  const { resolvedTheme } = useTheme();
+  const buttonVariant = resolvedTheme === "dark" ? "dark" : "light";
   const [selectedConvId, setSelectedConvId] = useState("");
   // Cached header data so the middle panel survives filter changes that
   // exclude the selected conv. Set when the user clicks a conv item; fresh
@@ -205,20 +210,23 @@ export default function WhatsappConvsCMS(props: WhatsappConvsCMSProps) {
           {/* LEFT PANEL */}
           <div className="left-panel flex flex-col w-80 shrink-0 gap-4 min-h-0">
             {/* Filters card */}
-            <div className="filters-card flex flex-col gap-3 p-4 bg-card-bg border border-dashboard-border rounded-lg shrink-0">
-              <div className="flex items-center justify-between">
-                <h5 className=" font-bold text-[15px] dark:text-sevenpreneur-white">
-                  Filters
-                </h5>
-                <button
+            <SectionContainerCMS
+              title="Filters"
+              icon={ListFilter}
+              className="shrink-0"
+              headerAction={
+                <AppButton
                   type="button"
+                  variant={buttonVariant}
+                  size="small"
                   onClick={resetFilters}
                   disabled={!hasActiveFilter}
-                  className="text-tertiary text-sm  font-semibold hover:underline disabled:opacity-40 disabled:cursor-not-allowed disabled:no-underline"
                 >
+                  <RotateCcw className="size-3.5" />
                   Reset
-                </button>
-              </div>
+                </AppButton>
+              }
+            >
               <div className="flex flex-col gap-2">
                 <div className="grid grid-cols-2 gap-2">
                   <AppSelect
@@ -253,7 +261,7 @@ export default function WhatsappConvsCMS(props: WhatsappConvsCMSProps) {
                   options={handlerOptions}
                 />
               </div>
-            </div>
+            </SectionContainerCMS>
 
             {/* Conversations list card */}
             <div className="convs-panels flex flex-col flex-1 min-h-0 shrink-0 bg-card-bg border border-dashboard-border rounded-lg overflow-hidden">
@@ -269,7 +277,7 @@ export default function WhatsappConvsCMS(props: WhatsappConvsCMSProps) {
                 <ListFilter className="size-4 text-emphasis" />
               </div>
 
-              <div className="flex flex-col flex-1 min-h-0 overflow-y-auto">
+              <div className="flex flex-col flex-1 min-h-0 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
                 {isLoadingConvs && <AppLoadingComponents />}
                 {isErrorConvs && <AppErrorComponents />}
 
