@@ -89,12 +89,12 @@ export default function AddCohortMemberFormCMS(
 
     // Required field checking
     if (!formData.email) {
-      toast.error("Don’t forget to select a user");
+      toast.error("Donâ€™t forget to select a user");
       setIsSubmitting(false);
       return;
     }
     if (!formData.cohortPriceId) {
-      toast.error("Don’t forget to select a access tier");
+      toast.error("Donâ€™t forget to select a access tier");
       setIsSubmitting(false);
       return;
     }

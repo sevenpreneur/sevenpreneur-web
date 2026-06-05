@@ -127,7 +127,7 @@ export default function EditInterstitialAdsFormCMS(
 
     // Required field checking
     if (!formData.interstitialTitle) {
-      toast.error("Oops, title can’t be empty");
+      toast.error("Oops, title canâ€™t be empty");
       setIsSubmitting(false);
       return;
     }

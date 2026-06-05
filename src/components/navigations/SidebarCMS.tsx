@@ -12,8 +12,8 @@ import {
   Presentation,
   Tags,
 } from "lucide-react";
-import { useTheme } from "next-themes";
 import { useEffect } from "react";
+import SevenpreneurLogo from "../svg-logos/SevenpreneurLogo";
 import AppSidebar from "./AppSidebar";
 import AppSidebarGroupMenu from "./AppSidebarGroupMenu";
 import AppSidebarMenuItem from "./AppSidebarMenuItem";
@@ -24,13 +24,6 @@ interface SidebarCMSProps {
 }
 
 export default function SidebarCMS(props: SidebarCMSProps) {
-  const { resolvedTheme } = useTheme();
-  const isDark = resolvedTheme === "dark";
-
-  const logoURL = isDark
-    ? "https://tskubmriuclmbcfmaiur.supabase.co/storage/v1/object/public/sevenpreneur/logo-sevenpreneur-square.svg"
-    : "https://tskubmriuclmbcfmaiur.supabase.co/storage/v1/object/public/sevenpreneur/logo-sevenpreneur-square-black.svg";
-
   const allowedRolesMenuCohorts = [
     "Administrator",
     "Super Admin",
@@ -99,8 +92,16 @@ export default function SidebarCMS(props: SidebarCMSProps) {
 
   return (
     <AppSidebar
-      logo={logoURL}
       logoLabel="Sevenpreneur Content Management System"
+      logoLabelDisplay={
+        <div className="flex items-center justify-between w-full gap-3">
+          <SevenpreneurLogo className="w-3/4 max-w-[168px] h-auto shrink-0" />
+          <span className="text-[11px] font-semibold whitespace-nowrap text-sb-text">
+            v3.5.0
+          </span>
+        </div>
+      }
+      hideLogoIcon
       avatarSrc={data?.user.avatar ?? undefined}
       avatarName={data?.user.full_name ?? undefined}
       avatarRole={data?.user.role_name ?? undefined}

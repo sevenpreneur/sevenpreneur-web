@@ -7,9 +7,10 @@ import { ReactNode } from "react";
 import AppButton from "../buttons/AppButton";
 
 interface AppSidebarProps {
-  logo: string | ReactNode;
+  logo?: string | ReactNode;
   logoLabel: string;
   logoLabelDisplay?: ReactNode;
+  hideLogoIcon?: boolean;
   avatarSrc?: string;
   avatarName?: string;
   avatarRole?: string;
@@ -20,6 +21,7 @@ export default function AppSidebar({
   logo,
   logoLabel,
   logoLabelDisplay,
+  hideLogoIcon = false,
   avatarSrc,
   avatarName,
   avatarRole,
@@ -63,36 +65,44 @@ export default function AppSidebar({
         <div
           className={`flex flex-col w-full gap-5 flex-1 min-h-0 overflow-hidden ${isCollapsed ? "items-center" : ""}`}
         >
-          <div
-            className={`flex items-center gap-3 shrink-0 ${
-              isCollapsed ? "justify-center w-full" : "pl-1"
-            }`}
-          >
+          {(!hideLogoIcon || !isCollapsed) && (
             <div
-              className={`flex aspect-square shrink-0 overflow-hidden rounded-lg border-4 border-dashboard-border ${
-                isCollapsed ? "w-9" : "w-11"
+              className={`flex items-center gap-3 shrink-0 ${
+                isCollapsed ? "justify-center w-full" : "pl-1"
               }`}
             >
-              {typeof logo === "string" ? (
-                <Image
-                  className="object-cover w-full h-full"
-                  src={logo}
-                  alt={logoLabel}
-                  width={400}
-                  height={400}
-                />
-              ) : (
-                <div className="flex items-center justify-center w-full h-full">
-                  {logo}
+              {!hideLogoIcon && (
+                <div
+                  className={`flex aspect-square shrink-0 overflow-hidden rounded-lg border-4 border-dashboard-border ${
+                    isCollapsed ? "w-9" : "w-11"
+                  }`}
+                >
+                  {typeof logo === "string" ? (
+                    <Image
+                      className="object-cover w-full h-full"
+                      src={logo}
+                      alt={logoLabel}
+                      width={400}
+                      height={400}
+                    />
+                  ) : (
+                    <div className="flex items-center justify-center w-full h-full">
+                      {logo}
+                    </div>
+                  )}
+                </div>
+              )}
+              {!isCollapsed && (
+                <div
+                  className={`font-semibold text-[13px] leading-snug transition-all duration-300 ease-in-out text-sb-text-strong ${
+                    logoLabelDisplay ? "" : "line-clamp-2"
+                  } ${hideLogoIcon ? "w-full" : ""}`}
+                >
+                  {logoLabelDisplay ?? logoLabel}
                 </div>
               )}
             </div>
-            {!isCollapsed && (
-              <div className=" font-semibold text-[13px] leading-snug line-clamp-2 transition-all duration-300 ease-in-out text-sb-text-strong">
-                {logoLabelDisplay ?? logoLabel}
-              </div>
-            )}
-          </div>
+          )}
 
           {/* Menu */}
           <nav

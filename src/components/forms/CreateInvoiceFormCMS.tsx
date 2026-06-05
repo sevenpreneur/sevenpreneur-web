@@ -300,7 +300,7 @@ export default function CreateInvoiceFormCMS({
       return;
     }
     if (!formData.invoiceUserPhone) {
-      toast.error("Phone number’s still empty");
+      toast.error("Phone numberâ€™s still empty");
       setIsSubmitting(false);
       return;
     }

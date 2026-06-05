@@ -388,7 +388,7 @@ export default function CreateArticleForm(props: CreateArticleFormProps) {
                         variant="CMS"
                         inputId="publish-date"
                         inputName="Sub-Heading"
-                        inputPlaceholder="Write section sub-title…"
+                        inputPlaceholder="Write section sub-titleâ€¦"
                         inputType="text"
                         value={post.sub_heading || ""}
                         onInputChange={handleChangeBodyContent(
@@ -448,7 +448,7 @@ export default function CreateArticleForm(props: CreateArticleFormProps) {
                     variant="CMS"
                     textAreaId="insight"
                     textAreaName="Content Summary"
-                    textAreaPlaceholder="Write a 3-sentence summary that captures the article’s main topic and overall takeaway"
+                    textAreaPlaceholder="Write a 3-sentence summary that captures the articleâ€™s main topic and overall takeaway"
                     textAreaHeight="h-44"
                     value={formData.articleInsight}
                     onTextAreaChange={handleInputChange("articleInsight")}

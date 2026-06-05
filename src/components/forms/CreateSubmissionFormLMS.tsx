@@ -91,7 +91,7 @@ export default function CreateSubmissionFormLMS({
 
       if (createSubmission.code === "CREATED") {
         toast.success("Successfully Submitted", {
-          description: "Got It! We’ve Received Your Submission.",
+          description: "Got It! Weâ€™ve Received Your Submission.",
         });
         setFormData({ submissionURL: "" });
         setSubmitMode(null);
@@ -138,7 +138,7 @@ export default function CreateSubmissionFormLMS({
           inputId="submission-url"
           inputName="Provide Document Link"
           inputType="url"
-          inputPlaceholder="Paste the document’s shareable link here"
+          inputPlaceholder="Paste the documentâ€™s shareable link here"
           value={formData.submissionURL}
           onInputChange={handleInputChange}
           characterLength={1000}

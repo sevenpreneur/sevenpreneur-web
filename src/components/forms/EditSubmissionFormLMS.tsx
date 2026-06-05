@@ -92,7 +92,7 @@ export default function EditSubmissionFormLMS({
     if (!initialData.id) {
       toast.error("Submission Not Found", {
         description:
-          "We couldn’t identify this submission. Please try again later.",
+          "We couldnâ€™t identify this submission. Please try again later.",
       });
       setIsSubmitting(false);
       return;
@@ -123,7 +123,7 @@ export default function EditSubmissionFormLMS({
         toast.error("Update Failed", {
           description:
             editSubmission?.message ||
-            "We couldn’t update your submission. Please check your input and try again.",
+            "We couldnâ€™t update your submission. Please check your input and try again.",
         });
       }
     } catch (error) {
@@ -162,7 +162,7 @@ export default function EditSubmissionFormLMS({
           inputId="submission-url"
           inputName="Provide Document Link"
           inputType="url"
-          inputPlaceholder="Paste the document’s shareable link here"
+          inputPlaceholder="Paste the documentâ€™s shareable link here"
           value={formData.submissionURL}
           onInputChange={handleInputChange}
           characterLength={1000}

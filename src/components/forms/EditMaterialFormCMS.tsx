@@ -115,7 +115,7 @@ export default function EditMaterialFormCMS(props: EditMaterialFormCMSProps) {
     setIsSubmitting(true);
 
     if (!formData.materialName) {
-      toast.error("Let’s give this document a proper title before saving.");
+      toast.error("Letâ€™s give this document a proper title before saving.");
       setIsSubmitting(false);
       return;
     }
@@ -228,7 +228,7 @@ export default function EditMaterialFormCMS(props: EditMaterialFormCMSProps) {
                 <div className="flex flex-col">
                   <h3 className="font-bold ">Upload Document</h3>
                   <p className=" font-medium text-sm text-emphasis">
-                    Choose how you’d like to add the document
+                    Choose how youâ€™d like to add the document
                   </p>
                 </div>
                 <div className="flex flex-col gap-3">
@@ -252,7 +252,7 @@ export default function EditMaterialFormCMS(props: EditMaterialFormCMSProps) {
                     inputId="learning-name"
                     inputName="Document Link"
                     inputType="url"
-                    inputPlaceholder="Paste the document’s shareable link here"
+                    inputPlaceholder="Paste the documentâ€™s shareable link here"
                     value={formData.materialURL}
                     onInputChange={handleInputChange("materialURL")}
                     characterLength={1000}

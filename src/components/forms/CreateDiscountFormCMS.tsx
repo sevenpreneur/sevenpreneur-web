@@ -148,7 +148,7 @@ export default function CreateDiscountFormCMS({
 
     // Required field checking
     if (!formData.discountName) {
-      toast.error("Oops! Don’t forget to give your discount a name.");
+      toast.error("Oops! Donâ€™t forget to give your discount a name.");
       setIsSubmitting(false);
       return;
     }
@@ -168,7 +168,7 @@ export default function CreateDiscountFormCMS({
       return;
     }
     if (isNaN(Number(formData.discountRate))) {
-      toast.error("Hmm… that doesn’t look like a valid number for the rate");
+      toast.error("Hmmâ€¦ that doesnâ€™t look like a valid number for the rate");
       setIsSubmitting(false);
       return;
     }

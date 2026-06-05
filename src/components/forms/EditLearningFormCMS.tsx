@@ -161,13 +161,13 @@ export default function EditLearningFormCMS(props: EditLearningFormCMSProps) {
 
     // Required field checking
     if (!formData.learningName) {
-      toast.error("Don’t leave the session untitled");
+      toast.error("Donâ€™t leave the session untitled");
       setIsSubmitting(false);
       return;
     }
     if (!formData.learningDescription) {
       toast.error(
-        "A brief description helps set expectations — don't skip it."
+        "A brief description helps set expectations â€” don't skip it."
       );
       setIsSubmitting(false);
       return;
@@ -300,7 +300,7 @@ export default function EditLearningFormCMS(props: EditLearningFormCMSProps) {
                 inputId="learning-name"
                 inputName="Session Topic"
                 inputType="text"
-                inputPlaceholder="What’s the topic of this meeting?"
+                inputPlaceholder="Whatâ€™s the topic of this meeting?"
                 value={formData.learningName}
                 onInputChange={handleInputChange("learningName")}
                 required

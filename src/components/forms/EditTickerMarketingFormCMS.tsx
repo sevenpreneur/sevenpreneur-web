@@ -103,7 +103,7 @@ export default function EditTickerMarketingFormCMS(
 
     // Required field checking
     if (!formData.tickerTitle) {
-      toast.error("Oops, headline can’t be empty");
+      toast.error("Oops, headline canâ€™t be empty");
       setIsSubmitting(false);
       return;
     }

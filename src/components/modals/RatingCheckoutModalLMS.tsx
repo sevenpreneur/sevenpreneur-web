@@ -289,7 +289,7 @@ function ModalContent(props: RatingCheckoutModalLMSProps) {
             })}
           </div>
 
-          {/* Motivational card — desktop only */}
+          {/* Motivational card â€” desktop only */}
           <div className="hidden sm:block mt-auto">
             <div className="bg-white dark:bg-card-inside-bg rounded-xl p-3.5 border border-[#EDE9FE] dark:border-dashboard-border">
               <p className="text-xl mb-1">?</p>

@@ -123,7 +123,7 @@ export default function UpdateVideoRecordingFormCMS({
   return (
     <AppSheet
       sheetName="Update Video Recording"
-      sheetDescription="Add or update the session’s video recording to ensure learners can revisit the content anytime."
+      sheetDescription="Add or update the sessionâ€™s video recording to ensure learners can revisit the content anytime."
       isOpen={isOpen}
       onClose={onClose}
     >

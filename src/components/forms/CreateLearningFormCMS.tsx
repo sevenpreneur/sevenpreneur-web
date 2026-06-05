@@ -115,7 +115,7 @@ export default function CreateLearningFormCMS(
 
     // Required field checking
     if (!formData.learningName) {
-      toast.error("Don’t leave the session untitled");
+      toast.error("Donâ€™t leave the session untitled");
       setIsSubmitting(false);
       return;
     }
@@ -253,7 +253,7 @@ export default function CreateLearningFormCMS(
                 inputId="learning-name"
                 inputName="Session Topic"
                 inputType="text"
-                inputPlaceholder="What’s the topic of this meeting?"
+                inputPlaceholder="Whatâ€™s the topic of this meeting?"
                 value={formData.learningName}
                 onInputChange={handleInputChange("learningName")}
                 required

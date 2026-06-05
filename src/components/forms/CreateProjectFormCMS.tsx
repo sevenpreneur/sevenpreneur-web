@@ -84,7 +84,7 @@ export default function CreateProjectFormCMS({
     }
     if (!formData.projectDescription) {
       toast.error(
-        "Add a brief to help participants understand the project’s objective"
+        "Add a brief to help participants understand the projectâ€™s objective"
       );
       setIsSubmitting(false);
       return;
@@ -201,7 +201,7 @@ export default function CreateProjectFormCMS({
                   Upload Supporting Document
                 </h3>
                 <p className=" font-medium text-sm text-emphasis">
-                  Optional — attach any file that can guide participants, such
+                  Optional â€” attach any file that can guide participants, such
                   as a case study, brief, or template.
                 </p>
               </div>
@@ -226,7 +226,7 @@ export default function CreateProjectFormCMS({
                   inputId="project-url"
                   inputName="Document Link"
                   inputType="url"
-                  inputPlaceholder="Paste the document’s shareable link here"
+                  inputPlaceholder="Paste the documentâ€™s shareable link here"
                   value={formData.projectURL}
                   onInputChange={handleInputChange("projectURL")}
                   characterLength={1000}

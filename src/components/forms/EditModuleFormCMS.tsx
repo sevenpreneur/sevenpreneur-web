@@ -118,7 +118,7 @@ export default function EditModuleFormCMS({
     setIsSubmitting(true);
 
     if (!formData.moduleName) {
-      toast.error("Let’s give this document a proper title before saving.");
+      toast.error("Letâ€™s give this document a proper title before saving.");
       setIsSubmitting(false);
       return;
     }
@@ -231,7 +231,7 @@ export default function EditModuleFormCMS({
                 <div className="flex flex-col">
                   <h3 className="font-bold ">Upload Document</h3>
                   <p className=" font-medium text-sm text-emphasis">
-                    Choose how you’d like to add the document
+                    Choose how youâ€™d like to add the document
                   </p>
                 </div>
                 <div className="flex flex-col gap-3">
@@ -255,7 +255,7 @@ export default function EditModuleFormCMS({
                     inputId="learning-name"
                     inputName="Document Link"
                     inputType="url"
-                    inputPlaceholder="Paste the document’s shareable link here"
+                    inputPlaceholder="Paste the documentâ€™s shareable link here"
                     value={formData.moduleURL}
                     onInputChange={handleInputChange("moduleURL")}
                     characterLength={1000}
