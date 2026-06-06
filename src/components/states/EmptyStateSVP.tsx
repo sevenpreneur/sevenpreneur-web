@@ -62,10 +62,10 @@ export default function EmptyStateSVP(props: EmptyStateSVPProps) {
           />
         </div>
         <div className="state-text flex flex-col gap-2 items-center">
-          <h2 className="state-title flex font-bold font-bodycopy text-center tracking-tight text-2xl dark:text-sevenpreneur-white">
+          <h2 className="state-title flex font-bold  text-center tracking-tight text-2xl dark:text-sevenpreneur-white">
             {title}
           </h2>
-          <p className="state-description font-bodycopy text-center font-medium text-emphasis dark:text-foreground">
+          <p className="state-description  text-center font-medium text-emphasis dark:text-foreground">
             {message}
           </p>
         </div>

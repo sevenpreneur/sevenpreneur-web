@@ -10,7 +10,7 @@ export default function ContentEventRestart25() {
         <div className="container flex flex-col py-8 px-8 gap-9 items-center z-20 lg:pt-16 lg:pb-16 lg:gap-[60px]">
           {/* Sponsor */}
           <div className="flex flex-col items-center gap-2">
-            <h3 className="section-title text-white/70 text-sm font-bold font-brand tracking-[0.2em]">
+            <h3 className="section-title text-white/70 text-sm font-bold font-mona-sans tracking-[0.2em]">
               {"Sponsored by".toUpperCase()}
             </h3>
             <div className="sponsor-logo flex gap-3.5 items-center">
@@ -87,7 +87,7 @@ export default function ContentEventRestart25() {
           {/* Main Topics */}
           <div className="about-event flex flex-col gap-3 items-center lg:gap-5">
             <SectionTitleRestart25 sectionTitle="Main Topic" />
-            <p className="quotes font-bodycopy font-medium text-sm text-center text-white/90 max-w-[500px] lg:text-xl lg:max-w-[760px]">
+            <p className="quotes  font-medium text-sm text-center text-white/90 max-w-[500px] lg:text-xl lg:max-w-[760px]">
               <span className="font-bold">“RE:START”</span> represents founders
               who don’t just chase trends, but architect businesses that thrive
               in the age of AI, automation, and constant disruption. While many

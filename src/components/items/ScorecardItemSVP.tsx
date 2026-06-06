@@ -66,11 +66,11 @@ export default function ScorecardItemSVP({
       className="scorecard-item flex flex-col w-[68px] transform transition-all lg:w-[98px]"
       ref={containerRef}
     >
-      <h5 className="text-white text-xl font-bodycopy font-extrabold lg:text-2xl">
+      <h5 className="text-white text-xl  font-extrabold lg:text-2xl">
         {displayedNumber.toLocaleString()}
         {isMoreValue && <span>+</span>}
       </h5>
-      <p className="text-white text-xs font-bodycopy lg:text-base">
+      <p className="text-white text-xs  lg:text-base">
         {scorecardName}
       </p>
     </div>

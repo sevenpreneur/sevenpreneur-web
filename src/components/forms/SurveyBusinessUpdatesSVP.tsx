@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 import { UpdateUserBusiness } from "@/lib/actions";
 import {
   BusinessEmployeeNumber,
@@ -190,8 +190,8 @@ export default function SurveyBusinessUpdateSVP(
         className="form-container flex flex-col w-full max-w-[768px] mx-auto items-center p-5 pb-64 gap-5"
         onSubmit={handleSubmit}
       >
-        <div className="welcoming-section flex flex-col bg-linear-to-br from-0% from-[#D2E5FC] to-40% to-white w-full gap-3 font-bodycopy p-5 border rounded-md dark:from-primary/20 dark:to-surface-black">
-          <h1 className="page-title font-brand font-bold text-2xl">
+        <div className="welcoming-section flex flex-col bg-linear-to-br from-0% from-[#D2E5FC] to-40% to-white w-full gap-3  p-5 border rounded-md dark:from-primary/20 dark:to-surface-black">
+          <h1 className="page-title font-mona-sans font-bold text-2xl">
             Business Information Update
           </h1>
           <p className="font-semibold text-[15px]">Halo, {nickname}!</p>
@@ -207,8 +207,8 @@ export default function SurveyBusinessUpdateSVP(
             pihak mana pun.
           </p>
         </div>
-        <div className="contact-section flex flex-col bg-white w-full gap-3 font-bodycopy p-5 border rounded-md dark:bg-surface-black">
-          <h2 className="section-title font-brand font-bold text-lg">
+        <div className="contact-section flex flex-col bg-white w-full gap-3  p-5 border rounded-md dark:bg-surface-black">
+          <h2 className="section-title font-mona-sans font-bold text-lg">
             Personal Information
           </h2>
           <AppInput variant="SVP"
@@ -262,7 +262,7 @@ export default function SurveyBusinessUpdateSVP(
             required
           />
           <div className="has-business flex flex-col gap-2">
-            <p className="font-bodycopy font-semibold text-sm pl-1">
+            <p className=" font-semibold text-sm pl-1">
               Apakah kamu sudah memiliki bisnis?
               <span className="label-required text-destructive">*</span>
             </p>
@@ -289,8 +289,8 @@ export default function SurveyBusinessUpdateSVP(
               : "max-h-0 opacity-0 -translate-y-3 pointer-events-none"
           }`}
         >
-          <div className="business-section flex flex-col bg-white w-full gap-3 font-bodycopy p-5 border rounded-md dark:bg-surface-black">
-            <h2 className="section-title font-brand font-bold text-lg">
+          <div className="business-section flex flex-col bg-white w-full gap-3  p-5 border rounded-md dark:bg-surface-black">
+            <h2 className="section-title font-mona-sans font-bold text-lg">
               Business Information
             </h2>
             <AppSelect variant="SVP"

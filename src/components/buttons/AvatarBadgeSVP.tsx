@@ -71,7 +71,7 @@ export default function AvatarBadgeSVP(props: AvatarBadgeSVPProps) {
           />
         </div>
         <div className="flex items-center gap-1">
-          <p className="user-name max-w-28 font-bodycopy font-semibold text-sm overflow-hidden text-ellipsis whitespace-nowrap">
+          <p className="user-name max-w-28  font-semibold text-sm overflow-hidden text-ellipsis whitespace-nowrap">
             {props.userName}
           </p>
           <ChevronDown className="dropdown-icon size-3" />

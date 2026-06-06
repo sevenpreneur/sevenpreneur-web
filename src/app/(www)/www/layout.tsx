@@ -69,7 +69,7 @@ export default async function MainLayout({ children }: MainLayoutProps) {
 
   return (
     <TRPCProvider baseURL={baseURL}>
-      <div>
+      <div className="font-plus-jakarta">
         <ThemeProvider attribute="class" defaultTheme="light">
           <HeaderSVP
             userName={userData?.full_name ?? null}

@@ -68,14 +68,14 @@ export default function ArticleDetailsMobileSVP(props: ArticleDetailsSVP) {
       <main className="page-container flex flex-col w-full pb-20 gap-6">
         <div className="title-section flex flex-col px-5 pt-5 gap-4">
           <div className="title-category flex flex-col gap-3">
-            <p className="w-fit py-1 px-4 font-bodycopy font-medium bg-[#EFEDF9] text-[#42359B] text-base dark:bg-[#1A1534] dark:text-[#958FB7] rounded-md">
+            <p className="w-fit py-1 px-4  font-medium bg-[#EFEDF9] text-[#42359B] text-base dark:bg-[#1A1534] dark:text-[#958FB7] rounded-md">
               {props.articleCategory}
             </p>
-            <h1 className="title font-bodycopy font-extrabold leading-snug text-2xl dark:text-sevenpreneur-white">
+            <h1 className="title  font-extrabold leading-snug text-2xl dark:text-sevenpreneur-white">
               {props.articleTitle}
             </h1>
           </div>
-          <p className="date-publish font-bodycopy font-medium text-[#333333] text-base dark:text-[#BCBCBC]">
+          <p className="date-publish  font-medium text-[#333333] text-base dark:text-[#BCBCBC]">
             {dayjs(props.articleDate).format("D MMMM YYYY")} ·{" "}
             {Math.round(props.articleReadingTime)} mins read
           </p>
@@ -90,7 +90,7 @@ export default function ArticleDetailsMobileSVP(props: ArticleDetailsSVP) {
                   height={300}
                 />
               </div>
-              <p className="author-name font-bodycopy font-medium text-base">
+              <p className="author-name  font-medium text-base">
                 {props.articleAuthorName}
               </p>
             </div>
@@ -115,7 +115,7 @@ export default function ArticleDetailsMobileSVP(props: ArticleDetailsSVP) {
         </div>
         <div className="body-section flex flex-col px-5 gap-4">
           <div className="insight flex flex-col w-full p-4 bg-linear-to-bl from-0% from-[#D2E5FC] to-50% to-section-background gap-4 rounded-lg border dark:from-[#0F0641] dark:to-sevenpreneur-surface-black">
-            <h3 className="w-fit font-bodycopy font-bold text-lg text-transparent bg-clip-text bg-gradient-to-r from-40% from-primary to-120% to-secondary">
+            <h3 className="w-fit  font-bold text-lg text-transparent bg-clip-text bg-gradient-to-r from-40% from-primary to-120% to-secondary">
               Ringkasan Artikel
             </h3>
             <ul className="flex flex-col gap-1 list-disc list-outside pl-4">
@@ -136,7 +136,7 @@ export default function ArticleDetailsMobileSVP(props: ArticleDetailsSVP) {
               key={post.index_order}
             >
               {post.sub_heading && (
-                <h2 className="font-bodycopy font-bold text-xl pt-1 pb-1 dark:text-sevenpreneur-white">
+                <h2 className=" font-bold text-xl pt-1 pb-1 dark:text-sevenpreneur-white">
                   {post.sub_heading}
                 </h2>
               )}
@@ -149,7 +149,7 @@ export default function ArticleDetailsMobileSVP(props: ArticleDetailsSVP) {
                     width={1200}
                     height={1200}
                   />
-                  <span className="image-description flex font-ui text-sm text-neutral-black/50">
+                  <span className="image-description flex  text-sm text-neutral-black/50">
                     {post.image_desc}
                   </span>
                 </div>

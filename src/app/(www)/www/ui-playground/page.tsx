@@ -53,7 +53,7 @@ export default async function Page() {
         </AppButton>
       </div>
       <div className="flex items-center justify-center gap-2">
-        <p className="font-bodycopy">Lorem ipsum dolor sit amet</p>
+        <p className="">Lorem ipsum dolor sit amet</p>
       </div>
       <div className="flex items-center justify-center gap-2">
         <SendTestEmailButton />

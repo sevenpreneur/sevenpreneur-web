@@ -49,7 +49,7 @@ export default function OffersBlueprintProgramSVP() {
   return (
     <div className="section-root relative flex items-center justify-center bg-black overflow-hidden">
       <div className="section-container flex flex-col w-full items-center gap-8 p-5 py-10 z-20 lg:px-0 lg:py-[60px] lg:gap-[64px] lg:max-w-[988px] xl:max-w-[1208px] 2xl:max-w-[1300px]">
-        <h2 className="section-title text-transparent w-fit bg-clip-text bg-gradient-to-r from-[#FFFFFF] to-[#B89FE0] font-brand font-bold text-center text-2xl sm:max-w-[662px] sm:text-3xl lg:max-w-[788px] lg:text-4xl">
+        <h2 className="section-title text-transparent w-fit bg-clip-text bg-gradient-to-r from-[#FFFFFF] to-[#B89FE0] font-mona-sans font-bold text-center text-2xl sm:max-w-[662px] sm:text-3xl lg:max-w-[788px] lg:text-4xl">
           Not Just a Business Class. <br /> It’s The Ecosystem for
           Entrepreneurs.
         </h2>
@@ -59,7 +59,7 @@ export default function OffersBlueprintProgramSVP() {
               className="offer-item flex w-full gap-5 z-10 lg:justify-normal lg:items-center lg:gap-16"
               key={index}
             >
-              <p className="offer-index flex items-center justify-center text-white size-6 bg-[#48363B] outline-4 outline-[#2A2A2A] rounded-full font-brand font-medium text-sm shrink-0 lg:size-10 lg:text-xl lg:outline-[6]">
+              <p className="offer-index flex items-center justify-center text-white size-6 bg-[#48363B] outline-4 outline-[#2A2A2A] rounded-full font-mona-sans font-medium text-sm shrink-0 lg:size-10 lg:text-xl lg:outline-[6]">
                 {index + 1}
               </p>
               <div className="offer-metadata flex flex-col gap-4 lg:gap-10 lg:flex-row lg:items-center">
@@ -73,14 +73,14 @@ export default function OffersBlueprintProgramSVP() {
                   />
                 </div>
                 <div className="flex flex-col gap-4 max-w-[521px] lg:max-w-none">
-                  <h4 className="offer-title font-bold font-brand text-transparent w-fit bg-clip-text bg-gradient-to-r from-[#FFFFFF] to-[#B89FE0] text-2xl sm:text-3xl lg:text-4xl">
+                  <h4 className="offer-title font-bold font-mona-sans text-transparent w-fit bg-clip-text bg-gradient-to-r from-[#FFFFFF] to-[#B89FE0] text-2xl sm:text-3xl lg:text-4xl">
                     {post.title}
                   </h4>
                   <div className="benefits flex flex-col gap-4">
                     {post.benefits.map((post, index) => (
                       <div
                         key={index}
-                        className="audience-list flex text-white text-left font-bodycopy items-center gap-3 rounded-md"
+                        className="audience-list flex text-white text-left  items-center gap-3 rounded-md"
                       >
                         <div className="audience-check flex aspect-square p-1 items-center justify-center bg-[#3417E3] rounded-full shrink-0">
                           <Check
@@ -88,7 +88,7 @@ export default function OffersBlueprintProgramSVP() {
                             className="w-3.5 h-auto lg:w-4"
                           />
                         </div>
-                        <p className="audience-item text-[15px] font-bodycopy text-white/70 sm:text-base lg:text-xl">
+                        <p className="audience-item text-[15px]  text-white/70 sm:text-base lg:text-xl">
                           {post}
                         </p>
                       </div>

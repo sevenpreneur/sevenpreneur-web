@@ -22,7 +22,7 @@ export default function HeaderNavbarItemSVP({
 
   return (
     <li
-      className={`menu-item relative flex items-center font-bodycopy text-[15px] ${
+      className={`menu-item relative flex items-center  text-[15px] ${
         isActive ? "font-bold" : "font-medium"
       }`}
     >

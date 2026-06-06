@@ -107,20 +107,20 @@ export default function CountdownTimerRestart25({
           <div className={`container flex flex-col items-center gap-1`}>
             <div className={`border-countdown ${countDownOutline}`}>
               <p
-                className={`value flex items-center justify-center aspect-square font-brand font-bold ${countDownColor} ${countDownSize}`}
+                className={`value flex items-center justify-center aspect-square font-mona-sans font-bold ${countDownColor} ${countDownSize}`}
               >
                 {post.value}
               </p>
             </div>
             {isIncludeDimension && variant !== "extra_small" && (
-              <p className="font-bodycopy text-sm lg:text-sm">
+              <p className=" text-sm lg:text-sm">
                 {post.dimensions}
               </p>
             )}
           </div>
           {index < countdownData.length - 1 && (
             <p
-              className={`font-bodycopy font-bold ${
+              className={` font-bold ${
                 variant === "default"
                   ? "text-white text-sm lg:text-base"
                   : "text-secondary text-sm"

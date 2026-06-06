@@ -25,7 +25,6 @@
 .content h4,
 .content h5,
 .content h6 {
-  font-family: var(--font-bodycopy);
   font-weight: 600;
   margin: 8px 0;
 }

@@ -51,14 +51,14 @@ export default function EventInfoSVP(props: EventInfoSVP) {
         <div className="list-info flex flex-col gap-3">
           {informations.map((post, index) => (
             <div
-              className="event-item flex gap-3 items-center font-bodycopy"
+              className="event-item flex gap-3 items-center "
               key={index}
             >
               <div className="flex aspect-square items-center justify-center shrink-0 p-2 bg-primary-soft-background text-primary-soft-foreground rounded-full overflow-hidden dark:bg-sevenpreneur-coal dark:text-foreground dark:border">
                 {post.icon}
               </div>
               <div className="flex flex-col">
-                <p className="text-[13px] text-primary font-bodycopy font-bold leading-snug tracking-widest dark:text-sevenpreneur-white">
+                <p className="text-[13px] text-primary  font-bold leading-snug tracking-widest dark:text-sevenpreneur-white">
                   {post.label}
                 </p>
                 <p className="text-[15px] font-medium leading-snug">
@@ -70,12 +70,12 @@ export default function EventInfoSVP(props: EventInfoSVP) {
         </div>
         <hr className="divider hidden border-t lg:flex" />
         <div className="add-to-cart hidden flex-col gap-3 lg:flex">
-          <div className="price-info flex flex-col font-bodycopy">
+          <div className="price-info flex flex-col ">
             <h3 className="font-bold text-xl dark:text-white">
               {getRupiahCurrency(props.eventPrice[0].amount)}
             </h3>
           </div>
-          <div className="flex flex-col items-center gap-3 font-bodycopy">
+          <div className="flex flex-col items-center gap-3 ">
             <Link
               href={`/events/${props.eventSlug}/${props.eventId}/checkout?ticketId=${props.eventPrice[0].id}`}
               className="add-to-cart-button w-full"
@@ -108,7 +108,7 @@ export default function EventInfoSVP(props: EventInfoSVP) {
                   : "Pay & Get Access"}
               </AppButton>
             </Link>
-            <div className="flex items-center font-bodycopy gap-1 text-emphasis">
+            <div className="flex items-center  gap-1 text-emphasis">
               <LockKeyhole className="size-3" />
               <p className="text-xs text-center">
                 Secure payment processed by Xendit

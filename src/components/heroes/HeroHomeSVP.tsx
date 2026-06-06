@@ -11,12 +11,12 @@ export default function HeroHomeSVP() {
       <div className="hero-container relative flex flex-col w-full items-center gap-8 py-10 px-4 z-[70] lg:flex-row lg:gap-8 lg:px-0 lg:py-32 lg:justify-between lg:max-w-[988px] xl:max-w-[1208px] 2xl:max-w-[1300px]">
         <div className="hero-content flex flex-col w-full items-center gap-[28px] lg:items-start">
           <div className="flex flex-col gap-3 items-center text-white lg:items-start ">
-            <div className="hero-title flex flex-col items-center text-center font-brand font-bold text-2xl max-w-[380px] sm:text-3xl lg:items-start lg:text-[40px] lg:text-left lg:max-w-[472px] xl:text-[52px] xl:max-w-[720px]">
+            <div className="hero-title flex flex-col items-center text-center font-mona-sans font-bold text-2xl max-w-[380px] sm:text-3xl lg:items-start lg:text-[40px] lg:text-left lg:max-w-[472px] xl:text-[52px] xl:max-w-[720px]">
               <h1 className="w-full text-transparent bg-clip-text bg-gradient-to-r from-10% from-white to-90% to-secondary">
                 Build your profitable business. <br /> Scale your next one.
               </h1>
             </div>
-            <p className="hero-description w-[317px] text-sm text-center text-white font-bodycopy lg:w-[460px] lg:text-lg lg:text-left xl:w-[518px] xl:text-xl">
+            <p className="hero-description w-[317px] text-sm text-center text-white  lg:w-[460px] lg:text-lg lg:text-left xl:w-[518px] xl:text-xl">
               Bantu kamu wujudkan bisnismu dari nol, lalu naik level dengan
               strategi yang tepat
             </p>

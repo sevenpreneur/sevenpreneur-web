@@ -6,7 +6,7 @@ export default function ScheduleBlueprintProgramSVP() {
     <div className="section-root relative flex items-center justify-center bg-black">
       <div className="batch-outline p-[1px] w-full h-full max-w-[565px] m-5 my-10 bg-gradient-to-br from-0% from-[#575757] to-100% to-[#3C3C3C] rounded-md overflow-hidden lg:max-w-[988px] xl:max-w-[1208px] 2xl:max-w-[1300px]">
         <div className="batch-container relative flex flex-col w-full h-full p-5 gap-8 rounded-md overflow-hidden lg:flex-row lg:items-center lg:justify-between lg:p-9">
-          <h2 className="batch-title text-transparent w-fit bg-clip-text bg-gradient-to-r from-[#FFFFFF] to-[#B89FE0] font-brand font-bold text-2xl z-10 sm:text-3xl xl:text-4xl">
+          <h2 className="batch-title text-transparent w-fit bg-clip-text bg-gradient-to-r from-[#FFFFFF] to-[#B89FE0] font-mona-sans font-bold text-2xl z-10 sm:text-3xl xl:text-4xl">
             Program Schedule
             <br />
             Batch 8
@@ -15,15 +15,15 @@ export default function ScheduleBlueprintProgramSVP() {
           <div className="schedule-group flex flex-col gap-6 z-10 lg:flex-row lg:bg-white lg:p-7 lg:gap-9 lg:rounded-md">
             <div className="schedule-item flex flex-col gap-3">
               <div className="flex flex-col">
-                <p className="session-schedule text-secondary font-bold font-brand">
+                <p className="session-schedule text-secondary font-bold font-mona-sans">
                   ONLINE
                 </p>
-                <p className="session-date text-white font-bold font-brand text-[22px] lg:text-black">
+                <p className="session-date text-white font-bold font-mona-sans text-[22px] lg:text-black">
                   27 APR - 17 MAY 2026
                 </p>
               </div>
               <div className="hidden border-b border-dashed lg:flex" />
-              <div className="schedule flex font-bodycopy gap-8 text-white lg:text-black">
+              <div className="schedule flex  gap-8 text-white lg:text-black">
                 <div className="day-schedule flex flex-col gap-1 w-fit text-[15px] lg:text-base">
                   <p className="font-bold">Day</p>
                   <div className="font-medium">
@@ -43,15 +43,15 @@ export default function ScheduleBlueprintProgramSVP() {
 
             <div className="schedule-item flex flex-col gap-3">
               <div className="flex flex-col">
-                <p className="session-schedule text-secondary font-bold font-brand ">
+                <p className="session-schedule text-secondary font-bold font-mona-sans ">
                   OFFLINE
                 </p>
-                <p className="session-date font-bold font-brand text-[22px] text-white lg:text-black">
+                <p className="session-date font-bold font-mona-sans text-[22px] text-white lg:text-black">
                   17 MAY 2026
                 </p>
               </div>
               <div className="hidden border-b border-dashed lg:flex" />
-              <div className="schedule flex font-bodycopy gap-8 text-white lg:text-black">
+              <div className="schedule flex  gap-8 text-white lg:text-black">
                 <div className="day-schedule flex flex-col gap-1 w-fit text-[15px] lg:text-base">
                   <p className="font-bold">Days</p>
                   <div className="font-medium">

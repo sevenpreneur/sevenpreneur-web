@@ -45,10 +45,10 @@ export default function StartQuizModal({
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex flex-col gap-1">
-          <h2 className="font-bodycopy font-bold text-lg text-sevenpreneur-coal dark:text-white">
+          <h2 className=" font-bold text-lg text-sevenpreneur-coal dark:text-white">
             Siap mulai quiz?
           </h2>
-          <p className="font-bodycopy text-sm text-emphasis">
+          <p className=" text-sm text-emphasis">
             Pastikan kamu sudah membaca materi sebelum memulai.
           </p>
         </div>
@@ -56,25 +56,25 @@ export default function StartQuizModal({
         <div className="flex flex-col gap-2">
           <div className="flex items-center gap-3 px-4 py-2.5 rounded-lg bg-section-background">
             <BookOpen className="size-4 text-primary shrink-0" />
-            <span className="font-bodycopy text-sm text-sevenpreneur-coal dark:text-white">
+            <span className=" text-sm text-sevenpreneur-coal dark:text-white">
               {quizCount} soal pilihan ganda
             </span>
           </div>
           <div className="flex items-center gap-3 px-4 py-2.5 rounded-lg bg-section-background">
             <Clock className="size-4 text-amber-500 shrink-0" />
-            <span className="font-bodycopy text-sm text-sevenpreneur-coal dark:text-white">
+            <span className=" text-sm text-sevenpreneur-coal dark:text-white">
               2 menit per soal
             </span>
           </div>
           <div className="flex items-center gap-3 px-4 py-2.5 rounded-lg bg-section-background">
             <Target className="size-4 text-primary shrink-0" />
-            <span className="font-bodycopy text-sm text-sevenpreneur-coal dark:text-white">
+            <span className=" text-sm text-sevenpreneur-coal dark:text-white">
               Nilai minimum 70% untuk lulus
             </span>
           </div>
           <div className="flex items-center gap-3 px-4 py-2.5 rounded-lg bg-section-background">
             <Zap className="size-4 text-warning shrink-0" />
-            <span className="font-bodycopy text-sm text-sevenpreneur-coal dark:text-white">
+            <span className=" text-sm text-sevenpreneur-coal dark:text-white">
               +{xpReward} XP jika lulus · Tidak bisa diulang
             </span>
           </div>

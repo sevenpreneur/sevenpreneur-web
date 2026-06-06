@@ -11,10 +11,10 @@ export default function BannerEventRestart25() {
         <div className="banner-event relative flex flex-col justify-center gap-5 p-5 max-w-[520px] bg-primary aspect-mobile-banner rounded-md overflow-hidden lg:pl-8 lg:w-[840px] lg:aspect-desktop-banner lg:max-w-[840px]">
           {/* Content */}
           <div className="flex flex-col text-white gap-1 z-20">
-            <h3 className="font-bold font-brand text-xl lg:text-2xl">
+            <h3 className="font-bold font-mona-sans text-xl lg:text-2xl">
               Having trouble??
             </h3>
-            <p className="font-bodycopy text-sm lg:text-xl">
+            <p className=" text-sm lg:text-xl">
               No worries — if you hit a snag while booking, we`re here to help!
             </p>
           </div>

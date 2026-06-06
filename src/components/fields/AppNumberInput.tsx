@@ -29,7 +29,7 @@ const variantStyles: Record<
     background: "bg-transparent",
     disabled:
       "bg-gray-100 text-gray-500  dark:bg-[#1F1F1F] dark:text-[#555555]",
-    font: "font-bodycopy",
+    font: "",
   },
   LMS: {
     focus: "focus:outline-tertiary/15 focus:border-tertiary",

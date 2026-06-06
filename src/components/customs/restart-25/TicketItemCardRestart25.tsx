@@ -82,7 +82,7 @@ export default function TicketItemCardRestart25({
           {/* Tiket Metadata */}
           <div className="metadata-ticket text-black flex flex-col items-center gap-1 px-3">
             <div className="type-ticket flex items-center gap-1.5">
-              <h3 className="font-brand font-bold text-center text-2xl lg:text-[28px]">
+              <h3 className="font-mona-sans font-bold text-center text-2xl lg:text-[28px]">
                 {ticketName}
               </h3>
               {isPremium && (
@@ -97,7 +97,7 @@ export default function TicketItemCardRestart25({
                 />
               )}
             </div>
-            <p className="tagline-ticket font-bodycopy font-semibold text-sm lg:text-base">
+            <p className="tagline-ticket  font-semibold text-sm lg:text-base">
               {ticketTagline}
             </p>
             <CountdownTimerRestart25
@@ -108,7 +108,7 @@ export default function TicketItemCardRestart25({
           </div>
 
           {/* Pricing */}
-          <div className="pricing flex flex-col gap-1 items-center font-bodycopy text-black">
+          <div className="pricing flex flex-col gap-1 items-center  text-black">
             {ticketBasePrice !== 0 && (
               <div className="discount flex items-center gap-2">
                 <p className="bg-primary font-bold text-white text-[10px] px-1 py-0.5 rounded-sm lg:text-xs">
@@ -135,7 +135,7 @@ export default function TicketItemCardRestart25({
           </div>
 
           {/* Benefit */}
-          <div className="benefit flex flex-col pl-6 font-bodycopy text-xs text-black gap-1 lg:text-sm">
+          <div className="benefit flex flex-col pl-6  text-xs text-black gap-1 lg:text-sm">
             <p className="font-bold">What You’ll Enjoy</p>
             <div className="benefit-items flex flex-col gap-0.5">
               {ticketBenefit.map((post, index) => (

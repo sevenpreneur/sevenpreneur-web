@@ -34,7 +34,6 @@ export type SizeType =
   | "smallIconRounded"
   | "mediumIcon"
   | "largeIconRounded";
-export type FontType = "brand" | "bodycopy" | "ui";
 
 interface AppButtonProps
   extends
@@ -44,7 +43,6 @@ interface AppButtonProps
   children: React.ReactNode;
   variant?: VariantType;
   size?: SizeType;
-  font?: FontType;
 }
 
 // Use forwardRef for pass ref component. forwardRef cant directly use with 'export default function'
@@ -55,7 +53,7 @@ const AppButton = forwardRef<HTMLButtonElement, AppButtonProps>(
       children,
       variant = "primary",
       size = "default",
-      font,
+
       disabled = false,
       className,
       featureName,
@@ -141,17 +139,10 @@ const AppButton = forwardRef<HTMLButtonElement, AppButtonProps>(
       largeIconRounded: "size-10 rounded-full",
     };
 
-    const fontClasses: Record<FontType, string> = {
-      brand: "font-brand",
-      bodycopy: "font-bodycopy",
-      ui: "font-ui",
-    };
-
     const finalClasses = [
       baseClasses,
       variantClasses[variant],
       sizeClasses[size],
-      font ? fontClasses[font] : undefined,
       className,
     ].join(" ");
 

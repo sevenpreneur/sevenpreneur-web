@@ -24,7 +24,7 @@ export default function AnnouncementTickerSVP({
       href={tickerTargetURL}
       className="announcement-ticker relative w-full h-10 bg-[#DEEBFF] flex items-center overflow-hidden dark:bg-[#09003E]"
     >
-      <div className="announcement-track flex gap-5 text-sm font-brand font-[350px] whitespace-nowrap z-10">
+      <div className="announcement-track flex gap-5 text-sm font-mona-sans font-[350px] whitespace-nowrap z-10">
         {loopedMessages.map((post, index) => (
           <div
             key={index}

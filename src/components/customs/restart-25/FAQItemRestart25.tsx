@@ -22,7 +22,7 @@ export default function FAQItemRestart25({
         onClick={handleOpen}
       >
         <div className="question flex text-white justify-between items-center">
-          <p className="font-semibold font-bodycopy text-sm lg:text-lg">
+          <p className="font-semibold  text-sm lg:text-lg">
             {questions}
           </p>
           <div className="flex aspect-square size-6 items-center justify-center">
@@ -38,7 +38,7 @@ export default function FAQItemRestart25({
             isOpen ? "max-h-[500px] opacity-100 mt-2" : "max-h-0 opacity-0"
           }`}
         >
-          <p className="text-white/50 text-sm font-bodycopy lg:text-lg">
+          <p className="text-white/50 text-sm  lg:text-lg">
             {answer}
           </p>
         </div>

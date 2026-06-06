@@ -31,19 +31,19 @@ export default function AuthLoginSVP() {
           </div>
           {/* Quotes Desktop */}
           <div className="quotes hidden lg:flex lg:absolute lg:w-max lg:top-1/2 lg:-translate-y-1/2 lg:left-1/2 lg:-translate-x-1/2">
-            <p className="p-2 text-center text-4xl font-brand font-bold text-transparent bg-clip-text bg-gradient-to-br from-0% from-white/90 to-[140%] to-[#3417E3]">
+            <p className="p-2 text-center text-4xl font-mona-sans font-bold text-transparent bg-clip-text bg-gradient-to-br from-0% from-white/90 to-[140%] to-[#3417E3]">
               Tools for{" "}
-              <span className="font-bodycopy italic underline decoration-[#7463DF]">
+              <span className=" italic underline decoration-[#7463DF]">
                 scaling
               </span>
               <br />
               Frameworks for{" "}
-              <span className="font-bodycopy italic underline decoration-[#7463DF]">
+              <span className=" italic underline decoration-[#7463DF]">
                 thinking
               </span>
               <br />
               Space for{" "}
-              <span className="font-bodycopy italic underline decoration-[#7463DF]">
+              <span className=" italic underline decoration-[#7463DF]">
                 becoming
               </span>
             </p>

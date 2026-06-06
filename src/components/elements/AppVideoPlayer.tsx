@@ -76,7 +76,7 @@ export default function AppVideoPlayer(props: AppVideoPlayerProps) {
   if (!signedToken || hasError) {
     return (
       <div className="flex w-full aspect-video items-center justify-center bg-black">
-        <p className="font-bodycopy text-white text-sm lg:text-base">
+        <p className=" text-white text-sm lg:text-base">
           Video unavailable. Please refresh the page.
         </p>
       </div>

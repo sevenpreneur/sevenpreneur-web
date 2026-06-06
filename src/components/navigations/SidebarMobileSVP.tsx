@@ -2,12 +2,12 @@
 import { DeleteSession } from "@/lib/actions";
 import {
   Briefcase,
+  BrainCircuit,
   Compass,
   HouseIcon,
   LayoutDashboard,
   LayoutList,
   LogOut,
-  Mic2,
   PlayCircle,
   Users,
   Wallet,
@@ -62,10 +62,10 @@ export default function SidebarMobileSVP(props: SidebarMobileSVPProps) {
       onClick={props.onClose}
     >
       <div
-        className={`side-menu-container fixed flex flex-col w-3/4 h-full inset-y-0 left-0 gap-4 bg-white/90 backdrop-blur-md transition transform ease-in-out dark:bg-black/60 sm:max-w-md`}
+        className={`side-menu-container fixed flex flex-col w-3/4 h-full inset-y-0 left-0 gap-4 bg-white/90 backdrop-blur-md transition transform ease-in-out overflow-hidden dark:bg-black/60 sm:max-w-md`}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="side-menu-box relative flex flex-col w-full h-full p-5 gap-5 justify-center">
+        <div className="side-menu-box relative flex flex-col w-full h-full p-5 gap-5 justify-start overflow-y-auto overscroll-contain">
           {props.isLoggedIn ? (
             <div className="user-informations flex w-full min-h-[64px] items-center gap-2 p-3 border bg-white rounded-lg overflow-hidden dark:bg-surface-black">
               <div className="user-avatar aspect-square size-9 shrink-0 rounded-full overflow-hidden">
@@ -78,10 +78,10 @@ export default function SidebarMobileSVP(props: SidebarMobileSVPProps) {
                 />
               </div>
               <div className="flex flex-col">
-                <p className="user-name font-bodycopy text-sevenpreneur-surface-black font-semibold text-[15px] line-clamp-1 leading-snug">
+                <p className="user-name text-sevenpreneur-surface-black font-semibold text-[15px] line-clamp-1 leading-snug">
                   {props.userName}
                 </p>
-                <p className="user-email font-bodycopy font-medium text-sm text-emphasis line-clamp-1 leading-snug">
+                <p className="user-email font-medium text-sm text-emphasis line-clamp-1 leading-snug">
                   {props.userEmail}
                 </p>
               </div>
@@ -106,10 +106,10 @@ export default function SidebarMobileSVP(props: SidebarMobileSVPProps) {
                   />
                 </div>
                 <div className="flex flex-col text-sevenpreneur-surface-black">
-                  <p className="login-title font-bodycopy font-semibold text-[15px] line-clamp-1 leading-snug">
+                  <p className="login-title font-semibold text-[15px] line-clamp-1 leading-snug">
                     Login to your account
                   </p>
-                  <p className="login-subtitle font-bodycopy font-medium text-sm line-clamp-1 leading-snug">
+                  <p className="login-subtitle font-medium text-sm line-clamp-1 leading-snug">
                     Explore more features
                   </p>
                 </div>
@@ -125,35 +125,33 @@ export default function SidebarMobileSVP(props: SidebarMobileSVPProps) {
             />
             <hr className="border-t" />
 
-            {/* Learning Programs group */}
-            <p className="font-bodycopy font-bold text-[11px] tracking-[0.15em] uppercase text-emphasis dark:text-white/50 mt-1">
-              Learning Programs
-            </p>
             <SidebarMenuItemMobileSVP
-              menuName="Sevenpreneur Business Blueprint Program"
+              menuName="Business Blueprint Program"
               menuIcon={<Compass className="size-5" />}
               menuURL="/cohorts/sevenpreneur-business-blueprint-program"
               onClick={props.onClose}
             />
+            <hr className="border-t" />
             <SidebarMenuItemMobileSVP
               menuName="RE:START Conference"
-              menuIcon={<Mic2 className="size-5" />}
+              menuIcon={<BrainCircuit className="size-5" />}
               menuURL="/events/restart-conference"
               onClick={props.onClose}
             />
+            <hr className="border-t" />
             <SidebarMenuItemMobileSVP
               menuName="Video Series"
               menuIcon={<PlayCircle className="size-5" />}
               menuURL="/playlists/restart-conference-2025/1"
               onClick={props.onClose}
             />
+            <hr className="border-t" />
             <SidebarMenuItemMobileSVP
               menuName="Community Events"
               menuIcon={<Users className="size-5" />}
               menuURL="/events/spill-your-bizz-iftar-meet-2026/5"
               onClick={props.onClose}
             />
-
             <hr className="border-t" />
             <SidebarMenuItemMobileSVP
               menuName="Corporate Training"

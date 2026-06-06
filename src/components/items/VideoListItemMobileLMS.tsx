@@ -28,7 +28,7 @@ export default function VideoListItemMobileLMS(
           width={500}
           height={500}
         />
-        <p className="video-duration absolute bottom-1 right-1 p-1 bg-black/60 text-white text-[10px] font-ui rounded-sm z-20">
+        <p className="video-duration absolute bottom-1 right-1 p-1 bg-black/60 text-white text-[10px] font-inter rounded-sm z-20">
           {getDurationFromSeconds(props.videoDuration)}
         </p>
         {props.isLoading && (
@@ -38,7 +38,7 @@ export default function VideoListItemMobileLMS(
           </div>
         )}
       </div>
-      <div className="video-attributes flex flex-col font-ui">
+      <div className="video-attributes flex flex-col font-inter">
         <p className="video-episode font-medium text-sm text-emphasis">
           EPISODE {props.index}
         </p>

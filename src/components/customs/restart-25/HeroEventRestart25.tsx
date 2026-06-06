@@ -31,7 +31,7 @@ export default function HeroEventRestart25() {
               height={500}
             />
             <div className="flex items-center gap-2">
-              <p className="font-medium font-bodycopy text-white text-xs lg:text-xl">
+              <p className="font-medium  text-white text-xs lg:text-xl">
                 Powered by
               </p>
               <Image
@@ -45,7 +45,7 @@ export default function HeroEventRestart25() {
               />
             </div>
           </div>
-          <div className="flex flex-col gap-2 items-center font-bodycopy text-white text-center lg:items-start lg:text-left">
+          <div className="flex flex-col gap-2 items-center  text-white text-center lg:items-start lg:text-left">
             {/* Event Title */}
             <h1 className="font-bold text-xl max-w-[280px] lg:text-[32px] lg:max-w-[472px] xl:text-[38px] xl:max-w-[612px]">
               A conference for founders stepping into next big move

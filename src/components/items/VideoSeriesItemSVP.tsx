@@ -20,11 +20,11 @@ export default function VideoSeriesItemSVP(props: VideoSeriesItemSVPProps) {
           width={500}
           height={500}
         />
-        <p className="absolute bottom-1 right-1 p-1 bg-sevenpreneur-coal/60 text-sevenpreneur-white text-[10px] font-bodycopy rounded-sm z-20">
+        <p className="absolute bottom-1 right-1 p-1 bg-sevenpreneur-coal/60 text-sevenpreneur-white text-[10px]  rounded-sm z-20">
           {getDurationFromSeconds(props.videoDuration)}
         </p>
       </div>
-      <div className="flex flex-col font-bodycopy lg:max-w-[440px] lg:gap-1">
+      <div className="flex flex-col  lg:max-w-[440px] lg:gap-1">
         <p className="font-medium text-xs text-emphasis">
           EPISODE {props.index}
         </p>

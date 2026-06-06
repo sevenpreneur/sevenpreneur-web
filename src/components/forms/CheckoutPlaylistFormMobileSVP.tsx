@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 import { MakePaymentPlaylistXendit } from "@/lib/actions";
 import { setSessionToken } from "@/trpc/client";
 import { ProductCategory } from "@/lib/app-types";
@@ -254,7 +254,7 @@ export default function CheckoutPlaylistFormMobileSVP({
                 width={400}
               />
             </div>
-            <div className="flex flex-col font-bodycopy max-w-[calc(100%-4rem-0.75rem)]">
+            <div className="flex flex-col  max-w-[calc(100%-4rem-0.75rem)]">
               <p className="font-bold line-clamp-1">{playlistName || "-"}</p>
               <p className="text-emphasis text-sm font-medium line-clamp-2">
                 {`Learning Series - ${playlistTotalVideo} episodes`}
@@ -263,7 +263,7 @@ export default function CheckoutPlaylistFormMobileSVP({
           </div>
           {/* Personal Information */}
           <div className="payment-method flex flex-col gap-3 bg-white p-5 dark:bg-coal-black">
-            <h2 className="font-bodycopy font-bold">Personal Information</h2>
+            <h2 className=" font-bold">Personal Information</h2>
             <div className="flex flex-col gap-3">
               <AppInput
                 variant="SVP"
@@ -301,7 +301,7 @@ export default function CheckoutPlaylistFormMobileSVP({
 
           {!isFreeCharge && (
             <div className="payment-method flex flex-col gap-3 bg-white p-5 dark:bg-coal-black">
-              <h1 className="font-bodycopy font-bold">Payment Method</h1>
+              <h1 className=" font-bold">Payment Method</h1>
               <div className="flex flex-col gap-5">
                 <PaymentChannelGroupSVP
                   groupPaymentName="Instant Payment"
@@ -406,7 +406,7 @@ export default function CheckoutPlaylistFormMobileSVP({
             )}
           </div>
           <div className="payment-details flex flex-col gap-2 bg-white p-5 dark:bg-coal-black">
-            <h1 className="font-bodycopy font-bold">Payment Details</h1>
+            <h1 className=" font-bold">Payment Details</h1>
             <div className="calculation-price flex flex-col gap-2">
               <ReceiptLineItemSVP
                 receiptName="Payment Method"
@@ -480,7 +480,7 @@ export default function CheckoutPlaylistFormMobileSVP({
                 height={100}
               />
             </div>
-            <p className="font-bodycopy text-xs text-emphasis">
+            <p className=" text-xs text-emphasis">
               Payment is securely processed with advanced encryption. Powered by{" "}
               {""}
               <a href="https://www.xendit.co/id/" className="font-bold">
@@ -493,7 +493,7 @@ export default function CheckoutPlaylistFormMobileSVP({
 
         {/* Floating CTA */}
         <div className="floating-cta fixed flex bg-white bottom-0 left-0 w-full justify-between p-5 border-t/50 z-40 dark:bg-surface-black">
-          <div className="flex flex-col font-bodycopy">
+          <div className="flex flex-col ">
             <p className="text-sm">Total Amount</p>
             <p className="font-bold">
               {isFreeCharge

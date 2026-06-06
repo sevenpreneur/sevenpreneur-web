@@ -65,16 +65,16 @@ export default function PriceItemBlueprintProgramSVP(
     >
       <div className="price-container flex flex-col w-[312px] h-full aspect-[360/956] p-8 items-center gap-4 bg-gradient-to-b from-0% from-[#554A94] via-40% via-[#432EBA] to-100% to-[#0D063A] rounded-lg lg:w-[360px] lg:aspect-[360/872]">
         <div className="price-title flex items-center justify-center gap-3 w-full">
-          <h3 className="font-bold font-brand text-white text-2xl">
+          <h3 className="font-bold font-mona-sans text-white text-2xl">
             {props.batch}
           </h3>
           {props.priceLabel}
         </div>
         <div className="divider w-full h-0.5 shrink-0 bg-gradient-to-r from-0% from-white/0 via-50% via-white to-100% to-white/0" />
-        <p className="price-description font-bodycopy text-white text-[15px] text-center leading-tight">
+        <p className="price-description  text-white text-[15px] text-center leading-tight">
           {props.priceDescription}
         </p>
-        <div className="price-discount flex items-center gap-2 font-brand text-white">
+        <div className="price-discount flex items-center gap-2 font-mona-sans text-white">
           <p className="discount-rate bg-secondary font-bold text-xs px-1 py-0.5 rounded-sm lg:text-sm">
             {Math.round(100 - (props.priceAmount / props.priceAnchor) * 100)}%
             OFF
@@ -88,7 +88,7 @@ export default function PriceItemBlueprintProgramSVP(
           </div>
         </div>
         <AppCountdownTimerDaily targetDateTime={targetTimeCountdown} />
-        <div className="price-amount flex items-center gap-0.5 font-brand text-white">
+        <div className="price-amount flex items-center gap-0.5 font-mona-sans text-white">
           <p className="font-bold text-lg">Rp</p>
           <p className="font-bold text-4xl">
             {props.priceAmount.toLocaleString("id-ID")}
@@ -159,7 +159,7 @@ export default function PriceItemBlueprintProgramSVP(
           </a>
         </div>
         <div className="benefits flex flex-col gap-1.5 w-full text-white">
-          <h4 className="font-bodycopy font-extrabold text-[15px]">
+          <h4 className=" font-extrabold text-[15px]">
             {props.isPriority
               ? "Everything in the Regular Plan plus:"
               : "Get started with:"}
@@ -173,14 +173,14 @@ export default function PriceItemBlueprintProgramSVP(
                 <div className="benefit-check flex my-1 bg-[#018D44] rounded-[2px] shrink-0">
                   <Check color="#AFEB29" size={14} className="p-0.5" />
                 </div>
-                <p className="benefit-value font-bodycopy text-xs leading-snug lg:text-sm">
+                <p className="benefit-value  text-xs leading-snug lg:text-sm">
                   {benefit}
                 </p>
               </div>
             ))}
           </div>
         </div>
-        <p className="price-installment w-full bg-black/40 p-2 border border-white/20 font-bodycopy text-white/75 text-xs text-center leading-tight rounded-md">
+        <p className="price-installment w-full bg-black/40 p-2 border border-white/20  text-white/75 text-xs text-center leading-tight rounded-md">
           Dapatkan opsi pembayaran dengan skema cicilan. Hubungi{" "}
           <a
             href="https://wa.me/6282312492067?text=Hi%20Kak,%20saya%20tertarik%20dengan%20skema%20cicilan%20pembayaran%20Program%20Sevenpreneur%20Business%20Blueprint%20Program%20Batch%20%238"
@@ -196,7 +196,7 @@ export default function PriceItemBlueprintProgramSVP(
 
       {/* Badge Priority */}
       {props.isPriority && (
-        <p className="badge-priority absolute -top-3 left-1/2 -translate-x-1/2 px-6 py-1.5 bg-secondary font-brand font-bold text-xs text-white tracking-[3px] truncate rounded-full">
+        <p className="badge-priority absolute -top-3 left-1/2 -translate-x-1/2 px-6 py-1.5 bg-secondary font-mona-sans font-bold text-xs text-white tracking-[3px] truncate rounded-full">
           SWEET SPOT
         </p>
       )}

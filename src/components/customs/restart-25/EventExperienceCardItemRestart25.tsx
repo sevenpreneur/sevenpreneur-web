@@ -37,17 +37,17 @@ export default function EventExperienceCardItemRestart25({
               width={40}
               height={40}
             />
-            <p className="font-bodycopy font-bold text-sm text-[#D99E00]">
+            <p className=" font-bold text-sm text-[#D99E00]">
               VIP ONLY
             </p>
           </div>
         )}
       </div>
       <div className="flex flex-col text-white gap-1">
-        <h2 className="font-brand font-bold leading-[1] text-lg lg:text-xl">
+        <h2 className="font-mona-sans font-bold leading-[1] text-lg lg:text-xl">
           {experienceName}
         </h2>
-        <p className="font-bodycopy font-medium text-white/65 text-sm lg:text-base">
+        <p className=" font-medium text-white/65 text-sm lg:text-base">
           {experienceDescription}
         </p>
       </div>

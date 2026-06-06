@@ -29,7 +29,7 @@ export default function MarqueeCorporateAITrainingSVP() {
 
   return (
     <div className="section-root relative flex flex-col items-center justify-center bg-black border-y border-white/5 overflow-hidden py-10 lg:py-14">
-      <p className="font-bodycopy text-center text-[11px] font-medium uppercase tracking-[0.25em] text-white/60 mb-8 px-4 lg:text-xs">
+      <p className=" text-center text-[11px] font-medium uppercase tracking-[0.25em] text-white/60 mb-8 px-4 lg:text-xs">
         Tools terdepan untuk transformasi bisnis
       </p>
       <div

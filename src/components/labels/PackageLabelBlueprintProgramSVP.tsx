@@ -58,7 +58,7 @@ export default function PackageLabelBlueprintProgramSVP({
         )}
 
         <p
-          className={`label-name font-brand font-bold text-white  ${
+          className={`label-name font-mona-sans font-bold text-white  ${
             smallSize ? "text-xs lg:text-sm" : "text-base lg:text-xl"
           }`}
         >

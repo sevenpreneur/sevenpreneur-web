@@ -17,17 +17,17 @@ import Script from "next/script";
 import { ReactNode } from "react";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
-  variable: "--font-plus-jakarta-sans",
+  variable: "--font-plus-jakarta-source",
   subsets: ["latin"],
 });
 
 const monaSans = Mona_Sans({
-  variable: "--font-mona-sans",
+  variable: "--font-mona-sans-source",
   subsets: ["latin"],
 });
 
 const inter = Inter({
-  variable: "--font-inter",
+  variable: "--font-inter-source",
   subsets: ["latin"],
 });
 

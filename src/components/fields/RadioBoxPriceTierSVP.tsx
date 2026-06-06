@@ -26,7 +26,7 @@ export default function RadioBoxPriceTierSVP({
         isSelected ? "bg-[#F2F8FF] border-primary" : "bg-white"
       } `}
     >
-      <div className="flex flex-col font-ui text-sm">
+      <div className="flex flex-col  text-sm">
         <div className="flex flex-col">
           <p
             className={`font-bold ${

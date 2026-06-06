@@ -22,7 +22,7 @@ export default function ProductItemHomeSVP(props: ProductItemHomeSVPProps) {
         />
         {!props.productPath && (
           <div
-            className="absolute right-3 top-3 py-[2px] px-[10px] text-sm text-white font-bodycopy font-medium rounded-full"
+            className="absolute right-3 top-3 py-[2px] px-[10px] text-sm text-white  font-medium rounded-full"
             style={{
               backgroundImage:
                 "linear-gradient(to right, rgb(37, 98, 231) 0%, rgb(110, 0, 255) 100%)",
@@ -34,10 +34,10 @@ export default function ProductItemHomeSVP(props: ProductItemHomeSVPProps) {
       </div>
       <div className="metadata flex flex-col flex-1 px-2 gap-2">
         <div className="flex flex-col gap-2">
-          <h3 className="product-name font-bodycopy font-bold text-xl lg:text-2xl text-white">
+          <h3 className="product-name  font-bold text-xl lg:text-2xl text-white">
             {props.productName}
           </h3>
-          <p className="product-description font-bodycopy text-[15px] text-sevenpreneur-dust">
+          <p className="product-description  text-[15px] text-sevenpreneur-dust">
             {props.productDesc}
           </p>
         </div>
@@ -46,7 +46,7 @@ export default function ProductItemHomeSVP(props: ProductItemHomeSVPProps) {
             href={props.productPath}
             className="product-path flex mt-auto items-center gap-1 text-[15px] text-primary hover:text-[#0759D3]"
           >
-            <p className="font-bodycopy font-medium duration-100 transform transition">
+            <p className=" font-medium duration-100 transform transition">
               View Details
             </p>
             <ArrowRight className="size-5" />

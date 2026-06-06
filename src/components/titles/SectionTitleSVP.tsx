@@ -12,7 +12,7 @@ export default function SectionTitleSVP({
   return (
     <div className="section-title-group flex flex-col gap-2">
       <div className="section-title-container flex flex-col">
-        <h2 className="section-title font-brand text-black font-bold text-xl dark:text-white lg:text-[21px]">
+        <h2 className="section-title font-mona-sans text-black font-bold text-xl dark:text-white lg:text-[21px]">
           {sectionTitle}
         </h2>
         {sectionDescription && (

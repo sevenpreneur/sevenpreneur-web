@@ -85,7 +85,7 @@ export default function ArticleListSVP(props: ArticleListSVPProps) {
             </div>
           </Link>
           <div className="aside-articles flex flex-col flex-1 w-full gap-4 py-4">
-            <h2 className="w-fit font-bodycopy font-bold text-xl text-transparent bg-clip-text bg-gradient-to-r from-40% from-primary to-120% to-secondary">
+            <h2 className="w-fit  font-bold text-xl text-transparent bg-clip-text bg-gradient-to-r from-40% from-primary to-120% to-secondary">
               Headline News
             </h2>
             <div className="article-list flex flex-col gap-5">
@@ -104,14 +104,14 @@ export default function ArticleListSVP(props: ArticleListSVPProps) {
                       height={160}
                     />
                   </div>
-                  <div className="attributes flex flex-col font-bodycopy w-full pr-4">
+                  <div className="attributes flex flex-col  w-full pr-4">
                     <p className="category text-sm font-semibold text-primary">
                       {post.category.name}
                     </p>
                     <p className="title font-bold text-base line-clamp-2 leading-snug lg:hover:underline lg:hover:underline-offset-3 dark:text-white">
                       {post.title}
                     </p>
-                    <p className="timestamp font-bodycopy text-emphasis text-sm dark:text-foreground">
+                    <p className="timestamp  text-emphasis text-sm dark:text-foreground">
                       {dayjs(post.published_at).fromNow()}
                     </p>
                   </div>
@@ -138,10 +138,10 @@ export default function ArticleListSVP(props: ArticleListSVPProps) {
                   />
                 </div>
                 <div className="flex flex-col gap-1">
-                  <p className="article-title font-bodycopy font-bold text-base line-clamp-2 leading-snug transition transform hover:underline hover:underline-offset-3 dark:text-sevenpreneur-white">
+                  <p className="article-title  font-bold text-base line-clamp-2 leading-snug transition transform hover:underline hover:underline-offset-3 dark:text-sevenpreneur-white">
                     {post.title}
                   </p>
-                  <p className="article-category font-bodycopy text-sm text-primary">
+                  <p className="article-category  text-sm text-primary">
                     {post.category.name}{" "}
                     <span className="text-emphasis dark:text-foreground">
                       · {dayjs(post.published_at).fromNow()}
@@ -175,10 +175,10 @@ export default function ArticleListSVP(props: ArticleListSVPProps) {
                   />
                 </div>
                 <div className="flex flex-col gap-1">
-                  <p className="article-title font-bodycopy font-bold text-base line-clamp-2 leading-snug transition transform hover:underline hover:underline-offset-3 dark:text-sevenpreneur-white">
+                  <p className="article-title  font-bold text-base line-clamp-2 leading-snug transition transform hover:underline hover:underline-offset-3 dark:text-sevenpreneur-white">
                     {post.title}
                   </p>
-                  <p className="article-category font-bodycopy text-sm text-primary">
+                  <p className="article-category  text-sm text-primary">
                     {post.category.name}{" "}
                     <span className="text-emphasis dark:text-foreground">
                       · {dayjs(post.published_at).fromNow()}

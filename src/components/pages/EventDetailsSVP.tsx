@@ -77,7 +77,7 @@ export default function EventDetailsSVP(props: EventDetailsSVPProps) {
             <SectionContainerSVP sectionName={`About ${props.eventName}`}>
               <div className="event-description flex flex-col gap-4 items-center whitespace-pre-wrap lg:items-start">
                 <p
-                  className={`description text-[15px] font-bodycopy ${
+                  className={`description text-[15px]  ${
                     !isExpanded && "line-clamp-5"
                   }`}
                   ref={paragraphRef}
@@ -133,7 +133,7 @@ export default function EventDetailsSVP(props: EventDetailsSVPProps) {
         </div>
         <div className="floating-cta fixed flex flex-col bg-background bottom-0 left-0 w-full gap-2 p-5 border-t transition-all duration-300 z-40 dark:bg-sevenpreneur-surface-black lg:hidden">
           <div className="flex  items-center justify-between">
-            <div className="flex flex-col font-bodycopy">
+            <div className="flex flex-col ">
               <p className="text-sm">Total Amount</p>
               <p className="font-bold dark:text-sevenpreneur-white">
                 {getRupiahCurrency(props.eventPrice[0].amount)}
@@ -171,7 +171,7 @@ export default function EventDetailsSVP(props: EventDetailsSVPProps) {
               </AppButton>
             </Link>
           </div>
-          <div className="flex w-full text-center justify-center items-center font-bodycopy text-emphasis gap-1">
+          <div className="flex w-full text-center justify-center items-center  text-emphasis gap-1">
             <LockKeyhole className="size-3" />
             <p className="text-xs text-center">
               Secure payment processed by Xendit

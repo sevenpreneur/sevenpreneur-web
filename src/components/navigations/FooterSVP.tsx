@@ -79,22 +79,22 @@ export default function FooterSVP() {
                       fill="#E74D79"
                     />
                   </svg>
-                  <p className="font-bodycopy font-medium text-sm lg:text-base">
+                  <p className=" font-medium text-sm lg:text-base">
                     Sevenpreneur is a global launchpad empowering entrepreneurs
                     to scale their ventures and thrive on the world stage.
                   </p>
                 </div>
                 <div className="company-legal flex flex-col text-white gap-1">
-                  <h4 className="text-lg font-brand font-bold lg:text-xl">
+                  <h4 className="text-lg font-mona-sans font-bold lg:text-xl">
                     PT Pengusaha Muda Indonesia
                   </h4>
-                  <p className="font-bodycopy font-medium text-sm text-emphasis lg:text-base">
+                  <p className=" font-medium text-sm text-emphasis lg:text-base">
                     Soho Capital Floor 19, Podomoro City, Jl. Letjend S.Parman
                     Kav.28, Jakarta Barat, DKI Jakarta, Indonesia
                   </p>
                 </div>
                 <div className="company-social-media flex flex-col text-white gap-1">
-                  <h4 className="text-lg font-brand font-bold lg:text-xl">
+                  <h4 className="text-lg font-mona-sans font-bold lg:text-xl">
                     Sevenpreneur on Social Media
                   </h4>
                   <div className="flex gap-2">
@@ -113,30 +113,30 @@ export default function FooterSVP() {
               </div>
               <div className="contact-part flex flex-col gap-5 max-w-[420px]">
                 <div className="flex flex-col gap-1">
-                  <h4 className="text-lg font-brand font-bold text-white lg:text-xl">
+                  <h4 className="text-lg font-mona-sans font-bold text-white lg:text-xl">
                     Contact Us
                   </h4>
                   <div className="flex flex-col gap-1">
                     <div className="flex flex-col">
-                      <p className="text-sm font-bodycopy font-semibold text-emphasis lg:text-base">
+                      <p className="text-sm  font-semibold text-emphasis lg:text-base">
                         Got questions about our program? We’re happy to help at
                       </p>
-                      <p className="font-brand font-bold text-white lg:text-lg">
+                      <p className="font-mona-sans font-bold text-white lg:text-lg">
                         event@sevenpreneur.com
                       </p>
                     </div>
                     <div className="flex flex-col">
-                      <p className="text-sm font-bodycopy font-semibold text-emphasis lg:text-base">
+                      <p className="text-sm  font-semibold text-emphasis lg:text-base">
                         For general inquiries, reach us anytime at
                       </p>
-                      <p className="font-brand font-bold text-white lg:text-lg">
+                      <p className="font-mona-sans font-bold text-white lg:text-lg">
                         devin@sevenpreneur.com
                       </p>
                     </div>
                   </div>
                 </div>
-                <ul className="menu flex flex-col gap-1.5 text-emphasis font-bodycopy font-medium">
-                  <h4 className="text-lg font-brand font-bold text-white lg:text-xl">
+                <ul className="menu flex flex-col gap-1.5 text-emphasis  font-medium">
+                  <h4 className="text-lg font-mona-sans font-bold text-white lg:text-xl">
                     Legal & Accessibility
                   </h4>
                   <Link href={"/privacy-policy"}>
@@ -158,7 +158,7 @@ export default function FooterSVP() {
               </div>
             </div>
             <hr className="w-full border-t border-[#3A3A3A]" />
-            <p className="copyright text-emphasis font-bodycopy text-xs text-center lg:text-sm">
+            <p className="copyright text-emphasis  text-xs text-center lg:text-sm">
               Copyright © 2025 Sevenpreneur. All rights reserved.
             </p>
           </div>

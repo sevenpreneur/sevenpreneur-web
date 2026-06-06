@@ -123,7 +123,7 @@ export default function TransactionCardItemSVP({
 
   return (
     <div className="transaction-item flex flex-col p-4 gap-3 bg-background rounded-md border dark:bg-sevenpreneur-surface-black dark:border-0">
-      <div className="flex items-center justify-between font-bodycopy">
+      <div className="flex items-center justify-between ">
         <p className="transaction-date text-sm">
           {dayjs(transactionDate).format("DD MMMM YYYY [at] HH:mm")}
         </p>
@@ -147,7 +147,7 @@ export default function TransactionCardItemSVP({
             width={400}
           />
         </div>
-        <div className="flex flex-col font-bodycopy max-w-[calc(100%-4rem-0.75rem)]">
+        <div className="flex flex-col  max-w-[calc(100%-4rem-0.75rem)]">
           <p className="product-name font-bold line-clamp-2 dark:text-sevenpreneur-white">
             {productName}
           </p>
@@ -157,7 +157,7 @@ export default function TransactionCardItemSVP({
         </div>
       </Link>
       <div className="transaction-metadata flex items-center justify-between">
-        <div className="flex flex-col font-bodycopy text-sm">
+        <div className="flex flex-col  text-sm">
           <p>Total Amount</p>
           <p className="font-bold dark:text-sevenpreneur-white">
             {getRupiahCurrency(Math.round(totalTransactionAmount))}

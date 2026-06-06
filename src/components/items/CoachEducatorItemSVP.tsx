@@ -27,16 +27,16 @@ export default function CoachEducatorItemSVP(props: CoachEducatorItemSVPProps) {
         />
       </div>
       <div className="flex flex-col w-full gap-2 lg:gap-2.5">
-        <p className="w-fit text-white font-brand font-bold bg-secondary px-2 py-1 text-[10px] truncate rounded-sm lg:text-[13px]">
+        <p className="w-fit text-white font-mona-sans font-bold bg-secondary px-2 py-1 text-[10px] truncate rounded-sm lg:text-[13px]">
           {props.coachArchetype.toUpperCase()}
         </p>
-        <p className="font-bodycopy font-bold text-white text-lg leading-snug lg:text-2xl">
+        <p className=" font-bold text-white text-lg leading-snug lg:text-2xl">
           {props.coachName}
         </p>
-        <p className="text-sevenpreneur-dust text-[12px] font-bodycopy font-medium lg:text-[15px]">
+        <p className="text-sevenpreneur-dust text-[12px]  font-medium lg:text-[15px]">
           {props.coachDesc}
         </p>
-        <p className="font-bodycopy text-white text-sm font-semibold leading-snug lg:text-[15px]">
+        <p className=" text-white text-sm font-semibold leading-snug lg:text-[15px]">
           {props.coachRole}
         </p>
       </div>

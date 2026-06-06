@@ -104,7 +104,7 @@ export default function HeroVideoCourseSVP({
       <div className="white-area relative w-full bg-black h-[360px] -mt-[1px] z-[21] md:flex-1 md:h-auto md:mt-auto" />
 
       {/* Headline */}
-      <div className="absolute flex flex-col w-full bottom-0 left-1/2 -translate-x-1/2 items-center font-ui p-5 pb-10 gap-4 z-30 sm:bottom-[100px] md:bottom-auto md:pb-5 md:items-start md:top-1/2 md:-translate-y-1/2 lg:p-0 lg:max-w-[960px] xl:max-w-[1208px]">
+      <div className="absolute flex flex-col w-full bottom-0 left-1/2 -translate-x-1/2 items-center  p-5 pb-10 gap-4 z-30 sm:bottom-[100px] md:bottom-auto md:pb-5 md:items-start md:top-1/2 md:-translate-y-1/2 lg:p-0 lg:max-w-[960px] xl:max-w-[1208px]">
         <div className="title-tagline flex flex-col items-center max-w-[420px] gap-3 md:items-start lg:gap-4">
           <div className="flex max-w-[280px] max-h-[72px] overflow-hidden xl:max-w-[320px] xl:max-h-[86px]">
             <Image

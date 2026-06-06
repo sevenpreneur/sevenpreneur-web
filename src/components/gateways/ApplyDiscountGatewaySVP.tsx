@@ -24,7 +24,7 @@ export default function ApplyDiscountGatewaySVP({
               height={100}
             />
           </div>
-          <div className="flex flex-col font-bodycopy">
+          <div className="flex flex-col ">
             <p className="font-bold w-fit text-sm text-primary">
               SPECIAL DISCOUNT
             </p>

@@ -16,13 +16,13 @@ export default function ProblemCorporateAITrainingSVP() {
       <div className="section-container flex flex-col w-full items-center gap-10 p-5 py-10 z-20 lg:px-0 lg:py-[80px] lg:gap-[64px] lg:max-w-[988px] xl:max-w-[1208px] 2xl:max-w-[1300px]">
         {/* Section Title & Desc */}
         <div className="section-title-desc flex flex-col w-full text-center items-center gap-3 z-10">
-          <div className="flex items-center gap-3 text-xs font-bodycopy font-medium tracking-[0.25em] uppercase text-white/70 mb-2">
+          <div className="flex items-center gap-3 text-xs  font-medium tracking-[0.25em] uppercase text-white/70 mb-2">
             The Reality
           </div>
-          <h2 className="section-title text-transparent w-fit bg-clip-text bg-gradient-to-r from-[#FFFFFF] to-[#B89FE0] font-brand font-bold text-2xl sm:text-3xl sm:max-w-[600px] lg:text-4xl lg:max-w-[788px]">
+          <h2 className="section-title text-transparent w-fit bg-clip-text bg-gradient-to-r from-[#FFFFFF] to-[#B89FE0] font-mona-sans font-bold text-2xl sm:text-3xl sm:max-w-[600px] lg:text-4xl lg:max-w-[788px]">
             Sekadar ngeprompt di ChatGPT bukan strategi AI
           </h2>
-          <p className="section-desc text-sm font-bodycopy text-white/80 max-w-[326px] sm:text-base sm:max-w-[480px] lg:text-xl lg:max-w-[640px]">
+          <p className="section-desc text-sm  text-white/80 max-w-[326px] sm:text-base sm:max-w-[480px] lg:text-xl lg:max-w-[640px]">
             Ini realita yang dihadapi mayoritas tim corporate. Tools-nya udah
             ada, tapi tim belum punya sistem dan kerangka berpikir yang tepat.
           </p>
@@ -39,7 +39,7 @@ export default function ProblemCorporateAITrainingSVP() {
                 <div className="flex items-center justify-center size-10 rounded-full bg-[#CC446A]/15 border border-[#CC446A]/30 shrink-0">
                   <X className="size-5 text-[#CC446A]" />
                 </div>
-                <p className="font-bodycopy text-sm text-white/80 leading-[1.6] lg:text-[15px]">
+                <p className=" text-sm text-white/80 leading-[1.6] lg:text-[15px]">
                   {text}
                 </p>
               </div>

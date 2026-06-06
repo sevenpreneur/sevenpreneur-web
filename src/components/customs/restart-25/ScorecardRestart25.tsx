@@ -65,11 +65,11 @@ export default function ScorecardRestart25({
       className="scorecard-item flex flex-col text-white items-center transform transition-all"
       ref={containerRef}
     >
-      <h5 className="font-brand font-bold text-3xl lg:text-4xl">
+      <h5 className="font-mona-sans font-bold text-3xl lg:text-4xl">
         {displayedNumber.toLocaleString()}
         {isMoreValue && <span>+</span>}
       </h5>
-      <p className="font-bodycopy font-medium text-sm text-white/65 lg:text-2xl">
+      <p className=" font-medium text-sm text-white/65 lg:text-2xl">
         {scorecardName}
       </p>
     </div>

@@ -27,7 +27,7 @@ const variantStyles: Record<
     itemActive: "bg-[#E1EDFF] text-primary dark:bg-white/5 dark:text-white",
     itemHover:
       "hover:bg-[#E1EDFF] hover:text-primary dark:hover:bg-white/5 dark:hover:text-white",
-    font: "font-bodycopy",
+    font: "",
   },
   LMS: {
     focus: "outline-4 outline-tertiary/15 border-tertiary",

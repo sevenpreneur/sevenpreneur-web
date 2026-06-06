@@ -19,11 +19,11 @@ export default function FinalCTACorporateAITrainingSVP() {
           <div className="cta-inner relative flex flex-col gap-10 w-full bg-[#0F0E1F]/95 rounded-3xl p-8 backdrop-blur-xl lg:flex-row lg:items-center lg:p-14 lg:gap-16">
             {/* Left: Headline + CTA */}
             <div className="flex flex-col gap-7 flex-1">
-              <div className="flex items-center gap-3 text-xs font-bodycopy font-medium tracking-[0.25em] uppercase text-white/70 self-start lg:self-auto">
+              <div className="flex items-center gap-3 text-xs  font-medium tracking-[0.25em] uppercase text-white/70 self-start lg:self-auto">
                 Final Step
               </div>
 
-              <h2 className="cta-title text-transparent bg-clip-text bg-gradient-to-r from-[#FFFFFF] to-[#B89FE0] font-brand font-bold text-3xl leading-[1.05] sm:text-4xl lg:text-5xl xl:text-[56px]">
+              <h2 className="cta-title text-transparent bg-clip-text bg-gradient-to-r from-[#FFFFFF] to-[#B89FE0] font-mona-sans font-bold text-3xl leading-[1.05] sm:text-4xl lg:text-5xl xl:text-[56px]">
                 Siap untuk lompatan{" "}
                 <span className="text-transparent bg-clip-text bg-gradient-to-br from-[#B89FE0] via-[#7B6FF0] to-[#CC446A]">
                   berikutnya?
@@ -33,7 +33,7 @@ export default function FinalCTACorporateAITrainingSVP() {
                 href="https://wa.me/6285353533844?text=Halo%2C%20MinSeven!%20%F0%9F%91%8B%0ASaya%20tertarik%20untuk%20mengetahui%20lebih%20lanjut%20tentang%20*Corporate%20AI%20Training*%20dari%20Sevenpreneur.%20Boleh%20konsultasi%20dulu%3F%0A%0A%E2%80%A2%20Nama%3A%20(isi%20di%20sini)%0A%E2%80%A2%20Perusahaan%3A%20(isi%20di%20sini)%0A%E2%80%A2%20Jumlah%20Tim%3A%20(isi%20di%20sini)%0A%0ATerima%20kasih%20%F0%9F%99%8F"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group relative inline-flex items-center justify-center gap-3 h-[58px] pl-6 pr-2 rounded-full bg-gradient-to-r from-[#7B6FF0] via-[#5E47ED] to-[#4C3FEC] text-white font-bodycopy font-semibold text-base shadow-[0_8px_32px_-4px_rgba(123,111,240,0.5)] hover:shadow-[0_12px_40px_-4px_rgba(123,111,240,0.7)] transition-all overflow-hidden self-start"
+                className="group relative inline-flex items-center justify-center gap-3 h-[58px] pl-6 pr-2 rounded-full bg-gradient-to-r from-[#7B6FF0] via-[#5E47ED] to-[#4C3FEC] text-white  font-semibold text-base shadow-[0_8px_32px_-4px_rgba(123,111,240,0.5)] hover:shadow-[0_12px_40px_-4px_rgba(123,111,240,0.7)] transition-all overflow-hidden self-start"
               >
                 <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
                 <Rocket className="size-5 relative" />
@@ -46,7 +46,7 @@ export default function FinalCTACorporateAITrainingSVP() {
 
             {/* Right: Contact info */}
             <div className="flex flex-col gap-3 w-full lg:max-w-[320px] shrink-0">
-              <h4 className="font-bodycopy text-[11px] font-bold tracking-[2px] uppercase text-[#B89FE0] mb-1">
+              <h4 className=" text-[11px] font-bold tracking-[2px] uppercase text-[#B89FE0] mb-1">
                 Kontak Langsung
               </h4>
               {contactInfo.map((item) => (
@@ -57,7 +57,7 @@ export default function FinalCTACorporateAITrainingSVP() {
                   <span className="flex items-center justify-center size-10 rounded-full bg-gradient-to-br from-[#3417E3] to-[#7B6FF0] shrink-0">
                     <item.Icon className="size-4 text-white" />
                   </span>
-                  <span className="font-bodycopy text-sm text-white/85">
+                  <span className=" text-sm text-white/85">
                     {item.text}
                   </span>
                 </div>

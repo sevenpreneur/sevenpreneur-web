@@ -13,7 +13,7 @@ export default function SectionContainerSVP(props: SectionContainerSVPProps) {
       {!props.hasNoSign && (
         <div className="section-sign absolute w-1.5 h-7 bg-secondary left-0 top-5 rounded-r-full rounded-l-xs lg:top-6" />
       )}
-      <h2 className="section-title font-bodycopy text-sevenpreneur-surface-black font-bold text-xl dark:text-white lg:text-[21px]">
+      <h2 className="section-title  text-sevenpreneur-surface-black font-bold text-xl dark:text-white lg:text-[21px]">
         {props.sectionName}
       </h2>
       <hr className="border-t" />

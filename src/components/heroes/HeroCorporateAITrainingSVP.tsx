@@ -32,13 +32,13 @@ export default function HeroCorporateAITrainingSVP() {
           {/* LEFT — Content */}
           <div className="hero-content flex flex-col w-full items-center text-center gap-7 lg:items-start lg:text-left">
             {/* Eyebrow */}
-            <div className="hero-eyebrow inline-flex items-center gap-2.5 rounded-full px-4 py-1.5 text-[11px] font-bodycopy font-semibold tracking-[0.25em] uppercase text-white/80 bg-white/5 border border-white/10 backdrop-blur-sm">
+            <div className="hero-eyebrow inline-flex items-center gap-2.5 rounded-full px-4 py-1.5 text-[11px]  font-semibold tracking-[0.25em] uppercase text-white/80 bg-white/5 border border-white/10 backdrop-blur-sm">
               <span className="w-1.5 h-1.5 rounded-full bg-[#0fd4a3] animate-pulse" />
               Corporate AI Training
             </div>
 
             {/* Title */}
-            <h1 className="hero-title font-brand font-bold text-white leading-[1.05] text-4xl sm:text-5xl lg:text-[58px] xl:text-[68px] tracking-tight max-w-[680px]">
+            <h1 className="hero-title font-mona-sans font-bold text-white leading-[1.05] text-4xl sm:text-5xl lg:text-[58px] xl:text-[68px] tracking-tight max-w-[680px]">
               Tingkatkan produktivitas tim hingga{" "}
               <span className="text-transparent bg-clip-text bg-gradient-to-br from-[#B89FE0] via-[#7B6FF0] to-[#CC446A]">
                 270%
@@ -46,7 +46,7 @@ export default function HeroCorporateAITrainingSVP() {
             </h1>
 
             {/* Description */}
-            <p className="hero-description font-bodycopy text-white/70 text-base max-w-[540px] sm:text-lg lg:text-xl">
+            <p className="hero-description  text-white/70 text-base max-w-[540px] sm:text-lg lg:text-xl">
               Tim yang cuma andelin ChatGPT udah ketinggalan jauh. Kami bangun
               sistem AI yang langsung applicable ke workflow tim kamu.
             </p>
@@ -57,7 +57,7 @@ export default function HeroCorporateAITrainingSVP() {
                 href="https://wa.me/6285353533844?text=Halo%2C%20MinSeven!%20%F0%9F%91%8B%0ASaya%20tertarik%20untuk%20mengetahui%20lebih%20lanjut%20tentang%20*Corporate%20AI%20Training*%20dari%20Sevenpreneur.%20Boleh%20konsultasi%20dulu%3F"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group relative inline-flex items-center justify-center gap-3 h-[58px] pl-6 pr-2 rounded-full bg-gradient-to-r from-[#7B6FF0] via-[#5E47ED] to-[#4C3FEC] text-white font-bodycopy font-semibold text-base shadow-[0_8px_32px_-4px_rgba(123,111,240,0.5)] hover:shadow-[0_12px_40px_-4px_rgba(123,111,240,0.7)] transition-all overflow-hidden"
+                className="group relative inline-flex items-center justify-center gap-3 h-[58px] pl-6 pr-2 rounded-full bg-gradient-to-r from-[#7B6FF0] via-[#5E47ED] to-[#4C3FEC] text-white  font-semibold text-base shadow-[0_8px_32px_-4px_rgba(123,111,240,0.5)] hover:shadow-[0_12px_40px_-4px_rgba(123,111,240,0.7)] transition-all overflow-hidden"
               >
                 <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
                 <Rocket className="size-5 relative" />
@@ -69,7 +69,7 @@ export default function HeroCorporateAITrainingSVP() {
 
               <Link
                 href="#program"
-                className="group inline-flex items-center justify-center gap-3 h-[58px] px-6 rounded-full bg-white/5 border border-white/15 text-white font-bodycopy font-semibold text-base hover:bg-white/10 hover:border-white/25 transition-all backdrop-blur-sm"
+                className="group inline-flex items-center justify-center gap-3 h-[58px] px-6 rounded-full bg-white/5 border border-white/15 text-white  font-semibold text-base hover:bg-white/10 hover:border-white/25 transition-all backdrop-blur-sm"
               >
                 <span className="flex items-center justify-center size-7 rounded-full bg-white/10 group-hover:bg-white/20 transition-colors">
                   <Sparkles className="size-3.5" />
@@ -83,7 +83,7 @@ export default function HeroCorporateAITrainingSVP() {
               {trustBadges.map((b) => (
                 <div
                   key={b.label}
-                  className="flex items-center gap-2 font-bodycopy text-sm text-white/60"
+                  className="flex items-center gap-2  text-sm text-white/60"
                 >
                   <span className="flex items-center justify-center size-7 rounded-full bg-white/5 border border-white/10">
                     <b.Icon className="size-3.5 text-[#B89FE0]" />
@@ -112,31 +112,31 @@ export default function HeroCorporateAITrainingSVP() {
 
                 {/* Header */}
                 <div className="relative flex items-center justify-between mb-7">
-                  <span className="font-bodycopy text-sm text-white/60">
+                  <span className=" text-sm text-white/60">
                     Live Dashboard Preview
                   </span>
-                  <span className="font-brand text-[10px] font-bold tracking-[1.5px] uppercase rounded-full px-3 py-1.5 bg-gradient-to-r from-[#7B6FF0] to-[#CC446A] text-white">
+                  <span className="font-mona-sans text-[10px] font-bold tracking-[1.5px] uppercase rounded-full px-3 py-1.5 bg-gradient-to-r from-[#7B6FF0] to-[#CC446A] text-white">
                     Q1 2026
                   </span>
                 </div>
 
                 {/* Productivity uplift big number */}
                 <div className="relative mb-6">
-                  <p className="font-bodycopy text-[10px] font-bold tracking-[2px] uppercase text-white/50 mb-3">
+                  <p className=" text-[10px] font-bold tracking-[2px] uppercase text-white/50 mb-3">
                     Productivity Uplift — Cohort 14
                   </p>
                   <div className="flex items-baseline gap-3">
-                    <span className="font-brand font-bold text-7xl text-white leading-none lg:text-[88px]">
+                    <span className="font-mona-sans font-bold text-7xl text-white leading-none lg:text-[88px]">
                       +270
                       <span className="text-transparent bg-clip-text bg-gradient-to-br from-[#B89FE0] via-[#7B6FF0] to-[#CC446A]">
                         %
                       </span>
                     </span>
                     <div className="flex flex-col pb-2">
-                      <span className="font-bodycopy text-[11px] text-white/50 tracking-[1.5px] uppercase">
+                      <span className=" text-[11px] text-white/50 tracking-[1.5px] uppercase">
                         vs. baseline
                       </span>
-                      <span className="font-bodycopy text-[11px] text-white/50 tracking-[1.5px] uppercase">
+                      <span className=" text-[11px] text-white/50 tracking-[1.5px] uppercase">
                         30-day window
                       </span>
                     </div>
@@ -145,7 +145,7 @@ export default function HeroCorporateAITrainingSVP() {
 
                 {/* Section header */}
                 <div className="relative flex items-center gap-3 mb-4">
-                  <span className="font-bodycopy text-[10px] font-bold tracking-[2px] uppercase text-white/50">
+                  <span className=" text-[10px] font-bold tracking-[2px] uppercase text-white/50">
                     Adoption per Departemen
                   </span>
                   <span className="flex-1 h-px bg-white/10" />
@@ -161,7 +161,7 @@ export default function HeroCorporateAITrainingSVP() {
                       <span className="flex items-center justify-center size-7 rounded-full bg-white/5 border border-white/10">
                         <r.Icon className="size-3.5 text-[#B89FE0]" />
                       </span>
-                      <span className="font-bodycopy text-[13px] text-white/85 truncate">
+                      <span className=" text-[13px] text-white/85 truncate">
                         {r.name}
                       </span>
                       <div className="w-20 h-1.5 bg-white/10 rounded-full overflow-hidden lg:w-24">
@@ -170,7 +170,7 @@ export default function HeroCorporateAITrainingSVP() {
                           style={{ width: `${r.pct}%` }}
                         />
                       </div>
-                      <span className="font-bodycopy text-[11px] tracking-[0.5px] font-bold text-right text-[#B89FE0]">
+                      <span className=" text-[11px] tracking-[0.5px] font-bold text-right text-[#B89FE0]">
                         {r.label}
                       </span>
                     </div>
@@ -184,10 +184,10 @@ export default function HeroCorporateAITrainingSVP() {
                       <Zap className="size-4 text-white fill-white" />
                     </span>
                     <div className="flex-1 min-w-0">
-                      <p className="font-bodycopy text-[13px] font-semibold text-white leading-tight">
+                      <p className=" text-[13px] font-semibold text-white leading-tight">
                         Custom LMS untuk tim kamu
                       </p>
-                      <p className="font-bodycopy text-[11px] text-white/55 leading-tight">
+                      <p className=" text-[11px] text-white/55 leading-tight">
                         branded · accessible · scalable
                       </p>
                     </div>

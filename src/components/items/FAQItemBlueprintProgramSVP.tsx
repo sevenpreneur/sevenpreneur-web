@@ -22,7 +22,7 @@ export default function FAQItemBlueprintProgramSVP({
       >
         {/* Question */}
         <div className="question flex text-white justify-between items-center">
-          <p className="font-medium font-bodycopy text-base lg:text-lg">
+          <p className="font-medium  text-base lg:text-lg">
             {questions}
           </p>
           <div className="flex aspect-square size-6 items-center justify-center">
@@ -40,7 +40,7 @@ export default function FAQItemBlueprintProgramSVP({
             isOpen ? "max-h-[500px] opacity-100 mt-2" : "max-h-0 opacity-0"
           }`}
         >
-          <p className="text-white/70 text-sm font-bodycopy lg:text-base">
+          <p className="text-white/70 text-sm  lg:text-base">
             {answer}
           </p>
         </div>

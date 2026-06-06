@@ -174,7 +174,7 @@ export default function TransactionStatusDetailsSVP(
       <div className="transaction-page relative flex flex-col pb-36 gap-1 bg-[#F9F9F9] dark:bg-coal-black lg:mx-auto lg:w-full lg:gap-3 lg:flex-row lg:bg-white lg:pt-12 lg:max-w-[988px] xl:max-w-[1208px] 2xl:max-w-[1300px]">
         <div className="flex flex-col gap-1 lg:flex-1 lg:gap-3">
           <div className="transaction-status flex flex-col p-5 items-center gap-5 bg-white dark:bg-surface-black lg:border lg:lg:rounded-lg">
-            <div className="status-guidance flex flex-col items-center text-center font-bodycopy">
+            <div className="status-guidance flex flex-col items-center text-center ">
               <PaymentStatusAnimationSVP variant={props.transactionStatus} />
               <div className="flex flex-col items-center gap-2">
                 <h2 className="font-bold">{statusWord}</h2>
@@ -194,7 +194,7 @@ export default function TransactionStatusDetailsSVP(
             </div>
             {props.transactionStatus !== "FAILED" && (
               <div
-                className={`flex font-bodycopy w-full items-center ${
+                className={`flex  w-full items-center ${
                   isPaid ? "justify-center" : "justify-between"
                 }`}
               >
@@ -236,7 +236,7 @@ export default function TransactionStatusDetailsSVP(
                     height={100}
                   />
                 </div>
-                <p className="payment-channel-name font-bodycopy font-[450px] text-sm">
+                <p className="payment-channel-name  font-[450px] text-sm">
                   {props.paymentChannelName}
                 </p>
               </div>
@@ -279,7 +279,7 @@ export default function TransactionStatusDetailsSVP(
               className="payment-details flex items-center justify-between hover:cursor-pointer"
               onClick={() => setOpenAmountDetails(!openAmountDetails)}
             >
-              <div className="amount flex flex-col font-bodycopy text-sm">
+              <div className="amount flex flex-col  text-sm">
                 <p>Total Amount</p>
                 <p className="font-bold">
                   {getRupiahCurrency(Math.round(props.productTotalAmount))}
@@ -305,7 +305,7 @@ export default function TransactionStatusDetailsSVP(
                 width={400}
               />
             </div>
-            <div className="flex flex-col font-bodycopy max-w-[calc(100%-4rem-0.75rem)]">
+            <div className="flex flex-col  max-w-[calc(100%-4rem-0.75rem)]">
               <p className="product-name font-bold line-clamp-2">
                 {productName}
               </p>
@@ -348,7 +348,7 @@ export default function TransactionStatusDetailsSVP(
                   height={100}
                 />
               </div>
-              <div className="flex flex-col font-bodycopy text-sm">
+              <div className="flex flex-col  text-sm">
                 <p className="font-bold">Having Trouble?</p>
                 <p className="text-emphasis">We are ready to help you</p>
               </div>

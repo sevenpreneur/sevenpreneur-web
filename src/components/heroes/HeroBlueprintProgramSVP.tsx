@@ -26,7 +26,7 @@ export default function HeroBlueprintProgramSVP(
               width={300}
               height={400}
             />
-            {/* <div className="hero-title flex flex-col items-center text-center font-brand font-bold text-2xl max-w-[380px] leading-[1.1] sm:text-3xl lg:items-start lg:text-[32px] lg:text-left lg:max-w-[472px] xl:text-[46px] xl:max-w-[720px]">
+            {/* <div className="hero-title flex flex-col items-center text-center font-mona-sans font-bold text-2xl max-w-[380px] leading-[1.1] sm:text-3xl lg:items-start lg:text-[32px] lg:text-left lg:max-w-[472px] xl:text-[46px] xl:max-w-[720px]">
               <h2 className="w-full text-transparent bg-clip-text bg-gradient-to-r from-[#FFFFFF] to-[#B89FE0]">
                 Bisnis Stuck & Nggak Berkembang?
               </h2>
@@ -34,7 +34,7 @@ export default function HeroBlueprintProgramSVP(
                 Saatnya Grow dengan <br /> Strategi yang Tepat
               </h2>
             </div> */}
-            <p className="hero-description w-[317px] text-sm text-center font-bodycopy lg:w-[460px] lg:text-lg lg:text-left xl:w-[518px] xl:text-xl">
+            <p className="hero-description w-[317px] text-sm text-center  lg:w-[460px] lg:text-lg lg:text-left xl:w-[518px] xl:text-xl">
               Kelas Strategi & Growth Bisnis untuk Executive <br /> dan
               Entrepreneur
             </p>

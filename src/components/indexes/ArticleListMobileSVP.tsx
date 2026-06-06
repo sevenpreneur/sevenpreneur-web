@@ -23,7 +23,7 @@ export default function ArticleListMobileSVP(props: ArticleListMobileSVPProps) {
       <PageContainerSVP className="flex lg:hidden">
         <div className="flex flex-col w-full gap-6 py-5 pb-20">
           <div className="headline-news flex flex-col gap-4">
-            <h2 className="w-fit font-bodycopy font-bold text-xl text-transparent bg-clip-text bg-gradient-to-r from-40% from-primary to-120% to-secondary">
+            <h2 className="w-fit  font-bold text-xl text-transparent bg-clip-text bg-gradient-to-r from-40% from-primary to-120% to-secondary">
               Headline News
             </h2>
             <div className="article-list flex flex-col gap-5">
@@ -42,14 +42,14 @@ export default function ArticleListMobileSVP(props: ArticleListMobileSVPProps) {
                       height={160}
                     />
                   </div>
-                  <div className="attributes flex flex-col font-bodycopy w-full">
+                  <div className="attributes flex flex-col  w-full">
                     <p className="category text-sm font-semibold text-primary">
                       {post.category.name}
                     </p>
                     <p className="title font-bold text-base font-content line-clamp-2 leading-snug lg:hover:underline lg:hover:underline-offset-3 dark:text-sevenpreneur-white">
                       {post.title}
                     </p>
-                    <p className="timestamp font-bodycopy text-sm text-emphasis dark:text-foreground">
+                    <p className="timestamp  text-sm text-emphasis dark:text-foreground">
                       {dayjs(post.published_at).fromNow()}
                     </p>
                   </div>
@@ -78,14 +78,14 @@ export default function ArticleListMobileSVP(props: ArticleListMobileSVPProps) {
                     height={160}
                   />
                 </div>
-                <div className="attributes flex flex-col font-bodycopy w-full">
+                <div className="attributes flex flex-col  w-full">
                   <p className="category text-sm font-semibold text-primary">
                     {post.category.name}
                   </p>
                   <p className="title font-bold text-base font-content line-clamp-2 leading-snug lg:hover:underline lg:hover:underline-offset-3 dark:text-sevenpreneur-white">
                     {post.title}
                   </p>
-                  <p className="timestamp font-bodycopy text-sm text-emphasis dark:text-foreground">
+                  <p className="timestamp  text-sm text-emphasis dark:text-foreground">
                     {dayjs(post.published_at).fromNow()}
                   </p>
                 </div>

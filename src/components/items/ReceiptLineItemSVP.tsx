@@ -28,9 +28,9 @@ export default function ReceiptLineItemSVP({
 
   return (
     <div className="line-item flex items-center justify-between">
-      <p className={`font-bodycopy text-sm ${nameClass}`}>{receiptName}</p>
+      <p className={` text-sm ${nameClass}`}>{receiptName}</p>
       <p
-        className={`font-bodycopy text-sm text-right dark:text-emphasis ${valueClass}`}
+        className={` text-sm text-right dark:text-emphasis ${valueClass}`}
       >
         {receiptValue}
       </p>

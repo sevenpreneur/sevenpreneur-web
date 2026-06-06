@@ -33,7 +33,7 @@ export default function RadioBoxBooleanSVP({
         checked={isSelected}
         onChange={() => onChange(value)}
       />
-      <div className="input-attributes flex flex-col font-bodycopy text-sm ">
+      <div className="input-attributes flex flex-col  text-sm ">
         <p className="input-label font-bold">{radioName}</p>
         <p className="input-description text-emphasis font-medium">
           {radioDescription}

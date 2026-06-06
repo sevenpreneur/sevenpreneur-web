@@ -78,7 +78,7 @@ export default async function TransactionsPage() {
   return (
     <PageContainerSVP className="flex">
       <div className="flex flex-col w-full py-5 pb-20 gap-5">
-        <h1 className="font-bold font-bodycopy text-xl dark:text-sevenpreneur-white">
+        <h1 className="font-bold  text-xl dark:text-sevenpreneur-white">
           Transaction History
         </h1>
         {transactionData.length > 0 ? (

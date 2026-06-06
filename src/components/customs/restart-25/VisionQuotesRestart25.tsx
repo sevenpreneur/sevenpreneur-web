@@ -8,10 +8,10 @@ export default function VisionQuotesRestart25() {
         {/* Content */}
         <div className="content flex flex-col gap-5 items-center py-10 z-20 max-w-[420px] lg:max-w-[960px]">
           <div className="title flex flex-col gap-3 text-white px-8">
-            <h2 className="title-content font-bold text-2xl font-brand text-center lg:text-[42px]">
+            <h2 className="title-content font-bold text-2xl font-mona-sans text-center lg:text-[42px]">
               Why we exist
             </h2>
-            <p className="quotes font-bodycopy italic text-sm text-center lg:text-2xl lg:max-w-[840px]">
+            <p className="quotes  italic text-sm text-center lg:text-2xl lg:max-w-[840px]">
               Sevenpreneur stand to create the future <b>global founders</b>{" "}
               from Indonesia who can lead companies and create massive economic
               impact at home and abroad. We prepare not only to entrepreneur—but
@@ -30,10 +30,10 @@ export default function VisionQuotesRestart25() {
                 height={100}
               />
             </div>
-            <p className="author-name font-bold text-sm font-brand text-center lg:text-xl">
+            <p className="author-name font-bold text-sm font-mona-sans text-center lg:text-xl">
               Raymond Chin
             </p>
-            <p className="author-role font-bodycopy text-center text-xs lg:text-lg">
+            <p className="author-role  text-center text-xs lg:text-lg">
               Founder Sevenpreneur
             </p>
           </div>

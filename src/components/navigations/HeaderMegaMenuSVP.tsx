@@ -53,7 +53,7 @@ export default function HeaderMegaMenuSVP({
     >
       <button
         type="button"
-        className={`mega-menu-trigger inline-flex items-center gap-1.5 font-bodycopy text-[15px] cursor-pointer transition-colors ${
+        className={`mega-menu-trigger inline-flex items-center gap-1.5  text-[15px] cursor-pointer transition-colors ${
           isActive ? "font-bold" : "font-medium"
         }`}
       >
@@ -95,10 +95,10 @@ export default function HeaderMegaMenuSVP({
                   <item.Icon className="size-5 text-white" />
                 </span>
                 <div className="flex flex-col gap-0.5 min-w-0">
-                  <p className="font-brand font-bold text-[14px] text-[#0a0a0a] leading-tight dark:text-white">
+                  <p className="font-mona-sans font-bold text-[14px] text-[#0a0a0a] leading-tight dark:text-white">
                     {item.name}
                   </p>
-                  <p className="font-bodycopy text-[12px] text-[#3a3a3a] leading-snug dark:text-white/60">
+                  <p className=" text-[12px] text-[#3a3a3a] leading-snug dark:text-white/60">
                     {item.desc}
                   </p>
                 </div>

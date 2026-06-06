@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 import {
   CheckDiscountCohort,
   CheckDiscountEvent,
@@ -129,7 +129,7 @@ export default function ApplyDiscountModalSVP({
             onSubmit={handleDiscountChecking}
           >
             <div className="flex flex-col w-full gap-2">
-              <h2 className="w-full font-bodycopy font-bold pl-0.5">
+              <h2 className="w-full  font-bold pl-0.5">
                 Redeem Promo
               </h2>
               <AppInput variant="SVP"

@@ -32,8 +32,8 @@ export default function AttendeeRoleCardItemRestart25({
           />
         </div>
         <div className="flex flex-col text-white">
-          <h3 className="font-brand font-bold text-xl">{roleTitle}</h3>
-          <p className="font-bodycopy text-lg">{roleSubtitle}</p>
+          <h3 className="font-mona-sans font-bold text-xl">{roleTitle}</h3>
+          <p className=" text-lg">{roleSubtitle}</p>
         </div>
       </div>
     </div>

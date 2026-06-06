@@ -88,7 +88,7 @@ export default function LearningSessionItemBlueprintProgramSVP({
       >
         <div className="learning-session-content flex flex-col z-40">
           {sessionNumber && (
-            <h4 className="session-chapter font-bold font-brand text-2xl lg:text-3xl xl:text-[48px]">
+            <h4 className="session-chapter font-bold font-mona-sans text-2xl lg:text-3xl xl:text-[48px]">
               {sessionNumber}
             </h4>
           )}
@@ -103,16 +103,16 @@ export default function LearningSessionItemBlueprintProgramSVP({
               height={300}
             />
           )}
-          <h3 className="session-title font-bold font-brand max-w-[184px] leading-tight text-transparent bg-clip-text bg-gradient-to-b from-0% from-[#D1CDCD] via-50% via-white to-100% to-[#D1CDCD] line-clamp-3 lg:max-w-[292px] lg:text-xl xl:max-w-[336px] xl:text-2xl">
+          <h3 className="session-title font-bold font-mona-sans max-w-[184px] leading-tight text-transparent bg-clip-text bg-gradient-to-b from-0% from-[#D1CDCD] via-50% via-white to-100% to-[#D1CDCD] line-clamp-3 lg:max-w-[292px] lg:text-xl xl:max-w-[336px] xl:text-2xl">
             {sessionName}
           </h3>
           {sessionDescription && (
-            <p className="session-desc font-bodycopy text-[10px] max-w-[184px] lg:max-w-[292px] lg:text-base xl:max-w-[332px] xl:text-lg">
+            <p className="session-desc  text-[10px] max-w-[184px] lg:max-w-[292px] lg:text-base xl:max-w-[332px] xl:text-lg">
               {sessionDescription}
             </p>
           )}
         </div>
-        <div className="learning-session-content flex flex-col font-bodycopy z-40">
+        <div className="learning-session-content flex flex-col  z-40">
           <h4 className="session-educator font-bold text-xs lg:text-lg">
             {sessionEducator}
           </h4>

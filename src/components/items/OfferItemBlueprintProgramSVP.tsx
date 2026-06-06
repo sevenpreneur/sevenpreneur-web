@@ -74,10 +74,10 @@ export default function OfferItemBlueprintProgramSVP({
               />
             </div>
           )}
-          <h3 className="offer-title font-brand font-bold text-lg text-white leading-tight lg:text-[24px]">
+          <h3 className="offer-title font-mona-sans font-bold text-lg text-white leading-tight lg:text-[24px]">
             {offerTitle}
           </h3>
-          <p className="offer-description font-bodycopy text-sm text-white lg:text-base">
+          <p className="offer-description  text-sm text-white lg:text-base">
             {offerDescription}
           </p>
         </div>

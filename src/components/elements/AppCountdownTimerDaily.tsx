@@ -58,14 +58,14 @@ export default function AppCountdownTimerDaily(
             className={`countdown-container flex flex-col items-center gap-1`}
           >
             <p
-              className={`countdown-value flex items-center justify-center aspect-square font-brand font-bold bg-secondary text-base rounded-[3px] p-0.5`}
+              className={`countdown-value flex items-center justify-center aspect-square font-mona-sans font-bold bg-secondary text-base rounded-[3px] p-0.5`}
             >
               {post.value}
             </p>
           </div>
           {index < countdownData.length - 1 && (
             <p
-              className={`countdown-separator font-bodycopy font-bold text-white "text-sm"`}
+              className={`countdown-separator  font-bold text-white "text-sm"`}
             >
               :
             </p>

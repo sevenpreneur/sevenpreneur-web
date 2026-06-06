@@ -123,7 +123,7 @@ export default function BusinessesAlumniHomeSVP() {
   return (
     <div className="section-root relative flex items-center justify-center overflow-hidden bg-sevenpreneur-coal">
       <div className="section-container flex flex-col w-full items-center gap-6 p-5 py-10 pb-0 z-20 lg:px-0 lg:py-[60px] lg:gap-[48px] ">
-        <h2 className="section-title w-fit text-transparent leading-snug bg-clip-text bg-gradient-to-r from-40% from-white to-100% to-primary font-brand font-bold text-center text-xl sm:text-2xl lg:text-4xl lg:max-w-[680px]">
+        <h2 className="section-title w-fit text-transparent leading-snug bg-clip-text bg-gradient-to-r from-40% from-white to-100% to-primary font-mona-sans font-bold text-center text-xl sm:text-2xl lg:text-4xl lg:max-w-[680px]">
           Empowering 900+ Real Businesses, <br /> Scaled Through Our Program
         </h2>
         <div className="logo-tracks flex flex-col gap-5">

@@ -27,7 +27,7 @@ export default function AppliedDiscountCardSVP({
               fill="#0165F6"
             />
           </div>
-          <div className="flex flex-col font-bodycopy">
+          <div className="flex flex-col ">
             <h5 className="discount-code font-bold text-sm">{discountCode}</h5>
             <p className="discount-rate font-medium text-[13px] text-[#333333] dark:text-emphasis">{`Saved ${discountRate}% today`}</p>
           </div>

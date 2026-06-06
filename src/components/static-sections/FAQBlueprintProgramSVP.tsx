@@ -64,7 +64,7 @@ export default function FAQBlueprintProgramSVP(
     <div className="section-root relative flex items-center justify-center bg-black overflow-hidden">
       <div className="section-container flex flex-col w-full items-center gap-20 p-5 py-10 pb-0 z-20 lg:px-0 lg:py-[60px] lg:pb-0 lg:max-w-[988px] xl:max-w-[1208px] 2xl:max-w-[1300px]">
         <div className="section-item flex flex-col w-full items-center gap-8 lg:gap-[64px]">
-          <h2 className="section-title text-transparent w-fit bg-clip-text bg-gradient-to-r from-[#FFFFFF] to-[#B89FE0] font-brand font-bold text-center text-2xl sm:text-3xl lg:text-4xl">
+          <h2 className="section-title text-transparent w-fit bg-clip-text bg-gradient-to-r from-[#FFFFFF] to-[#B89FE0] font-mona-sans font-bold text-center text-2xl sm:text-3xl lg:text-4xl">
             Everything You Need to Know
           </h2>
           <div className="section-faq flex flex-col w-full max-w-[840px] gap-3 lg:gap-3">
@@ -81,7 +81,7 @@ export default function FAQBlueprintProgramSVP(
         {/* Help Desk */}
         <div className="section-item flex items-center justify-between gap-8 max-w-[840px]">
           <div className="section-title hidden gap-8 shrink-0 lg:flex lg:flex-col">
-            <h2 className="section-title text-transparent w-fit bg-clip-text bg-gradient-to-r from-20% from-[#FFFFFF] to-100% to-[#B89FE0] font-brand font-bold text-2xl sm:text-3xl lg:text-4xl">
+            <h2 className="section-title text-transparent w-fit bg-clip-text bg-gradient-to-r from-20% from-[#FFFFFF] to-100% to-[#B89FE0] font-mona-sans font-bold text-2xl sm:text-3xl lg:text-4xl">
               Punya pertanyaan lanjutan? <br /> Konsultasikan bersama kami
             </h2>
             <a
@@ -137,7 +137,7 @@ export default function FAQBlueprintProgramSVP(
       {/* Absolute Layout */}
       {/* Title on Mobile */}
       <div className="section-title absolute flex flex-col w-[350px] bottom-14 left-1/2 -translate-x-1/2 items-center gap-3 z-40 lg:hidden">
-        <h2 className="section-title text-transparent w-fit bg-clip-text bg-gradient-to-r from-20% from-[#FFFFFF] to-100% to-[#B89FE0] font-brand font-bold text-center text-xl">
+        <h2 className="section-title text-transparent w-fit bg-clip-text bg-gradient-to-r from-20% from-[#FFFFFF] to-100% to-[#B89FE0] font-mona-sans font-bold text-center text-xl">
           Punya pertanyaan lanjutan? <br /> Konsultasikan bersama kami
         </h2>
         <a

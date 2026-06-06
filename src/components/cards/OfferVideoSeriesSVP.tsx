@@ -72,7 +72,7 @@ export default function OfferVideoSeriesSVP(props: OfferVideoSeriesSVPProps) {
         <div className="benefit-offer-list flex flex-col gap-3">
           {benefits.map((post, index) => (
             <div
-              className="benefit-item flex gap-3 items-center font-bodycopy"
+              className="benefit-item flex gap-3 items-center "
               key={index}
             >
               <div className="flex aspect-square items-center justify-center shrink-0 p-2 bg-primary-soft-background text-primary-soft-foreground rounded-full overflow-hidden dark:bg-sevenpreneur-coal dark:text-foreground dark:border">
@@ -84,7 +84,7 @@ export default function OfferVideoSeriesSVP(props: OfferVideoSeriesSVPProps) {
         </div>
         <hr className="hidden border-t md:flex" />
         <div className="hidden flex-col gap-3 md:flex">
-          <div className="price-information flex flex-col font-bodycopy">
+          <div className="price-information flex flex-col ">
             <p className="text-emphasis font-medium text-sm">
               <s>{getRupiahCurrency(priceAnchor)}</s>
             </p>
@@ -97,7 +97,7 @@ export default function OfferVideoSeriesSVP(props: OfferVideoSeriesSVPProps) {
               </p>
             </div>
           </div>
-          <div className="flex flex-col items-center gap-3 font-bodycopy">
+          <div className="flex flex-col items-center gap-3 ">
             <Link
               href={`/playlists/${props.playlistSlug}/${props.playlistId}/checkout`}
               className="w-full"

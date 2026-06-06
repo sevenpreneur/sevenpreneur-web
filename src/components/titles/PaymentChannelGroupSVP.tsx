@@ -24,7 +24,7 @@ export default function PaymentChannelGroupSVP({
           setOpenPaymentChannel(!openPaymentChannel);
         }}
       >
-        <p className="font-bodycopy font-semibold text-sm">
+        <p className=" font-semibold text-sm">
           {groupPaymentName}
         </p>
         <ChevronUp

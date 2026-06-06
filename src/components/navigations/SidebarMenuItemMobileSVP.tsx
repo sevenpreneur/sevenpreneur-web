@@ -17,14 +17,14 @@ export default function SidebarMenuItemMobileSVP(
     return (
       <Link href={props.menuURL} onClick={props.onClick}>
         <li
-          className={`flex items-center font-bodycopy font-medium text-[15px] gap-2 ${
+          className={`flex items-center min-w-0 font-medium text-[15px] gap-2 ${
             props.destructiveColor
               ? "text-destructive"
               : "text-[#111111] dark:text-white"
           }`}
         >
-          {props.menuIcon}
-          {props.menuName}
+          <span className="shrink-0">{props.menuIcon}</span>
+          <span className="min-w-0 line-clamp-1">{props.menuName}</span>
         </li>
       </Link>
     );
@@ -32,15 +32,15 @@ export default function SidebarMenuItemMobileSVP(
 
   return (
     <li
-      className={`flex items-center font-bodycopy font-medium text-[15px] gap-2 ${
+      className={`flex items-center min-w-0 font-medium text-[15px] gap-2 ${
         props.destructiveColor
           ? "text-destructive"
           : "text-[#111111] dark:text-white"
       }`}
       onClick={props.onClick}
     >
-      {props.menuIcon}
-      {props.menuName}
+      <span className="shrink-0">{props.menuIcon}</span>
+      <span className="min-w-0 line-clamp-1">{props.menuName}</span>
     </li>
   );
 }

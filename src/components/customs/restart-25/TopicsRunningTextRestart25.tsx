@@ -66,7 +66,7 @@ export default function TopicsRunningText() {
                   className="border-topic-item p-[1px] rounded-md bg-gradient-to-r from-0% from-[#727272] via-50% via-[#333333] to-100% to-[#727272]"
                   key={index}
                 >
-                  <div className="topic-item flex items-start text-white font-bodycopy font-medium max-w-[200px] bg-[#1B1B1B] p-2 gap-2 rounded-md lg:max-w-[270px]">
+                  <div className="topic-item flex items-start text-white  font-medium max-w-[200px] bg-[#1B1B1B] p-2 gap-2 rounded-md lg:max-w-[270px]">
                     <IconComponent
                       className="w-5 h-5 shrink-0 lg:w-7 lg:h-7"
                       strokeWidth={2}
@@ -90,7 +90,7 @@ export default function TopicsRunningText() {
                   className="border-topic-item p-[1px] rounded-md bg-gradient-to-r from-0% from-[#727272] via-50% via-[#333333] to-100% to-[#727272]"
                   key={index}
                 >
-                  <div className="topic-item flex items-start text-white font-bodycopy font-medium max-w-[200px] bg-[#1B1B1B] p-2 gap-2 rounded-md lg:max-w-[270px]">
+                  <div className="topic-item flex items-start text-white  font-medium max-w-[200px] bg-[#1B1B1B] p-2 gap-2 rounded-md lg:max-w-[270px]">
                     <IconComponent
                       className="w-5 h-5 shrink-0 lg:w-7 lg:h-7"
                       strokeWidth={2}

@@ -27,10 +27,10 @@ export default function AboutBlueprintProgramSVP() {
           {/* Section Content */}
           <div className="section-content flex flex-col text-center items-center gap-6 lg:text-left lg:items-start">
             <div className="section-title-desc flex flex-col w-full items-center gap-3 z-10">
-              <h2 className="section-title text-transparent w-fit bg-clip-text bg-gradient-to-r from-[#FFFFFF] to-[#B89FE0] font-brand font-bold text-2xl max-w-[598px] sm:text-3xl lg:text-4xl lg:max-w-full">
+              <h2 className="section-title text-transparent w-fit bg-clip-text bg-gradient-to-r from-[#FFFFFF] to-[#B89FE0] font-mona-sans font-bold text-2xl max-w-[598px] sm:text-3xl lg:text-4xl lg:max-w-full">
                 Bantu bisnis keluar dari stagnasi dengan sistem dan strategi
               </h2>
-              <p className="section-desc text-[15px] font-bodycopy text-white max-w-[598px] sm:text-base lg:max-w-full lg:text-xl">
+              <p className="section-desc text-[15px]  text-white max-w-[598px] sm:text-base lg:max-w-full lg:text-xl">
                 Kelas dengan strategi framework praktis untuk segala aspek
                 bisnis seperti memperluas market, membangun offer yang kuat,
                 menciptakan sistem kerja tim, dan sistem cashflow yang siap
@@ -40,20 +40,20 @@ export default function AboutBlueprintProgramSVP() {
 
             {/* Section Audiences */}
             <div className="section-audiences flex flex-col gap-3 items-start">
-              <p className="section-desc text-[15px] font-bodycopy text-white max-w-[326px] sm:text-base lg:text-xl lg:max-w-[712px]">
+              <p className="section-desc text-[15px]  text-white max-w-[326px] sm:text-base lg:text-xl lg:max-w-[712px]">
                 Just right for you:
               </p>
               <div className="audiences flex flex-col gap-2">
                 {audiences.map((post) => (
                   <div
                     key={post}
-                    className="audience-list flex bg-[#1C1C1C] p-3 text-white text-left font-bodycopy items-center gap-3 rounded-md max-w-[598px] lg:p-4"
+                    className="audience-list flex bg-[#1C1C1C] p-3 text-white text-left  items-center gap-3 rounded-md max-w-[598px] lg:p-4"
                   >
                     <div className="audience-check flex size-6 lg:size-8 items-center justify-center bg-[#3417E3] rounded-full shrink-0">
                       <Check color="#FFFFFF" className="w-3.5 h-auto lg:w-5" />
                     </div>
                     <p
-                      className="audience-item text-[15px] font-bodycopy sm:text-base lg:text-xl"
+                      className="audience-item text-[15px]  sm:text-base lg:text-xl"
                       dangerouslySetInnerHTML={{ __html: post }}
                     />
                   </div>

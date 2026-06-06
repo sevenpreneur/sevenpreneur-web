@@ -23,17 +23,17 @@ export default function SpeakerItemRestart25({
         fill
       />
       <div className="speaker-name-title absolute flex flex-col bottom-2 right-2 gap-0.5 pl-2 text-end items-end text-white z-10">
-        <p className="speaker-name font-brand font-bold leading-snug tracking-widest text-sm lg:text-base">
+        <p className="speaker-name font-mona-sans font-bold leading-snug tracking-widest text-sm lg:text-base">
           {speakerName.toUpperCase()}
           {onConfirmation && (
-            <span className="text-red-500 font-bodycopy">*</span>
+            <span className="text-red-500 ">*</span>
           )}
         </p>
-        <p className="speaker-title font-bodycopy font-medium text-white/65 text-[11px] lg:text-sm">
+        <p className="speaker-title  font-medium text-white/65 text-[11px] lg:text-sm">
           {speakerTitle.trim()}
         </p>
         {onConfirmation && (
-          <p className="text-red-500 font-bodycopy text-sm lg:text-base">
+          <p className="text-red-500  text-sm lg:text-base">
             *on confirmation
           </p>
         )}

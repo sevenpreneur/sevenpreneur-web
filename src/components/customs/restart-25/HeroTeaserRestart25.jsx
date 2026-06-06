@@ -82,7 +82,7 @@ export default function HeroTeaserRestart25() {
       />
 
       {/* --- Heading */}
-      <div className="title w-full flex flex-col gap-1 px-8 font-brand z-50">
+      <div className="title w-full flex flex-col gap-1 px-8 font-mona-sans z-50">
         <h1 className="font-medium text-2xl text-white text-center leading-tight lg:text-[48px]">
           This year, we want <br className="block lg:hidden" /> you to become
         </h1>

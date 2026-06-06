@@ -80,13 +80,13 @@ export default function CompanySVP() {
         </div>
 
         <div className="section-container relative flex flex-col w-full items-center gap-6 px-5 py-14 z-10 text-center lg:px-0 lg:py-[88px] lg:gap-8 lg:max-w-[988px] xl:max-w-[1208px] 2xl:max-w-[1300px]">
-          <span className="inline-block rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-xs font-bodycopy font-semibold tracking-widest text-white/60 uppercase">
+          <span className="inline-block rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-xs  font-semibold tracking-widest text-white/60 uppercase">
             About Us
           </span>
-          <h1 className="font-brand font-bold text-2xl leading-snug text-transparent bg-clip-text bg-gradient-to-r from-white via-white to-primary max-w-[340px] sm:text-3xl sm:max-w-[480px] lg:text-[52px] lg:leading-tight lg:max-w-[760px]">
+          <h1 className="font-mona-sans font-bold text-2xl leading-snug text-transparent bg-clip-text bg-gradient-to-r from-white via-white to-primary max-w-[340px] sm:text-3xl sm:max-w-[480px] lg:text-[52px] lg:leading-tight lg:max-w-[760px]">
             Building the Future of Business Education in Indonesia
           </h1>
-          <p className="font-bodycopy text-sm text-white/60 max-w-[320px] sm:text-base sm:max-w-[480px] lg:text-lg lg:max-w-[600px]">
+          <p className=" text-sm text-white/60 max-w-[320px] sm:text-base sm:max-w-[480px] lg:text-lg lg:max-w-[600px]">
             Sevenpreneur hadir untuk mengubah cara Indonesia belajar bisnis —
             lebih terstruktur, lebih relevan, dan terintegrasi dengan kecerdasan
             buatan.
@@ -99,10 +99,10 @@ export default function CompanySVP() {
               { value: "2019", label: "Berdiri Sejak" },
             ].map(({ value, label }) => (
               <div key={label} className="flex flex-col items-center gap-1">
-                <span className="font-brand font-bold text-2xl text-white lg:text-4xl">
+                <span className="font-mona-sans font-bold text-2xl text-white lg:text-4xl">
                   {value}
                 </span>
-                <span className="font-bodycopy text-xs text-white/50 tracking-wide uppercase">
+                <span className=" text-xs text-white/50 tracking-wide uppercase">
                   {label}
                 </span>
               </div>
@@ -115,10 +115,10 @@ export default function CompanySVP() {
       <section className="section-root relative flex items-center justify-center bg-background">
         <div className="section-container flex flex-col w-full items-center gap-10 px-5 py-12 lg:px-0 lg:py-[72px] lg:max-w-[988px] xl:max-w-[1208px] 2xl:max-w-[1300px]">
           <div className="flex flex-col items-center gap-2 text-center">
-            <span className="text-xs font-bodycopy font-semibold tracking-widest text-primary uppercase">
+            <span className="text-xs  font-semibold tracking-widest text-primary uppercase">
               Our Foundation
             </span>
-            <h2 className="font-brand font-bold text-xl text-foreground leading-snug sm:text-2xl lg:text-4xl">
+            <h2 className="font-mona-sans font-bold text-xl text-foreground leading-snug sm:text-2xl lg:text-4xl">
               Visi & Misi
             </h2>
           </div>
@@ -147,11 +147,11 @@ export default function CompanySVP() {
                     />
                   </svg>
                 </div>
-                <h3 className="font-brand font-bold text-lg text-foreground">
+                <h3 className="font-mona-sans font-bold text-lg text-foreground">
                   Visi
                 </h3>
               </div>
-              <p className="font-bodycopy text-base text-emphasis leading-relaxed">
+              <p className=" text-base text-emphasis leading-relaxed">
                 Menjadi ekosistem pelatihan bisnis berbasis AI terdepan di Asia
                 Tenggara yang melahirkan generasi pengusaha berdampak — dari
                 Indonesia untuk dunia.
@@ -176,7 +176,7 @@ export default function CompanySVP() {
                     />
                   </svg>
                 </div>
-                <h3 className="font-brand font-bold text-lg text-foreground">
+                <h3 className="font-mona-sans font-bold text-lg text-foreground">
                   Misi
                 </h3>
               </div>
@@ -189,7 +189,7 @@ export default function CompanySVP() {
                 ].map((item) => (
                   <li
                     key={item}
-                    className="flex items-start gap-2.5 font-bodycopy text-sm text-emphasis leading-relaxed"
+                    className="flex items-start gap-2.5  text-sm text-emphasis leading-relaxed"
                   >
                     <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
                     {item}
@@ -205,13 +205,13 @@ export default function CompanySVP() {
       <section className="section-root relative flex items-center justify-center bg-section-background">
         <div className="section-container flex flex-col w-full items-center gap-10 px-5 py-12 lg:px-0 lg:py-[72px] lg:max-w-[988px] xl:max-w-[1208px] 2xl:max-w-[1300px]">
           <div className="flex flex-col items-center gap-2 text-center">
-            <span className="text-xs font-bodycopy font-semibold tracking-widest text-primary uppercase">
+            <span className="text-xs  font-semibold tracking-widest text-primary uppercase">
               Why Sevenpreneur
             </span>
-            <h2 className="font-brand font-bold text-xl text-foreground leading-snug sm:text-2xl lg:text-4xl">
+            <h2 className="font-mona-sans font-bold text-xl text-foreground leading-snug sm:text-2xl lg:text-4xl">
               Keunggulan Kami
             </h2>
-            <p className="font-bodycopy text-sm text-emphasis max-w-[340px] mt-1 sm:text-base sm:max-w-[480px]">
+            <p className=" text-sm text-emphasis max-w-[340px] mt-1 sm:text-base sm:max-w-[480px]">
               Bukan sekadar kursus online biasa — kami membangun ekosistem
               bisnis yang menyeluruh.
             </p>
@@ -227,10 +227,10 @@ export default function CompanySVP() {
                   <Icon className="h-5 w-5 text-tertiary" strokeWidth={1.8} />
                 </div>
                 <div className="flex flex-col gap-1.5">
-                  <h3 className="font-brand font-bold text-base text-foreground">
+                  <h3 className="font-mona-sans font-bold text-base text-foreground">
                     {title}
                   </h3>
-                  <p className="font-bodycopy text-sm text-emphasis leading-relaxed">
+                  <p className=" text-sm text-emphasis leading-relaxed">
                     {description}
                   </p>
                 </div>
@@ -244,13 +244,13 @@ export default function CompanySVP() {
       <section className="section-root relative flex items-center justify-center bg-background">
         <div className="section-container flex flex-col w-full items-center gap-10 px-5 py-12 lg:px-0 lg:py-[72px] lg:max-w-[988px] xl:max-w-[1208px] 2xl:max-w-[1300px]">
           <div className="flex flex-col items-center gap-2 text-center">
-            <span className="text-xs font-bodycopy font-semibold tracking-widest text-primary uppercase">
+            <span className="text-xs  font-semibold tracking-widest text-primary uppercase">
               The Team
             </span>
-            <h2 className="font-brand font-bold text-xl text-foreground leading-snug sm:text-2xl lg:text-4xl">
+            <h2 className="font-mona-sans font-bold text-xl text-foreground leading-snug sm:text-2xl lg:text-4xl">
               Di Balik Sevenpreneur
             </h2>
-            <p className="font-bodycopy text-sm text-emphasis max-w-[340px] mt-1 sm:text-base sm:max-w-[480px]">
+            <p className=" text-sm text-emphasis max-w-[340px] mt-1 sm:text-base sm:max-w-[480px]">
               Tim yang berkomitmen untuk mengubah cara Indonesia belajar dan
               berbisnis.
             </p>
@@ -266,20 +266,20 @@ export default function CompanySVP() {
                   <div
                     className={`flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br ${accentFrom} ${accentTo}`}
                   >
-                    <span className="font-brand font-bold text-lg text-white">
+                    <span className="font-mona-sans font-bold text-lg text-white">
                       {initials}
                     </span>
                   </div>
                   <div className="flex flex-col gap-1">
-                    <h3 className="font-brand font-bold text-base text-foreground">
+                    <h3 className="font-mona-sans font-bold text-base text-foreground">
                       {name}
                     </h3>
-                    <span className="font-bodycopy text-xs font-semibold text-primary tracking-wide uppercase">
+                    <span className=" text-xs font-semibold text-primary tracking-wide uppercase">
                       {role}
                     </span>
                   </div>
                   <div className="h-px w-full bg-border" />
-                  <p className="font-bodycopy text-sm text-emphasis leading-relaxed">
+                  <p className=" text-sm text-emphasis leading-relaxed">
                     {description}
                   </p>
                 </div>
@@ -295,16 +295,16 @@ export default function CompanySVP() {
           <div className="absolute top-0 left-1/2 -translate-x-1/2 h-[320px] w-[640px] rounded-full bg-tertiary/20 blur-[100px]" />
         </div>
         <div className="section-container relative flex flex-col w-full items-center gap-6 px-5 py-12 z-10 text-center lg:px-0 lg:py-[72px] lg:max-w-[988px] xl:max-w-[1208px] 2xl:max-w-[1300px]">
-          <h2 className="font-brand font-bold text-xl leading-snug text-transparent bg-clip-text bg-gradient-to-r from-white to-primary max-w-[340px] sm:text-2xl sm:max-w-[480px] lg:text-4xl lg:max-w-[600px]">
+          <h2 className="font-mona-sans font-bold text-xl leading-snug text-transparent bg-clip-text bg-gradient-to-r from-white to-primary max-w-[340px] sm:text-2xl sm:max-w-[480px] lg:text-4xl lg:max-w-[600px]">
             Siap Bergabung dengan Ekosistem Sevenpreneur?
           </h2>
-          <p className="font-bodycopy text-sm text-white/60 max-w-[300px] sm:text-base sm:max-w-[440px]">
+          <p className=" text-sm text-white/60 max-w-[300px] sm:text-base sm:max-w-[440px]">
             Ribuan founder telah memulai perjalanan mereka bersama kami.
             Saatnya giliranmu.
           </p>
           <a
             href="/cohorts/sevenpreneur-business-blueprint-program"
-            className="mt-2 inline-flex items-center gap-2 rounded-full bg-primary px-7 py-3 font-bodycopy text-sm font-semibold text-white transition-colors hover:bg-primary-hover"
+            className="mt-2 inline-flex items-center gap-2 rounded-full bg-primary px-7 py-3  text-sm font-semibold text-white transition-colors hover:bg-primary-hover"
           >
             Mulai Sekarang
           </a>
