@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import AppSocialMediaButton from "../buttons/AppSocialMediaButton";
-import styles from "./Article.module.css";
+import styles from "../css/Article.module.css";
 import ArticleDetailsMobileSVP from "./ArticleDetailsMobileSVP";
 
 dayjs.extend(duration);
@@ -119,7 +119,7 @@ export default function ArticleDetailsSVP(props: ArticleDetailsSVP) {
               {insight.map((post) => (
                 <li
                   key={post}
-                  className="font-read text-emphasis text-lg dark:text-foreground"
+                  className="font-inter text-emphasis text-lg dark:text-foreground"
                 >
                   {post}
                 </li>
@@ -181,7 +181,7 @@ export default function ArticleDetailsSVP(props: ArticleDetailsSVP) {
                       className="flex w-full items-center gap-5 z-10"
                     >
                       <div className="step-point bg-primary size-2 rounded-full shrink-0 outline-primary-light/60 outline-3 dark:bg-secondary dark:outline-white/10" />
-                      <p className="font-read text-base p-2 rounded-md hover:bg-black/5 dark:hover:bg-white/5">
+                      <p className="font-inter text-base p-2 rounded-md hover:bg-black/5 dark:hover:bg-white/5">
                         {post.sub_heading}
                       </p>
                     </Link>

@@ -255,10 +255,8 @@
   /* Typography */
   --font-mona-sans: var(--font-mona-sans-source);
   --font-plus-jakarta: var(--font-plus-jakarta-source);
-  --font-read: var(--font-inter-source);
   --font-inter: var(--font-inter-source);
-  --font-fraunces: var(--font-fraunces);
-  --font-cormorant: var(--font-cormorant-garamond);
+  --font-open-sauce: var(--font-open-sauce-one);
   --font-jetbrains: var(--font-jetbrains-mono);
   --font-geist-sans: var(--font-geist-sans);
   --font-geist-mono: var(--font-geist-mono);

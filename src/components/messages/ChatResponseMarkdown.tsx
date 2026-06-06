@@ -4,7 +4,7 @@ import { useClipboard } from "@/lib/use-clipboard";
 import { Check, CopyIcon, Loader2 } from "lucide-react";
 import Image from "next/image";
 import AppButton from "../buttons/AppButton";
-import styles from "./Markdown.module.css";
+import styles from "../css/Markdown.module.css";
 
 interface ChatResponseMarkdownProps {
   chatMessage: string;

@@ -15,7 +15,7 @@ import BottomNavLMS from "../navigations/BottomNavLMS";
 import HeaderAIResultDetailsLMS from "../navigations/HeaderAIResultDetailsLMS";
 import PageContainerDashboard from "../pages/PageContainerDashboard";
 import LoadingAIGeneratingResult from "../states/LoadingAIGeneratingResultLMS";
-import styles from "./Report.module.css";
+import styles from "../css/Report.module.css";
 
 const maturityAttributes: Record<
   AICompetitorGrader_MarketMaturity,

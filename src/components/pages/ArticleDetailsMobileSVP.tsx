@@ -6,7 +6,7 @@ import Image from "next/image";
 import React from "react";
 import { toast } from "sonner";
 import AppButton from "../buttons/AppButton";
-import styles from "./Article.module.css";
+import styles from "../css/Article.module.css";
 import { ArticleBodyContent } from "./ArticleDetailsSVP";
 
 interface ArticleDetailsSVP {
@@ -122,7 +122,7 @@ export default function ArticleDetailsMobileSVP(props: ArticleDetailsSVP) {
               {insight.map((post) => (
                 <li
                   key={post}
-                  className="font-read text-emphasis text-base dark:text-foreground"
+                  className="font-inter text-emphasis text-base dark:text-foreground"
                 >
                   {post}
                 </li>
