@@ -2,8 +2,6 @@ import { createTRPCRouter } from "@/trpc/init";
 import { updateAdv } from "./ads/update.ads";
 import { updateArticle } from "./article/update.article";
 import { updateB2B } from "./b2b/update.b2b";
-import { updateBA } from "./ba/update.ba";
-import { updateBD } from "./bd/update.bd";
 import { updateEvent } from "./event/update.event";
 import { updateLMS } from "./lms/update.lms";
 import { updatePlaylist } from "./playlist/update.playlist";
@@ -30,26 +28,6 @@ export const updateRouter = createTRPCRouter({
   discussionReply: updateLMS.discussionReply,
   project: updateLMS.project,
   submission: updateLMS.submission,
-
-  // Business-assessment-related //
-
-  ba: {
-    category: updateBA.category,
-    subcategory: updateBA.subcategory,
-    question: updateBA.question,
-    answerSheet: updateBA.answerSheet,
-  },
-
-  // Business-metric-related //
-
-  // Business data (bd)
-  bd: {
-    revenue_mtd: updateBD.revenue_mtd,
-    revenue_mtd_csv: updateBD.revenue_mtd_csv,
-    cost_mtd: updateBD.cost_mtd,
-    north_star_indicator: updateBD.north_star_indicator,
-    north_star_mtd: updateBD.north_star_mtd,
-  },
 
   // Playlist-related //
 

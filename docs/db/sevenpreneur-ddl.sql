@@ -37,29 +37,6 @@ CREATE TYPE c_role_enum AS ENUM (
   'assistant'
 );
 
--- Enumeration for the ba_answer_sheets table (ba_*)
-
-CREATE TYPE ba_period_enum AS ENUM (
-  'asesmen_pertama',
-  'asesmen_kedua',
-  'asesmen_ketiga'
-);
-
--- Enumeration for the bd_fin_cost_mtds table (cost_*)
-
-CREATE TYPE cost_category_enum AS ENUM (
-  -- TODO: use actual values
-  'todo'
-);
-
--- Enumeration for the bd_north_star_indicators table (ns_*)
-
-CREATE TYPE ns_status_enum AS ENUM (
-  'on_track',
-  'at_risk',
-  'off_track'
-);
-
 -- Enumeration for the users table
 
 CREATE TYPE occupation_enum AS ENUM (
@@ -450,108 +427,6 @@ CREATE TABLE learning_ratings (
   improvement_suggestion TEXT             NULL,
   created_at             TIMESTAMPTZ  NOT NULL  DEFAULT CURRENT_TIMESTAMP,
   UNIQUE (learning_id, user_id)
-);
-
--- Business-assessment-related
-
-CREATE TABLE ba_categories (
-  id          SMALLSERIAL    PRIMARY KEY,
-  name        VARCHAR        NOT NULL,
-  weight      DECIMAL(5, 2)  NOT NULL, -- in percent (%)
-  num_order   SMALLINT           NULL,
-  created_at  TIMESTAMPTZ    NOT NULL  DEFAULT CURRENT_TIMESTAMP,
-  updated_at  TIMESTAMPTZ    NOT NULL  DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE ba_subcategories (
-  id           SMALLSERIAL  PRIMARY KEY,
-  category_id  SMALLINT     NOT NULL,
-  name         VARCHAR      NOT NULL,
-  num_order    SMALLINT         NULL,
-  created_at   TIMESTAMPTZ  NOT NULL  DEFAULT CURRENT_TIMESTAMP,
-  updated_at   TIMESTAMPTZ  NOT NULL  DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE ba_questions (
-  id              SERIAL         PRIMARY KEY,
-  subcategory_id  SMALLINT       NOT NULL,
-  question        VARCHAR        NOT NULL,
-  hint            VARCHAR        NOT NULL,
-  weight          DECIMAL(4, 2)  NOT NULL,
-  status          status_enum    NOT NULL,
-  num_order       SMALLINT           NULL,
-  created_at      TIMESTAMPTZ    NOT NULL  DEFAULT CURRENT_TIMESTAMP,
-  updated_at      TIMESTAMPTZ    NOT NULL  DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE ba_answer_sheets (
-  id          SERIAL          PRIMARY KEY,
-  user_id     UUID            NOT NULL,
-  period      ba_period_enum  NOT NULL,
-  score       DECIMAL(5, 2)   NOT NULL, -- in percent (%)
-  created_at  TIMESTAMPTZ     NOT NULL  DEFAULT CURRENT_TIMESTAMP,
-  updated_at  TIMESTAMPTZ     NOT NULL  DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE ba_answer_items (
-  id           SERIAL       PRIMARY KEY,
-  sheet_id     INTEGER      NOT NULL,
-  question_id  INTEGER      NOT NULL,
-  score        SMALLINT     NOT NULL, -- in [0, 5] range
-  created_at   TIMESTAMPTZ  NOT NULL  DEFAULT CURRENT_TIMESTAMP,
-  updated_at   TIMESTAMPTZ  NOT NULL  DEFAULT CURRENT_TIMESTAMP
-);
-
--- Business-metric-related
-
-CREATE TABLE bd_fin_revenue_mtds (
-  id          SERIAL          PRIMARY KEY,
-  user_id     UUID            NOT NULL,
-  year        SMALLINT        NOT NULL,
-  month       SMALLINT        NOT NULL,
-  amount      DECIMAL(12, 2)  NOT NULL,
-  currency    VARCHAR         NOT NULL,
-  by_product  JSON            NOT NULL,
-  by_channel  JSON            NOT NULL,
-  note        VARCHAR             NULL,
-  created_at  TIMESTAMPTZ     NOT NULL  DEFAULT CURRENT_TIMESTAMP,
-  updated_at  TIMESTAMPTZ     NOT NULL  DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE bd_fin_cost_mtds (
-  id          SERIAL              PRIMARY KEY,
-  user_id     UUID                NOT NULL,
-  year        SMALLINT            NOT NULL,
-  month       SMALLINT            NOT NULL,
-  amount      DECIMAL(12, 2)      NOT NULL,
-  currency    VARCHAR             NOT NULL,
-  category    cost_category_enum  NOT NULL,
-  note        VARCHAR                 NULL,
-  created_at  TIMESTAMPTZ         NOT NULL  DEFAULT CURRENT_TIMESTAMP,
-  updated_at  TIMESTAMPTZ         NOT NULL  DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE bd_north_star_indicators (
-  id             SERIAL          PRIMARY KEY,
-  user_id        UUID            NOT NULL,
-  name           VARCHAR         NOT NULL,
-  description    TEXT            NOT NULL,
-  annual_target  DECIMAL(12, 2)  NOT NULL,
-  unit           VARCHAR         NOT NULL,
-  status         ns_status_enum  NOT NULL,
-  created_at     TIMESTAMPTZ     NOT NULL  DEFAULT CURRENT_TIMESTAMP,
-  updated_at     TIMESTAMPTZ     NOT NULL  DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE bd_north_star_mtds (
-  id            SERIAL          PRIMARY KEY,
-  indicator_id  SERIAL          NOT NULL,
-  year          SMALLINT        NOT NULL,
-  month         SMALLINT        NOT NULL,
-  actual_value  DECIMAL(12, 2)  NOT NULL,
-  note          VARCHAR             NULL,
-  created_at    TIMESTAMPTZ     NOT NULL  DEFAULT CURRENT_TIMESTAMP,
-  updated_at    TIMESTAMPTZ     NOT NULL  DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Playlist-related
@@ -962,33 +837,6 @@ ALTER TABLE learning_ratings
   ADD FOREIGN KEY (learning_id) REFERENCES learnings (id),
   ADD FOREIGN KEY (user_id)     REFERENCES users (id);
 
-ALTER TABLE ba_subcategories
-  ADD FOREIGN KEY (category_id) REFERENCES ba_categories (id);
-
-ALTER TABLE ba_questions
-  ADD FOREIGN KEY (subcategory_id) REFERENCES ba_subcategories (id);
-
-ALTER TABLE ba_answer_sheets
-  ADD FOREIGN KEY (user_id) REFERENCES users (id);
-
-ALTER TABLE ba_answer_items
-  ADD FOREIGN KEY (sheet_id)    REFERENCES ba_answer_sheets (id),
-  ADD FOREIGN KEY (question_id) REFERENCES ba_questions (id);
-
--- Business-metric-related
-
-ALTER TABLE bd_fin_revenue_mtds
-  ADD FOREIGN KEY (user_id) REFERENCES users (id);
-
-ALTER TABLE bd_fin_cost_mtds
-  ADD FOREIGN KEY (user_id) REFERENCES users (id);
-
-ALTER TABLE bd_north_star_indicators
-  ADD FOREIGN KEY (user_id) REFERENCES users (id);
-
-ALTER TABLE bd_north_star_mtds
-  ADD FOREIGN KEY (indicator_id) REFERENCES bd_north_star_indicators (id);
-
 -- Playlist-related
 
 ALTER TABLE playlists
@@ -1197,53 +1045,6 @@ CREATE TRIGGER update_projects_updated_at_trigger
 
 CREATE TRIGGER update_submissions_updated_at_trigger
   BEFORE UPDATE ON submissions
-  FOR EACH ROW
-    EXECUTE FUNCTION update_updated_at();
-
-CREATE TRIGGER update_ba_categories_updated_at_trigger
-  BEFORE UPDATE ON ba_categories
-  FOR EACH ROW
-    EXECUTE FUNCTION update_updated_at();
-
-CREATE TRIGGER update_ba_subcategories_updated_at_trigger
-  BEFORE UPDATE ON ba_subcategories
-  FOR EACH ROW
-    EXECUTE FUNCTION update_updated_at();
-
-CREATE TRIGGER update_ba_questions_updated_at_trigger
-  BEFORE UPDATE ON ba_questions
-  FOR EACH ROW
-    EXECUTE FUNCTION update_updated_at();
-
-CREATE TRIGGER update_ba_answer_sheets_updated_at_trigger
-  BEFORE UPDATE ON ba_answer_sheets
-  FOR EACH ROW
-    EXECUTE FUNCTION update_updated_at();
-
-CREATE TRIGGER update_ba_answer_items_updated_at_trigger
-  BEFORE UPDATE ON ba_answer_items
-  FOR EACH ROW
-    EXECUTE FUNCTION update_updated_at();
-
--- Business-metric-related
-
-CREATE TRIGGER update_bd_fin_revenue_mtds_updated_at_trigger
-  BEFORE UPDATE ON bd_fin_revenue_mtds
-  FOR EACH ROW
-    EXECUTE FUNCTION update_updated_at();
-
-CREATE TRIGGER update_bd_fin_cost_mtds_updated_at_trigger
-  BEFORE UPDATE ON bd_fin_cost_mtds
-  FOR EACH ROW
-    EXECUTE FUNCTION update_updated_at();
-
-CREATE TRIGGER update_bd_north_star_indicators_updated_at_trigger
-  BEFORE UPDATE ON bd_north_star_indicators
-  FOR EACH ROW
-    EXECUTE FUNCTION update_updated_at();
-
-CREATE TRIGGER update_bd_north_star_mtds_updated_at_trigger
-  BEFORE UPDATE ON bd_north_star_mtds
   FOR EACH ROW
     EXECUTE FUNCTION update_updated_at();
 

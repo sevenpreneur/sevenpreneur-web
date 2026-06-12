@@ -157,7 +157,7 @@ export default function AddCohortMemberFormCMS(
                 onChange={handleInputChange("cohortPriceId")}
                 required
                 options={cohortDetailsData?.cohort.cohort_prices.map(
-                  (post) => ({
+                  (post: { id: number; name: string }) => ({
                     value: post.id,
                     label: post.name,
                   })

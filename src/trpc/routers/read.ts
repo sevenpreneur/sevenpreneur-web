@@ -3,8 +3,6 @@ import { readAdv } from "./ads/read.ads";
 import { readAIResult } from "./ai_tool/read.ai_tool";
 import { readArticle } from "./article/read.article";
 import { readB2B } from "./b2b/read.b2b";
-import { readBA } from "./ba/read.ba";
-import { readBD } from "./bd/read.bd";
 import { readEvent } from "./event/read.event";
 import { readLMS } from "./lms/read.lms";
 import { readLookup } from "./lookup/read.lookup";
@@ -41,26 +39,6 @@ export const readRouter = createTRPCRouter({
   learningFeedbackAnalysis: readLMS.learningFeedbackAnalysis,
   cohortRatingStats: readLMS.cohortRatingStats,
   userRating: readLMS.userRating,
-
-  // Business-assessment-related //
-
-  ba: {
-    category: readBA.category,
-    subcategory: readBA.subcategory,
-    question: readBA.question,
-    sheet: readBA.sheet,
-    answerSheet: readBA.answerSheet,
-  },
-
-  // Business-metric-related //
-
-  // Business data (bd)
-  bd: {
-    revenue_mtd: readBD.revenue_mtd,
-    cost_mtd: readBD.cost_mtd,
-    north_star_indicator: readBD.north_star_indicator,
-    north_star_mtd: readBD.north_star_mtd,
-  },
 
   // Playlist-related //
 

@@ -3,8 +3,6 @@ import { listAITool } from "./ai_tool/list.ai_tool";
 import { listAnalytics } from "./analytics/list.analytics";
 import { listArticle } from "./article/list.article";
 import { listB2B } from "./b2b/list.b2b";
-import { listBA } from "./ba/list.ba";
-import { listBD } from "./bd/list.bd";
 import { listEvent } from "./event/list.event";
 import { listLMS } from "./lms/list.lms";
 import { listLookup } from "./lookup/list.lookup";
@@ -41,25 +39,6 @@ export const listRouter = createTRPCRouter({
   projects: listLMS.projects,
   submissions: listLMS.submissions,
   attendance_counts: listLMS.attendance_counts,
-
-  // Business-assessment-related //
-
-  ba: {
-    categories: listBA.categories,
-    subcategories: listBA.subcategories,
-    questions: listBA.questions,
-    answerSheets: listBA.answerSheets,
-  },
-
-  // Business-metric-related //
-
-  // Business data (bd)
-  bd: {
-    revenue_mtds: listBD.revenue_mtds,
-    cost_mtds: listBD.cost_mtds,
-    north_star_indicators: listBD.north_star_indicators,
-    north_star_mtds: listBD.north_star_mtds,
-  },
 
   // Playlist-related //
 

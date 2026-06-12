@@ -40,29 +40,6 @@ enum c_role_enum {
   assistant
 }
 
-// Enumeration for the ba_answer_sheets table (ba_*)
-
-enum ba_period_enum {
-  asesmen_pertama
-  asesmen_kedua
-  asesmen_ketiga
-}
-
-// Enumeration for the bd_fin_cost_mtds table (cost_*)
-
-enum cost_category_enum {
-  // TODO: use actual values
-  todo
-}
-
-// Enumeration for the bd_north_star_indicators table (ns_*)
-
-enum ns_status_enum {
-  on_track
-  at_risk
-  off_track
-}
-
 // Enumeration for the users table
 
 enum occupation_enum {
@@ -366,108 +343,6 @@ Table attendances {
   user_id      uuid         [ref: > users.id]
   check_in_at  timestamptz
   check_out_at timestamptz
-}
-
-// Business-assessment-related
-
-Table ba_categories {
-  id          smallint      [primary key]
-  name        varchar
-  weight      decimal(5,2)  [note: 'in percent (%)']
-  num_order   smallint
-  created_at  timestamptz
-  updated_at  timestamptz
-}
-
-Table ba_subcategories {
-  id           smallint     [primary key]
-  category_id  smallint     [ref: > ba_categories.id]
-  name         varchar
-  num_order    smallint
-  created_at   timestamptz
-  updated_at   timestamptz
-}
-
-Table ba_questions {
-  id              integer       [primary key]
-  subcategory_id  smallint      [ref: > ba_subcategories.id]
-  question        varchar
-  hint            varchar
-  weight          decimal(4,2)
-  status          status_enum
-  num_order       smallint
-  created_at      timestamptz
-  updated_at      timestamptz
-}
-
-Table ba_answer_sheets {
-  id          integer         [primary key]
-  user_id     uuid            [ref: > users.id]
-  period      ba_period_enum
-  score       decimal(5,2)    [note: 'in percent (%)']
-  created_at  timestamptz
-  updated_at  timestamptz
-}
-
-Table ba_answer_items {
-  id           integer      [primary key]
-  sheet_id     integer      [ref: > ba_answer_sheets.id]
-  question_id  integer      [ref: > ba_questions.id]
-  score        smallint     [note: 'in [0, 5] range']
-  created_at   timestamptz
-  updated_at   timestamptz
-}
-
-// Business-metric-related
-
-Table bd_fin_revenue_mtds {
-  id          integer        [primary key]
-  user_id     uuid           [ref: > users.id]
-  year        smallint
-  month       smallint
-  amount      decimal(12,2)
-  currency    varchar
-  by_product  json
-  by_channel  json
-  note        varchar
-  created_at  timestamptz
-  updated_at  timestamptz
-}
-
-Table bd_fin_cost_mtds {
-  id          integer             [primary key]
-  user_id     uuid                [ref: > users.id]
-  year        smallint
-  month       smallint
-  amount      decimal(12,2)
-  currency    varchar
-  category    cost_category_enum
-  note        varchar
-  created_at  timestamptz
-  updated_at  timestamptz
-}
-
-Table bd_north_star_indicators {
-  id             integer         [primary key]
-  user_id        uuid            [ref: > users.id]
-  name           varchar
-  description    text
-  annual_target  decimal(12,2)
-  unit           varchar
-  status         ns_status_enum
-  created_at     timestamptz
-  updated_at     timestamptz
-}
-
-Table bd_north_star_mtds {
-  id            integer        [primary key]
-  indicator_id  integer        [ref: > bd_north_star_indicators.id]
-  year          smallint
-  month         smallint
-  actual_value  decimal(12,2)
-  note          varchar
-  created_at    timestamptz
-  updated_at    timestamptz
 }
 
 // Playlist-related
