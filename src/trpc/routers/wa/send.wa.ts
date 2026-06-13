@@ -345,4 +345,138 @@ export const sendWA = {
         } as WhatsappAttachmentTemplate
       );
     }),
+
+  broadcast_template: administratorProcedure
+    .input(
+      z.object({
+        conv_ids: z.array(stringIsNanoid()).min(1).max(200),
+        template_name: stringNotBlank(),
+        lang_code: stringNotBlank().default("id_ID"),
+        parameters: z.record(stringNotBlank(), stringNotBlank()).default({}),
+      })
+    )
+    .mutation(async (opts) => {
+      const convIds = Array.from(new Set(opts.input.conv_ids));
+      const conversations = await opts.ctx.prisma.wAConversation.findMany({
+        select: {
+          id: true,
+          full_name: true,
+          phone_number: true,
+        },
+        where: { id: { in: convIds } },
+      });
+      const conversationsById = new Map(
+        conversations.map((conversation) => [conversation.id, conversation])
+      );
+
+      const paramEntries = Object.entries(opts.input.parameters);
+      const bodyParamList = paramEntries.map((entry) => {
+        return { name: entry[0], text: entry[1] };
+      });
+
+      const resultingText = await whatsappTemplateToText(
+        opts.ctx.prisma,
+        opts.input.template_name,
+        opts.input.lang_code,
+        opts.input.parameters
+      );
+
+      const results: {
+        conv_id: string;
+        full_name?: string;
+        phone_number?: string;
+        status: "SENT" | "FAILED";
+        chat_id?: string;
+        error?: string;
+      }[] = [];
+
+      for (const convId of convIds) {
+        const conversation = conversationsById.get(convId);
+        if (!conversation) {
+          results.push({
+            conv_id: convId,
+            status: "FAILED",
+            error: "Conversation not found",
+          });
+          continue;
+        }
+
+        try {
+          const response = await whatsappTemplateMessageRequest(
+            conversation.phone_number,
+            opts.input.template_name,
+            opts.input.lang_code,
+            bodyParamList
+          );
+          if (response.error) {
+            await LogError("send.whatsapp.broadcast", "API error", {
+              conv_id: conversation.id,
+              phone_number: conversation.phone_number,
+              error: response.error,
+            });
+            results.push({
+              conv_id: conversation.id,
+              full_name: conversation.full_name,
+              phone_number: conversation.phone_number,
+              status: "FAILED",
+              error: response.error.message,
+            });
+            continue;
+          }
+          if (!response.messages || response.messages.length < 1) {
+            throw new Error("No message ID");
+          }
+          if (response.messages.length > 1) {
+            await LogError(
+              "send.whatsapp.broadcast",
+              "More-than-one messages are returned."
+            );
+          }
+
+          const createdChat = await opts.ctx.prisma.wAChat.create({
+            data: {
+              conv_id: conversation.id,
+              wam_id: response.messages[0].id,
+              direction: WACDirection.OUTBOUND,
+              sender_type: WACSenderType.ADMIN,
+              type: WACType.TEMPLATE,
+              message: resultingText,
+              attachment: {
+                name: opts.input.template_name,
+                lang_code: opts.input.lang_code,
+                parameters: opts.input.parameters,
+              } as WhatsappAttachmentTemplate,
+            },
+          });
+
+          results.push({
+            conv_id: conversation.id,
+            full_name: conversation.full_name,
+            phone_number: conversation.phone_number,
+            status: "SENT",
+            chat_id: createdChat.id,
+          });
+        } catch (e) {
+          await LogError("send.whatsapp.broadcast", e);
+          results.push({
+            conv_id: conversation.id,
+            full_name: conversation.full_name,
+            phone_number: conversation.phone_number,
+            status: "FAILED",
+            error: e instanceof Error ? e.message : "Failed to send template",
+          });
+        }
+      }
+
+      const sent = results.filter((result) => result.status === "SENT").length;
+
+      return {
+        code: STATUS_OK,
+        message: sent === results.length ? "Success" : "Partially sent",
+        total: results.length,
+        sent,
+        failed: results.length - sent,
+        results,
+      };
+    }),
 };

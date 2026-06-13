@@ -283,12 +283,14 @@ ORDER BY last_message_at DESC`;
     const waTemplatesList = await opts.ctx.prisma.wATemplate.findMany({
       select: {
         id: true,
-        name: true,
+        template_id: true,
         lang_code: true,
         category: true,
+        components: true,
         status: true,
+        quality_rating: true,
       },
-      orderBy: [{ name: "asc" }],
+      orderBy: [{ template_id: "asc" }],
     });
 
     return {

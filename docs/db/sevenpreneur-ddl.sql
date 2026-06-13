@@ -164,11 +164,22 @@ CREATE TYPE wat_format AS ENUM (
 );
 
 CREATE TYPE wat_status AS ENUM (
-  'pending_review',
+  'pending',
   'approved',
   'rejected',
   'disabled',
-  'paused'
+  'paused',
+  'in_appeal',
+  'pending_deletion',
+  'deleted',
+  'limit_exceeded'
+);
+
+CREATE TYPE wat_quality AS ENUM (
+  'green',
+  'yellow',
+  'red',
+  'unknown'
 );
 
 -- Enumeration for the wa_alerts table (wa_alert_*)
@@ -715,16 +726,18 @@ CREATE TABLE wa_assets (
 );
 
 CREATE TABLE wa_templates (
-  id          SERIAL        PRIMARY KEY,
-  name        VARCHAR       NOT NULL,
-  lang_code   CHAR(5)       NOT NULL  DEFAULT 'en_US',
-  category    wat_category  NOT NULL,
-  format      wat_format    NOT NULL  DEFAULT 'named',
-  components  JSON          NOT NULL  DEFAULT '[]',
-  status      wat_status    NOT NULL  DEFAULT 'pending_review',
-  created_at  TIMESTAMPTZ   NOT NULL  DEFAULT CURRENT_TIMESTAMP,
-  updated_at  TIMESTAMPTZ   NOT NULL  DEFAULT CURRENT_TIMESTAMP,
-  UNIQUE (name, lang_code)
+  id               SERIAL        PRIMARY KEY,
+  template_id      VARCHAR       NOT NULL,
+  lang_code        VARCHAR       NOT NULL  DEFAULT 'en_US',
+  category         wat_category  NOT NULL,
+  format           wat_format    NOT NULL  DEFAULT 'named',
+  components       JSON          NOT NULL  DEFAULT '[]',
+  status           wat_status    NOT NULL  DEFAULT 'pending',
+  quality_rating   wat_quality       NULL,
+  rejected_reason  VARCHAR           NULL,
+  created_at       TIMESTAMPTZ   NOT NULL  DEFAULT CURRENT_TIMESTAMP,
+  updated_at       TIMESTAMPTZ   NOT NULL  DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE (template_id, lang_code)
 );
 
 CREATE TABLE wa_alerts (

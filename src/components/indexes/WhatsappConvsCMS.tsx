@@ -3,7 +3,7 @@ import { LeadStatus } from "@/lib/app-types";
 import { supabase } from "@/lib/supabase";
 import { trpc } from "@/trpc/client";
 import { WALeadStatus, WAMode } from "@prisma/client";
-import { ListFilter, MessageCircle, RotateCcw } from "lucide-react";
+import { ListFilter, MessageCircle, RotateCcw, Send } from "lucide-react";
 import { useTheme } from "next-themes";
 import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
@@ -11,6 +11,7 @@ import AppButton from "../buttons/AppButton";
 import SectionContainerCMS from "../cards/SectionContainerCMS";
 import WhatsappLeadDetailsCMS from "../elements/WhatsappLeadDetailsCMS";
 import AppSelect from "../fields/AppSelect";
+import BroadcastWhatsappFormCMS from "../forms/BroadcastWhatsappFormCMS";
 import WhatsappConvItemCMS from "../items/WhatsappConvItemCMS";
 import WhatsappChatsCMS from "../messages/WhatsappChatsCMS";
 import PageContainerCMS from "../pages/PageContainerCMS";
@@ -48,6 +49,7 @@ export default function WhatsappConvsCMS(props: WhatsappConvsCMSProps) {
     useState<LeadStatusFilter>("ALL");
   const [modeFilter, setModeFilter] = useState<ModeFilter>("ALL");
   const [handlerFilter, setHandlerFilter] = useState<HandlerFilter>("ALL");
+  const [isBroadcastOpen, setIsBroadcastOpen] = useState(false);
 
   const utils = trpc.useUtils();
   const readMessage = trpc.update.wa.conversation_as_read.useMutation();
@@ -205,7 +207,16 @@ export default function WhatsappConvsCMS(props: WhatsappConvsCMSProps) {
   return (
     <PageContainerCMS className="h-screen">
       <div className="page-wrapper flex flex-col w-full h-full gap-4">
-        <PageHeaderCMS name="Whatsapp Chats" icon={MessageCircle} />
+        <PageHeaderCMS name="Whatsapp Chats" icon={MessageCircle}>
+          <AppButton
+            type="button"
+            variant="tertiary"
+            onClick={() => setIsBroadcastOpen(true)}
+          >
+            <Send className="size-4" />
+            Broadcast Message
+          </AppButton>
+        </PageHeaderCMS>
         <div className="conv-details flex flex-1 w-full min-h-0 gap-4">
           {/* LEFT PANEL */}
           <div className="left-panel flex flex-col w-80 shrink-0 gap-4 min-h-0">
@@ -359,6 +370,11 @@ export default function WhatsappConvsCMS(props: WhatsappConvsCMSProps) {
           )}
         </div>
       </div>
+      <BroadcastWhatsappFormCMS
+        sessionToken={props.sessionToken}
+        isOpen={isBroadcastOpen}
+        onClose={() => setIsBroadcastOpen(false)}
+      />
     </PageContainerCMS>
   );
 }

@@ -15,6 +15,7 @@ import {
   WAMode,
   WATCategory,
   WATFormat,
+  WATQuality,
   WATStatus,
 } from "@prisma/client";
 import z from "zod";
@@ -132,8 +133,8 @@ export const updateWA = {
     .input(
       z.object({
         id: numberIsID(),
-        name: stringNotBlank().optional(),
-        lang_code: stringNotBlank().max(5).optional(),
+        template_id: stringNotBlank().optional(),
+        lang_code: stringNotBlank().optional(),
         category: z.enum(WATCategory).optional(),
         format: z.enum(WATFormat).optional(),
         components: z
@@ -152,18 +153,22 @@ export const updateWA = {
           )
           .optional(),
         status: z.enum(WATStatus).optional(),
+        quality_rating: z.enum(WATQuality).nullable().optional(),
+        rejected_reason: stringNotBlank().nullable().optional(),
       })
     )
     .mutation(async (opts) => {
       const updatedTemplate =
         await opts.ctx.prisma.wATemplate.updateManyAndReturn({
           data: {
-            name: opts.input.name,
+            template_id: opts.input.template_id,
             lang_code: opts.input.lang_code,
             category: opts.input.category,
             format: opts.input.format,
             components: opts.input.components,
             status: opts.input.status,
+            quality_rating: opts.input.quality_rating,
+            rejected_reason: opts.input.rejected_reason,
           },
           where: {
             id: opts.input.id,

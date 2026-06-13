@@ -30,19 +30,19 @@ function whatsappReplaceParameter(
 
 export async function whatsappTemplateToText(
   prisma: ReturnType<typeof GetPrismaClient>,
-  name: string,
+  template_id: string,
   lang_code: string,
   parameters: Record<string, string>
 ) {
   const theTemplate = await prisma.wATemplate.findFirst({
     select: { components: true },
-    where: { name: name, lang_code: lang_code },
+    where: { template_id: template_id, lang_code: lang_code },
   });
   if (!theTemplate) {
     await LogError(
       "whatsappTemplateToText",
       "Template not found.",
-      name,
+      template_id,
       lang_code
     );
     return "";
