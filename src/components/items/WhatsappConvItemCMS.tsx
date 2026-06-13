@@ -9,9 +9,10 @@ import {
   getLabelWhatsappChatType,
   resolveWhatsappChatStatus,
 } from "@/lib/whatsapp-utils";
+import { WAMode } from "@prisma/client";
 import dayjs from "dayjs";
 import Image from "next/image";
-import BooleanLabelCMS from "../labels/BooleanLabelCMS";
+import AppBasedLabel from "../labels/AppBasedLabel";
 
 const variantStyles: Record<
   LeadStatus,
@@ -41,7 +42,7 @@ interface WhatsappConvItemCMSProps {
   convLastMessageAt: string;
   convLeadStatus: LeadStatus;
   convUnreadMessage: number;
-  convIsAssigned: boolean;
+  convMode: WAMode;
   selectedConvId: string;
   onClick?: () => void;
 }
@@ -103,15 +104,16 @@ export default function WhatsappConvItemCMS(props: WhatsappConvItemCMSProps) {
               <p className="conv-last-message text-sm text-emphasis  font-[450] line-clamp-1">
                 {props.convLastMessageType === "TEXT"
                   ? props.convLastMessage
-                  : labelType}
+                  : props.convLastMessageType === "TEMPLATE"
+                    ? props.convLastMessage || labelType
+                    : labelType}
               </p>
             </div>
           </div>
           <div className="mt-1">
-            <BooleanLabelCMS
-              value={props.convIsAssigned}
-              label={props.convIsAssigned ? "Assigned" : "Unassigned"}
-            />
+            <AppBasedLabel variant={props.convMode === "AI" ? "purple" : "green"}>
+              {props.convMode === "AI" ? "AI Mode" : "Human Mode"}
+            </AppBasedLabel>
           </div>
         </div>
       </div>

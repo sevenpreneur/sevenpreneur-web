@@ -1,6 +1,5 @@
-import GetPrismaClient from "./prisma";
 import LogError from "./prisma-log-error";
-import { WhatsAppTemplateComponentType } from "./whatsapp-types";
+import { whatsappGetTemplate } from "./whatsapp";
 
 // https://developers.facebook.com/documentation/business-messaging/whatsapp/templates/overview/?locale=en_US#parameter-formats
 function whatsappReplaceParameter(
@@ -29,15 +28,17 @@ function whatsappReplaceParameter(
 }
 
 export async function whatsappTemplateToText(
-  prisma: ReturnType<typeof GetPrismaClient>,
   template_id: string,
   lang_code: string,
   parameters: Record<string, string>
 ) {
-  const theTemplate = await prisma.wATemplate.findFirst({
-    select: { components: true },
-    where: { template_id: template_id, lang_code: lang_code },
-  });
+  let theTemplate;
+  try {
+    theTemplate = await whatsappGetTemplate(template_id, lang_code);
+  } catch (e) {
+    await LogError("whatsappTemplateToText", e, template_id, lang_code);
+    return "";
+  }
   if (!theTemplate) {
     await LogError(
       "whatsappTemplateToText",
@@ -48,17 +49,19 @@ export async function whatsappTemplateToText(
     return "";
   }
 
-  const components = theTemplate.components as WhatsAppTemplateComponentType;
-
-  const textIndices = {
+  const textIndices: Record<string, number> = {
     HEADER: 0,
     BODY: 1,
     FOOTER: 2,
   };
   const texts = ["", "", ""];
 
-  for (const component of components) {
-    texts[textIndices[component.type]] +=
+  for (const component of theTemplate.components) {
+    const type = (component.type ?? "").toUpperCase();
+    if (!(type in textIndices) || typeof component.text !== "string") {
+      continue;
+    }
+    texts[textIndices[type]] +=
       whatsappReplaceParameter(component.text, parameters) + "\n";
   }
 

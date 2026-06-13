@@ -3,7 +3,7 @@ import { LeadStatus } from "@/lib/app-types";
 import { supabase } from "@/lib/supabase";
 import { trpc } from "@/trpc/client";
 import { WALeadStatus, WAMode } from "@prisma/client";
-import { ListFilter, MessageCircle, RotateCcw, Send } from "lucide-react";
+import { ListFilter, Megaphone, MessageCircle, RotateCcw } from "lucide-react";
 import { useTheme } from "next-themes";
 import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
@@ -213,7 +213,7 @@ export default function WhatsappConvsCMS(props: WhatsappConvsCMSProps) {
             variant="tertiary"
             onClick={() => setIsBroadcastOpen(true)}
           >
-            <Send className="size-4" />
+            <Megaphone className="size-4" />
             Broadcast Message
           </AppButton>
         </PageHeaderCMS>
@@ -307,7 +307,7 @@ export default function WhatsappConvsCMS(props: WhatsappConvsCMSProps) {
                         convLastMessageAt={post.last_message_at}
                         convLeadStatus={post.lead_status as LeadStatus}
                         convUnreadMessage={post.unread_count}
-                        convIsAssigned={!!post.handler_id}
+                        convMode={post.mode}
                         selectedConvId={selectedConvId}
                         onClick={() => handleSelectConv(post)}
                       />

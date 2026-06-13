@@ -193,46 +193,6 @@ enum WAAssetType {
   @@map("wa_asset_type")
 }
 
-// Enumeration for the WATemplate model (WAT*)
-
-enum WATCategory {
-  MARKETING      @map("marketing")
-  UTILITY        @map("utility")
-  AUTHENTICATION @map("authentication")
-
-  @@map("wat_category")
-}
-
-enum WATFormat {
-  NAMED      @map("named")
-  POSITIONAL @map("positional")
-
-  @@map("wat_format")
-}
-
-enum WATStatus {
-  PENDING          @map("pending")
-  APPROVED         @map("approved")
-  REJECTED         @map("rejected")
-  DISABLED         @map("disabled")
-  PAUSED           @map("paused")
-  IN_APPEAL        @map("in_appeal")
-  PENDING_DELETION @map("pending_deletion")
-  DELETED          @map("deleted")
-  LIMIT_EXCEEDED   @map("limit_exceeded")
-
-  @@map("wat_status")
-}
-
-enum WATQuality {
-  GREEN   @map("green")
-  YELLOW  @map("yellow")
-  RED     @map("red")
-  UNKNOWN @map("unknown")
-
-  @@map("wat_quality")
-}
-
 // Enumeration for the WAAlert model (WAA*)
 
 enum WAAStatus {
@@ -941,23 +901,6 @@ model WAAsset {
   updated_at  DateTime    @default(now()) @updatedAt @db.Timestamptz()
 
   @@map("wa_assets")
-}
-
-model WATemplate {
-  id              Int         @id @default(autoincrement())
-  template_id     String      @db.VarChar()
-  lang_code       String      @default("en_US") @db.VarChar()
-  category        WATCategory
-  format          WATFormat   @default(NAMED)
-  components      Json        @default("[]") @db.Json
-  status          WATStatus   @default(PENDING)
-  quality_rating  WATQuality?
-  rejected_reason String?     @db.VarChar()
-  created_at      DateTime    @default(now()) @db.Timestamptz()
-  updated_at      DateTime    @default(now()) @updatedAt @db.Timestamptz()
-
-  @@unique([template_id, lang_code])
-  @@map("wa_templates")
 }
 
 model WAAlert {

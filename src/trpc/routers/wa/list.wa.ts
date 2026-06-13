@@ -1,5 +1,6 @@
 import { Optional } from "@/lib/optional-type";
 import { STATUS_OK } from "@/lib/status_code";
+import { whatsappListTemplates } from "@/lib/whatsapp";
 import { administratorProcedure } from "@/trpc/init";
 import { readFailedNotFound } from "@/trpc/utils/errors";
 import { calculatePage } from "@/trpc/utils/paging";
@@ -279,24 +280,22 @@ ORDER BY last_message_at DESC`;
       };
     }),
 
-  templates: administratorProcedure.input(z.object({})).query(async (opts) => {
-    const waTemplatesList = await opts.ctx.prisma.wATemplate.findMany({
-      select: {
-        id: true,
-        template_id: true,
-        lang_code: true,
-        category: true,
-        components: true,
-        status: true,
-        quality_rating: true,
-      },
-      orderBy: [{ template_id: "asc" }],
-    });
+  templates: administratorProcedure.input(z.object({})).query(async () => {
+    const templates = await whatsappListTemplates();
+    const list = templates.map((template) => ({
+      id: template.id,
+      template_id: template.name,
+      lang_code: template.language,
+      category: template.category,
+      status: template.status,
+      quality_rating: template.quality_score?.score ?? null,
+      components: template.components,
+    }));
 
     return {
       code: STATUS_OK,
       message: "Success",
-      list: waTemplatesList,
+      list,
     };
   }),
 

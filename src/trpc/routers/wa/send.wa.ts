@@ -326,7 +326,6 @@ export const sendWA = {
       })();
 
       const resultingText = await whatsappTemplateToText(
-        opts.ctx.prisma,
         opts.input.template_name,
         opts.input.lang_code,
         opts.input.parameters
@@ -375,7 +374,6 @@ export const sendWA = {
       });
 
       const resultingText = await whatsappTemplateToText(
-        opts.ctx.prisma,
         opts.input.template_name,
         opts.input.lang_code,
         opts.input.parameters

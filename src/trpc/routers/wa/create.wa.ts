@@ -9,13 +9,7 @@ import {
   stringIsTimestampTz,
   stringNotBlank,
 } from "@/trpc/utils/validation";
-import {
-  WAAssetType,
-  WATCategory,
-  WATFormat,
-  WATQuality,
-  WATStatus,
-} from "@prisma/client";
+import { WAAssetType } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import z from "zod";
 
@@ -50,61 +44,6 @@ export const createWA = {
         code: STATUS_CREATED,
         message: "Success",
         asset: theAsset,
-      };
-    }),
-
-  template: administratorProcedure
-    .input(
-      z.object({
-        template_id: stringNotBlank(),
-        lang_code: stringNotBlank(),
-        category: z.enum(WATCategory),
-        format: z.enum(WATFormat),
-        components: z.array(
-          z.union([
-            z.object({
-              type: z.literal("HEADER"),
-              format: z.literal("TEXT"),
-              text: stringNotBlank(),
-            }),
-            z.object({
-              type: z.union([z.literal("BODY"), z.literal("FOOTER")]),
-              text: stringNotBlank(),
-            }),
-          ])
-        ),
-        status: z.enum(WATStatus),
-        quality_rating: z.enum(WATQuality).nullable().optional(),
-        rejected_reason: stringNotBlank().nullable().optional(),
-      })
-    )
-    .mutation(async (opts) => {
-      const waTemplate = await opts.ctx.prisma.wATemplate.create({
-        data: {
-          template_id: opts.input.template_id,
-          lang_code: opts.input.lang_code,
-          category: opts.input.category,
-          format: opts.input.format,
-          components: opts.input.components,
-          status: opts.input.status,
-          quality_rating: opts.input.quality_rating,
-          rejected_reason: opts.input.rejected_reason,
-        },
-      });
-      const theTemplate = await opts.ctx.prisma.wATemplate.findFirst({
-        where: { id: waTemplate.id },
-      });
-      if (!theTemplate) {
-        throw new TRPCError({
-          code: STATUS_INTERNAL_SERVER_ERROR,
-          message: "Failed to create a new template.",
-        });
-      }
-
-      return {
-        code: STATUS_CREATED,
-        message: "Success",
-        template: theTemplate,
       };
     }),
 

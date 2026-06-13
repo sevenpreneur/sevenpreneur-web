@@ -12,7 +12,13 @@ import WhatsappImagePreviewCMS from "../modals/WhatsappImagePreviewCMS";
 import AppLoadingComponents from "../states/AppLoadingComponents";
 import AppButton from "../buttons/AppButton";
 import Image from "next/image";
-import { FileText, Download, FileQuestion, Reply } from "lucide-react";
+import {
+  FileText,
+  Download,
+  FileQuestion,
+  Reply,
+  Megaphone,
+} from "lucide-react";
 import dayjs from "dayjs";
 
 export interface WhatsappReplyTarget {
@@ -248,9 +254,7 @@ export default function WhatsappChatItemCMS(props: WhatsappChatItemCMSProps) {
               <p className="text-sm font-medium  truncate leading-snug">
                 {fileName}
               </p>
-              <p className="text-xs text-muted-foreground ">
-                {ext}
-              </p>
+              <p className="text-xs text-muted-foreground ">{ext}</p>
             </div>
 
             {/* Download button */}
@@ -343,6 +347,36 @@ export default function WhatsappChatItemCMS(props: WhatsappChatItemCMSProps) {
             </div>
           ) : (
             <MediaDownloadingState />
+          )}
+        </div>
+      </WhatsappChatBubbleCMS>
+    );
+  }
+
+  if (props.chat.type === "TEMPLATE") {
+    const templateName = props.chat.attachment.name;
+    return (
+      <WhatsappChatBubbleCMS
+        chatDirection={props.chatDirection}
+        chatStatus={props.chatStatus}
+        iconStatus={iconStatus}
+        timestampStatus={timestampStatus}
+        createdAt={props.createdAt}
+        onReply={handleReply}
+        replyTo={props.replyTo}
+        customerName={props.customerName}
+      >
+        <div className="template flex flex-col gap-1">
+          <span className="flex w-fit items-center gap-1 px-1 text-[11px] font-medium tracking-wide text-emphasis">
+            <Megaphone className="size-3" />
+            Broadcast
+          </span>
+          {props.chatMessage.trim() ? (
+            <WhatsappFormattedText text={props.chatMessage} className="px-1" />
+          ) : (
+            <p className="px-1 italic text-muted-foreground">
+              {templateName || "Template message"}
+            </p>
           )}
         </div>
       </WhatsappChatBubbleCMS>

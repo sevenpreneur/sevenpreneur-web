@@ -6,6 +6,7 @@ import {
   FileQuestionMark,
   FileText,
   ImageIcon,
+  Megaphone,
   TriangleAlert,
   Video,
 } from "lucide-react";
@@ -80,6 +81,11 @@ export function getLabelWhatsappChatType(
     return {
       iconType: <FileText className="size-4 text-emphasis" />,
       labelType: "Document",
+    };
+  } else if (chatType === "TEMPLATE") {
+    return {
+      iconType: <Megaphone className="size-4 text-emphasis" />,
+      labelType: "Template",
     };
   }
 

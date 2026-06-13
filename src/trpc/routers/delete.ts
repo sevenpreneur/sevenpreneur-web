@@ -61,7 +61,6 @@ export const deleteRouter = createTRPCRouter({
 
   wa: {
     asset: deleteWA.asset,
-    template: deleteWA.template,
     alert: deleteWA.alert,
   },
 

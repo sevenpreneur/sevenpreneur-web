@@ -18,6 +18,36 @@ type TemplateComponent = {
   text?: string;
 };
 
+type RawTemplateComponent = {
+  type?: string;
+  format?: string;
+  text?: string;
+  buttons?: { type?: string; text?: string }[];
+};
+
+// Replaces {{param}} placeholders with the entered values for a live preview,
+// keeping the placeholder when no value has been typed yet.
+function substituteParams(text: string, parameters: Record<string, string>) {
+  return text.replace(/\{\{([0-9a-z_]+)\}\}/gi, (whole, key) => {
+    const value = parameters[key]?.trim();
+    return value ? value : whole;
+  });
+}
+
+function parseTemplateComponents(components: unknown) {
+  const list = Array.isArray(components)
+    ? (components as RawTemplateComponent[])
+    : [];
+  const byType = (type: string) =>
+    list.find((component) => (component.type ?? "").toUpperCase() === type);
+  return {
+    header: byType("HEADER"),
+    body: byType("BODY"),
+    footer: byType("FOOTER"),
+    buttons: byType("BUTTONS")?.buttons ?? [],
+  };
+}
+
 type BroadcastTemplate = {
   template_id: string;
   lang_code: string;
@@ -125,6 +155,11 @@ export default function BroadcastWhatsappFormCMS({
     [selectedTemplate?.components]
   );
 
+  const previewComponents = useMemo(
+    () => parseTemplateComponents(selectedTemplate?.components),
+    [selectedTemplate?.components]
+  );
+
   const filteredConversations = useMemo(() => {
     const keyword = searchValue.trim().toLowerCase();
     if (!keyword) return conversations;
@@ -220,6 +255,7 @@ export default function BroadcastWhatsappFormCMS({
       {
         onSuccess: (result) => {
           utils.list.wa.conversations.invalidate();
+          utils.list.wa.chats.invalidate();
           if (result.failed > 0) {
             toast.warning(
               `Broadcast sent to ${result.sent} recipient(s), ${result.failed} failed`
@@ -276,13 +312,63 @@ export default function BroadcastWhatsappFormCMS({
               <div className="flex flex-col gap-4 min-h-0">
                 <AppSelect
                   selectId="broadcast-template"
-                  selectName="Template"
                   selectPlaceholder="Choose template"
                   variant="CMS"
                   value={selectedTemplateKey}
                   onChange={(value) => setSelectedTemplateKey(value as string)}
                   options={templateOptions}
                 />
+
+                {selectedTemplate && (
+                  <div className="template-preview flex flex-col gap-1.5">
+                    <div className="flex flex-col gap-1 rounded-lg bg-[#E5DDD5] p-3 dark:bg-[#0b141a]">
+                      <div className="relative max-w-[88%] rounded-lg rounded-tl-none bg-white px-3 py-2 shadow-sm dark:bg-[#202c33]">
+                        {previewComponents.header &&
+                          (previewComponents.header.format === "TEXT" &&
+                          previewComponents.header.text ? (
+                            <p className="mb-1 break-words text-sm font-bold text-foreground">
+                              {substituteParams(
+                                previewComponents.header.text,
+                                parameters
+                              )}
+                            </p>
+                          ) : (
+                            <div className="mb-1.5 flex h-20 items-center justify-center rounded bg-card-inside-bg text-xs font-semibold text-emphasis">
+                              {previewComponents.header.format ?? "MEDIA"} HEADER
+                            </div>
+                          ))}
+                        {previewComponents.body?.text && (
+                          <p className="whitespace-pre-wrap break-words text-sm text-foreground">
+                            {substituteParams(
+                              previewComponents.body.text,
+                              parameters
+                            )}
+                          </p>
+                        )}
+                        {previewComponents.footer?.text && (
+                          <p className="mt-1.5 break-words text-xs text-emphasis">
+                            {substituteParams(
+                              previewComponents.footer.text,
+                              parameters
+                            )}
+                          </p>
+                        )}
+                      </div>
+                      {previewComponents.buttons.length > 0 && (
+                        <div className="flex max-w-[88%] flex-col gap-1">
+                          {previewComponents.buttons.map((button, index) => (
+                            <div
+                              key={index}
+                              className="rounded-lg bg-white px-3 py-2 text-center text-sm font-semibold text-tertiary shadow-sm dark:bg-[#202c33]"
+                            >
+                              {button.text}
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
 
                 {selectedTemplate && (
                   <div className="flex flex-col gap-2 rounded-md border border-dashboard-border bg-card-inside-bg p-3">

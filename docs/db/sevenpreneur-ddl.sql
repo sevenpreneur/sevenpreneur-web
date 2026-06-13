@@ -150,38 +150,6 @@ CREATE TYPE wa_asset_type AS ENUM (
   'video'
 );
 
--- Enumeration for the wa_templates table (wat_*)
-
-CREATE TYPE wat_category AS ENUM (
-  'marketing',
-  'utility',
-  'authentication'
-);
-
-CREATE TYPE wat_format AS ENUM (
-  'named',
-  'positional'
-);
-
-CREATE TYPE wat_status AS ENUM (
-  'pending',
-  'approved',
-  'rejected',
-  'disabled',
-  'paused',
-  'in_appeal',
-  'pending_deletion',
-  'deleted',
-  'limit_exceeded'
-);
-
-CREATE TYPE wat_quality AS ENUM (
-  'green',
-  'yellow',
-  'red',
-  'unknown'
-);
-
 -- Enumeration for the wa_alerts table (wa_alert_*)
 
 CREATE TYPE wa_alert_status AS ENUM (
@@ -723,21 +691,6 @@ CREATE TABLE wa_assets (
   description  VARCHAR            NULL,
   created_at   TIMESTAMPTZ    NOT NULL  DEFAULT CURRENT_TIMESTAMP,
   updated_at   TIMESTAMPTZ    NOT NULL  DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE wa_templates (
-  id               SERIAL        PRIMARY KEY,
-  template_id      VARCHAR       NOT NULL,
-  lang_code        VARCHAR       NOT NULL  DEFAULT 'en_US',
-  category         wat_category  NOT NULL,
-  format           wat_format    NOT NULL  DEFAULT 'named',
-  components       JSON          NOT NULL  DEFAULT '[]',
-  status           wat_status    NOT NULL  DEFAULT 'pending',
-  quality_rating   wat_quality       NULL,
-  rejected_reason  VARCHAR           NULL,
-  created_at       TIMESTAMPTZ   NOT NULL  DEFAULT CURRENT_TIMESTAMP,
-  updated_at       TIMESTAMPTZ   NOT NULL  DEFAULT CURRENT_TIMESTAMP,
-  UNIQUE (template_id, lang_code)
 );
 
 CREATE TABLE wa_alerts (

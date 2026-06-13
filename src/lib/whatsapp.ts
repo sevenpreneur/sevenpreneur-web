@@ -178,6 +178,90 @@ export const whatsappTemplateMessageRequest = (
   });
 };
 
+export type WhatsappTemplateComponent = {
+  type: string;
+  format?: string;
+  text?: string;
+  buttons?: { type?: string; text?: string }[];
+  example?: unknown;
+};
+
+export type WhatsappTemplate = {
+  id: string;
+  name: string;
+  language: string;
+  category: string;
+  parameter_format?: string;
+  status: string;
+  components: WhatsappTemplateComponent[];
+  quality_score?: { score?: string };
+  rejected_reason?: string;
+};
+
+const WHATSAPP_TEMPLATE_FIELDS =
+  "id,name,language,category,parameter_format,status,components,quality_score,rejected_reason";
+
+// https://developers.facebook.com/docs/whatsapp/business-management-api/message-templates
+// Fetch all message templates from Meta (handles pagination).
+export const whatsappListTemplates = async (): Promise<WhatsappTemplate[]> => {
+  const businessId = process.env.WHATSAPP_BUSINESS_ID;
+  const token = process.env.WHATSAPP_ACCESS_TOKEN;
+
+  const templates: WhatsappTemplate[] = [];
+  let url: string | undefined =
+    `https://graph.facebook.com/v23.0/${businessId}/message_templates` +
+    `?fields=${WHATSAPP_TEMPLATE_FIELDS}&limit=100`;
+
+  while (url) {
+    const response = await fetch(url, {
+      method: "GET",
+      headers: { Authorization: "Bearer " + token },
+    });
+    if (!response.ok) {
+      throw new Error(
+        `WhatsApp list templates failed: ${response.status} ${response.statusText}`
+      );
+    }
+    const json = (await response.json()) as {
+      data?: WhatsappTemplate[];
+      paging?: { next?: string };
+    };
+    if (Array.isArray(json.data)) {
+      templates.push(...json.data);
+    }
+    url = json.paging?.next;
+  }
+
+  return templates;
+};
+
+// Fetch a single template by name + language. Meta's `name` filter returns
+// every language variant for that name, so we pick the matching language.
+export const whatsappGetTemplate = async (
+  name: string,
+  langCode: string
+): Promise<WhatsappTemplate | null> => {
+  const businessId = process.env.WHATSAPP_BUSINESS_ID;
+  const token = process.env.WHATSAPP_ACCESS_TOKEN;
+
+  const url =
+    `https://graph.facebook.com/v23.0/${businessId}/message_templates` +
+    `?name=${encodeURIComponent(name)}&fields=${WHATSAPP_TEMPLATE_FIELDS}&limit=100`;
+
+  const response = await fetch(url, {
+    method: "GET",
+    headers: { Authorization: "Bearer " + token },
+  });
+  if (!response.ok) {
+    throw new Error(
+      `WhatsApp get template failed: ${response.status} ${response.statusText}`
+    );
+  }
+  const json = (await response.json()) as { data?: WhatsappTemplate[] };
+  const list = json.data ?? [];
+  return list.find((t) => t.name === name && t.language === langCode) ?? null;
+};
+
 // https://developers.facebook.com/documentation/business-messaging/whatsapp/messages/video-messages/?locale=en_US
 export const whatsappVideoMessageRequest = (
   userPhoneNumber: string,
