@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   BanknoteArrowDown,
   Building2,
+  ChartColumnBig,
   CircleUserIcon,
   FlagTriangleRight,
   Globe,
@@ -183,6 +184,13 @@ export default function SidebarCMS(props: SidebarCMSProps) {
               menuName="Whatsapp"
               menuURL="/whatsapp"
               menuIcon={<FontAwesomeIcon icon={faWhatsapp} size="lg" />}
+            />
+          )}
+          {isAllowedMenuWhatsapp && (
+            <AppSidebarMenuItem
+              menuName="Leads Overview"
+              menuURL="/leads-overview"
+              menuIcon={<ChartColumnBig />}
             />
           )}
         </AppSidebarGroupMenu>
