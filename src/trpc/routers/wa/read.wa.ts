@@ -58,6 +58,23 @@ export const readWA = {
     };
   }),
 
+  template: administratorProcedure
+    .input(objectHasOnlyID())
+    .query(async (opts) => {
+      const waTemplate = await opts.ctx.prisma.wATemplate.findFirst({
+        where: { id: opts.input.id },
+      });
+      if (!waTemplate) {
+        throw readFailedNotFound("template");
+      }
+
+      return {
+        code: STATUS_OK,
+        message: "Success",
+        template: waTemplate,
+      };
+    }),
+
   alert: administratorProcedure.input(objectHasOnlyID()).query(async (opts) => {
     const waAlert = await opts.ctx.prisma.wAAlert.findFirst({
       where: { id: opts.input.id },

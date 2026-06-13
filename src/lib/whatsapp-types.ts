@@ -27,14 +27,14 @@ export type WhatsappAttachmentContacts = {
       street?: string;
       type?: string;
       zip?: string;
-    }
+    },
   ];
   birthday?: string;
   emails?: [
     {
       email?: string;
       type?: string;
-    }
+    },
   ];
   name?: {
     formatted_name?: string;
@@ -54,13 +54,13 @@ export type WhatsappAttachmentContacts = {
       phone?: string;
       wa_id?: string;
       type?: string;
-    }
+    },
   ];
   urls?: [
     {
       url?: string;
       type?: string;
-    }
+    },
   ];
 }[];
 
@@ -131,3 +131,15 @@ export type WhatsAppTypeAttachmentPairUnion =
         | "UNSUPPORTED";
       attachment: unknown;
     };
+
+export type WhatsAppTemplateComponentType = (
+  | {
+      type: "HEADER";
+      format: "TEXT";
+      text: string;
+    }
+  | {
+      type: "BODY" | "FOOTER";
+      text: string;
+    }
+)[];

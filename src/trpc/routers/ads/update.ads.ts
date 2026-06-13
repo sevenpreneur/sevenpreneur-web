@@ -44,7 +44,8 @@ export const updateAdv = {
       await checkUpdateResult(
         updatedInterstitialAd.length,
         "interstitial ad",
-        "interstitial ads"
+        "interstitial ads",
+        "interstitial"
       );
       return {
         code: STATUS_OK,

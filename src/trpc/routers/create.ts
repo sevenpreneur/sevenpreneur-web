@@ -59,6 +59,7 @@ export const createRouter = createTRPCRouter({
 
   wa: {
     asset: createWA.asset,
+    template: createWA.template,
     alert: createWA.alert,
   },
 

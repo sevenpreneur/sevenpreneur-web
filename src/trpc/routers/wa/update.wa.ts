@@ -9,7 +9,14 @@ import {
   stringIsUUID,
   stringNotBlank,
 } from "@/trpc/utils/validation";
-import { WAAssetType, WALeadStatus, WAMode } from "@prisma/client";
+import {
+  WAAssetType,
+  WALeadStatus,
+  WAMode,
+  WATCategory,
+  WATFormat,
+  WATStatus,
+} from "@prisma/client";
 import z from "zod";
 
 export const updateWA = {
@@ -42,8 +49,9 @@ export const updateWA = {
         });
       await checkUpdateResult(
         updatedConversation.length,
-        "conversation",
-        "conversations"
+        "WA conversation",
+        "WA conversations",
+        "wa.conversation"
       );
       return {
         code: STATUS_OK,
@@ -76,8 +84,9 @@ export const updateWA = {
         });
       await checkUpdateResult(
         updatedConversation.length,
-        "conversation",
-        "conversations"
+        "WA conversation",
+        "WA conversations",
+        "wa.conversation"
       );
 
       return {
@@ -107,8 +116,8 @@ export const updateWA = {
       });
       await checkUpdateResult(
         updatedAssets.length,
-        "asset",
-        "assets",
+        "WA asset",
+        "WA assets",
         "wa.asset"
       );
 
@@ -116,6 +125,61 @@ export const updateWA = {
         code: STATUS_OK,
         message: "Success",
         asset: updatedAssets[0],
+      };
+    }),
+
+  template: administratorProcedure
+    .input(
+      z.object({
+        id: numberIsID(),
+        name: stringNotBlank().optional(),
+        lang_code: stringNotBlank().max(5).optional(),
+        category: z.enum(WATCategory).optional(),
+        format: z.enum(WATFormat).optional(),
+        components: z
+          .array(
+            z.union([
+              z.object({
+                type: z.literal("HEADER"),
+                format: z.literal("TEXT"),
+                text: stringNotBlank(),
+              }),
+              z.object({
+                type: z.union([z.literal("BODY"), z.literal("FOOTER")]),
+                text: stringNotBlank(),
+              }),
+            ])
+          )
+          .optional(),
+        status: z.enum(WATStatus).optional(),
+      })
+    )
+    .mutation(async (opts) => {
+      const updatedTemplate =
+        await opts.ctx.prisma.wATemplate.updateManyAndReturn({
+          data: {
+            name: opts.input.name,
+            lang_code: opts.input.lang_code,
+            category: opts.input.category,
+            format: opts.input.format,
+            components: opts.input.components,
+            status: opts.input.status,
+          },
+          where: {
+            id: opts.input.id,
+          },
+        });
+      await checkUpdateResult(
+        updatedTemplate.length,
+        "WA template",
+        "WA templates",
+        "wa.template"
+      );
+
+      return {
+        code: STATUS_OK,
+        message: "Success",
+        template: updatedTemplate[0],
       };
     }),
 
@@ -133,8 +197,8 @@ export const updateWA = {
       });
       await checkUpdateResult(
         updatedAlerts.length,
-        "alert",
-        "alerts",
+        "WA alert",
+        "WA alerts",
         "wa.alert"
       );
 

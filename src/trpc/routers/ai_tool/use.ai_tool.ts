@@ -422,7 +422,8 @@ export const useAITool = {
         await checkUpdateResult(
           updatedConversation.length,
           "AI conversation",
-          "AI conversations"
+          "AI conversations",
+          "ai.sendChat"
         );
 
         conversationName = parsedResult.response.title;
