@@ -1,20 +1,21 @@
 "use client";
 import { SessionMethod } from "@/lib/app-types";
+import AppBasedLabel, { AppBasedLabelVariant } from "./AppBasedLabel";
 
 const variantStyles: Record<
   SessionMethod,
   {
-    themeColor: string;
+    variant: AppBasedLabelVariant;
   }
 > = {
   ONLINE: {
-    themeColor: "bg-primary-soft-background text-primary-soft-foreground",
+    variant: "blue",
   },
   ONSITE: {
-    themeColor: "bg-[#EFEDF9] text-[#42359B]",
+    variant: "purple",
   },
   HYBRID: {
-    themeColor: "bg-[#DBF2F0] text-[#00A694]",
+    variant: "green",
   },
 };
 
@@ -27,13 +28,7 @@ export default function LearningMethodLabelCMS({
   labelName,
   variants,
 }: LearningMethodCMSProps) {
-  const { themeColor } = variantStyles[variants];
+  const { variant } = variantStyles[variants];
 
-  return (
-    <div
-      className={`label-container inline-flex py-1 px-2 rounded-sm items-center justify-center text-center gap-1 text-xs font-bold  truncate ${themeColor}`}
-    >
-      {labelName}
-    </div>
-  );
+  return <AppBasedLabel variant={variant}>{labelName}</AppBasedLabel>;
 }

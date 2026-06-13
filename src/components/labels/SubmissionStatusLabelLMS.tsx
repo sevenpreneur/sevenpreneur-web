@@ -1,19 +1,20 @@
 "use client";
 import { SubmissionStatus } from "@/lib/app-types";
+import AppBasedLabel, { AppBasedLabelVariant } from "./AppBasedLabel";
 
 const variantStyles: Record<
   SubmissionStatus,
   {
-    labelColor: string;
+    variant: AppBasedLabelVariant;
     labelText: string;
   }
 > = {
   SUBMITTED: {
-    labelColor: "bg-success-background text-success-foreground",
+    variant: "green",
     labelText: "SUBMITTED",
   },
   NOT_SUBMITTED: {
-    labelColor: "bg-danger-background text-danger-foreground",
+    variant: "red",
     labelText: "NOT SUBMITTED",
   },
 };
@@ -25,13 +26,7 @@ interface SubmissionStatusLabelLMSProps {
 export default function SubmissionStatusLabelLMS({
   variant,
 }: SubmissionStatusLabelLMSProps) {
-  const { labelColor, labelText } = variantStyles[variant];
+  const { variant: labelVariant, labelText } = variantStyles[variant];
 
-  return (
-    <span
-      className={`w-fit text-xs  font-semibold px-2 py-0.5 rounded-full ${labelColor}`}
-    >
-      {labelText}
-    </span>
-  );
+  return <AppBasedLabel variant={labelVariant}>{labelText}</AppBasedLabel>;
 }

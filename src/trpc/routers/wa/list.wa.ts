@@ -106,6 +106,8 @@ AND wa_conversations.handler_id = ${opts.input.handler_id}::uuid`;
         last_message_status: WACStatus | null;
         last_message_type: WACType;
         last_message_direction: WACDirection;
+        last_inbound_message: string | null;
+        last_inbound_message_at: Date | null;
         unread_count: number;
         user_full_name?: string;
         user_avatar?: string;
@@ -121,6 +123,20 @@ FROM (
     wa_chats.message AS last_message, wa_chats.created_at AS last_message_at,
     wa_chats.status AS last_message_status, wa_chats.type AS last_message_type,
     wa_chats.direction AS last_message_direction,
+    (
+      SELECT wci.message
+      FROM wa_chats wci
+      WHERE wci.conv_id = wa_conversations.id AND wci.direction = 'inbound'
+      ORDER BY wci.created_at DESC
+      LIMIT 1
+    ) AS last_inbound_message,
+    (
+      SELECT wci.created_at
+      FROM wa_chats wci
+      WHERE wci.conv_id = wa_conversations.id AND wci.direction = 'inbound'
+      ORDER BY wci.created_at DESC
+      LIMIT 1
+    ) AS last_inbound_message_at,
     (
       SELECT COUNT(wc.id)
       FROM wa_chats wc

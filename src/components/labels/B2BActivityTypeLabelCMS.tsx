@@ -9,64 +9,60 @@ import {
   MessageCircle,
   Phone,
   Users,
-  Video,
 } from "lucide-react";
 import { ReactNode } from "react";
+import AppBasedLabel, { AppBasedLabelVariant } from "./AppBasedLabel";
 
 const variantStyles: Record<
   B2BActivityTypeEnum,
   {
-    labelColor: string;
+    variant: AppBasedLabelVariant;
     labelIcon: ReactNode;
     labelName: string;
   }
 > = {
   CHAT_WHATSAPP: {
-    labelColor:
-      "text-[#0A4F2D] bg-[#ECFDF3] dark:text-[#62a882] dark:bg-success/15",
+    variant: "green",
     labelIcon: <MessageCircle className="size-3" />,
     labelName: "WhatsApp Chat",
   },
   COLD_EMAIL: {
-    labelColor:
-      "text-[#164EA6] bg-[#E2F0FF] dark:text-[#6f96d4] dark:bg-primary/15",
+    variant: "blue",
     labelIcon: <Mail className="size-3" />,
     labelName: "Cold Email",
   },
   PHONE_CALL: {
-    labelColor: "text-warning-foreground bg-warning-background",
+    variant: "yellow",
     labelIcon: <Phone className="size-3" />,
     labelName: "Phone Call",
   },
   CONFERENCE_CALL: {
-    labelColor:
-      "text-[#42359B] bg-[#EFEDF9] dark:text-[#9088c4] dark:bg-tertiary/15",
+    variant: "purple",
     labelIcon: <Headphones className="size-3" />,
     labelName: "Conference Call",
   },
   OFFLINE_MEETING: {
-    labelColor: "text-primary-soft-foreground bg-primary-soft-background",
+    variant: "blue",
     labelIcon: <Users className="size-3" />,
     labelName: "Offline Meeting",
   },
   IN_PERSON_MEETING: {
-    labelColor: "text-primary-soft-foreground bg-primary-soft-background",
+    variant: "blue",
     labelIcon: <Users className="size-3" />,
     labelName: "In-Person Meeting",
   },
   SENT_PROPOSAL: {
-    labelColor:
-      "text-[#3f3f3f] bg-[#EAEAEA] dark:text-[#bbbbbb] dark:bg-[#2a2a2a]",
+    variant: "gray",
     labelIcon: <FileText className="size-3" />,
     labelName: "Sent Proposal",
   },
   SENT_CONTRACT: {
-    labelColor: "text-success-foreground bg-success-background",
+    variant: "green",
     labelIcon: <FileSignature className="size-3" />,
     labelName: "Sent Contract",
   },
   FOLLOW_UP: {
-    labelColor: "text-warning-foreground bg-warning-background",
+    variant: "yellow",
     labelIcon: <CalendarClock className="size-3" />,
     labelName: "Follow Up",
   },
@@ -79,13 +75,12 @@ interface B2BActivityTypeLabelCMSProps {
 export default function B2BActivityTypeLabelCMS({
   variants,
 }: B2BActivityTypeLabelCMSProps) {
-  const { labelColor, labelIcon, labelName } = variantStyles[variants];
+  const { variant, labelIcon, labelName } = variantStyles[variants];
+
   return (
-    <div
-      className={`label-container inline-flex w-fit py-0.5 px-2 rounded-sm items-center justify-center gap-1 text-[13px] font-semibold  truncate ${labelColor}`}
-    >
+    <AppBasedLabel variant={variant}>
       {labelIcon}
       {labelName}
-    </div>
+    </AppBasedLabel>
   );
 }

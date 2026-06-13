@@ -1,25 +1,20 @@
 "use client";
 import { StatusType } from "@/lib/app-types";
+import AppBasedLabel, { AppBasedLabelVariant } from "./AppBasedLabel";
 
 const variantStyles: Record<
   StatusType,
   {
-    backgroundColor: string;
-    labelColor: string;
-    signColor: string;
+    variant: AppBasedLabelVariant;
     label: string;
   }
 > = {
   ACTIVE: {
-    backgroundColor: "bg-success-background",
-    labelColor: "text-success-foreground",
-    signColor: "bg-success-foreground",
+    variant: "green",
     label: "ACTIVE",
   },
   INACTIVE: {
-    backgroundColor: "bg-danger-background",
-    labelColor: "text-danger-foreground",
-    signColor: "bg-danger-foreground",
+    variant: "red",
     label: "INACTIVE",
   },
 };
@@ -29,15 +24,12 @@ interface StatusLabelCMSProps {
 }
 
 export default function StatusLabelCMS({ variants }: StatusLabelCMSProps) {
-  const { backgroundColor, labelColor, signColor, label } =
-    variantStyles[variants];
+  const { variant, label } = variantStyles[variants];
 
   return (
-    <div
-      className={`label-container inline-flex py-[2px] px-[10px] w-fit rounded-full items-center justify-center gap-1 text-xs font-semibold  ${backgroundColor} ${labelColor}`}
-    >
-      <div className={`flex size-2 rounded-full ${signColor}`} />
+    <AppBasedLabel variant={variant}>
+      <div className="flex size-2 rounded-full bg-current" />
       {label}
-    </div>
+    </AppBasedLabel>
   );
 }

@@ -7,29 +7,29 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ReactNode } from "react";
+import AppBasedLabel, { AppBasedLabelVariant } from "./AppBasedLabel";
 
 const variantStyles: Record<
   LeadStatus,
   {
+    variant: AppBasedLabelVariant;
     name: string;
-    labelColor: string;
     labelIcon: ReactNode;
   }
 > = {
   HOT: {
+    variant: "red",
     name: "Hot Leads",
-
-    labelColor: "bg-destructive text-white",
-    labelIcon: <FontAwesomeIcon icon={faFire} className="text-[#FED106]" />,
+    labelIcon: <FontAwesomeIcon icon={faFire} />,
   },
   WARM: {
+    variant: "orange",
     name: "Warm Leads",
-    labelColor: "text-[#FB7A36] bg-[#FDE4D8]",
     labelIcon: <FontAwesomeIcon icon={faMugHot} />,
   },
   COLD: {
+    variant: "blue",
     name: "Cold Leads",
-    labelColor: "text-primary-soft-foreground bg-primary-soft-background",
     labelIcon: <FontAwesomeIcon icon={faSnowflake} />,
   },
 };
@@ -39,14 +39,12 @@ interface LeadStatusLabelCMSProps {
 }
 
 export default function LeadStatusLabelCMS(props: LeadStatusLabelCMSProps) {
-  const { name, labelColor, labelIcon } = variantStyles[props.variants];
+  const { variant, name, labelIcon } = variantStyles[props.variants];
 
   return (
-    <div
-      className={`label-container inline-flex py-0.5 px-2 rounded-full items-center justify-center gap-1 text-sm font-semibold  truncate ${labelColor}`}
-    >
+    <AppBasedLabel variant={variant}>
       {labelIcon}
       {name}
-    </div>
+    </AppBasedLabel>
   );
 }

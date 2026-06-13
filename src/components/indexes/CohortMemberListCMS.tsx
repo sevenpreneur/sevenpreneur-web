@@ -201,11 +201,11 @@ export default function CohortMemberListCMS(props: CohortMemberListCMSProps) {
               <table className="table-submission relative w-full rounded-sm">
                 <TableHeaderCMS>
                   <TableRowCMS>
-                    <TableHeadCMS>{`No.`.toUpperCase()}</TableHeadCMS>
-                    <TableHeadCMS>{`Name`.toUpperCase()}</TableHeadCMS>
-                    <TableHeadCMS>{`Access Tier`.toUpperCase()}</TableHeadCMS>
-                    <TableHeadCMS>{`Roles`.toUpperCase()}</TableHeadCMS>
-                    <TableHeadCMS>{`Action`.toUpperCase()}</TableHeadCMS>
+                    <TableHeadCMS>{`No.`}</TableHeadCMS>
+                    <TableHeadCMS>{`Name`}</TableHeadCMS>
+                    <TableHeadCMS>{`Access Tier`}</TableHeadCMS>
+                    <TableHeadCMS>{`Roles`}</TableHeadCMS>
+                    <TableHeadCMS>{`Action`}</TableHeadCMS>
                   </TableRowCMS>
                 </TableHeaderCMS>
                 <TableBodyCMS>

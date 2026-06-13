@@ -2,28 +2,28 @@
 import { B2BProbabilityStatusEnum } from "@prisma/client";
 import { Flame, Snowflake, ThermometerSun } from "lucide-react";
 import { ReactNode } from "react";
+import AppBasedLabel, { AppBasedLabelVariant } from "./AppBasedLabel";
 
 const variantStyles: Record<
   B2BProbabilityStatusEnum,
   {
-    labelColor: string;
+    variant: AppBasedLabelVariant;
     labelIcon: ReactNode;
     labelName: string;
   }
 > = {
   COLD: {
-    labelColor:
-      "text-[#164EA6] bg-[#E2F0FF] dark:text-[#6f96d4] dark:bg-primary/15",
+    variant: "blue",
     labelIcon: <Snowflake className="size-3" />,
     labelName: "Cold",
   },
   WARM: {
-    labelColor: "text-warning-foreground bg-warning-background",
+    variant: "yellow",
     labelIcon: <ThermometerSun className="size-3" />,
     labelName: "Warm",
   },
   HOT: {
-    labelColor: "text-danger-foreground bg-danger-background",
+    variant: "red",
     labelIcon: <Flame className="size-3" />,
     labelName: "Hot",
   },
@@ -36,13 +36,12 @@ interface B2BProbabilityStatusLabelCMSProps {
 export default function B2BProbabilityStatusLabelCMS({
   variants,
 }: B2BProbabilityStatusLabelCMSProps) {
-  const { labelColor, labelIcon, labelName } = variantStyles[variants];
+  const { variant, labelIcon, labelName } = variantStyles[variants];
+
   return (
-    <div
-      className={`label-container inline-flex w-fit py-0.5 px-2 rounded-sm items-center justify-center gap-1 text-[13px] font-semibold  truncate ${labelColor}`}
-    >
+    <AppBasedLabel variant={variant}>
       {labelIcon}
       {labelName}
-    </div>
+    </AppBasedLabel>
   );
 }

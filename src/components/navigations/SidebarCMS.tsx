@@ -134,9 +134,7 @@ export default function SidebarCMS(props: SidebarCMSProps) {
           )}
         </AppSidebarGroupMenu>
       )}
-      {(isAllowedMenuUsers ||
-        isAllowedMenuTransactions ||
-        isAllowedMenuB2BPipeline) && (
+      {(isAllowedMenuUsers || isAllowedMenuTransactions) && (
         <AppSidebarGroupMenu groupName="Administration">
           {isAllowedMenuUsers && (
             <AppSidebarMenuItem
@@ -152,6 +150,24 @@ export default function SidebarCMS(props: SidebarCMSProps) {
               menuIcon={<BanknoteArrowDown />}
             />
           )}
+        </AppSidebarGroupMenu>
+      )}
+      {(isAllowedMenuWhatsapp || isAllowedMenuB2BPipeline) && (
+        <AppSidebarGroupMenu groupName="Sales">
+          {isAllowedMenuWhatsapp && (
+            <AppSidebarMenuItem
+              menuName="Whatsapp"
+              menuURL="/whatsapp"
+              menuIcon={<FontAwesomeIcon icon={faWhatsapp} size="lg" />}
+            />
+          )}
+          {isAllowedMenuWhatsapp && (
+            <AppSidebarMenuItem
+              menuName="Leads Overview"
+              menuURL="/leads-overview"
+              menuIcon={<ChartColumnBig />}
+            />
+          )}
           {isAllowedMenuB2BPipeline && (
             <AppSidebarMenuItem
               menuName="B2B Pipeline"
@@ -161,9 +177,7 @@ export default function SidebarCMS(props: SidebarCMSProps) {
           )}
         </AppSidebarGroupMenu>
       )}
-      {(isAllowedMenuWebMarketing ||
-        isAllowedMenuArticles ||
-        isAllowedMenuWhatsapp) && (
+      {(isAllowedMenuWebMarketing || isAllowedMenuArticles) && (
         <AppSidebarGroupMenu groupName="Marketing">
           {isAllowedMenuWebMarketing && (
             <AppSidebarMenuItem
@@ -177,20 +191,6 @@ export default function SidebarCMS(props: SidebarCMSProps) {
               menuName="SEO Articles"
               menuURL="/articles"
               menuIcon={<PenTool />}
-            />
-          )}
-          {isAllowedMenuWhatsapp && (
-            <AppSidebarMenuItem
-              menuName="Whatsapp"
-              menuURL="/whatsapp"
-              menuIcon={<FontAwesomeIcon icon={faWhatsapp} size="lg" />}
-            />
-          )}
-          {isAllowedMenuWhatsapp && (
-            <AppSidebarMenuItem
-              menuName="Leads Overview"
-              menuURL="/leads-overview"
-              menuIcon={<ChartColumnBig />}
             />
           )}
         </AppSidebarGroupMenu>

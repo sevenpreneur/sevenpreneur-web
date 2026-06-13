@@ -1,48 +1,47 @@
 "use client";
-import { ReactNode } from "react";
-import { Check, ClockFading, X } from "lucide-react";
 import { TransactionStatus } from "@/lib/app-types";
+import { Check, ClockFading, X } from "lucide-react";
+import { ReactNode } from "react";
+import AppBasedLabel, { AppBasedLabelVariant } from "./AppBasedLabel";
 
 const variantStyles: Record<
   TransactionStatus,
   {
-    statusColor: string;
+    variant: AppBasedLabelVariant;
     statusWord: string;
     statusIcon: ReactNode;
   }
 > = {
   PAID: {
-    statusColor: "text-success-foreground bg-success-background",
+    variant: "green",
     statusWord: "Paid",
     statusIcon: <Check className="size-3" />,
   },
   PENDING: {
-    statusColor: "text-warning-foreground bg-warning-background",
+    variant: "yellow",
     statusWord: "Pending",
     statusIcon: <ClockFading className="size-3" />,
   },
   FAILED: {
-    statusColor: "text-danger-foreground bg-danger-background",
+    variant: "red",
     statusWord: "Failed",
     statusIcon: <X className="size-3" />,
   },
 };
 
-interface RolesLabelCMSProps {
+interface TransactionStatusLabelCMSProps {
   variants: TransactionStatus;
 }
 
 export default function TransactionStatusLabelCMS({
   variants,
-}: RolesLabelCMSProps) {
-  const { statusColor, statusWord, statusIcon } = variantStyles[variants];
+}: TransactionStatusLabelCMSProps) {
+  const { variant, statusWord, statusIcon } = variantStyles[variants];
 
   return (
-    <div
-      className={`label-container inline-flex w-fit py-0.5 px-2 rounded-sm items-center justify-center gap-1 text-[13px] font-semibold  truncate ${statusColor}`}
-    >
+    <AppBasedLabel variant={variant}>
       {statusIcon}
       {statusWord}
-    </div>
+    </AppBasedLabel>
   );
 }

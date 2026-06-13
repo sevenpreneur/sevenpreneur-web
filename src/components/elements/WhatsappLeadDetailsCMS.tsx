@@ -21,6 +21,7 @@ import SectionContainerCMS from "../cards/SectionContainerCMS";
 import AppTextArea from "../fields/AppTextArea";
 import CreateWhatsappAlertFormCMS from "../forms/CreateWhatsappAlertFormCMS";
 import EditLeadStatusFormCMS from "../forms/EditLeadStatusFormCMS";
+import AppBasedLabel from "../labels/AppBasedLabel";
 import LeadStatusLabelCMS from "../labels/LeadStatusLabelCMS";
 import AppErrorComponents from "../states/AppErrorComponents";
 import AppLoadingComponents from "../states/AppLoadingComponents";
@@ -308,9 +309,7 @@ export default function WhatsappLeadDetailsCMS(
                         </AppButton>
                       </div>
                     ) : (
-                      <p className="py-1 px-2 text-sm bg-secondary-soft-background text-secondary-soft-foreground dark:bg-sevenpreneur-pink-midgnight dark:text-sevenpreneur-pink-rose  font-semibold rounded-full">
-                        Unassigned
-                      </p>
+                      <AppBasedLabel variant="pink">Unassigned</AppBasedLabel>
                     )}
                   </div>
                 </div>

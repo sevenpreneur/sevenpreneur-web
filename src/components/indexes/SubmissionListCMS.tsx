@@ -152,20 +152,14 @@ export default function SubmissionListCMS(props: SubmissionListCMSProps) {
                 <table className="table-submission relative w-full rounded-sm">
                   <TableHeaderCMS>
                     <TableRowCMS>
-                      <TableHeadCMS>{`No.`.toUpperCase()}</TableHeadCMS>
-                      <TableHeadCMS>{`Name`.toUpperCase()}</TableHeadCMS>
-                      <TableHeadCMS>
-                        {`Submitted at`.toUpperCase()}
-                      </TableHeadCMS>
-                      <TableHeadCMS>
-                        {`Timing Status`.toUpperCase()}
-                      </TableHeadCMS>
-                      <TableHeadCMS>
-                        {`Review Status`.toUpperCase()}
-                      </TableHeadCMS>
-                      <TableHeadCMS>{`Fav`.toUpperCase()}</TableHeadCMS>
+                      <TableHeadCMS>{`No.`}</TableHeadCMS>
+                      <TableHeadCMS>{`Name`}</TableHeadCMS>
+                      <TableHeadCMS>Submitted At</TableHeadCMS>
+                      <TableHeadCMS>Timing Status</TableHeadCMS>
+                      <TableHeadCMS>Review Status</TableHeadCMS>
+                      <TableHeadCMS>{`Fav`}</TableHeadCMS>
                       {isAllowedDetailsSubmission && (
-                        <TableHeadCMS>{`Action`.toUpperCase()}</TableHeadCMS>
+                        <TableHeadCMS>{`Action`}</TableHeadCMS>
                       )}
                     </TableRowCMS>
                   </TableHeaderCMS>

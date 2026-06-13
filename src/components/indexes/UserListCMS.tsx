@@ -192,13 +192,13 @@ export default function UserListCMS(props: UserListCMSProps) {
           <table className="table-users relative w-full rounded-sm">
             <TableHeaderCMS>
               <TableRowCMS>
-                <TableHeadCMS>{`No.`.toUpperCase()}</TableHeadCMS>
-                <TableHeadCMS>{`User`.toUpperCase()}</TableHeadCMS>
-                <TableHeadCMS>{`Roles`.toUpperCase()}</TableHeadCMS>
-                <TableHeadCMS>{`Status`.toUpperCase()}</TableHeadCMS>
-                <TableHeadCMS>{`Register at`.toUpperCase()}</TableHeadCMS>
+                <TableHeadCMS>{`No.`}</TableHeadCMS>
+                <TableHeadCMS>{`User`}</TableHeadCMS>
+                <TableHeadCMS>{`Roles`}</TableHeadCMS>
+                <TableHeadCMS>{`Status`}</TableHeadCMS>
+                <TableHeadCMS>Register At</TableHeadCMS>
                 {isAllowedMutateUser && (
-                  <TableHeadCMS>{`Actions`.toUpperCase()}</TableHeadCMS>
+                  <TableHeadCMS>{`Actions`}</TableHeadCMS>
                 )}
               </TableRowCMS>
             </TableHeaderCMS>

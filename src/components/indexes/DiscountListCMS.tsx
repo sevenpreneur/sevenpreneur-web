@@ -196,14 +196,14 @@ export default function DiscountListCMS({
             <table className="relative w-full">
               <TableHeaderCMS>
                 <TableRowCMS>
-                  <TableHeadCMS>{`No.`.toUpperCase()}</TableHeadCMS>
-                  <TableHeadCMS>{`Name`.toUpperCase()}</TableHeadCMS>
-                  <TableHeadCMS>{`Discount Code`.toUpperCase()}</TableHeadCMS>
-                  <TableHeadCMS>{`Rate`.toUpperCase()}</TableHeadCMS>
-                  <TableHeadCMS>{`Status`.toUpperCase()}</TableHeadCMS>
-                  <TableHeadCMS>{`Start date`.toUpperCase()}</TableHeadCMS>
-                  <TableHeadCMS>{`Expired date`.toUpperCase()}</TableHeadCMS>
-                  <TableHeadCMS>{`Actions`.toUpperCase()}</TableHeadCMS>
+                  <TableHeadCMS>{`No.`}</TableHeadCMS>
+                  <TableHeadCMS>{`Name`}</TableHeadCMS>
+                  <TableHeadCMS>{`Discount Code`}</TableHeadCMS>
+                  <TableHeadCMS>{`Rate`}</TableHeadCMS>
+                  <TableHeadCMS>{`Status`}</TableHeadCMS>
+                  <TableHeadCMS>Start Date</TableHeadCMS>
+                  <TableHeadCMS>Expired Date</TableHeadCMS>
+                  <TableHeadCMS>{`Actions`}</TableHeadCMS>
                 </TableRowCMS>
               </TableHeaderCMS>
               <TableBodyCMS>

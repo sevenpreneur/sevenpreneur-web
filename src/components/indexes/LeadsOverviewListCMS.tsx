@@ -100,16 +100,18 @@ export default function LeadsOverviewListCMS(props: LeadsOverviewListCMSProps) {
   const handleDownloadCsv = () => {
     const headers = [
       "No.",
-      "Nama",
-      "Nomor HP",
-      "Status Leads",
-      "Terakhir Chat",
+      "Name",
+      "Phone Number",
+      "Lead Status",
+      "Last Message",
+      "Last Active",
     ];
     const escapeCell = (value: string) => `"${value.replace(/"/g, '""')}"`;
     const rows = filteredList.map((conv, index) => {
       const name = conv.user_full_name || conv.full_name;
       const status = leadStatusLabel[conv.lead_status as LeadStatus] ?? "";
-      const lastChat = conv.last_message_at
+      const lastMessage = conv.last_inbound_message ?? "-";
+      const lastActive = conv.last_message_at
         ? dayjs(conv.last_message_at).format("D MMM YYYY HH:mm")
         : "-";
       return [
@@ -117,13 +119,16 @@ export default function LeadsOverviewListCMS(props: LeadsOverviewListCMSProps) {
         name,
         conv.phone_number,
         status,
-        lastChat,
+        lastMessage,
+        lastActive,
       ]
         .map(escapeCell)
         .join(",");
     });
 
-    const csvContent = [headers.map(escapeCell).join(","), ...rows].join("\r\n");
+    const csvContent = [headers.map(escapeCell).join(","), ...rows].join(
+      "\r\n"
+    );
     // Prepend BOM so Excel reads UTF-8 (correct accents/emojis) correctly.
     const blob = new Blob(["﻿" + csvContent], {
       type: "text/csv;charset=utf-8;",
@@ -198,11 +203,12 @@ export default function LeadsOverviewListCMS(props: LeadsOverviewListCMSProps) {
           <table className="table-leads relative w-full rounded-sm">
             <TableHeaderCMS>
               <TableRowCMS>
-                <TableHeadCMS>{`No.`.toUpperCase()}</TableHeadCMS>
-                <TableHeadCMS>{`Nama`.toUpperCase()}</TableHeadCMS>
-                <TableHeadCMS>{`Nomor HP`.toUpperCase()}</TableHeadCMS>
-                <TableHeadCMS>{`Status Leads`.toUpperCase()}</TableHeadCMS>
-                <TableHeadCMS>{`Terakhir Chat`.toUpperCase()}</TableHeadCMS>
+                <TableHeadCMS>No.</TableHeadCMS>
+                <TableHeadCMS>Name</TableHeadCMS>
+                <TableHeadCMS>Phone Number</TableHeadCMS>
+                <TableHeadCMS>Lead Status</TableHeadCMS>
+                <TableHeadCMS>Last Message</TableHeadCMS>
+                <TableHeadCMS>Last Message at</TableHeadCMS>
               </TableRowCMS>
             </TableHeaderCMS>
             <TableBodyCMS>
@@ -223,6 +229,17 @@ export default function LeadsOverviewListCMS(props: LeadsOverviewListCMSProps) {
                     <LeadStatusLabelCMS
                       variants={conv.lead_status as LeadStatus}
                     />
+                  </TableCellCMS>
+                  <TableCellCMS>
+                    {conv.last_inbound_message ? (
+                      <div className="flex flex-col max-w-[280px]">
+                        <p className="line-clamp-2 text-sm text-emphasis">
+                          {conv.last_inbound_message}
+                        </p>
+                      </div>
+                    ) : (
+                      "-"
+                    )}
                   </TableCellCMS>
                   <TableCellCMS>
                     {conv.last_message_at

@@ -1,44 +1,40 @@
 "use client";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { ReactNode } from "react";
+import { ProductCategory } from "@/lib/app-types";
 import {
   faFlag,
   faPenNib,
   faPersonChalkboard,
   faPlay,
 } from "@fortawesome/free-solid-svg-icons";
-import { ProductCategory } from "@/lib/app-types";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { ReactNode } from "react";
+import AppBasedLabel, { AppBasedLabelVariant } from "./AppBasedLabel";
 
 const variantStyles: Record<
   ProductCategory,
   {
-    backgroundColor: string;
-    labelColor: string;
+    variant: AppBasedLabelVariant;
     labelIcon: ReactNode;
     labelName: string;
   }
 > = {
   COHORT: {
-    backgroundColor: "bg-[#EFEDF9] dark:bg-tertiary/15",
-    labelColor: "text-[#42359B] dark:text-[#9088c4]",
+    variant: "purple",
     labelIcon: <FontAwesomeIcon icon={faPersonChalkboard} className="size-3" />,
     labelName: "Cohort",
   },
   PLAYLIST: {
-    backgroundColor: "bg-[#E2F0FF] dark:bg-primary/15",
-    labelColor: "text-[#164EA6] dark:text-[#6f96d4]",
+    variant: "blue",
     labelIcon: <FontAwesomeIcon icon={faPlay} className="size-3" />,
     labelName: "Playlist",
   },
   AI: {
-    backgroundColor: "bg-[#ECFDF3] dark:bg-success/15",
-    labelColor: "text-[#0A4F2D] dark:text-[#62a882]",
+    variant: "green",
     labelIcon: <FontAwesomeIcon icon={faPenNib} className="size-3" />,
     labelName: "AI",
   },
   EVENT: {
-    backgroundColor: "bg-[#ECFDF3] dark:bg-success/15",
-    labelColor: "text-[#0A4F2D] dark:text-[#62a882]",
+    variant: "green",
     labelIcon: <FontAwesomeIcon icon={faFlag} className="size-3" />,
     labelName: "Event",
   },
@@ -51,16 +47,12 @@ interface ProductCategoryLabelCMSProps {
 export default function ProductCategoryLabelCMS({
   variants,
 }: ProductCategoryLabelCMSProps) {
-  // --- Variant declaration
-  const { backgroundColor, labelColor, labelIcon, labelName } =
-    variantStyles[variants];
+  const { variant, labelIcon, labelName } = variantStyles[variants];
 
   return (
-    <div
-      className={`label-container inline-flex w-fit py-0.5 px-2 rounded-sm items-center justify-center gap-1 text-[13px] font-semibold  truncate ${labelColor} ${backgroundColor}`}
-    >
+    <AppBasedLabel variant={variant}>
       {labelIcon}
       {labelName}
-    </div>
+    </AppBasedLabel>
   );
 }

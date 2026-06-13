@@ -318,15 +318,15 @@ export default function TransactionListCMS({
             <table className="table-component relative w-full overflow-hidden">
               <TableHeaderCMS>
                 <TableRowCMS>
-                  <TableHeadCMS>{`No.`.toUpperCase()}</TableHeadCMS>
-                  <TableHeadCMS>{`Transaction Id`.toUpperCase()}</TableHeadCMS>
-                  <TableHeadCMS>{`Product Name`.toUpperCase()}</TableHeadCMS>
-                  <TableHeadCMS>{`Category`.toUpperCase()}</TableHeadCMS>
-                  <TableHeadCMS>{`Amount`.toUpperCase()}</TableHeadCMS>
-                  <TableHeadCMS>{`Status`.toUpperCase()}</TableHeadCMS>
-                  <TableHeadCMS>{`Created At`.toUpperCase()}</TableHeadCMS>
-                  <TableHeadCMS>{`Paid At`.toUpperCase()}</TableHeadCMS>
-                  <TableHeadCMS>{`Actions`.toUpperCase()}</TableHeadCMS>
+                  <TableHeadCMS>{`No.`}</TableHeadCMS>
+                  <TableHeadCMS>{`Transaction Id`}</TableHeadCMS>
+                  <TableHeadCMS>{`Product Name`}</TableHeadCMS>
+                  <TableHeadCMS>{`Category`}</TableHeadCMS>
+                  <TableHeadCMS>{`Amount`}</TableHeadCMS>
+                  <TableHeadCMS>{`Status`}</TableHeadCMS>
+                  <TableHeadCMS>{`Created At`}</TableHeadCMS>
+                  <TableHeadCMS>{`Paid At`}</TableHeadCMS>
+                  <TableHeadCMS>{`Actions`}</TableHeadCMS>
                 </TableRowCMS>
               </TableHeaderCMS>
               {/* Table Body */}

@@ -193,12 +193,12 @@ export default function EventListCMS({ sessionToken }: EventListCMSProps) {
             <table className="relative w-full rounded-sm">
               <TableHeaderCMS>
                 <TableRowCMS>
-                  <TableHeadCMS>{`No.`.toUpperCase()}</TableHeadCMS>
-                  <TableHeadCMS>{`Name`.toUpperCase()}</TableHeadCMS>
-                  <TableHeadCMS>{`Event date`.toUpperCase()}</TableHeadCMS>
-                  <TableHeadCMS>{`Status`.toUpperCase()}</TableHeadCMS>
-                  <TableHeadCMS>{`Location`.toUpperCase()}</TableHeadCMS>
-                  <TableHeadCMS>{`Actions`.toUpperCase()}</TableHeadCMS>
+                  <TableHeadCMS>{`No.`}</TableHeadCMS>
+                  <TableHeadCMS>{`Name`}</TableHeadCMS>
+                  <TableHeadCMS>Event Date</TableHeadCMS>
+                  <TableHeadCMS>{`Status`}</TableHeadCMS>
+                  <TableHeadCMS>{`Location`}</TableHeadCMS>
+                  <TableHeadCMS>{`Actions`}</TableHeadCMS>
                 </TableRowCMS>
               </TableHeaderCMS>
               <TableBodyCMS>

@@ -18,6 +18,7 @@ import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
 import AppButton from "../buttons/AppButton";
 import AppInput from "../fields/AppInput";
+import AppBasedLabel from "../labels/AppBasedLabel";
 import AppNumberPagination from "../navigations/AppNumberPagination";
 import PageContainerCMS from "../pages/PageContainerCMS";
 import AppErrorComponents from "../states/AppErrorComponents";
@@ -126,10 +127,10 @@ export default function ArticleListCMS(props: ArticleListCMSProps) {
             <table className="relative w-full rounded-sm">
               <TableHeaderCMS>
                 <TableRowCMS>
-                  <TableHeadCMS>{`Image`.toUpperCase()}</TableHeadCMS>
-                  <TableHeadCMS>{`Metadata`.toUpperCase()}</TableHeadCMS>
-                  <TableHeadCMS>{`Person`.toUpperCase()}</TableHeadCMS>
-                  <TableHeadCMS>{`Action`.toUpperCase()}</TableHeadCMS>
+                  <TableHeadCMS>Image</TableHeadCMS>
+                  <TableHeadCMS>Metadata</TableHeadCMS>
+                  <TableHeadCMS>Person</TableHeadCMS>
+                  <TableHeadCMS>Action</TableHeadCMS>
                 </TableRowCMS>
               </TableHeaderCMS>
               <TableBodyCMS>
@@ -167,23 +168,12 @@ export default function ArticleListCMS(props: ArticleListCMSProps) {
                           {post.title}
                         </h2>
                         <div className="flex items-center gap-2">
-                          <div
-                            className={`article-categories flex rounded-full items-center text-xs py-[2px] px-[10px] text-white  font-medium`}
-                            style={{
-                              backgroundImage:
-                                "linear-gradient(to right, rgb(37, 98, 231) 0%, rgb(110, 0, 255) 100%)",
-                            }}
-                          >
+                          <AppBasedLabel variant="purple">
                             {post.category.name}
-                          </div>
-                          <div
-                            className={`article-id flex rounded-full items-center text-xs py-[2px] px-[10px] text-emphasis border border-dashboard-border  font-medium`}
-                            style={{
-                              backgroundImage: "#FAFAFA",
-                            }}
-                          >
+                          </AppBasedLabel>
+                          <AppBasedLabel variant="gray">
                             {post.id}
-                          </div>
+                          </AppBasedLabel>
                         </div>
                         <div className="flex flex-col">
                           <p className="article-keywords  font-[440] text-emphasis text-sm line-clamp-1">

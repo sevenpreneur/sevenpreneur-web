@@ -243,15 +243,15 @@ export default function B2BPipelineListCMS(props: B2BPipelineListCMSProps) {
             <table className="relative w-full rounded-sm">
               <TableHeaderCMS>
                 <TableRowCMS>
-                  <TableHeadCMS>{`No.`.toUpperCase()}</TableHeadCMS>
-                  <TableHeadCMS>{`Company`.toUpperCase()}</TableHeadCMS>
-                  <TableHeadCMS>{`Industry`.toUpperCase()}</TableHeadCMS>
-                  <TableHeadCMS>{`Product`.toUpperCase()}</TableHeadCMS>
-                  <TableHeadCMS>{`Stage`.toUpperCase()}</TableHeadCMS>
-                  <TableHeadCMS>{`Status`.toUpperCase()}</TableHeadCMS>
-                  <TableHeadCMS>{`Value`.toUpperCase()}</TableHeadCMS>
-                  <TableHeadCMS>{`Owner`.toUpperCase()}</TableHeadCMS>
-                  <TableHeadCMS>{`Action`.toUpperCase()}</TableHeadCMS>
+                  <TableHeadCMS>{`No.`}</TableHeadCMS>
+                  <TableHeadCMS>{`Company`}</TableHeadCMS>
+                  <TableHeadCMS>{`Industry`}</TableHeadCMS>
+                  <TableHeadCMS>{`Product`}</TableHeadCMS>
+                  <TableHeadCMS>{`Stage`}</TableHeadCMS>
+                  <TableHeadCMS>{`Status`}</TableHeadCMS>
+                  <TableHeadCMS>{`Value`}</TableHeadCMS>
+                  <TableHeadCMS>{`Owner`}</TableHeadCMS>
+                  <TableHeadCMS>{`Action`}</TableHeadCMS>
                 </TableRowCMS>
               </TableHeaderCMS>
               <TableBodyCMS>
