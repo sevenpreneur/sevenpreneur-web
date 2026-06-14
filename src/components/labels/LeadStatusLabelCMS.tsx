@@ -19,17 +19,17 @@ const variantStyles: Record<
 > = {
   HOT: {
     variant: "red",
-    name: "Hot Leads",
+    name: "Hot",
     labelIcon: <FontAwesomeIcon icon={faFire} />,
   },
   WARM: {
     variant: "orange",
-    name: "Warm Leads",
+    name: "Warm",
     labelIcon: <FontAwesomeIcon icon={faMugHot} />,
   },
   COLD: {
     variant: "blue",
-    name: "Cold Leads",
+    name: "Cold",
     labelIcon: <FontAwesomeIcon icon={faSnowflake} />,
   },
 };

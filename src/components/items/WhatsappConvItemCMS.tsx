@@ -11,6 +11,7 @@ import {
 } from "@/lib/whatsapp-utils";
 import { WAMode } from "@prisma/client";
 import dayjs from "dayjs";
+import { TimerOff } from "lucide-react";
 import Image from "next/image";
 import AppBasedLabel from "../labels/AppBasedLabel";
 
@@ -43,6 +44,7 @@ interface WhatsappConvItemCMSProps {
   convLeadStatus: LeadStatus;
   convUnreadMessage: number;
   convMode: WAMode;
+  convWindowExpired: boolean;
   selectedConvId: string;
   onClick?: () => void;
 }
@@ -110,10 +112,20 @@ export default function WhatsappConvItemCMS(props: WhatsappConvItemCMSProps) {
               </p>
             </div>
           </div>
-          <div className="mt-1">
-            <AppBasedLabel variant={props.convMode === "AI" ? "purple" : "green"}>
+          <div className="mt-1 flex items-center gap-1.5">
+            <AppBasedLabel
+              variant={props.convMode === "AI" ? "purple" : "green"}
+            >
               {props.convMode === "AI" ? "AI Mode" : "Human Mode"}
             </AppBasedLabel>
+            {props.convWindowExpired && (
+              <span title="24-hour messaging window closed — only templates can be sent">
+                <AppBasedLabel variant="gray">
+                  <TimerOff className="size-3.5" />
+                  24h
+                </AppBasedLabel>
+              </span>
+            )}
           </div>
         </div>
       </div>

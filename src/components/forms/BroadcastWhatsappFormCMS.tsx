@@ -1,11 +1,18 @@
 "use client";
 import { trpc } from "@/trpc/client";
-import { Loader2, Search, Send, X } from "lucide-react";
+import { Loader2, Search, TimerOff, Users, X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
+import { LeadStatus } from "@/lib/app-types";
 import AppButton from "../buttons/AppButton";
 import AppInput from "../fields/AppInput";
 import AppSelect from "../fields/AppSelect";
+import AppBasedLabel from "../labels/AppBasedLabel";
+import LeadStatusLabelCMS from "../labels/LeadStatusLabelCMS";
+import {
+  WhatsappTemplateQualityLabelCMS,
+  WhatsappTemplateStatusLabelCMS,
+} from "../labels/WhatsappTemplateLabelCMS";
 import AppLoadingComponents from "../states/AppLoadingComponents";
 
 interface BroadcastWhatsappFormCMSProps {
@@ -62,6 +69,7 @@ type BroadcastConversation = {
   user_full_name?: string | null;
   phone_number: string;
   lead_status: string;
+  window_expired: boolean;
 };
 
 function extractTemplateParams(components: unknown) {
@@ -134,7 +142,7 @@ export default function BroadcastWhatsappFormCMS({
   const templateOptions = useMemo(
     () =>
       templates.map((template) => ({
-        label: `${template.template_id} (${template.lang_code})`,
+        label: template.template_id,
         value: `${template.template_id}::${template.lang_code}`,
       })),
     [templates]
@@ -295,7 +303,7 @@ export default function BroadcastWhatsappFormCMS({
               </p>
             </div>
             <div className="flex items-center gap-2 px-3 py-1.5 rounded-md bg-card-inside-bg border border-dashboard-border text-sm font-semibold text-emphasis">
-              <Send className="size-4" />
+              <Users className="size-4" />
               {selectedConvIds.length} selected
             </div>
           </div>
@@ -308,7 +316,7 @@ export default function BroadcastWhatsappFormCMS({
           )}
 
           {!isLoading && !isError && (
-            <div className="grid min-h-0 gap-5 md:grid-cols-[1fr_1.15fr]">
+            <div className="grid min-h-0 gap-5 md:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)]">
               <div className="flex flex-col gap-4 min-h-0">
                 <AppSelect
                   selectId="broadcast-template"
@@ -334,7 +342,8 @@ export default function BroadcastWhatsappFormCMS({
                             </p>
                           ) : (
                             <div className="mb-1.5 flex h-20 items-center justify-center rounded bg-card-inside-bg text-xs font-semibold text-emphasis">
-                              {previewComponents.header.format ?? "MEDIA"} HEADER
+                              {previewComponents.header.format ?? "MEDIA"}{" "}
+                              HEADER
                             </div>
                           ))}
                         {previewComponents.body?.text && (
@@ -374,16 +383,16 @@ export default function BroadcastWhatsappFormCMS({
                   <div className="flex flex-col gap-2 rounded-md border border-dashboard-border bg-card-inside-bg p-3">
                     <div className="flex items-center justify-between gap-2 text-xs font-semibold">
                       <span className="text-emphasis">Status</span>
-                      <span className="text-foreground">
-                        {selectedTemplate.status}
-                      </span>
+                      <WhatsappTemplateStatusLabelCMS
+                        status={selectedTemplate.status}
+                      />
                     </div>
                     {selectedTemplate.quality_rating && (
                       <div className="flex items-center justify-between gap-2 text-xs font-semibold">
                         <span className="text-emphasis">Quality</span>
-                        <span className="text-foreground">
-                          {selectedTemplate.quality_rating}
-                        </span>
+                        <WhatsappTemplateQualityLabelCMS
+                          quality={selectedTemplate.quality_rating}
+                        />
                       </div>
                     )}
                   </div>
@@ -458,9 +467,19 @@ export default function BroadcastWhatsappFormCMS({
                             {conversation.phone_number}
                           </span>
                         </div>
-                        <span className="shrink-0 text-xs font-semibold text-emphasis">
-                          {conversation.lead_status}
-                        </span>
+                        <div className="flex shrink-0 items-center gap-1">
+                          <LeadStatusLabelCMS
+                            variants={conversation.lead_status as LeadStatus}
+                          />
+                          {conversation.window_expired && (
+                            <span title="24-hour messaging window closed — only templates can be sent">
+                              <AppBasedLabel variant="gray">
+                                <TimerOff className="size-3" />
+                                24h
+                              </AppBasedLabel>
+                            </span>
+                          )}
+                        </div>
                       </label>
                     );
                   })}

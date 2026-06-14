@@ -308,6 +308,7 @@ export default function WhatsappConvsCMS(props: WhatsappConvsCMSProps) {
                         convLeadStatus={post.lead_status as LeadStatus}
                         convUnreadMessage={post.unread_count}
                         convMode={post.mode}
+                        convWindowExpired={post.window_expired}
                         selectedConvId={selectedConvId}
                         onClick={() => handleSelectConv(post)}
                       />

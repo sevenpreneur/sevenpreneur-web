@@ -160,6 +160,9 @@ FROM (
 ) AS t
 ORDER BY last_message_at DESC`;
 
+      const WINDOW_MS = 24 * 60 * 60 * 1000;
+      const now = Date.now();
+
       const returnedList = conversationList.map((entry) => {
         entry.lead_status = entry.lead_status.toUpperCase() as WALeadStatus;
         entry.mode = entry.mode.toUpperCase() as WAMode;
@@ -172,7 +175,10 @@ ORDER BY last_message_at DESC`;
             entry.last_message_status.toUpperCase() as WACStatus;
         }
         entry.unread_count = Number(entry.unread_count);
-        return entry;
+        const window_expired =
+          !entry.last_inbound_message_at ||
+          now - new Date(entry.last_inbound_message_at).getTime() >= WINDOW_MS;
+        return { ...entry, window_expired };
       });
 
       const returnedMetapaging = {

@@ -53,8 +53,8 @@ const variantStyles: Record<
     backgroundColor: "bg-[#FDE7EE] dark:bg-secondary/15",
   },
   red: {
-    textColor: "text-destructive-soft-foreground",
-    borderColor: "border-[#F3918A] dark:border-[#73120A]",
+    textColor: "text-destructive-soft-foreground dark:text-[#f0628a]",
+    borderColor: "border-[#F3918A] dark:border-[#7a2438]",
     backgroundColor: "bg-[#FEE6E4] dark:bg-destructive/15",
   },
   orange: {
