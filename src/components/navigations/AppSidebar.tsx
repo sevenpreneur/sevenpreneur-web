@@ -7,10 +7,7 @@ import { ReactNode } from "react";
 import AppButton from "../buttons/AppButton";
 
 interface AppSidebarProps {
-  logo?: string | ReactNode;
-  logoLabel: string;
-  logoLabelDisplay?: ReactNode;
-  hideLogoIcon?: boolean;
+  logoContent?: ReactNode;
   avatarSrc?: string;
   avatarName?: string;
   avatarRole?: string;
@@ -18,10 +15,7 @@ interface AppSidebarProps {
 }
 
 export default function AppSidebar({
-  logo,
-  logoLabel,
-  logoLabelDisplay,
-  hideLogoIcon = false,
+  logoContent,
   avatarSrc,
   avatarName,
   avatarRole,
@@ -31,6 +25,11 @@ export default function AppSidebar({
   const { resolvedTheme, setTheme } = useTheme();
   const isDark = resolvedTheme === "dark";
   const toggleTheme = () => setTheme(isDark ? "light" : "dark");
+
+  // Global collapsed logo (square mark) — long logos are provided per sidebar.
+  const squareLogoURL = isDark
+    ? "https://tskubmriuclmbcfmaiur.supabase.co/storage/v1/object/public/sevenpreneur/logo-sevenpreneur-square.svg"
+    : "https://tskubmriuclmbcfmaiur.supabase.co/storage/v1/object/public/sevenpreneur/logo-sevenpreneur-square-white.svg";
 
   return (
     <div
@@ -61,50 +60,32 @@ export default function AppSidebar({
           </AppButton>
         </div>
 
-        {/* Top: logo + menu */}
+        {(isCollapsed || logoContent) && (
+          <div
+            className={`logo-container flex items-center gap-3 shrink-0 bg-sb-avatar-bg border-b border-dashboard-border -mt-4 py-4 mb-4 ${
+              isCollapsed ? "justify-center -mx-2 px-2" : "-mx-4 px-4"
+            }`}
+          >
+            {isCollapsed ? (
+              <div className="flex aspect-square w-9 shrink-0 overflow-hidden rounded-md border border-dashboard-border">
+                <Image
+                  className="object-cover w-full h-full"
+                  src={squareLogoURL}
+                  alt="Sevenpreneur"
+                  width={400}
+                  height={400}
+                />
+              </div>
+            ) : (
+              logoContent
+            )}
+          </div>
+        )}
+
+        {/* Menu */}
         <div
           className={`flex flex-col w-full gap-5 flex-1 min-h-0 overflow-hidden ${isCollapsed ? "items-center" : ""}`}
         >
-          {(!hideLogoIcon || !isCollapsed) && (
-            <div
-              className={`flex items-center gap-3 shrink-0 ${
-                isCollapsed ? "justify-center w-full" : "pl-1"
-              }`}
-            >
-              {!hideLogoIcon && (
-                <div
-                  className={`flex aspect-square shrink-0 overflow-hidden rounded-lg border-4 border-dashboard-border ${
-                    isCollapsed ? "w-9" : "w-11"
-                  }`}
-                >
-                  {typeof logo === "string" ? (
-                    <Image
-                      className="object-cover w-full h-full"
-                      src={logo}
-                      alt={logoLabel}
-                      width={400}
-                      height={400}
-                    />
-                  ) : (
-                    <div className="flex items-center justify-center w-full h-full">
-                      {logo}
-                    </div>
-                  )}
-                </div>
-              )}
-              {!isCollapsed && (
-                <div
-                  className={`font-semibold text-[13px] leading-snug transition-all duration-300 ease-in-out text-sb-text-strong ${
-                    logoLabelDisplay ? "" : "line-clamp-2"
-                  } ${hideLogoIcon ? "w-full" : ""}`}
-                >
-                  {logoLabelDisplay ?? logoLabel}
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* Menu */}
           <nav
             className={`flex flex-col gap-1 flex-1 overflow-y-auto w-full [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] ${isCollapsed ? "items-center" : ""}`}
           >

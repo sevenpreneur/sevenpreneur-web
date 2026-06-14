@@ -35,10 +35,6 @@ export default function SidebarLMS({
   const { resolvedTheme } = useTheme();
   const isDark = resolvedTheme === "dark";
 
-  const logoURL = isDark
-    ? "https://tskubmriuclmbcfmaiur.supabase.co/storage/v1/object/public/sevenpreneur/logo-sevenpreneur-square.svg"
-    : "https://tskubmriuclmbcfmaiur.supabase.co/storage/v1/object/public/sevenpreneur/logo-sevenpreneur-square-white.svg";
-
   useEffect(() => {
     if (sessionToken) setSessionToken(sessionToken);
   }, [sessionToken]);
@@ -49,10 +45,10 @@ export default function SidebarLMS({
 
   return (
     <AppSidebar
-      logo={logoURL}
-      logoLabel="Agora Sevenpreneur"
-      logoLabelDisplay={
-        <AgoraSevenpreneurLogo className="max-w-[142px] h-auto" />
+      logoContent={
+        <div className="text-sb-text-strong">
+          <AgoraSevenpreneurLogo className="max-w-[142px] h-auto" />
+        </div>
       }
       avatarSrc={data?.user.avatar ?? undefined}
       avatarName={data?.user.full_name ?? undefined}

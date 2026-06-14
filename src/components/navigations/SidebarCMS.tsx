@@ -93,8 +93,7 @@ export default function SidebarCMS(props: SidebarCMSProps) {
 
   return (
     <AppSidebar
-      logoLabel="Sevenpreneur Content Management System"
-      logoLabelDisplay={
+      logoContent={
         <div className="flex items-center justify-between w-full gap-3">
           <SevenpreneurLogo className="w-3/4 max-w-[168px] h-auto shrink-0" />
           <span className="text-[11px] font-semibold whitespace-nowrap text-sb-text">
@@ -102,7 +101,6 @@ export default function SidebarCMS(props: SidebarCMSProps) {
           </span>
         </div>
       }
-      hideLogoIcon
       avatarSrc={data?.user.avatar ?? undefined}
       avatarName={data?.user.full_name ?? undefined}
       avatarRole={data?.user.role_name ?? undefined}
