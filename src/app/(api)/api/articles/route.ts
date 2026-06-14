@@ -6,6 +6,7 @@ const DEFAULT_PAGE_SIZE = 20;
 export async function POST(req: NextRequest) {
   const authHeader = req.headers.get("authorization");
   const expectedKey = process.env.SECRET_KEY_PUBLIC_API;
+
   if (!expectedKey || authHeader !== `Bearer ${expectedKey}`) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
