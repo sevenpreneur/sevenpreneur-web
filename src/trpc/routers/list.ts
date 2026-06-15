@@ -2,6 +2,7 @@ import { createTRPCRouter } from "@/trpc/init";
 import { listAITool } from "./ai_tool/list.ai_tool";
 import { listAnalytics } from "./analytics/list.analytics";
 import { listArticle } from "./article/list.article";
+import { listAutomation } from "./automation/list.automation";
 import { listB2B } from "./b2b/list.b2b";
 import { listEvent } from "./event/list.event";
 import { listLMS } from "./lms/list.lms";
@@ -72,6 +73,10 @@ export const listRouter = createTRPCRouter({
 
   articleCategories: listArticle.articleCategories,
   articles: listArticle.articles,
+
+  // Automations (Kill Switch) //
+
+  automations: listAutomation.automations,
 
   // Analytics-related //
 

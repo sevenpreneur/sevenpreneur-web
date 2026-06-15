@@ -956,6 +956,20 @@ model B2BAction {
   @@map("b2b_actions")
 }
 
+// Automations (Kill Switch)
+
+model Automation {
+  id          String     @id @default(uuid()) @db.Uuid
+  key         String     @unique @db.VarChar()
+  description String     @db.VarChar()
+  status      StatusEnum @default(ACTIVE)
+  tags        String?    @db.VarChar()
+  created_at  DateTime   @default(now()) @db.Timestamptz()
+  updated_at  DateTime   @default(now()) @updatedAt @db.Timestamptz()
+
+  @@map("automations")
+}
+
 // Error Logs
 
 model ErrorLog {

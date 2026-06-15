@@ -2,6 +2,7 @@ import { createTRPCRouter } from "@/trpc/init";
 import { readAdv } from "./ads/read.ads";
 import { readAIResult } from "./ai_tool/read.ai_tool";
 import { readArticle } from "./article/read.article";
+import { readAutomation } from "./automation/read.automation";
 import { readB2B } from "./b2b/read.b2b";
 import { readEvent } from "./event/read.event";
 import { readLMS } from "./lms/read.lms";
@@ -74,6 +75,10 @@ export const readRouter = createTRPCRouter({
   // Article-related //
 
   article: readArticle.article,
+
+  // Automations (Kill Switch) //
+
+  automation: readAutomation.automation,
 
   // Ads //
 

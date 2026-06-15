@@ -2,6 +2,7 @@ import { createTRPCRouter } from "@/trpc/init";
 import { deleteAITool } from "./ai_tool/delete.ai_tool";
 import { deleteWA } from "./wa/delete.wa";
 import { deleteArticle } from "./article/delete.article";
+import { deleteAutomation } from "./automation/delete.automation";
 import { deleteB2B } from "./b2b/delete.b2b";
 import { deleteEvent } from "./event/delete.event";
 import { deleteLMS } from "./lms/delete.lms";
@@ -56,6 +57,10 @@ export const deleteRouter = createTRPCRouter({
 
   articleCategory: deleteArticle.articleCategory,
   article: deleteArticle.article,
+
+  // Automations (Kill Switch) //
+
+  automation: deleteAutomation.automation,
 
   // WhatsApp-chat-related //
 

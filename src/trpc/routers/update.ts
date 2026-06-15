@@ -1,6 +1,7 @@
 import { createTRPCRouter } from "@/trpc/init";
 import { updateAdv } from "./ads/update.ads";
 import { updateArticle } from "./article/update.article";
+import { updateAutomation } from "./automation/update.automation";
 import { updateB2B } from "./b2b/update.b2b";
 import { updateEvent } from "./event/update.event";
 import { updateLMS } from "./lms/update.lms";
@@ -51,6 +52,10 @@ export const updateRouter = createTRPCRouter({
 
   articleCategory: updateArticle.articleCategory,
   article: updateArticle.article,
+
+  // Automations (Kill Switch) //
+
+  automation: updateAutomation.automation,
 
   // Ads //
 

@@ -404,11 +404,6 @@ CREATE TABLE attendances (
   PRIMARY KEY (learning_id, user_id)
 );
 
--- Stores structured feedback from members after each learning session
--- Likert fields: 1 (Sangat Buruk) — 5 (Sangat Baik)
--- Submitting a rating automatically sets attendances.check_out_at
--- Unique per (learning_id, user_id) — one submission per member per session
-
 CREATE TABLE learning_ratings (
   id                     SERIAL       PRIMARY KEY,
   learning_id            INTEGER      NOT NULL,
@@ -733,6 +728,18 @@ CREATE TABLE b2b_actions (
   summary        TEXT                     NOT NULL,
   created_at     TIMESTAMPTZ              NOT NULL  DEFAULT CURRENT_TIMESTAMP,
   updated_at     TIMESTAMPTZ              NOT NULL  DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Automations (Kill Switch)
+
+CREATE TABLE automations (
+  id           UUID         PRIMARY KEY  DEFAULT gen_random_uuid(),
+  key          VARCHAR      NOT NULL     UNIQUE,
+  description  VARCHAR      NOT NULL,
+  status       status_enum  NOT NULL     DEFAULT 'active',
+  tags         VARCHAR          NULL,
+  created_at   TIMESTAMPTZ  NOT NULL     DEFAULT CURRENT_TIMESTAMP,
+  updated_at   TIMESTAMPTZ  NOT NULL     DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Error Logs
@@ -1138,6 +1145,13 @@ CREATE TRIGGER update_b2b_pipeline_updated_at_trigger
 
 CREATE TRIGGER update_b2b_actions_updated_at_trigger
   BEFORE UPDATE ON b2b_actions
+  FOR EACH ROW
+    EXECUTE FUNCTION update_updated_at();
+
+-- Automations (Kill Switch)
+
+CREATE TRIGGER update_automations_updated_at_trigger
+  BEFORE UPDATE ON automations
   FOR EACH ROW
     EXECUTE FUNCTION update_updated_at();
 

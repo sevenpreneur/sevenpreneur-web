@@ -1,5 +1,6 @@
 import { createTRPCRouter } from "@/trpc/init";
 import { createArticle } from "./article/create.article";
+import { createAutomation } from "./automation/create.automation";
 import { createB2B } from "./b2b/create.b2b";
 import { createWA } from "./wa/create.wa";
 import { createEvent } from "./event/create.event";
@@ -54,6 +55,10 @@ export const createRouter = createTRPCRouter({
 
   articleCategory: createArticle.articleCategory,
   article: createArticle.article,
+
+  // Automations (Kill Switch) //
+
+  automation: createAutomation.automation,
 
   // WhatsApp-chat-related //
 
