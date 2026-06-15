@@ -1,5 +1,4 @@
 import GetPrismaClient from "@/lib/prisma";
-import { StatusEnum } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import z from "zod";
 
@@ -45,7 +44,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(
       {
         key: parsed.data.key,
-        is_active: false,
         status: null,
         message: "Automation not found",
       },
@@ -55,7 +53,6 @@ export async function POST(req: NextRequest) {
 
   return NextResponse.json({
     key: automation.key,
-    is_active: automation.status === StatusEnum.ACTIVE,
     status: automation.status,
     description: automation.description,
     tags: automation.tags,

@@ -4,6 +4,7 @@ import { faWhatsapp } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   BanknoteArrowDown,
+  Bot,
   Building2,
   ChartColumnBig,
   CircleUserIcon,
@@ -44,6 +45,7 @@ export default function SidebarCMS(props: SidebarCMSProps) {
     "Class Manager",
   ];
   const allowedRolesMenuTransactions = ["Super Admin"];
+  const allowedRolesMenuAutomations = ["Administrator", "Super Admin"];
   const allowedRolesMenuB2BPipeline = ["Administrator", "Super Admin"];
   const allowedRolesMenuWebMarketing = [
     "Administrator",
@@ -66,6 +68,9 @@ export default function SidebarCMS(props: SidebarCMSProps) {
     props.sessionUserRoleName
   );
   const isAllowedMenuTransactions = allowedRolesMenuTransactions.includes(
+    props.sessionUserRoleName
+  );
+  const isAllowedMenuAutomations = allowedRolesMenuAutomations.includes(
     props.sessionUserRoleName
   );
   const isAllowedMenuWebMarketing = allowedRolesMenuWebMarketing.includes(
@@ -132,7 +137,9 @@ export default function SidebarCMS(props: SidebarCMSProps) {
           )}
         </AppSidebarGroupMenu>
       )}
-      {(isAllowedMenuUsers || isAllowedMenuTransactions) && (
+      {(isAllowedMenuUsers ||
+        isAllowedMenuTransactions ||
+        isAllowedMenuAutomations) && (
         <AppSidebarGroupMenu groupName="Administration">
           {isAllowedMenuUsers && (
             <AppSidebarMenuItem
@@ -146,6 +153,13 @@ export default function SidebarCMS(props: SidebarCMSProps) {
               menuName="Transactions"
               menuURL="/transactions"
               menuIcon={<BanknoteArrowDown />}
+            />
+          )}
+          {isAllowedMenuAutomations && (
+            <AppSidebarMenuItem
+              menuName="Automations"
+              menuURL="/automations"
+              menuIcon={<Bot />}
             />
           )}
         </AppSidebarGroupMenu>
