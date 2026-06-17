@@ -3,13 +3,12 @@ import { LeadStatus } from "@/lib/app-types";
 import { supabase } from "@/lib/supabase";
 import { trpc } from "@/trpc/client";
 import { WALeadStatus, WAMode } from "@prisma/client";
-import { ListFilter, Megaphone, MessageCircle, RotateCcw } from "lucide-react";
-import { useTheme } from "next-themes";
+import { ListFilter, Megaphone, MessageCircle, Search } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
 import AppButton from "../buttons/AppButton";
-import SectionContainerCMS from "../cards/SectionContainerCMS";
 import WhatsappLeadDetailsCMS from "../elements/WhatsappLeadDetailsCMS";
+import AppInput from "../fields/AppInput";
 import AppSelect from "../fields/AppSelect";
 import BroadcastWhatsappFormCMS from "../forms/BroadcastWhatsappFormCMS";
 import WhatsappConvItemCMS from "../items/WhatsappConvItemCMS";
@@ -39,9 +38,10 @@ type ConvHeaderSnapshot = {
 };
 
 export default function WhatsappConvsCMS(props: WhatsappConvsCMSProps) {
-  const { resolvedTheme } = useTheme();
-  const buttonVariant = resolvedTheme === "dark" ? "dark" : "light";
   const [selectedConvId, setSelectedConvId] = useState("");
+  const [searchValue, setSearchValue] = useState("");
+  // Debounced search so we don't refetch on every keystroke.
+  const [searchQuery, setSearchQuery] = useState("");
   // Cached header data so the middle panel survives filter changes that
   // exclude the selected conv. Set when the user clicks a conv item; fresh
   // values from the live list take priority over this snapshot when present.
@@ -56,20 +56,27 @@ export default function WhatsappConvsCMS(props: WhatsappConvsCMSProps) {
   const utils = trpc.useUtils();
   const readMessage = trpc.update.wa.conversation_as_read.useMutation();
 
-  // Build query input from filters; page_size drives the infinite-scroll pagination.
+  useEffect(() => {
+    const timer = setTimeout(() => setSearchQuery(searchValue.trim()), 350);
+    return () => clearTimeout(timer);
+  }, [searchValue]);
+
+  // Build query input from search + filters; page_size drives infinite scroll.
   const conversationsInput = useMemo(() => {
     const input: {
+      search?: string;
       lead_status?: WALeadStatus;
       mode?: WAMode;
       handler_id?: string | null;
       page_size: number;
     } = { page_size: CONV_PAGE_SIZE };
+    if (searchQuery) input.search = searchQuery;
     if (leadStatusFilter !== "ALL") input.lead_status = leadStatusFilter;
     if (modeFilter !== "ALL") input.mode = modeFilter;
     if (handlerFilter === "UNASSIGNED") input.handler_id = null;
     else if (handlerFilter !== "ALL") input.handler_id = handlerFilter;
     return input;
-  }, [leadStatusFilter, modeFilter, handlerFilter]);
+  }, [searchQuery, leadStatusFilter, modeFilter, handlerFilter]);
 
   // Fetch tRPC data (paginated, loads the next 30 on scroll)
   const {
@@ -142,17 +149,6 @@ export default function WhatsappConvsCMS(props: WhatsappConvsCMSProps) {
     });
   };
 
-  const hasActiveFilter =
-    leadStatusFilter !== "ALL" ||
-    modeFilter !== "ALL" ||
-    handlerFilter !== "ALL";
-
-  const resetFilters = () => {
-    setLeadStatusFilter("ALL");
-    setModeFilter("ALL");
-    setHandlerFilter("ALL");
-  };
-
   // Subscribe to Realtime to keep convList updated even when no conversation is selected
   useEffect(() => {
     const channel = supabase
@@ -212,17 +208,20 @@ export default function WhatsappConvsCMS(props: WhatsappConvsCMSProps) {
   }, [convItems]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const leadStatusOptions = [
+    { label: "All status", value: null },
     { label: "Hot Leads", value: "HOT" },
     { label: "Warm Leads", value: "WARM" },
     { label: "Cold Leads", value: "COLD" },
   ];
 
   const modeOptions = [
+    { label: "All modes", value: null },
     { label: "AI Mode", value: "AI" },
     { label: "Human Mode", value: "HUMAN" },
   ];
 
   const handlerOptions = [
+    { label: "All handlers", value: null },
     { label: "Unassigned", value: "UNASSIGNED" },
     ...(handlerList?.list.map((u) => ({
       label: u.full_name,
@@ -244,63 +243,63 @@ export default function WhatsappConvsCMS(props: WhatsappConvsCMSProps) {
             Broadcast Message
           </AppButton>
         </PageHeaderCMS>
+
+        {/* Search + filters toolbar */}
+        <div className="filters-bar flex flex-col gap-3 shrink-0 sm:flex-row sm:items-center">
+          <div className="flex-1 min-w-0">
+            <AppInput
+              inputId="conv-search"
+              inputType="text"
+              inputIcon={<Search className="size-4" />}
+              inputPlaceholder="Search name, phone number, or chat content"
+              variant="CMS"
+              value={searchValue}
+              onInputChange={setSearchValue}
+            />
+          </div>
+          <div className="flex items-center gap-2 shrink-0">
+            <div className="w-48">
+              <AppSelect
+                selectId="filter-mode"
+                selectPlaceholder="Mode"
+                variant="CMS"
+                value={modeFilter === "ALL" ? null : modeFilter}
+                onChange={(value) =>
+                  setModeFilter((value as ModeFilter) ?? "ALL")
+                }
+                options={modeOptions}
+              />
+            </div>
+            <div className="w-48">
+              <AppSelect
+                selectId="filter-lead-status"
+                selectPlaceholder="Status"
+                variant="CMS"
+                value={leadStatusFilter === "ALL" ? null : leadStatusFilter}
+                onChange={(value) =>
+                  setLeadStatusFilter((value as LeadStatusFilter) ?? "ALL")
+                }
+                options={leadStatusOptions}
+              />
+            </div>
+            <div className="w-56">
+              <AppSelect
+                selectId="filter-handler"
+                selectPlaceholder="Assigned to"
+                variant="CMS"
+                value={handlerFilter === "ALL" ? null : handlerFilter}
+                onChange={(value) =>
+                  setHandlerFilter((value as HandlerFilter) ?? "ALL")
+                }
+                options={handlerOptions}
+              />
+            </div>
+          </div>
+        </div>
+
         <div className="conv-details flex flex-1 w-full min-h-0 gap-4">
           {/* LEFT PANEL */}
           <div className="left-panel flex flex-col w-80 shrink-0 gap-4 min-h-0">
-            {/* Filters card */}
-            <SectionContainerCMS
-              title="Filters"
-              icon={ListFilter}
-              className="shrink-0"
-              headerAction={
-                <AppButton
-                  type="button"
-                  variant={buttonVariant}
-                  size="small"
-                  onClick={resetFilters}
-                  disabled={!hasActiveFilter}
-                >
-                  <RotateCcw className="size-3.5" />
-                  Reset
-                </AppButton>
-              }
-            >
-              <div className="flex flex-col gap-2">
-                <div className="grid grid-cols-2 gap-2">
-                  <AppSelect
-                    selectId="filter-mode"
-                    selectPlaceholder="Mode"
-                    variant="CMS"
-                    value={modeFilter === "ALL" ? null : modeFilter}
-                    onChange={(value) =>
-                      setModeFilter((value as ModeFilter) ?? "ALL")
-                    }
-                    options={modeOptions}
-                  />
-                  <AppSelect
-                    selectId="filter-lead-status"
-                    selectPlaceholder="Status"
-                    variant="CMS"
-                    value={leadStatusFilter === "ALL" ? null : leadStatusFilter}
-                    onChange={(value) =>
-                      setLeadStatusFilter((value as LeadStatusFilter) ?? "ALL")
-                    }
-                    options={leadStatusOptions}
-                  />
-                </div>
-                <AppSelect
-                  selectId="filter-handler"
-                  selectPlaceholder="Assigned to"
-                  variant="CMS"
-                  value={handlerFilter === "ALL" ? null : handlerFilter}
-                  onChange={(value) =>
-                    setHandlerFilter((value as HandlerFilter) ?? "ALL")
-                  }
-                  options={handlerOptions}
-                />
-              </div>
-            </SectionContainerCMS>
-
             {/* Conversations list card */}
             <div className="convs-panels flex flex-col flex-1 min-h-0 shrink-0 bg-card-bg border border-dashboard-border rounded-lg overflow-hidden">
               <div className="column-title flex items-center justify-between p-3 bg-card-bg  border-b border-dashboard-border shrink-0">

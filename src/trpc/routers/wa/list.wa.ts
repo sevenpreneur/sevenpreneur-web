@@ -27,6 +27,8 @@ export const listWA = {
     .input(
       z.object({
         full_name: stringNotBlank().optional(),
+        // Free-text search across name, phone number, and chat content.
+        search: stringNotBlank().optional(),
         lead_status: z.enum(WALeadStatus).optional(),
         mode: z.enum(WAMode).optional(),
         handler_id: stringIsUUID().nullable().optional(),
@@ -37,15 +39,7 @@ export const listWA = {
       })
     )
     .query(async (opts) => {
-      const whereClause = {
-        full_name: undefined as Optional<{
-          contains: string;
-          mode: "insensitive";
-        }>,
-        lead_status: undefined as Optional<WALeadStatus>,
-        mode: undefined as Optional<WAMode>,
-        handler_id: undefined as Optional<string | null>,
-      };
+      const whereClause: Prisma.WAConversationWhereInput = {};
       let whereClauseSql = Prisma.sql`WHERE 1 = 1`;
 
       if (opts.input.full_name !== undefined) {
@@ -59,6 +53,30 @@ ${whereClauseSql}
 AND (
   wa_conversations.full_name ILIKE ${ilikeFullName} OR
   users.full_name ILIKE ${ilikeFullName}
+)`;
+      }
+
+      // Free-text search: conversation name, linked user name, phone number,
+      // or any chat message in the conversation.
+      if (opts.input.search !== undefined) {
+        const q = opts.input.search;
+        whereClause.OR = [
+          { full_name: { contains: q, mode: "insensitive" } },
+          { user: { full_name: { contains: q, mode: "insensitive" } } },
+          { phone_number: { contains: q, mode: "insensitive" } },
+          { chats: { some: { message: { contains: q, mode: "insensitive" } } } },
+        ];
+        const ilikeSearch = `%${q}%`;
+        whereClauseSql = Prisma.sql`
+${whereClauseSql}
+AND (
+  wa_conversations.full_name ILIKE ${ilikeSearch} OR
+  users.full_name ILIKE ${ilikeSearch} OR
+  wa_conversations.phone_number ILIKE ${ilikeSearch} OR
+  EXISTS (
+    SELECT 1 FROM wa_chats wsc
+    WHERE wsc.conv_id = wa_conversations.id AND wsc.message ILIKE ${ilikeSearch}
+  )
 )`;
       }
 
