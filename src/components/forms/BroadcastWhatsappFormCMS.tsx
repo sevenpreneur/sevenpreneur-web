@@ -99,6 +99,8 @@ export default function BroadcastWhatsappFormCMS({
   );
   const [selectedConvIds, setSelectedConvIds] = useState<string[]>([]);
   const [searchValue, setSearchValue] = useState("");
+  const [leadStatusFilter, setLeadStatusFilter] = useState<string | null>(null);
+  const [windowFilter, setWindowFilter] = useState<string | null>(null);
   const [parameters, setParameters] = useState<Record<string, string>>({});
 
   const {
@@ -170,17 +172,41 @@ export default function BroadcastWhatsappFormCMS({
 
   const filteredConversations = useMemo(() => {
     const keyword = searchValue.trim().toLowerCase();
-    if (!keyword) return conversations;
     return conversations.filter((conversation) => {
-      const name = (
-        conversation.user_full_name || conversation.full_name
-      ).toLowerCase();
-      return (
-        name.includes(keyword) ||
-        conversation.phone_number.toLowerCase().includes(keyword)
-      );
+      if (keyword) {
+        const name = (
+          conversation.user_full_name || conversation.full_name
+        ).toLowerCase();
+        if (
+          !name.includes(keyword) &&
+          !conversation.phone_number.toLowerCase().includes(keyword)
+        ) {
+          return false;
+        }
+      }
+      if (leadStatusFilter && conversation.lead_status !== leadStatusFilter) {
+        return false;
+      }
+      if (windowFilter === "ACTIVE" && conversation.window_expired) return false;
+      if (windowFilter === "EXPIRED" && !conversation.window_expired) {
+        return false;
+      }
+      return true;
     });
-  }, [conversations, searchValue]);
+  }, [conversations, searchValue, leadStatusFilter, windowFilter]);
+
+  const leadStatusOptions = [
+    { label: "All lead status", value: null },
+    { label: "Hot Leads", value: "HOT" },
+    { label: "Warm Leads", value: "WARM" },
+    { label: "Cold Leads", value: "COLD" },
+  ];
+
+  const windowOptions = [
+    { label: "All windows", value: null },
+    { label: "Inside 24h window", value: "ACTIVE" },
+    { label: "Window expired (24h)", value: "EXPIRED" },
+  ];
 
   const selectedTemplatePayload = selectedTemplate
     ? {
@@ -188,12 +214,6 @@ export default function BroadcastWhatsappFormCMS({
         lang_code: selectedTemplate.lang_code,
       }
     : null;
-
-  const allVisibleSelected =
-    filteredConversations.length > 0 &&
-    filteredConversations.every((conversation) =>
-      selectedConvIds.includes(conversation.id)
-    );
 
   const toggleConversation = (convId: string) => {
     setSelectedConvIds((prev) =>
@@ -203,23 +223,18 @@ export default function BroadcastWhatsappFormCMS({
     );
   };
 
-  const toggleVisibleConversations = () => {
-    if (allVisibleSelected) {
-      const visibleIds = new Set(
-        filteredConversations.map((conversation) => conversation.id)
-      );
-      setSelectedConvIds((prev) => prev.filter((id) => !visibleIds.has(id)));
-    } else {
-      setSelectedConvIds((prev) =>
-        Array.from(
-          new Set([
-            ...prev,
-            ...filteredConversations.map((conversation) => conversation.id),
-          ])
-        )
-      );
-    }
+  const selectAllFiltered = () => {
+    setSelectedConvIds((prev) =>
+      Array.from(
+        new Set([
+          ...prev,
+          ...filteredConversations.map((conversation) => conversation.id),
+        ])
+      )
+    );
   };
+
+  const clearAllSelected = () => setSelectedConvIds([]);
 
   const handleParameterChange = (param: string) => (value: string) => {
     setParameters((prev) => ({ ...prev, [param]: value }));
@@ -229,6 +244,8 @@ export default function BroadcastWhatsappFormCMS({
     setSelectedTemplateKey(null);
     setSelectedConvIds([]);
     setSearchValue("");
+    setLeadStatusFilter(null);
+    setWindowFilter(null);
     setParameters({});
     onClose();
   };
@@ -430,17 +447,48 @@ export default function BroadcastWhatsappFormCMS({
                   value={searchValue}
                   onInputChange={setSearchValue}
                 />
+                <div className="grid grid-cols-2 gap-2">
+                  <AppSelect
+                    selectId="broadcast-filter-lead-status"
+                    selectPlaceholder="Lead status"
+                    variant="CMS"
+                    value={leadStatusFilter}
+                    onChange={(value) =>
+                      setLeadStatusFilter((value as string | null) ?? null)
+                    }
+                    options={leadStatusOptions}
+                  />
+                  <AppSelect
+                    selectId="broadcast-filter-window"
+                    selectPlaceholder="24h window"
+                    variant="CMS"
+                    value={windowFilter}
+                    onChange={(value) =>
+                      setWindowFilter((value as string | null) ?? null)
+                    }
+                    options={windowOptions}
+                  />
+                </div>
                 <div className="flex items-center justify-between gap-3">
                   <p className="text-sm font-semibold text-emphasis">
                     {filteredConversations.length} recipient(s)
                   </p>
-                  <button
-                    type="button"
-                    className="text-sm font-semibold text-tertiary hover:underline"
-                    onClick={toggleVisibleConversations}
-                  >
-                    {allVisibleSelected ? "Clear visible" : "Select visible"}
-                  </button>
+                  <div className="flex items-center gap-3">
+                    <button
+                      type="button"
+                      className="text-sm font-semibold text-tertiary hover:underline"
+                      onClick={selectAllFiltered}
+                    >
+                      Select all
+                    </button>
+                    <button
+                      type="button"
+                      className="text-sm font-semibold text-emphasis hover:underline"
+                      onClick={clearAllSelected}
+                    >
+                      Clear all
+                    </button>
+                  </div>
                 </div>
                 <div className="flex max-h-[44vh] min-h-72 flex-col overflow-y-auto rounded-lg border border-dashboard-border bg-card-inside-bg">
                   {filteredConversations.map((conversation) => {
