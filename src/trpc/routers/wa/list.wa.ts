@@ -125,51 +125,61 @@ AND wa_conversations.handler_id = ${opts.input.handler_id}::uuid`;
         handler_full_name?: string;
         handler_avatar?: string;
       };
+      // Two-stage query. Stage 1 (`paged`) resolves the latest message per
+      // conversation, sorts, and applies LIMIT/OFFSET — so only the page's
+      // rows survive. Stage 2 then computes the expensive per-conversation
+      // aggregates (last inbound message, unread count) via LATERAL joins,
+      // which therefore run once per returned row instead of once per chat.
       const conversationList = await opts.ctx.prisma.$queryRaw<WAConvItem[]>`
-SELECT *
-FROM (
-  SELECT DISTINCT ON (wa_conversations.id)
-    wa_conversations.id, wa_conversations.full_name, wa_conversations.phone_number,
-    wa_conversations.lead_status, wa_conversations.mode, wa_conversations.handler_id,
-    wa_chats.message AS last_message, wa_chats.created_at AS last_message_at,
-    wa_chats.status AS last_message_status, wa_chats.type AS last_message_type,
-    wa_chats.direction AS last_message_direction,
-    (
-      SELECT wci.message
-      FROM wa_chats wci
-      WHERE wci.conv_id = wa_conversations.id AND wci.direction = 'inbound'
-      ORDER BY wci.created_at DESC
-      LIMIT 1
-    ) AS last_inbound_message,
-    (
-      SELECT wci.created_at
-      FROM wa_chats wci
-      WHERE wci.conv_id = wa_conversations.id AND wci.direction = 'inbound'
-      ORDER BY wci.created_at DESC
-      LIMIT 1
-    ) AS last_inbound_message_at,
-    (
-      SELECT COUNT(wc.id)
-      FROM wa_chats wc
-      WHERE wc.conv_id = wa_conversations.id AND wc.direction = 'inbound' AND wc.created_at > (
-        SELECT COALESCE(wc2.created_at, '2000-01-01 00:00:00Z'::TIMESTAMPTZ)
-        FROM wa_conversations wconv
-        LEFT JOIN wa_chats wc2 ON wconv.last_read_id = wc2.id
-        WHERE wconv.id = wa_conversations.id
-        LIMIT 1
+WITH paged AS (
+  SELECT *
+  FROM (
+    SELECT DISTINCT ON (wa_conversations.id)
+      wa_conversations.id, wa_conversations.full_name, wa_conversations.phone_number,
+      wa_conversations.lead_status, wa_conversations.mode, wa_conversations.handler_id,
+      wa_conversations.user_id, wa_conversations.last_read_id,
+      wa_chats.message AS last_message, wa_chats.created_at AS last_message_at,
+      wa_chats.status AS last_message_status, wa_chats.type AS last_message_type,
+      wa_chats.direction AS last_message_direction
+    FROM wa_conversations
+      LEFT JOIN wa_chats ON wa_conversations.id = wa_chats.conv_id
+      LEFT JOIN users ON wa_conversations.user_id = users.id
+    ${whereClauseSql}
+    ORDER BY wa_conversations.id, wa_chats.created_at DESC
+  ) AS distinct_convs
+  ORDER BY last_message_at DESC
+  ${limitOffsetSql}
+)
+SELECT
+  paged.id, paged.full_name, paged.phone_number,
+  paged.lead_status, paged.mode, paged.handler_id,
+  paged.last_message, paged.last_message_at,
+  paged.last_message_status, paged.last_message_type, paged.last_message_direction,
+  inbound.message AS last_inbound_message,
+  inbound.created_at AS last_inbound_message_at,
+  COALESCE(unread.unread_count, 0) AS unread_count,
+  users.full_name AS user_full_name, users.avatar AS user_avatar,
+  handlers.full_name AS handler_full_name, handlers.avatar AS handler_avatar
+FROM paged
+  LEFT JOIN users ON paged.user_id = users.id
+  LEFT JOIN users AS handlers ON paged.handler_id = handlers.id
+  LEFT JOIN LATERAL (
+    SELECT wci.message, wci.created_at
+    FROM wa_chats wci
+    WHERE wci.conv_id = paged.id AND wci.direction = 'inbound'
+    ORDER BY wci.created_at DESC
+    LIMIT 1
+  ) AS inbound ON TRUE
+  LEFT JOIN LATERAL (
+    SELECT COUNT(wc.id) AS unread_count
+    FROM wa_chats wc
+    WHERE wc.conv_id = paged.id AND wc.direction = 'inbound'
+      AND wc.created_at > COALESCE(
+        (SELECT wc2.created_at FROM wa_chats wc2 WHERE wc2.id = paged.last_read_id),
+        '2000-01-01 00:00:00Z'::TIMESTAMPTZ
       )
-    ) AS unread_count,
-    users.full_name AS user_full_name, users.avatar AS user_avatar,
-    handlers.full_name AS handler_full_name, handlers.avatar AS handler_avatar
-  FROM wa_conversations
-    LEFT JOIN wa_chats ON wa_conversations.id = wa_chats.conv_id
-    LEFT JOIN users ON wa_conversations.user_id = users.id
-    LEFT JOIN users AS handlers ON wa_conversations.handler_id = handlers.id
-  ${whereClauseSql}
-  ORDER BY wa_conversations.id, wa_chats.created_at DESC
-) AS t
-ORDER BY last_message_at DESC
-${limitOffsetSql}`;
+  ) AS unread ON TRUE
+ORDER BY paged.last_message_at DESC`;
 
       const WINDOW_MS = 24 * 60 * 60 * 1000;
       const now = Date.now();
