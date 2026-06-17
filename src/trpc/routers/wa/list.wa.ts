@@ -32,6 +32,9 @@ export const listWA = {
         handler_id: stringIsUUID().nullable().optional(),
         page: numberIsPosInt().optional(),
         page_size: numberIsPosInt().optional(),
+        // Cursor (= page number) used by the infinite-scroll list. Takes
+        // precedence over `page` when present.
+        cursor: numberIsPosInt().optional(),
       })
     )
     .query(async (opts) => {
@@ -88,12 +91,19 @@ AND wa_conversations.handler_id = ${opts.input.handler_id}::uuid`;
       }
 
       const paging = calculatePage(
-        opts.input,
+        { page: opts.input.cursor ?? opts.input.page, page_size: opts.input.page_size },
         await opts.ctx.prisma.wAConversation.aggregate({
           _count: true,
           where: whereClause,
         })
       );
+
+      // Only paginate when a page_size is given; callers without it still
+      // receive the full list (broadcast picker, leads overview, ...).
+      const limitOffsetSql =
+        paging.prisma.take !== undefined
+          ? Prisma.sql`LIMIT ${paging.prisma.take} OFFSET ${paging.prisma.skip ?? 0}`
+          : Prisma.empty;
 
       type WAConvItem = {
         id: string;
@@ -158,7 +168,8 @@ FROM (
   ${whereClauseSql}
   ORDER BY wa_conversations.id, wa_chats.created_at DESC
 ) AS t
-ORDER BY last_message_at DESC`;
+ORDER BY last_message_at DESC
+${limitOffsetSql}`;
 
       const WINDOW_MS = 24 * 60 * 60 * 1000;
       const now = Date.now();
@@ -181,8 +192,16 @@ ORDER BY last_message_at DESC`;
         return { ...entry, window_expired };
       });
 
+      const nextPage =
+        paging.metapaging.current_page !== undefined &&
+        paging.metapaging.total_page !== undefined &&
+        paging.metapaging.current_page < paging.metapaging.total_page
+          ? paging.metapaging.current_page + 1
+          : null;
+
       const returnedMetapaging = {
         ...paging.metapaging,
+        next_page: nextPage,
         full_name: opts.input.full_name,
         lead_status: opts.input.lead_status,
         mode: opts.input.mode,

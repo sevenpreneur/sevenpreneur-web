@@ -23,6 +23,8 @@ interface WhatsappConvsCMSProps {
   sessionToken: string;
 }
 
+const CONV_PAGE_SIZE = 30;
+
 type LeadStatusFilter = WALeadStatus | "ALL";
 type ModeFilter = WAMode | "ALL";
 type HandlerFilter = "ALL" | "UNASSIGNED" | string;
@@ -54,13 +56,15 @@ export default function WhatsappConvsCMS(props: WhatsappConvsCMSProps) {
   const utils = trpc.useUtils();
   const readMessage = trpc.update.wa.conversation_as_read.useMutation();
 
-  // Build query input from filters
+  // Build query input from filters. page_size drives the infinite-scroll
+  // pagination (30 conversations per request).
   const conversationsInput = useMemo(() => {
     const input: {
       lead_status?: WALeadStatus;
       mode?: WAMode;
       handler_id?: string | null;
-    } = {};
+      page_size: number;
+    } = { page_size: CONV_PAGE_SIZE };
     if (leadStatusFilter !== "ALL") input.lead_status = leadStatusFilter;
     if (modeFilter !== "ALL") input.mode = modeFilter;
     if (handlerFilter === "UNASSIGNED") input.handler_id = null;
@@ -68,14 +72,38 @@ export default function WhatsappConvsCMS(props: WhatsappConvsCMSProps) {
     return input;
   }, [leadStatusFilter, modeFilter, handlerFilter]);
 
-  // Fetch tRPC data
+  // Fetch tRPC data (paginated, loads the next 30 on scroll)
   const {
-    data: convList,
+    data: convPages,
     isLoading: isLoadingConvs,
     isError: isErrorConvs,
-  } = trpc.list.wa.conversations.useQuery(conversationsInput, {
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = trpc.list.wa.conversations.useInfiniteQuery(conversationsInput, {
     enabled: !!props.sessionToken,
+    initialCursor: 1,
+    getNextPageParam: (lastPage) => lastPage.metapaging.next_page ?? undefined,
   });
+
+  // Flatten loaded pages into a single conversation list
+  const convItems = useMemo(
+    () => convPages?.pages.flatMap((page) => page.list) ?? [],
+    [convPages]
+  );
+  const totalConvCount = convPages?.pages[0]?.metapaging.total_data;
+
+  // Load the next page when scrolled near the bottom of the list
+  const handleConvScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    const el = e.currentTarget;
+    if (
+      el.scrollHeight - el.scrollTop - el.clientHeight < 200 &&
+      hasNextPage &&
+      !isFetchingNextPage
+    ) {
+      fetchNextPage();
+    }
+  };
 
   // Fetch admin handler list for filter dropdown
   const { data: handlerList } = trpc.list.users.useQuery(
@@ -84,8 +112,8 @@ export default function WhatsappConvsCMS(props: WhatsappConvsCMSProps) {
   );
 
   const convFromList = useMemo(
-    () => convList?.list.find((c) => c.id === selectedConvId),
-    [convList, selectedConvId]
+    () => convItems.find((c) => c.id === selectedConvId),
+    [convItems, selectedConvId]
   );
 
   // Prefer fresh data from the list; fall back to the click-time snapshot so
@@ -152,37 +180,38 @@ export default function WhatsappConvsCMS(props: WhatsappConvsCMSProps) {
     };
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Read message when click conv item
-  useEffect(() => {
-    if (!selectedConvId) return;
-    utils.list.wa.conversations.setData(conversationsInput, (old) => {
+  // Optimistically zero the unread count for a conversation across all
+  // loaded pages of the infinite query.
+  const markConvReadInCache = (convId: string) => {
+    utils.list.wa.conversations.setInfiniteData(conversationsInput, (old) => {
       if (!old) return old;
       return {
         ...old,
-        list: old.list.map((conv) =>
-          conv.id === selectedConvId ? { ...conv, unread_count: 0 } : conv
-        ),
+        pages: old.pages.map((page) => ({
+          ...page,
+          list: page.list.map((conv) =>
+            conv.id === convId ? { ...conv, unread_count: 0 } : conv
+          ),
+        })),
       };
     });
+  };
+
+  // Read message when click conv item
+  useEffect(() => {
+    if (!selectedConvId) return;
+    markConvReadInCache(selectedConvId);
     readMessage.mutate({ id: selectedConvId });
   }, [selectedConvId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Mark as read when new messages arrive for the currently open conversation
   useEffect(() => {
-    if (!selectedConvId || !convList) return;
-    const conv = convList.list.find((c) => c.id === selectedConvId);
+    if (!selectedConvId) return;
+    const conv = convItems.find((c) => c.id === selectedConvId);
     if (!conv || conv.unread_count === 0) return;
-    utils.list.wa.conversations.setData(conversationsInput, (old) => {
-      if (!old) return old;
-      return {
-        ...old,
-        list: old.list.map((c) =>
-          c.id === selectedConvId ? { ...c, unread_count: 0 } : c
-        ),
-      };
-    });
+    markConvReadInCache(selectedConvId);
     readMessage.mutate({ id: selectedConvId });
-  }, [convList]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [convItems]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const leadStatusOptions = [
     { label: "Hot Leads", value: "HOT" },
@@ -279,22 +308,23 @@ export default function WhatsappConvsCMS(props: WhatsappConvsCMSProps) {
               <div className="column-title flex items-center justify-between p-3 bg-card-bg  border-b border-dashboard-border shrink-0">
                 <p className="font-bold text-[15px] dark:text-sevenpreneur-white">
                   Chats{" "}
-                  {convList && (
-                    <span className="font-medium">
-                      ({convList.list.length})
-                    </span>
+                  {totalConvCount !== undefined && (
+                    <span className="font-medium">({totalConvCount})</span>
                   )}
                 </p>
                 <ListFilter className="size-4 text-emphasis" />
               </div>
 
-              <div className="flex flex-col flex-1 min-h-0 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+              <div
+                className="flex flex-col flex-1 min-h-0 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+                onScroll={handleConvScroll}
+              >
                 {isLoadingConvs && <AppLoadingComponents />}
                 {isErrorConvs && <AppErrorComponents />}
 
                 {!isLoadingConvs && !isErrorConvs && (
                   <div className="conv-list p-2 flex flex-col">
-                    {convList?.list.map((post, index) => (
+                    {convItems.map((post, index) => (
                       <WhatsappConvItemCMS
                         key={index}
                         convId={post.id}
@@ -313,6 +343,11 @@ export default function WhatsappConvsCMS(props: WhatsappConvsCMSProps) {
                         onClick={() => handleSelectConv(post)}
                       />
                     ))}
+                    {isFetchingNextPage && (
+                      <div className="py-2">
+                        <AppLoadingComponents />
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
