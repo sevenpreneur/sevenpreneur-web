@@ -1,6 +1,14 @@
 "use client";
 import { trpc } from "@/trpc/client";
-import { Loader2, Search, TimerOff, Users, X } from "lucide-react";
+import {
+  CheckCircle2,
+  Loader2,
+  Search,
+  TimerOff,
+  Users,
+  X,
+  XCircle,
+} from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { LeadStatus } from "@/lib/app-types";
@@ -72,6 +80,14 @@ type BroadcastConversation = {
   window_expired: boolean;
 };
 
+type SendResult = {
+  conv_id: string;
+  name: string;
+  phone: string;
+  status: "SENT" | "FAILED";
+  error?: string;
+};
+
 function extractTemplateParams(components: unknown) {
   const params = new Set<string>();
   if (!Array.isArray(components)) return [];
@@ -102,6 +118,13 @@ export default function BroadcastWhatsappFormCMS({
   const [leadStatusFilter, setLeadStatusFilter] = useState<string | null>(null);
   const [windowFilter, setWindowFilter] = useState<string | null>(null);
   const [parameters, setParameters] = useState<Record<string, string>>({});
+
+  // Sending phase: "form" shows the composer, "progress" shows the live
+  // per-recipient send progress in the same modal.
+  const [phase, setPhase] = useState<"form" | "progress">("form");
+  const [isSending, setIsSending] = useState(false);
+  const [totalToSend, setTotalToSend] = useState(0);
+  const [sendResults, setSendResults] = useState<SendResult[]>([]);
 
   const {
     data: templatesData,
@@ -240,17 +263,28 @@ export default function BroadcastWhatsappFormCMS({
     setParameters((prev) => ({ ...prev, [param]: value }));
   };
 
-  const handleClose = () => {
+  const resetState = () => {
+    setPhase("form");
+    setIsSending(false);
+    setSendResults([]);
+    setTotalToSend(0);
     setSelectedTemplateKey(null);
     setSelectedConvIds([]);
     setSearchValue("");
     setLeadStatusFilter(null);
     setWindowFilter(null);
     setParameters({});
+  };
+
+  const handleClose = () => {
+    resetState();
     onClose();
   };
 
-  const handleSubmit = () => {
+  // "Send again" — back to the composer with everything reset to default.
+  const handleSendAgain = () => resetState();
+
+  const handleSubmit = async () => {
     if (!selectedTemplatePayload) {
       toast.error("Please choose a WhatsApp template");
       return;
@@ -269,33 +303,64 @@ export default function BroadcastWhatsappFormCMS({
     const templateParameterValues = Object.fromEntries(
       templateParams.map((param) => [param, parameters[param].trim()])
     );
+    const payload = selectedTemplatePayload;
+    const recipients = [...selectedConvIds];
 
-    broadcastTemplate.mutate(
-      {
-        conv_ids: selectedConvIds,
-        template_name: selectedTemplatePayload.template_name,
-        lang_code: selectedTemplatePayload.lang_code,
-        parameters: templateParameterValues,
-      },
-      {
-        onSuccess: (result) => {
-          utils.list.wa.conversations.invalidate();
-          utils.list.wa.chats.invalidate();
-          if (result.failed > 0) {
-            toast.warning(
-              `Broadcast sent to ${result.sent} recipient(s), ${result.failed} failed`
-            );
-          } else {
-            toast.success(`Broadcast sent to ${result.sent} recipient(s)`);
-          }
-          handleClose();
-        },
-        onError: () => {
-          toast.error("Failed to send broadcast");
-        },
+    // Switch to the progress layout and send one recipient at a time so the
+    // bar advances live and each recipient's error surfaces individually.
+    setPhase("progress");
+    setIsSending(true);
+    setTotalToSend(recipients.length);
+    setSendResults([]);
+
+    for (const convId of recipients) {
+      const conv = conversations.find((c) => c.id === convId);
+      const fallbackName = conv?.user_full_name || conv?.full_name || "Unknown";
+      const fallbackPhone = conv?.phone_number ?? "";
+      try {
+        const result = await broadcastTemplate.mutateAsync({
+          conv_ids: [convId],
+          template_name: payload.template_name,
+          lang_code: payload.lang_code,
+          parameters: templateParameterValues,
+        });
+        const r = result.results[0];
+        setSendResults((prev) => [
+          ...prev,
+          {
+            conv_id: convId,
+            name: r?.full_name || fallbackName,
+            phone: r?.phone_number || fallbackPhone,
+            status: r?.status ?? "FAILED",
+            error: r?.error,
+          },
+        ]);
+      } catch (e) {
+        setSendResults((prev) => [
+          ...prev,
+          {
+            conv_id: convId,
+            name: fallbackName,
+            phone: fallbackPhone,
+            status: "FAILED",
+            error: e instanceof Error ? e.message : "Failed to send",
+          },
+        ]);
       }
-    );
+    }
+
+    setIsSending(false);
+    utils.list.wa.conversations.invalidate();
+    utils.list.wa.chats.invalidate();
   };
+
+  const doneCount = sendResults.length;
+  const sentCount = sendResults.filter((r) => r.status === "SENT").length;
+  const failedCount = doneCount - sentCount;
+  const progressPct =
+    totalToSend > 0 ? Math.round((doneCount / totalToSend) * 100) : 0;
+  const isFinished =
+    phase === "progress" && !isSending && totalToSend > 0 && doneCount === totalToSend;
 
   if (!isOpen) return null;
 
@@ -305,7 +370,9 @@ export default function BroadcastWhatsappFormCMS({
   return (
     <div
       className="modal-root fixed inset-0 flex w-full h-full items-center justify-center bg-black/65 z-[999]"
-      onClick={handleClose}
+      onClick={() => {
+        if (!isSending) handleClose();
+      }}
     >
       <div
         className="modal-container fixed flex bg-card-bg max-w-[calc(100%-2rem)] p-6 w-full max-h-[calc(100vh-2rem)] rounded-lg shadow-md sm:max-w-3xl"
@@ -321,18 +388,22 @@ export default function BroadcastWhatsappFormCMS({
             </div>
             <div className="flex items-center gap-2 px-3 py-1.5 rounded-md bg-card-inside-bg border border-dashboard-border text-sm font-semibold text-emphasis">
               <Users className="size-4" />
-              {selectedConvIds.length} selected
+              {phase === "progress"
+                ? `${doneCount}/${totalToSend}`
+                : `${selectedConvIds.length} selected`}
             </div>
           </div>
 
-          {isLoading && <AppLoadingComponents />}
-          {isError && (
-            <p className="text-sm font-semibold text-destructive">
-              Failed to load broadcast data.
-            </p>
-          )}
+          {phase === "form" && (
+            <>
+              {isLoading && <AppLoadingComponents />}
+              {isError && (
+                <p className="text-sm font-semibold text-destructive">
+                  Failed to load broadcast data.
+                </p>
+              )}
 
-          {!isLoading && !isError && (
+              {!isLoading && !isError && (
             <div className="grid min-h-0 gap-5 md:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)]">
               <div className="flex flex-col gap-4 min-h-0">
                 <AppSelect
@@ -534,34 +605,130 @@ export default function BroadcastWhatsappFormCMS({
                 </div>
               </div>
             </div>
+              )}
+            </>
+          )}
+
+          {phase === "progress" && (
+            <div className="flex flex-col gap-4 min-h-0">
+              <div className="flex flex-col gap-2">
+                <div className="flex items-center justify-between gap-3 text-sm font-semibold">
+                  <span className="text-emphasis">
+                    {isSending
+                      ? `Sending ${doneCount} of ${totalToSend}…`
+                      : `Done — ${doneCount} of ${totalToSend}`}
+                  </span>
+                  <span>
+                    <span className="text-[#067647] dark:text-success-foreground">
+                      {sentCount} sent
+                    </span>
+                    {failedCount > 0 && (
+                      <span className="text-destructive">
+                        {" · "}
+                        {failedCount} failed
+                      </span>
+                    )}
+                  </span>
+                </div>
+                <div className="h-2 w-full overflow-hidden rounded-full bg-card-inside-bg">
+                  <div
+                    className="h-full rounded-full bg-tertiary transition-all duration-300"
+                    style={{ width: `${progressPct}%` }}
+                  />
+                </div>
+              </div>
+
+              <div className="flex max-h-[44vh] min-h-72 flex-col overflow-y-auto rounded-lg border border-dashboard-border bg-card-inside-bg">
+                {sendResults.map((result) => (
+                  <div
+                    key={result.conv_id}
+                    className="flex items-start gap-3 border-b border-dashboard-border px-3 py-2.5 last:border-b-0"
+                  >
+                    <div className="flex min-w-0 flex-1 flex-col">
+                      <span className="truncate text-sm font-semibold text-foreground">
+                        {result.name}
+                      </span>
+                      <span className="truncate text-xs font-medium text-emphasis">
+                        {result.phone}
+                      </span>
+                      {result.status === "FAILED" && result.error && (
+                        <span className="mt-0.5 break-words text-xs font-medium text-destructive">
+                          {result.error}
+                        </span>
+                      )}
+                    </div>
+                    <div className="shrink-0">
+                      {result.status === "SENT" ? (
+                        <AppBasedLabel variant="green">
+                          <CheckCircle2 className="size-3" />
+                          Sent
+                        </AppBasedLabel>
+                      ) : (
+                        <AppBasedLabel variant="red">
+                          <XCircle className="size-3" />
+                          Failed
+                        </AppBasedLabel>
+                      )}
+                    </div>
+                  </div>
+                ))}
+                {isSending && (
+                  <div className="flex items-center gap-2 px-3 py-2.5 text-sm font-medium text-emphasis">
+                    <Loader2 className="size-4 animate-spin" />
+                    Sending…
+                  </div>
+                )}
+              </div>
+            </div>
           )}
 
           <div className="flex justify-end gap-2">
-            <AppButton
-              type="button"
-              variant="neutral"
-              onClick={handleClose}
-              disabled={broadcastTemplate.isPending}
-            >
-              Cancel
-            </AppButton>
-            <AppButton
-              type="button"
-              variant="tertiary"
-              onClick={handleSubmit}
-              disabled={broadcastTemplate.isPending || isLoading || isError}
-            >
-              {broadcastTemplate.isPending && (
+            {phase === "form" && (
+              <>
+                <AppButton type="button" variant="neutral" onClick={handleClose}>
+                  Cancel
+                </AppButton>
+                <AppButton
+                  type="button"
+                  variant="tertiary"
+                  onClick={handleSubmit}
+                  disabled={isLoading || isError}
+                >
+                  Send Broadcast
+                </AppButton>
+              </>
+            )}
+            {phase === "progress" && isSending && (
+              <AppButton type="button" variant="tertiary" disabled>
                 <Loader2 className="size-4 animate-spin" />
-              )}
-              Send Broadcast
-            </AppButton>
+                Sending…
+              </AppButton>
+            )}
+            {isFinished && (
+              <>
+                <AppButton
+                  type="button"
+                  variant="neutral"
+                  onClick={handleSendAgain}
+                >
+                  Kirim Broadcast Ulang
+                </AppButton>
+                <AppButton
+                  type="button"
+                  variant="tertiary"
+                  onClick={handleClose}
+                >
+                  Tutup
+                </AppButton>
+              </>
+            )}
           </div>
         </div>
         <button
           type="button"
-          className="absolute right-4 top-4 flex hover:cursor-pointer"
+          className="absolute right-4 top-4 flex hover:cursor-pointer disabled:cursor-not-allowed disabled:opacity-40"
           onClick={handleClose}
+          disabled={isSending}
           aria-label="Close broadcast modal"
         >
           <X className="size-6" />
