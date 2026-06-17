@@ -5,6 +5,13 @@ const eslintConfig = [
   ...nextTypescript,
   ...nextCoreWebVitals,
   {
+    // Allow plain <img> only in the root layout (opted out of next/image here).
+    files: ["src/app/layout.tsx"],
+    rules: {
+      "@next/next/no-img-element": "off",
+    },
+  },
+  {
     ignores: [
       "node_modules/**",
       ".next/**",
