@@ -32,8 +32,7 @@ export const listWA = {
         handler_id: stringIsUUID().nullable().optional(),
         page: numberIsPosInt().optional(),
         page_size: numberIsPosInt().optional(),
-        // Cursor (= page number) used by the infinite-scroll list. Takes
-        // precedence over `page` when present.
+        // Cursor (= page number) for infinite scroll; takes precedence over `page`.
         cursor: numberIsPosInt().optional(),
       })
     )
@@ -98,8 +97,7 @@ AND wa_conversations.handler_id = ${opts.input.handler_id}::uuid`;
         })
       );
 
-      // Only paginate when a page_size is given; callers without it still
-      // receive the full list (broadcast picker, leads overview, ...).
+      // Only paginate when a page_size is given; otherwise return the full list.
       const limitOffsetSql =
         paging.prisma.take !== undefined
           ? Prisma.sql`LIMIT ${paging.prisma.take} OFFSET ${paging.prisma.skip ?? 0}`
@@ -125,11 +123,7 @@ AND wa_conversations.handler_id = ${opts.input.handler_id}::uuid`;
         handler_full_name?: string;
         handler_avatar?: string;
       };
-      // Two-stage query. Stage 1 (`paged`) resolves the latest message per
-      // conversation, sorts, and applies LIMIT/OFFSET — so only the page's
-      // rows survive. Stage 2 then computes the expensive per-conversation
-      // aggregates (last inbound message, unread count) via LATERAL joins,
-      // which therefore run once per returned row instead of once per chat.
+      // Paginate first, then compute per-conversation aggregates via LATERAL so they run once per returned row.
       const conversationList = await opts.ctx.prisma.$queryRaw<WAConvItem[]>`
 WITH paged AS (
   SELECT *

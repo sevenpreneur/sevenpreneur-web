@@ -56,8 +56,7 @@ export default function WhatsappConvsCMS(props: WhatsappConvsCMSProps) {
   const utils = trpc.useUtils();
   const readMessage = trpc.update.wa.conversation_as_read.useMutation();
 
-  // Build query input from filters. page_size drives the infinite-scroll
-  // pagination (30 conversations per request).
+  // Build query input from filters; page_size drives the infinite-scroll pagination.
   const conversationsInput = useMemo(() => {
     const input: {
       lead_status?: WALeadStatus;
@@ -180,8 +179,7 @@ export default function WhatsappConvsCMS(props: WhatsappConvsCMSProps) {
     };
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Optimistically zero the unread count for a conversation across all
-  // loaded pages of the infinite query.
+  // Optimistically zero the unread count across all loaded pages.
   const markConvReadInCache = (convId: string) => {
     utils.list.wa.conversations.setInfiniteData(conversationsInput, (old) => {
       if (!old) return old;
