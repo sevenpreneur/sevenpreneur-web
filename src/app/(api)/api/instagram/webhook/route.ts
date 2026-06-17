@@ -2,9 +2,9 @@ import LogError from "@/lib/prisma-log-error";
 import { NextRequest, NextResponse } from "next/server";
 import { IGWebhookBody } from "./type.ig.webhook";
 import {
+  enqueueTriggerAutoComment,
   fetchInstagramMediaCaption,
   handleMessagingEvent,
-  triggerLangGraphAutoComment,
 } from "./util.ig.webhook";
 
 // Trial allowlist for auto-commenting to prevent abuse while we iterate on the feature.
@@ -77,7 +77,7 @@ export async function POST(req: NextRequest) {
             comment.media.original_media_id ?? comment.media.id
           );
 
-          await triggerLangGraphAutoComment({
+          await enqueueTriggerAutoComment({
             ig_business_account_id: entry.id,
             comment: {
               id: comment.id,

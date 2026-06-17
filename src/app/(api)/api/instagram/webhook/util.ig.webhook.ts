@@ -1,5 +1,11 @@
 import { instagramGetMediaContextRequest } from "@/lib/instagram";
+import {
+  LANGGRAPH_FAILURE_CALLBACK_URL,
+  LANGGRAPH_TRIGGER_RETRIES,
+  TRIGGER_LANGGRAPH_IG_URL,
+} from "@/lib/langgraph-agent";
 import LogError from "@/lib/prisma-log-error";
+import GetQStashClient from "@/lib/qstash";
 import { IGWebhookMessagingEvent } from "./type.ig.webhook";
 
 export type IGAutoCommentPayload = {
@@ -97,32 +103,47 @@ export async function fetchInstagramMediaCaption(
   }
 }
 
+// Posts a comment event to the LangGraph agent. THROWS on misconfiguration or a
+// non-2xx/failed request so the QStash handler can return non-2xx and retry.
 export async function triggerLangGraphAutoComment(
   payload: IGAutoCommentPayload
 ) {
   const agentUrl = process.env.AGENT_URL;
   const agentSecretKey = process.env.AGENT_SECRET_KEY;
   if (!agentUrl || !agentSecretKey) {
-    await LogError(
-      "instagram.webhook",
-      "AGENT_URL or AGENT_SECRET_KEY not configured."
-    );
-    return;
+    throw new Error("AGENT_URL or AGENT_SECRET_KEY not configured.");
   }
 
+  const response = await fetch(`${agentUrl}/api/v1/webhook/instagram/comment`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${agentSecretKey}`,
+    },
+    body: JSON.stringify(payload),
+  });
+  if (!response.ok) {
+    const responseBody = await response.text().catch(() => "");
+    throw new Error(
+      `LangGraph agent returned ${response.status} ${response.statusText}: ${responseBody}`
+    );
+  }
+}
+
+// Enqueues the auto-comment trigger through QStash so the /health-gated handler
+// retries transient Railway outages instead of dropping the event.
+export async function enqueueTriggerAutoComment(payload: IGAutoCommentPayload) {
   try {
-    await fetch(`${agentUrl}/api/v1/webhook/instagram/comment`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${agentSecretKey}`,
-      },
-      body: JSON.stringify(payload),
+    await GetQStashClient().publishJSON({
+      url: TRIGGER_LANGGRAPH_IG_URL,
+      body: payload,
+      retries: LANGGRAPH_TRIGGER_RETRIES,
+      failureCallback: LANGGRAPH_FAILURE_CALLBACK_URL,
     });
   } catch (e) {
     await LogError(
       "instagram.webhook",
-      "Failed to trigger LangGraph auto-comment.",
+      "Failed to enqueue auto-comment trigger.",
       e
     );
   }

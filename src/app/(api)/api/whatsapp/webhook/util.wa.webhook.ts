@@ -1,3 +1,8 @@
+import {
+  LANGGRAPH_FAILURE_CALLBACK_URL,
+  LANGGRAPH_TRIGGER_RETRIES,
+  TRIGGER_LANGGRAPH_WA_URL,
+} from "@/lib/langgraph-agent";
 import GetPrismaClient from "@/lib/prisma";
 import LogError from "@/lib/prisma-log-error";
 import GetQStashClient from "@/lib/qstash";
@@ -174,7 +179,7 @@ export async function appendChatFromUser(
   };
 }
 
-export async function triggerLangGraphAgent(payload: {
+export type LangGraphAgentPayload = {
   id: string;
   conv_id: string;
   wam_id: string;
@@ -186,41 +191,51 @@ export async function triggerLangGraphAgent(payload: {
   reply_to_id: string | null;
   attachment: object | null;
   sent_at: string | null;
-}) {
+};
+
+// Posts a message to the LangGraph agent. THROWS on misconfiguration or a
+// non-2xx/failed request so the QStash handler can return non-2xx and retry.
+export async function triggerLangGraphAgent(payload: LangGraphAgentPayload) {
   const agentUrl = process.env.AGENT_URL;
   const agentSecretKey = process.env.AGENT_SECRET_KEY;
   if (!agentUrl || !agentSecretKey) {
+    throw new Error("AGENT_URL or AGENT_SECRET_KEY not configured.");
+  }
+  const response = await fetch(`${agentUrl}/api/v1/webhook/whatsapp/message`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${agentSecretKey}`,
+    },
+    body: JSON.stringify(payload),
+  });
+  if (!response.ok) {
+    const responseBody = await response.text().catch(() => "");
+    throw new Error(
+      `LangGraph agent returned ${response.status} ${response.statusText}: ${responseBody}`
+    );
+  }
+}
+
+// Enqueues the LangGraph trigger through QStash so the agent's /health-gated
+// handler retries transient Railway outages instead of dropping the message.
+export async function enqueueTriggerLangGraph(
+  qstash: ReturnType<typeof GetQStashClient>,
+  payload: LangGraphAgentPayload
+) {
+  try {
+    await qstash.publishJSON({
+      url: TRIGGER_LANGGRAPH_WA_URL,
+      body: payload,
+      retries: LANGGRAPH_TRIGGER_RETRIES,
+      failureCallback: LANGGRAPH_FAILURE_CALLBACK_URL,
+    });
+  } catch (e) {
     await LogError(
       "whatsapp.webhook",
-      "AGENT_URL or AGENT_SECRET_KEY not configured."
+      "Failed to enqueue LangGraph trigger.",
+      e
     );
-    return;
-  }
-  try {
-    const response = await fetch(
-      `${agentUrl}/api/v1/webhook/whatsapp/message`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${agentSecretKey}`,
-        },
-        body: JSON.stringify(payload),
-      }
-    );
-    if (!response.ok) {
-      const responseBody = await response.text().catch(() => "");
-      await LogError(
-        "whatsapp.webhook",
-        `LangGraph agent returned ${response.status} ${response.statusText}.`,
-        {
-          response_body: responseBody,
-          payload,
-        }
-      );
-    }
-  } catch (e) {
-    await LogError("whatsapp.webhook", "Failed to trigger LangGraph agent.", e);
   }
 }
 
