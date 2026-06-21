@@ -7,7 +7,8 @@ import {
   stringNotBlank,
 } from "@/trpc/utils/validation";
 import {
-  B2BActivityTypeEnum,
+  B2BActionPriorityEnum,
+  B2BActionStatusEnum,
   B2BProbabilityStatusEnum,
   B2BProductEnum,
   B2BSourceEnum,
@@ -131,16 +132,26 @@ export const createB2B = {
     .input(
       z.object({
         pipeline_id: numberIsID(),
-        activity_type: z.enum(B2BActivityTypeEnum),
-        summary: stringNotBlank(),
+        name: stringNotBlank(),
+        summary: stringNotBlank().nullable().optional(),
+        status: z.enum(B2BActionStatusEnum).optional(),
+        priority: z.enum(B2BActionPriorityEnum).optional(),
+        due_date: monthDate.nullable().optional(),
+        assignee_id: stringIsUUID().nullable().optional(),
       })
     )
     .mutation(async (opts) => {
       const created = await opts.ctx.prisma.b2BAction.create({
         data: {
           pipeline_id: opts.input.pipeline_id,
-          activity_type: opts.input.activity_type,
-          summary: opts.input.summary,
+          name: opts.input.name,
+          summary: opts.input.summary ?? null,
+          status: opts.input.status,
+          priority: opts.input.priority,
+          due_date: opts.input.due_date
+            ? new Date(opts.input.due_date)
+            : null,
+          assignee_id: opts.input.assignee_id ?? null,
         },
       });
       return {

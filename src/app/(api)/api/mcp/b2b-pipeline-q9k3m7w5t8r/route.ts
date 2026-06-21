@@ -1,7 +1,6 @@
 import GetPrismaClient from "@/lib/prisma";
 import { createSevenpreneurMcp, mcpJsonText as jsonText } from "@/lib/mcp";
 import {
-  B2BActivityTypeEnum,
   B2BProbabilityStatusEnum,
   B2BProductEnum,
   B2BSourceEnum,
@@ -25,7 +24,6 @@ const PRODUCT_ENUM = z.enum(B2BProductEnum);
 const SOURCE_ENUM = z.enum(B2BSourceEnum);
 const STAGE_ENUM = z.enum(B2BStageEnum);
 const PROBABILITY_STATUS_ENUM = z.enum(B2BProbabilityStatusEnum);
-const ACTIVITY_TYPE_ENUM = z.enum(B2BActivityTypeEnum);
 
 // Month-precision input. Accepts "YYYY-MM" (e.g. "2026-06") — converts to
 // the first day of the month before persisting.
@@ -99,15 +97,15 @@ function serializePipeline(p: PipelineWithRelations) {
 function serializeAction(a: {
   id: number;
   pipeline_id: number;
-  activity_type: B2BActivityTypeEnum;
-  summary: string;
+  name: string;
+  summary: string | null;
   created_at: Date;
   updated_at: Date;
 }) {
   return {
     id: a.id,
     pipeline_id: a.pipeline_id,
-    activity_type: a.activity_type,
+    name: a.name,
     summary: a.summary,
     created_at: dayjs(a.created_at).toISOString(),
     updated_at: dayjs(a.updated_at).toISOString(),
@@ -653,14 +651,13 @@ const handler = createSevenpreneurMcp(
 
     server.tool(
       "list_actions",
-      "List activity records (touchpoints) logged against B2B pipeline leads. Each action records an interaction type (chat_whatsapp, cold_email, phone_call, conference_call, offline_meeting, in_person_meeting, sent_proposal, sent_contract, follow_up) plus a free-text summary. Filter by pipeline_id to get one lead's history, by activity_type to scope by interaction kind, or by date range.",
+      "List activity records (touchpoints) logged against B2B pipeline leads. Each action has a name (the task/activity title) plus an optional free-text summary, a workflow status, priority, due date, and assignee. Filter by pipeline_id to get one lead's history, or by date range.",
       {
         pipeline_id: z
           .number()
           .int()
           .optional()
           .describe("Filter to actions logged for this pipeline lead"),
-        activity_type: ACTIVITY_TYPE_ENUM.optional(),
         from: dateString
           .optional()
           .describe("Earliest created_at (inclusive)"),
@@ -672,7 +669,6 @@ const handler = createSevenpreneurMcp(
         const prisma = GetPrismaClient();
         const where: Prisma.B2BActionWhereInput = {};
         if (args.pipeline_id !== undefined) where.pipeline_id = args.pipeline_id;
-        if (args.activity_type) where.activity_type = args.activity_type;
         if (args.from || args.to) {
           where.created_at = {};
           if (args.from) where.created_at.gte = dayjs(args.from).toDate();
@@ -719,11 +715,15 @@ const handler = createSevenpreneurMcp(
           .number()
           .int()
           .describe("B2BPipeline.id this action belongs to"),
-        activity_type: ACTIVITY_TYPE_ENUM,
+        name: z
+          .string()
+          .min(1)
+          .describe("Short name/title of the activity or task"),
         summary: z
           .string()
           .min(1)
-          .describe("Free-text summary of what happened in this activity"),
+          .optional()
+          .describe("Optional free-text summary of what happened"),
       },
       async (args) => {
         const prisma = GetPrismaClient();
@@ -731,8 +731,8 @@ const handler = createSevenpreneurMcp(
           const created = await prisma.b2BAction.create({
             data: {
               pipeline_id: args.pipeline_id,
-              activity_type: args.activity_type,
-              summary: args.summary.trim(),
+              name: args.name.trim(),
+              summary: args.summary?.trim() ?? null,
             },
           });
           return jsonText(serializeAction(created));
@@ -750,16 +750,16 @@ const handler = createSevenpreneurMcp(
 
     server.tool(
       "update_action",
-      "Edit the activity type or summary of an existing B2B action record.",
+      "Edit the name or summary of an existing B2B action record.",
       {
         id: z.number().int().describe("B2BAction.id"),
-        activity_type: ACTIVITY_TYPE_ENUM.optional(),
+        name: z.string().min(1).optional(),
         summary: z.string().min(1).optional(),
       },
-      async ({ id, activity_type, summary }) => {
+      async ({ id, name, summary }) => {
         const prisma = GetPrismaClient();
         const data: Prisma.B2BActionUpdateInput = {};
-        if (activity_type !== undefined) data.activity_type = activity_type;
+        if (name !== undefined) data.name = name.trim();
         if (summary !== undefined) data.summary = summary.trim();
         try {
           const updated = await prisma.b2BAction.update({

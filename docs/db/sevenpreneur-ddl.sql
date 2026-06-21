@@ -206,6 +206,20 @@ CREATE TYPE b2ba_activity_type_enum AS ENUM (
   'follow_up'
 );
 
+CREATE TYPE b2ba_status_enum AS ENUM (
+  'to_do',
+  'in_progress',
+  'review',
+  'done'
+);
+
+CREATE TYPE b2ba_priority_enum AS ENUM (
+  'low',
+  'medium',
+  'high',
+  'urgent'
+);
+
 ------------
 -- Tables --
 ------------
@@ -730,12 +744,16 @@ CREATE TABLE b2b_pipeline (
 );
 
 CREATE TABLE b2b_actions (
-  id             SERIAL                   PRIMARY KEY,
-  pipeline_id    INTEGER                  NOT NULL,
-  activity_type  b2ba_activity_type_enum  NOT NULL,
-  summary        TEXT                     NOT NULL,
-  created_at     TIMESTAMPTZ              NOT NULL  DEFAULT CURRENT_TIMESTAMP,
-  updated_at     TIMESTAMPTZ              NOT NULL  DEFAULT CURRENT_TIMESTAMP
+  id             SERIAL              PRIMARY KEY,
+  pipeline_id    INTEGER             NOT NULL,
+  name           VARCHAR             NOT NULL,
+  summary        TEXT                    NULL,
+  status         b2ba_status_enum    NOT NULL  DEFAULT 'to_do',
+  priority       b2ba_priority_enum  NOT NULL  DEFAULT 'medium',
+  due_date       DATE                    NULL,
+  assignee_id    UUID                    NULL,
+  created_at     TIMESTAMPTZ         NOT NULL  DEFAULT CURRENT_TIMESTAMP,
+  updated_at     TIMESTAMPTZ         NOT NULL  DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Automations (Kill Switch)
@@ -919,7 +937,8 @@ ALTER TABLE b2b_pipeline
   ADD FOREIGN KEY (company_id) REFERENCES b2b_company (id);
 
 ALTER TABLE b2b_actions
-  ADD FOREIGN KEY (pipeline_id) REFERENCES b2b_pipeline (id) ON DELETE CASCADE;
+  ADD FOREIGN KEY (pipeline_id)  REFERENCES b2b_pipeline (id) ON DELETE CASCADE,
+  ADD FOREIGN KEY (assignee_id) REFERENCES users (id) ON DELETE SET NULL;
 
 -- Relation Tables --
 

@@ -45,3 +45,8 @@ next-env.d.ts
 
 # self-signed certificates
 certificates
+
+# AI agent coding
+/.agents/
+/.claude/
+/.codex/

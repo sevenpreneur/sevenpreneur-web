@@ -33,6 +33,7 @@ const inter = Inter({
 const googleSans = Google_Sans({
   variable: "--font-google-sans",
   subsets: ["latin"],
+  adjustFontFallback: false,
 });
 
 const jetbrainsMono = JetBrains_Mono({

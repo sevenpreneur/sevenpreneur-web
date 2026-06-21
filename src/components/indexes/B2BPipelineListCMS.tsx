@@ -3,9 +3,16 @@ import AppButton from "@/components/buttons/AppButton";
 import PageHeaderCMS from "@/components/titles/PageHeaderCMS";
 import { getRupiahCurrency, getShortRupiahCurrency } from "@/lib/currency";
 import { setSessionToken, trpc } from "@/trpc/client";
+import type {
+  B2BProbabilityStatusEnum,
+  B2BProductEnum,
+  B2BStageEnum,
+} from "@/lib/app-types";
 import {
   Building2,
   EllipsisVertical,
+  KanbanSquare,
+  ListFilter,
   PlusCircle,
   Scale,
   Search,
@@ -22,13 +29,19 @@ import AppScorecardDashboard from "../cards/AppScorecardDashboard";
 import AppDropdown from "../elements/AppDropdown";
 import AppDropdownItemList from "../elements/AppDropdownItemList";
 import AppInput from "../fields/AppInput";
-import AppSelect from "../fields/AppSelect";
 import CreateLeadsPipelineFormCMS from "../forms/CreateLeadsPipelineFormCMS";
 import EditLeadsPipelineFormCMS from "../forms/EditLeadsPipelineFormCMS";
 import B2BProbabilityStatusLabelCMS from "../labels/B2BProbabilityStatusLabelCMS";
-import B2BProductLabelCMS from "../labels/B2BProductLabelCMS";
 import B2BStageLabelCMS from "../labels/B2BStageLabelCMS";
+import FilterLabelCMS from "../labels/FilterLabelCMS";
 import AppAlertConfirmDialog from "../modals/AppAlertConfirmDialog";
+import FilterB2BPipeline, {
+  B2B_FILTER_CONFIGS,
+  EMPTY_B2B_FILTERS,
+  getB2BFilterLabel,
+  type B2BFilterKey,
+  type B2BPipelineFilters,
+} from "../modals/FilterB2BPipeline";
 import AppNumberPagination from "../navigations/AppNumberPagination";
 import PageContainerCMS from "../pages/PageContainerCMS";
 import AppErrorComponents from "../states/AppErrorComponents";
@@ -38,6 +51,7 @@ import TableCellCMS from "../tables/TableCellCMS";
 import TableHeadCMS from "../tables/TableHeadCMS";
 import TableHeaderCMS from "../tables/TableHeaderCMS";
 import TableRowCMS from "../tables/TableRowCMS";
+import Link from "next/link";
 
 interface B2BPipelineListCMSProps {
   sessionToken: string;
@@ -55,12 +69,61 @@ export default function B2BPipelineListCMS(props: B2BPipelineListCMSProps) {
   const [debouncedKeyword, setDebouncedKeyword] = useState<string | undefined>(
     ""
   );
-  const [year, setYear] = useState<number>(2026);
+  const [year, setYear] = useState<number | "">(2026);
 
-  const YEAR_OPTIONS = [2026, 2027, 2028, 2029, 2030].map((y) => ({
-    label: String(y),
-    value: y,
-  }));
+  // Applied filters (empty string = not applied), mapped 1:1 to tRPC inputs.
+  const [filterData, setFilterData] = useState<Record<B2BFilterKey, string>>({
+    product: "",
+    stage: "",
+    probability_status: "",
+  });
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+
+  const hasActiveFilter =
+    !!debouncedKeyword ||
+    year !== "" ||
+    Object.values(filterData).some((v) => v !== "");
+
+  const resetToFirstPage = () => {
+    const params = new URLSearchParams(searchParam.toString());
+    params.set("page", "1");
+    router.push(`?${params.toString()}`);
+  };
+
+  const handleFilterChange = (key: B2BFilterKey, value: string) => {
+    setFilterData((prev) => ({ ...prev, [key]: value }));
+    resetToFirstPage();
+  };
+
+  const handleYearChange = (value: number | "") => {
+    setYear(value);
+    resetToFirstPage();
+  };
+
+  // Commit the whole filter set from the modal at once.
+  const handleApplyFilters = (filters: B2BPipelineFilters) => {
+    setYear(filters.year);
+    setFilterData({
+      product: filters.product,
+      stage: filters.stage,
+      probability_status: filters.probability_status,
+    });
+    resetToFirstPage();
+  };
+
+  const clearKeyword = () => {
+    setKeyword("");
+    setDebouncedKeyword(undefined);
+    resetToFirstPage();
+  };
+
+  const clearAllFilters = () => {
+    setKeyword("");
+    setDebouncedKeyword(undefined);
+    setYear(EMPTY_B2B_FILTERS.year);
+    setFilterData({ product: "", stage: "", probability_status: "" });
+    resetToFirstPage();
+  };
 
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [editTargetId, setEditTargetId] = useState<number | null>(null);
@@ -103,7 +166,12 @@ export default function B2BPipelineListCMS(props: B2BPipelineListCMSProps) {
       page: currentPage,
       page_size: pageSize,
       keyword: debouncedKeyword,
-      year,
+      year: year === "" ? undefined : year,
+      product: (filterData.product || undefined) as B2BProductEnum | undefined,
+      stage: (filterData.stage || undefined) as B2BStageEnum | undefined,
+      probability_status: (filterData.probability_status || undefined) as
+        | B2BProbabilityStatusEnum
+        | undefined,
     },
     { enabled: !!props.sessionToken }
   );
@@ -213,28 +281,62 @@ export default function B2BPipelineListCMS(props: B2BPipelineListCMSProps) {
                 value={keyword}
                 onInputChange={(value) => {
                   setKeyword(value);
-                  const params = new URLSearchParams(searchParam.toString());
-                  params.set("page", "1");
-                  router.push(`?${params.toString()}`);
+                  resetToFirstPage();
                 }}
               />
             </div>
-            <div className="w-32">
-              <AppSelect
-                variant="CMS"
-                selectId="filter-year"
-                selectPlaceholder="Year"
-                value={year}
-                onChange={(value) => {
-                  setYear(Number(value));
-                  const params = new URLSearchParams(searchParam.toString());
-                  params.set("page", "1");
-                  router.push(`?${params.toString()}`);
-                }}
-                options={YEAR_OPTIONS}
-              />
+            <div className="filter-button relative flex w-fit">
+              <AppButton
+                variant="neutral"
+                size="icon"
+                onClick={() => setIsFilterOpen(true)}
+              >
+                <ListFilter className="size-4 text-emphasis" />
+              </AppButton>
+              {hasActiveFilter && (
+                <div className="filter-indikator absolute size-2.5 bg-primary outline-3 outline-primary-soft top-0 right-0 rounded-full" />
+              )}
             </div>
           </div>
+
+          {hasActiveFilter && (
+            <div className="applied-filter flex flex-wrap w-full items-center gap-2">
+              <p className="text-sm text-emphasis font-medium">
+                Active filters:
+              </p>
+              {debouncedKeyword && (
+                <FilterLabelCMS
+                  filterName={`Search: ${debouncedKeyword}`}
+                  removeFilter={clearKeyword}
+                />
+              )}
+              {year !== "" && (
+                <FilterLabelCMS
+                  filterName={`Year: ${year}`}
+                  removeFilter={() => handleYearChange("")}
+                />
+              )}
+              {B2B_FILTER_CONFIGS.filter(
+                (config) => filterData[config.key]
+              ).map((config) => (
+                <FilterLabelCMS
+                  key={config.key}
+                  filterName={`${config.label}: ${getB2BFilterLabel(
+                    config.key,
+                    filterData[config.key]
+                  )}`}
+                  removeFilter={() => handleFilterChange(config.key, "")}
+                />
+              ))}
+              <button
+                type="button"
+                className="text-sm font-medium text-destructive hover:underline hover:underline-offset-2 transition-all hover:cursor-pointer active:scale-95"
+                onClick={clearAllFilters}
+              >
+                Clear all
+              </button>
+            </div>
+          )}
 
           {isLoading && <AppLoadingComponents />}
           {isError && <AppErrorComponents />}
@@ -244,10 +346,9 @@ export default function B2BPipelineListCMS(props: B2BPipelineListCMSProps) {
               <TableHeaderCMS>
                 <TableRowCMS>
                   <TableHeadCMS>{`No.`}</TableHeadCMS>
-                  <TableHeadCMS>{`Program`}</TableHeadCMS>
                   <TableHeadCMS>{`Company`}</TableHeadCMS>
                   <TableHeadCMS>{`Industry`}</TableHeadCMS>
-                  <TableHeadCMS>{`Product`}</TableHeadCMS>
+                  <TableHeadCMS>{`Program`}</TableHeadCMS>
                   <TableHeadCMS>{`Stage`}</TableHeadCMS>
                   <TableHeadCMS>{`Status`}</TableHeadCMS>
                   <TableHeadCMS>{`Value`}</TableHeadCMS>
@@ -262,22 +363,21 @@ export default function B2BPipelineListCMS(props: B2BPipelineListCMSProps) {
                       {(currentPage - 1) * pageSize + index + 1}
                     </TableCellCMS>
                     <TableCellCMS>
-                      <p className=" font-semibold text-sm line-clamp-2 max-w-64 dark:text-sevenpreneur-white">
-                        {post.name}
-                      </p>
+                      <Link href={`/b2b-pipeline/${post.id}`}>
+                        <p className="font-semibold text-sm line-clamp-2 max-w-64 dark:text-sevenpreneur-white">
+                          {post.company_name}
+                        </p>
+                      </Link>
                     </TableCellCMS>
                     <TableCellCMS>
-                      <span className=" text-sm line-clamp-2 max-w-48 dark:text-sevenpreneur-white">
-                        {post.company_name}
-                      </span>
-                    </TableCellCMS>
-                    <TableCellCMS>
-                      <span className=" text-sm text-emphasis line-clamp-2 max-w-40">
+                      <span className="text-sm text-emphasis line-clamp-2 max-w-40">
                         {post.industry_name}
                       </span>
                     </TableCellCMS>
                     <TableCellCMS>
-                      <B2BProductLabelCMS variants={post.product} />
+                      <span className="text-sm line-clamp-2 max-w-48 dark:text-sevenpreneur-white">
+                        {post.name}
+                      </span>
                     </TableCellCMS>
                     <TableCellCMS>
                       <B2BStageLabelCMS variants={post.stage} />
@@ -332,6 +432,14 @@ export default function B2BPipelineListCMS(props: B2BPipelineListCMSProps) {
                           alignDesktop="right"
                           onClose={() => setActionsOpened(null)}
                         >
+                          <AppDropdownItemList
+                            menuIcon={<KanbanSquare className="size-4" />}
+                            menuName="View Actions"
+                            onClick={() => {
+                              router.push(`/admin/b2b-pipeline/${post.id}`);
+                              setActionsOpened(null);
+                            }}
+                          />
                           <AppDropdownItemList
                             menuIcon={<Settings2 className="size-4" />}
                             menuName="Edit"
@@ -409,6 +517,18 @@ export default function B2BPipelineListCMS(props: B2BPipelineListCMSProps) {
           }}
         />
       )}
+
+      <FilterB2BPipeline
+        isOpen={isFilterOpen}
+        initialFilters={{
+          year,
+          product: filterData.product,
+          stage: filterData.stage,
+          probability_status: filterData.probability_status,
+        }}
+        onClose={() => setIsFilterOpen(false)}
+        onApply={handleApplyFilters}
+      />
     </React.Fragment>
   );
 }

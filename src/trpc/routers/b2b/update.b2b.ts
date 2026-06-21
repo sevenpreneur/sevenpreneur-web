@@ -8,7 +8,8 @@ import {
   stringNotBlank,
 } from "@/trpc/utils/validation";
 import {
-  B2BActivityTypeEnum,
+  B2BActionPriorityEnum,
+  B2BActionStatusEnum,
   B2BProbabilityStatusEnum,
   B2BProductEnum,
   B2BSourceEnum,
@@ -109,15 +110,24 @@ export const updateB2B = {
     .input(
       z.object({
         id: numberIsID(),
-        activity_type: z.enum(B2BActivityTypeEnum).optional(),
-        summary: stringNotBlank().optional(),
+        name: stringNotBlank().optional(),
+        summary: stringNotBlank().nullable().optional(),
+        status: z.enum(B2BActionStatusEnum).optional(),
+        priority: z.enum(B2BActionPriorityEnum).optional(),
+        due_date: monthDate.nullable().optional(),
+        assignee_id: stringIsUUID().nullable().optional(),
       })
     )
     .mutation(async (opts) => {
-      const { id, ...data } = opts.input;
+      const { id, due_date, ...rest } = opts.input;
       const updated = await opts.ctx.prisma.b2BAction.updateMany({
         where: { id },
-        data,
+        data: {
+          ...rest,
+          ...(due_date !== undefined && {
+            due_date: due_date ? new Date(due_date) : null,
+          }),
+        },
       });
       await checkUpdateResult(updated.count, "action", "actions");
       return {

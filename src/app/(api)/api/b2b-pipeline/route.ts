@@ -63,7 +63,7 @@ export async function POST(req: NextRequest) {
     actions: p.actions.map((a) => ({
       id: a.id,
       pipeline_id: a.pipeline_id,
-      activity_type: a.activity_type,
+      name: a.name,
       summary: a.summary,
       created_at: a.created_at,
       updated_at: a.updated_at,

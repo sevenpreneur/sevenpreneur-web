@@ -12,7 +12,7 @@ export default function FilterLabelCMS({
   removeFilter,
 }: FilterLabelCMSProps) {
   return (
-    <AppBasedLabel variant="blue">
+    <AppBasedLabel variant="gray">
       {filterName}
       <X
         className="size-4 transform transition-all hover:cursor-pointer active:scale-95"

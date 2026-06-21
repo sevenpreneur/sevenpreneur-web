@@ -1,7 +1,6 @@
 "use client";
 import { trpc } from "@/trpc/client";
 import {
-  B2BActivityTypeEnum,
   B2BProbabilityStatusEnum,
   B2BProductEnum,
   B2BSourceEnum,
@@ -15,7 +14,6 @@ import AppButton from "../buttons/AppButton";
 import AppInput from "../fields/AppInput";
 import AppSelect from "../fields/AppSelect";
 import AppTextArea from "../fields/AppTextArea";
-import B2BActivityTypeLabelCMS from "../labels/B2BActivityTypeLabelCMS";
 import AppAlertConfirmDialog from "../modals/AppAlertConfirmDialog";
 import AppSheet from "../modals/AppSheet";
 import AppErrorComponents from "../states/AppErrorComponents";
@@ -60,18 +58,6 @@ const PROBABILITY_STATUS_OPTIONS = [
   { label: "Cold", value: B2BProbabilityStatusEnum.COLD },
   { label: "Warm", value: B2BProbabilityStatusEnum.WARM },
   { label: "Hot", value: B2BProbabilityStatusEnum.HOT },
-];
-
-const ACTIVITY_TYPE_OPTIONS = [
-  { label: "WhatsApp Chat", value: B2BActivityTypeEnum.CHAT_WHATSAPP },
-  { label: "Cold Email", value: B2BActivityTypeEnum.COLD_EMAIL },
-  { label: "Phone Call", value: B2BActivityTypeEnum.PHONE_CALL },
-  { label: "Conference Call", value: B2BActivityTypeEnum.CONFERENCE_CALL },
-  { label: "Offline Meeting", value: B2BActivityTypeEnum.OFFLINE_MEETING },
-  { label: "In-Person Meeting", value: B2BActivityTypeEnum.IN_PERSON_MEETING },
-  { label: "Sent Proposal", value: B2BActivityTypeEnum.SENT_PROPOSAL },
-  { label: "Sent Contract", value: B2BActivityTypeEnum.SENT_CONTRACT },
-  { label: "Follow Up", value: B2BActivityTypeEnum.FOLLOW_UP },
 ];
 
 export default function EditLeadsPipelineFormCMS(
@@ -523,11 +509,11 @@ function ActionsSection({ pipelineId }: ActionsSectionProps) {
   const [deleteTargetId, setDeleteTargetId] = useState<number | null>(null);
 
   const [newDraft, setNewDraft] = useState({
-    activity_type: "" as B2BActivityTypeEnum | "",
+    name: "",
     summary: "",
   });
   const [editDraft, setEditDraft] = useState({
-    activity_type: "" as B2BActivityTypeEnum | "",
+    name: "",
     summary: "",
   });
 
@@ -535,24 +521,20 @@ function ActionsSection({ pipelineId }: ActionsSectionProps) {
     utils.list.b2b.actions.invalidate({ pipeline_id: pipelineId });
 
   const handleCreate = () => {
-    if (!newDraft.activity_type) {
-      toast.error("Pick an activity type.");
-      return;
-    }
-    if (!newDraft.summary.trim()) {
-      toast.error("Summary is required.");
+    if (!newDraft.name.trim()) {
+      toast.error("Name is required.");
       return;
     }
     createAction.mutate(
       {
         pipeline_id: pipelineId,
-        activity_type: newDraft.activity_type as B2BActivityTypeEnum,
-        summary: newDraft.summary.trim(),
+        name: newDraft.name.trim(),
+        summary: newDraft.summary.trim() || null,
       },
       {
         onSuccess: () => {
           toast.success("Activity added.");
-          setNewDraft({ activity_type: "", summary: "" });
+          setNewDraft({ name: "", summary: "" });
           invalidate();
         },
         onError: (err) =>
@@ -561,30 +543,22 @@ function ActionsSection({ pipelineId }: ActionsSectionProps) {
     );
   };
 
-  const handleStartEdit = (
-    id: number,
-    activityType: B2BActivityTypeEnum,
-    summary: string
-  ) => {
+  const handleStartEdit = (id: number, name: string, summary: string) => {
     setEditingId(id);
-    setEditDraft({ activity_type: activityType, summary });
+    setEditDraft({ name, summary });
   };
 
   const handleSaveEdit = () => {
     if (!editingId) return;
-    if (!editDraft.activity_type) {
-      toast.error("Pick an activity type.");
-      return;
-    }
-    if (!editDraft.summary.trim()) {
-      toast.error("Summary is required.");
+    if (!editDraft.name.trim()) {
+      toast.error("Name is required.");
       return;
     }
     updateAction.mutate(
       {
         id: editingId,
-        activity_type: editDraft.activity_type as B2BActivityTypeEnum,
-        summary: editDraft.summary.trim(),
+        name: editDraft.name.trim(),
+        summary: editDraft.summary.trim() || null,
       },
       {
         onSuccess: () => {
@@ -622,24 +596,21 @@ function ActionsSection({ pipelineId }: ActionsSectionProps) {
 
       {/* Add new activity */}
       <div className="p-4 bg-card-inside-bg border border-dashboard-border rounded-md flex flex-col gap-3">
-        <AppSelect
+        <AppInput
           variant="CMS"
-          selectId="new-action-type"
-          selectName="Activity Type"
-          selectPlaceholder="Pick activity type"
-          value={newDraft.activity_type}
-          onChange={(value) =>
-            setNewDraft((prev) => ({
-              ...prev,
-              activity_type: value as B2BActivityTypeEnum,
-            }))
+          inputId="new-action-name"
+          inputName="Name"
+          inputType="text"
+          inputPlaceholder="e.g. Follow up proposal with PIC"
+          value={newDraft.name}
+          onInputChange={(value) =>
+            setNewDraft((prev) => ({ ...prev, name: value }))
           }
-          options={ACTIVITY_TYPE_OPTIONS}
         />
         <AppTextArea
           variant="CMS"
           textAreaId="new-action-summary"
-          textAreaName="Summary"
+          textAreaName="Summary (optional)"
           textAreaPlaceholder="What happened in this activity?"
           textAreaHeight="h-24"
           characterLength={2000}
@@ -685,24 +656,21 @@ function ActionsSection({ pipelineId }: ActionsSectionProps) {
               >
                 {isEditing ? (
                   <>
-                    <AppSelect
+                    <AppInput
                       variant="CMS"
-                      selectId={`edit-action-type-${action.id}`}
-                      selectName="Activity Type"
-                      selectPlaceholder="Pick activity type"
-                      value={editDraft.activity_type}
-                      onChange={(value) =>
-                        setEditDraft((prev) => ({
-                          ...prev,
-                          activity_type: value as B2BActivityTypeEnum,
-                        }))
+                      inputId={`edit-action-name-${action.id}`}
+                      inputName="Name"
+                      inputType="text"
+                      inputPlaceholder="e.g. Follow up proposal with PIC"
+                      value={editDraft.name}
+                      onInputChange={(value) =>
+                        setEditDraft((prev) => ({ ...prev, name: value }))
                       }
-                      options={ACTIVITY_TYPE_OPTIONS}
                     />
                     <AppTextArea
                       variant="CMS"
                       textAreaId={`edit-action-summary-${action.id}`}
-                      textAreaName="Summary"
+                      textAreaName="Summary (optional)"
                       textAreaHeight="h-24"
                       characterLength={2000}
                       value={editDraft.summary}
@@ -739,9 +707,9 @@ function ActionsSection({ pipelineId }: ActionsSectionProps) {
                 ) : (
                   <>
                     <div className="flex items-start justify-between gap-2">
-                      <B2BActivityTypeLabelCMS
-                        variants={action.activity_type}
-                      />
+                      <p className="text-sm font-semibold text-foreground dark:text-sevenpreneur-white">
+                        {action.name}
+                      </p>
                       <div className="flex gap-1">
                         <AppButton
                           variant="ghost"
@@ -750,8 +718,8 @@ function ActionsSection({ pipelineId }: ActionsSectionProps) {
                           onClick={() =>
                             handleStartEdit(
                               action.id,
-                              action.activity_type,
-                              action.summary
+                              action.name,
+                              action.summary ?? ""
                             )
                           }
                         >
@@ -767,9 +735,11 @@ function ActionsSection({ pipelineId }: ActionsSectionProps) {
                         </AppButton>
                       </div>
                     </div>
-                    <p className=" text-sm text-foreground whitespace-pre-wrap">
-                      {action.summary}
-                    </p>
+                    {action.summary && (
+                      <p className=" text-sm text-foreground whitespace-pre-wrap">
+                        {action.summary}
+                      </p>
+                    )}
                     <p className="text-xs text-emphasis ">
                       {dayjs(action.created_at).format("D MMM YYYY HH:mm")}
                     </p>

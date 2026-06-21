@@ -116,3 +116,25 @@ export type WhatsappChatType =
 // Article related
 export type ArticleStatus = "DRAFT" | "PUBLISHED" | "UNPUBLISHED";
 
+// B2B Sales Pipeline related
+export type B2BProductEnum =
+  | "SPONSORSHIP"
+  | "CORPORATE_TRAINING"
+  | "CORPORATE_AI_TRAINING";
+export type B2BSourceEnum =
+  | "SOCIAL_MEDIA"
+  | "FOUNDER_NETWORK"
+  | "EVENT_CONFERENCE"
+  | "REFERRAL_PARTNER"
+  | "REFERRAL_CLIENT"
+  | "WEBSITE";
+export type B2BStageEnum =
+  | "LEAD_IDENTIFIED"
+  | "CONTACTED"
+  | "NEGOTIATION"
+  | "VERBAL_COMMIT"
+  | "CLOSED_WON"
+  | "CLOSED_LOST"
+  | "ON_HOLD";
+export type B2BProbabilityStatusEnum = "COLD" | "WARM" | "HOT";
+

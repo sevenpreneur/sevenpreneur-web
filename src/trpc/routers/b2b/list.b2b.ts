@@ -9,7 +9,6 @@ import {
   stringNotBlank,
 } from "@/trpc/utils/validation";
 import {
-  B2BActivityTypeEnum,
   B2BProbabilityStatusEnum,
   B2BProductEnum,
   B2BSourceEnum,
@@ -233,7 +232,6 @@ export const listB2B = {
     .input(
       z.object({
         pipeline_id: numberIsID(),
-        activity_type: z.enum(B2BActivityTypeEnum).optional(),
         page: numberIsPosInt().optional(),
         page_size: numberIsPosInt().optional(),
       })
@@ -241,7 +239,6 @@ export const listB2B = {
     .query(async (opts) => {
       const whereClause = {
         pipeline_id: opts.input.pipeline_id,
-        activity_type: opts.input.activity_type,
       };
 
       const paging = calculatePage(
@@ -253,7 +250,10 @@ export const listB2B = {
       );
 
       const actionList = await opts.ctx.prisma.b2BAction.findMany({
-        orderBy: [{ created_at: "desc" }],
+        include: {
+          assignee: { select: { id: true, full_name: true, avatar: true } },
+        },
+        orderBy: [{ created_at: "asc" }],
         where: whereClause,
         skip: paging.prisma.skip,
         take: paging.prisma.take,
@@ -262,7 +262,20 @@ export const listB2B = {
       return {
         code: STATUS_OK,
         message: "Success",
-        list: actionList,
+        list: actionList.map((entry) => ({
+          id: entry.id,
+          pipeline_id: entry.pipeline_id,
+          name: entry.name,
+          summary: entry.summary,
+          status: entry.status,
+          priority: entry.priority,
+          due_date: entry.due_date,
+          assignee_id: entry.assignee_id,
+          assignee_name: entry.assignee?.full_name ?? null,
+          assignee_avatar: entry.assignee?.avatar ?? null,
+          created_at: entry.created_at,
+          updated_at: entry.updated_at,
+        })),
         metapaging: paging.metapaging,
       };
     }),

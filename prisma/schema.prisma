@@ -259,6 +259,24 @@ enum B2BActivityTypeEnum {
   @@map("b2ba_activity_type_enum")
 }
 
+enum B2BActionStatusEnum {
+  TO_DO       @map("to_do")
+  IN_PROGRESS @map("in_progress")
+  REVIEW      @map("review")
+  DONE        @map("done")
+
+  @@map("b2ba_status_enum")
+}
+
+enum B2BActionPriorityEnum {
+  LOW    @map("low")
+  MEDIUM @map("medium")
+  HIGH   @map("high")
+  URGENT @map("urgent")
+
+  @@map("b2ba_priority_enum")
+}
+
 ////////////
 // Models //
 ////////////
@@ -362,6 +380,7 @@ model User {
   wa_conversations      WAConversation[]    @relation("wa_conversation")
   wa_handleds           WAConversation[]    @relation("wa_handle")
   b2b_pipelines         B2BPipeline[]
+  b2b_actions           B2BAction[]
 
   @@map("users")
 }
@@ -957,13 +976,18 @@ model B2BPipeline {
 }
 
 model B2BAction {
-  id            Int                 @id @default(autoincrement())
-  pipeline      B2BPipeline         @relation(fields: [pipeline_id], references: [id], onDelete: Cascade)
+  id            Int                   @id @default(autoincrement())
+  pipeline      B2BPipeline           @relation(fields: [pipeline_id], references: [id], onDelete: Cascade)
   pipeline_id   Int
-  activity_type B2BActivityTypeEnum
-  summary       String              @db.Text
-  created_at    DateTime            @default(now()) @db.Timestamptz()
-  updated_at    DateTime            @default(now()) @updatedAt @db.Timestamptz()
+  name          String                @db.VarChar()
+  summary       String?               @db.Text
+  status        B2BActionStatusEnum   @default(TO_DO)
+  priority      B2BActionPriorityEnum @default(MEDIUM)
+  due_date      DateTime?             @db.Date
+  assignee      User?                 @relation(fields: [assignee_id], references: [id], onDelete: SetNull)
+  assignee_id   String?               @db.Uuid
+  created_at    DateTime              @default(now()) @db.Timestamptz()
+  updated_at    DateTime              @default(now()) @updatedAt @db.Timestamptz()
 
   @@map("b2b_actions")
 }
