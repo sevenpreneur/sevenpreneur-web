@@ -72,6 +72,7 @@ export const deleteRouter = createTRPCRouter({
   // B2B Sales Pipeline //
 
   b2b: {
+    company: deleteB2B.company,
     pipeline: deleteB2B.pipeline,
     action: deleteB2B.action,
   },

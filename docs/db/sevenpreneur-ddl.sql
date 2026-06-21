@@ -700,14 +700,22 @@ CREATE TABLE wa_alerts (
 
 -- B2B Sales Pipeline
 
+CREATE TABLE b2b_company (
+  id             SERIAL       PRIMARY KEY,
+  name           VARCHAR      NOT NULL,
+  industry_id    SMALLINT     NOT NULL,
+  pic_name       VARCHAR          NULL,
+  pic_job_title  VARCHAR          NULL,
+  pic_wa         VARCHAR          NULL,
+  pic_email      VARCHAR          NULL,
+  created_at     TIMESTAMPTZ  NOT NULL  DEFAULT CURRENT_TIMESTAMP,
+  updated_at     TIMESTAMPTZ  NOT NULL  DEFAULT CURRENT_TIMESTAMP
+);
+
 CREATE TABLE b2b_pipeline (
   id                   SERIAL            PRIMARY KEY,
   name                 VARCHAR           NOT NULL,
-  industry_id          SMALLINT          NOT NULL,
-  pic_name             VARCHAR               NULL,
-  pic_job_title        VARCHAR               NULL,
-  pic_wa               VARCHAR               NULL,
-  pic_email            VARCHAR               NULL,
+  company_id           INTEGER           NOT NULL,
   product              b2b_product_enum  NOT NULL,
   source               b2b_source_enum   NOT NULL,
   stage                b2b_stage_enum    NOT NULL  DEFAULT 'lead_identified',
@@ -723,7 +731,7 @@ CREATE TABLE b2b_pipeline (
 
 CREATE TABLE b2b_actions (
   id             SERIAL                   PRIMARY KEY,
-  company_id     INTEGER                  NOT NULL,
+  pipeline_id    INTEGER                  NOT NULL,
   activity_type  b2ba_activity_type_enum  NOT NULL,
   summary        TEXT                     NOT NULL,
   created_at     TIMESTAMPTZ              NOT NULL  DEFAULT CURRENT_TIMESTAMP,
@@ -903,12 +911,15 @@ ALTER TABLE wa_alerts
 
 -- B2B Sales Pipeline
 
-ALTER TABLE b2b_pipeline
-  ADD FOREIGN KEY (owner_id)    REFERENCES users (id),
+ALTER TABLE b2b_company
   ADD FOREIGN KEY (industry_id) REFERENCES industries (id);
 
+ALTER TABLE b2b_pipeline
+  ADD FOREIGN KEY (owner_id)   REFERENCES users (id),
+  ADD FOREIGN KEY (company_id) REFERENCES b2b_company (id);
+
 ALTER TABLE b2b_actions
-  ADD FOREIGN KEY (company_id) REFERENCES b2b_pipeline (id) ON DELETE CASCADE;
+  ADD FOREIGN KEY (pipeline_id) REFERENCES b2b_pipeline (id) ON DELETE CASCADE;
 
 -- Relation Tables --
 
@@ -1137,6 +1148,11 @@ CREATE TRIGGER update_wa_alerts_updated_at_trigger
     EXECUTE FUNCTION update_updated_at();
 
 -- B2B Sales Pipeline
+
+CREATE TRIGGER update_b2b_company_updated_at_trigger
+  BEFORE UPDATE ON b2b_company
+  FOR EACH ROW
+    EXECUTE FUNCTION update_updated_at();
 
 CREATE TRIGGER update_b2b_pipeline_updated_at_trigger
   BEFORE UPDATE ON b2b_pipeline

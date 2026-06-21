@@ -21,7 +21,7 @@ import z from "zod";
 const monthDate = z.iso.date();
 
 export const updateB2B = {
-  pipeline: administratorProcedure
+  company: administratorProcedure
     .input(
       z.object({
         id: numberIsID(),
@@ -31,6 +31,27 @@ export const updateB2B = {
         pic_job_title: stringNotBlank().nullable().optional(),
         pic_wa: stringNotBlank().nullable().optional(),
         pic_email: stringNotBlank().nullable().optional(),
+      })
+    )
+    .mutation(async (opts) => {
+      const { id, ...data } = opts.input;
+      const updated = await opts.ctx.prisma.b2BCompany.updateMany({
+        where: { id },
+        data,
+      });
+      await checkUpdateResult(updated.count, "company", "companies");
+      return {
+        code: STATUS_OK,
+        message: "Company updated",
+      };
+    }),
+
+  pipeline: administratorProcedure
+    .input(
+      z.object({
+        id: numberIsID(),
+        name: stringNotBlank().optional(),
+        company_id: numberIsID().optional(),
         product: z.enum(B2BProductEnum).optional(),
         source: z.enum(B2BSourceEnum).optional(),
         stage: z.enum(B2BStageEnum).optional(),

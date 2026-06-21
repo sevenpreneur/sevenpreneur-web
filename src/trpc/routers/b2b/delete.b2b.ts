@@ -4,6 +4,19 @@ import { checkDeleteResult } from "@/trpc/utils/errors";
 import { objectHasOnlyID } from "@/trpc/utils/validation";
 
 export const deleteB2B = {
+  company: administratorProcedure
+    .input(objectHasOnlyID())
+    .mutation(async (opts) => {
+      const deleted = await opts.ctx.prisma.b2BCompany.deleteMany({
+        where: { id: opts.input.id },
+      });
+      await checkDeleteResult(deleted.count, "companies", "company");
+      return {
+        code: STATUS_NO_CONTENT,
+        message: "Success",
+      };
+    }),
+
   pipeline: administratorProcedure
     .input(objectHasOnlyID())
     .mutation(async (opts) => {

@@ -244,6 +244,7 @@ export default function B2BPipelineListCMS(props: B2BPipelineListCMSProps) {
               <TableHeaderCMS>
                 <TableRowCMS>
                   <TableHeadCMS>{`No.`}</TableHeadCMS>
+                  <TableHeadCMS>{`Program`}</TableHeadCMS>
                   <TableHeadCMS>{`Company`}</TableHeadCMS>
                   <TableHeadCMS>{`Industry`}</TableHeadCMS>
                   <TableHeadCMS>{`Product`}</TableHeadCMS>
@@ -264,6 +265,11 @@ export default function B2BPipelineListCMS(props: B2BPipelineListCMSProps) {
                       <p className=" font-semibold text-sm line-clamp-2 max-w-64 dark:text-sevenpreneur-white">
                         {post.name}
                       </p>
+                    </TableCellCMS>
+                    <TableCellCMS>
+                      <span className=" text-sm line-clamp-2 max-w-48 dark:text-sevenpreneur-white">
+                        {post.company_name}
+                      </span>
                     </TableCellCMS>
                     <TableCellCMS>
                       <span className=" text-sm text-emphasis line-clamp-2 max-w-40">

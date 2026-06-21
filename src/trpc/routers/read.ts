@@ -98,6 +98,7 @@ export const readRouter = createTRPCRouter({
   // B2B Sales Pipeline //
 
   b2b: {
+    company: readB2B.company,
     pipeline: readB2B.pipeline,
     action: readB2B.action,
   },

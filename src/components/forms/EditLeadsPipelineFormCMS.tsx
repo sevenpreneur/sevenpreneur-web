@@ -79,6 +79,7 @@ export default function EditLeadsPipelineFormCMS(
 ) {
   const utils = trpc.useUtils();
   const updatePipeline = trpc.update.b2b.pipeline.useMutation();
+  const updateCompany = trpc.update.b2b.company.useMutation();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Fetch tRPC data
@@ -101,9 +102,21 @@ export default function EditLeadsPipelineFormCMS(
       value: entry.id,
     })) ?? [];
 
+  const { data: companiesData } = trpc.list.b2b.companies.useQuery(
+    { page: 1, page_size: 200 },
+    { enabled: !!props.sessionToken }
+  );
+  const companyOptions =
+    companiesData?.list.map((entry) => ({
+      label: entry.name,
+      value: entry.id,
+    })) ?? [];
+
   // Beginning State
   const [formData, setFormData] = useState<{
     name: string;
+    company_id: number | "";
+    company_name: string;
     industry_id: number | "";
     pic_name: string;
     pic_job_title: string;
@@ -119,6 +132,8 @@ export default function EditLeadsPipelineFormCMS(
     project_end_month: string;
   }>({
     name: initialData?.name || "",
+    company_id: initialData?.company_id ?? "",
+    company_name: initialData?.company_name || "",
     industry_id: initialData?.industry_id ?? "",
     pic_name: initialData?.pic_name || "",
     pic_job_title: initialData?.pic_job_title || "",
@@ -143,6 +158,8 @@ export default function EditLeadsPipelineFormCMS(
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setFormData({
         name: initialData.name || "",
+        company_id: initialData.company_id,
+        company_name: initialData.company_name || "",
         industry_id: initialData.industry_id,
         pic_name: initialData.pic_name || "",
         pic_job_title: initialData.pic_job_title || "",
@@ -167,6 +184,23 @@ export default function EditLeadsPipelineFormCMS(
   // Handle data changes
   const handleInputChange = (fieldName: string) => (value: unknown) => {
     setFormData((prev) => ({ ...prev, [fieldName]: value }));
+  };
+
+  // When the company is reassigned, repopulate the editable company-detail
+  // fields from the newly selected company.
+  const handleCompanyChange = (value: unknown) => {
+    const companyId = Number(value);
+    const picked = companiesData?.list.find((c) => c.id === companyId);
+    setFormData((prev) => ({
+      ...prev,
+      company_id: companyId,
+      company_name: picked?.name ?? prev.company_name,
+      industry_id: picked?.industry_id ?? prev.industry_id,
+      pic_name: picked?.pic_name ?? "",
+      pic_job_title: picked?.pic_job_title ?? "",
+      pic_wa: picked?.pic_wa ?? "",
+      pic_email: picked?.pic_email ?? "",
+    }));
   };
 
   // Handle form submit
@@ -209,21 +243,41 @@ export default function EditLeadsPipelineFormCMS(
       setIsSubmitting(false);
       return;
     }
+    if (!formData.company_id) {
+      toast.error("Pick a company.");
+      setIsSubmitting(false);
+      return;
+    }
+    if (!formData.company_name.trim()) {
+      toast.error("Company name is required.");
+      setIsSubmitting(false);
+      return;
+    }
     if (!formData.industry_id) {
       toast.error("Pick an industry.");
       setIsSubmitting(false);
       return;
     }
 
-    updatePipeline.mutate(
-      {
-        id: props.pipelineId,
-        name: formData.name.trim(),
+    const companyId = Number(formData.company_id);
+
+    try {
+      // 1. Save the (selected) company's own details.
+      await updateCompany.mutateAsync({
+        id: companyId,
+        name: formData.company_name.trim(),
         industry_id: Number(formData.industry_id),
         pic_name: formData.pic_name.trim() || null,
         pic_job_title: formData.pic_job_title.trim() || null,
         pic_wa: formData.pic_wa.trim() || null,
         pic_email: formData.pic_email.trim() || null,
+      });
+
+      // 2. Save the pipeline (program) fields, including company link.
+      await updatePipeline.mutateAsync({
+        id: props.pipelineId,
+        name: formData.name.trim(),
+        company_id: companyId,
         product: formData.product as B2BProductEnum,
         source: formData.source as B2BSourceEnum,
         stage: formData.stage as B2BStageEnum,
@@ -237,21 +291,20 @@ export default function EditLeadsPipelineFormCMS(
         project_end_month: formData.project_end_month
           ? `${formData.project_end_month}-01`
           : null,
-      },
-      {
-        onSuccess: () => {
-          toast.success("Lead updated.");
-          setIsSubmitting(false);
-          utils.list.b2b.pipelines.invalidate();
-          utils.read.b2b.pipeline.invalidate({ id: props.pipelineId });
-          props.onClose();
-        },
-        onError: (err) => {
-          setIsSubmitting(false);
-          toast.error("Failed to update lead.", { description: err.message });
-        },
-      }
-    );
+      });
+
+      toast.success("Lead updated.");
+      setIsSubmitting(false);
+      utils.list.b2b.pipelines.invalidate();
+      utils.list.b2b.companies.invalidate();
+      utils.read.b2b.pipeline.invalidate({ id: props.pipelineId });
+      props.onClose();
+    } catch (err) {
+      setIsSubmitting(false);
+      toast.error("Failed to update lead.", {
+        description: err instanceof Error ? err.message : String(err),
+      });
+    }
   };
 
   return (
@@ -274,7 +327,7 @@ export default function EditLeadsPipelineFormCMS(
               <AppInput
                 variant="CMS"
                 inputId="lead-name"
-                inputName="Company Name"
+                inputName="Program Name"
                 inputType="text"
                 value={formData.name}
                 onInputChange={handleInputChange("name")}
@@ -282,12 +335,12 @@ export default function EditLeadsPipelineFormCMS(
               />
               <AppSelect
                 variant="CMS"
-                selectId="lead-industry"
-                selectName="Industry"
-                selectPlaceholder="Pick an industry"
-                value={formData.industry_id}
-                onChange={handleInputChange("industry_id")}
-                options={industryOptions}
+                selectId="lead-company"
+                selectName="Company"
+                selectPlaceholder="Pick a company"
+                value={formData.company_id}
+                onChange={handleCompanyChange}
+                options={companyOptions}
                 required
               />
               <AppSelect
@@ -373,9 +426,29 @@ export default function EditLeadsPipelineFormCMS(
             </div>
 
             <div className="group-input flex flex-col gap-4 pt-2 border-t border-dashboard-border">
-              <h4 className="text-sm  font-bold pt-3">
-                Person in Charge
-              </h4>
+              <h4 className="text-sm  font-bold pt-3">Company Details</h4>
+              <p className="text-xs text-emphasis -mt-2">
+                Edits here update the selected company everywhere it&apos;s used.
+              </p>
+              <AppInput
+                variant="CMS"
+                inputId="lead-company-name"
+                inputName="Company Name"
+                inputType="text"
+                value={formData.company_name}
+                onInputChange={handleInputChange("company_name")}
+                required
+              />
+              <AppSelect
+                variant="CMS"
+                selectId="lead-industry"
+                selectName="Industry"
+                selectPlaceholder="Pick an industry"
+                value={formData.industry_id}
+                onChange={handleInputChange("industry_id")}
+                options={industryOptions}
+                required
+              />
               <AppInput
                 variant="CMS"
                 inputId="lead-pic-name"
@@ -439,7 +512,7 @@ interface ActionsSectionProps {
 function ActionsSection({ pipelineId }: ActionsSectionProps) {
   const utils = trpc.useUtils();
   const { data, isLoading, isError } = trpc.list.b2b.actions.useQuery({
-    company_id: pipelineId,
+    pipeline_id: pipelineId,
   });
 
   const createAction = trpc.create.b2b.action.useMutation();
@@ -459,7 +532,7 @@ function ActionsSection({ pipelineId }: ActionsSectionProps) {
   });
 
   const invalidate = () =>
-    utils.list.b2b.actions.invalidate({ company_id: pipelineId });
+    utils.list.b2b.actions.invalidate({ pipeline_id: pipelineId });
 
   const handleCreate = () => {
     if (!newDraft.activity_type) {
@@ -472,7 +545,7 @@ function ActionsSection({ pipelineId }: ActionsSectionProps) {
     }
     createAction.mutate(
       {
-        company_id: pipelineId,
+        pipeline_id: pipelineId,
         activity_type: newDraft.activity_type as B2BActivityTypeEnum,
         summary: newDraft.summary.trim(),
       },

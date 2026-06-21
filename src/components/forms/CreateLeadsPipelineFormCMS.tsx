@@ -69,9 +69,24 @@ export default function CreateLeadsPipelineFormCMS(props: CreateLeadsPipelineFor
       value: entry.id,
     })) ?? [];
 
+  const { data: companiesData } = trpc.list.b2b.companies.useQuery(
+    { page: 1, page_size: 200 },
+    { enabled: !!props.sessionToken }
+  );
+  const companyOptions =
+    companiesData?.list.map((entry) => ({
+      label: entry.name,
+      value: entry.id,
+    })) ?? [];
+
+  // "existing" = pick a company from the dropdown; "new" = create one inline.
+  const [companyMode, setCompanyMode] = useState<"existing" | "new">("existing");
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
+    company_id: "" as number | "",
+    company_name: "",
     industry_id: "" as number | "",
     pic_name: "",
     pic_job_title: "",
@@ -98,14 +113,27 @@ export default function CreateLeadsPipelineFormCMS(props: CreateLeadsPipelineFor
     setIsSubmitting(true);
 
     if (!formData.name.trim()) {
-      toast.error("Company name is required.");
+      toast.error("Program name is required.");
       setIsSubmitting(false);
       return;
     }
-    if (!formData.industry_id) {
-      toast.error("Pick an industry.");
-      setIsSubmitting(false);
-      return;
+    if (companyMode === "existing") {
+      if (!formData.company_id) {
+        toast.error("Pick a company.");
+        setIsSubmitting(false);
+        return;
+      }
+    } else {
+      if (!formData.company_name.trim()) {
+        toast.error("Company name is required.");
+        setIsSubmitting(false);
+        return;
+      }
+      if (!formData.industry_id) {
+        toast.error("Pick an industry.");
+        setIsSubmitting(false);
+        return;
+      }
     }
     if (!formData.product) {
       toast.error("Pick a product type.");
@@ -157,11 +185,18 @@ export default function CreateLeadsPipelineFormCMS(props: CreateLeadsPipelineFor
     createPipeline.mutate(
       {
         name: formData.name.trim(),
-        industry_id: Number(formData.industry_id),
-        pic_name: formData.pic_name.trim() || null,
-        pic_job_title: formData.pic_job_title.trim() || null,
-        pic_wa: formData.pic_wa.trim() || null,
-        pic_email: formData.pic_email.trim() || null,
+        ...(companyMode === "existing"
+          ? { company_id: Number(formData.company_id) }
+          : {
+              new_company: {
+                name: formData.company_name.trim(),
+                industry_id: Number(formData.industry_id),
+                pic_name: formData.pic_name.trim() || null,
+                pic_job_title: formData.pic_job_title.trim() || null,
+                pic_wa: formData.pic_wa.trim() || null,
+                pic_email: formData.pic_email.trim() || null,
+              },
+            }),
         product: formData.product as B2BProductEnum,
         source: formData.source as B2BSourceEnum,
         stage: formData.stage,
@@ -181,6 +216,7 @@ export default function CreateLeadsPipelineFormCMS(props: CreateLeadsPipelineFor
           toast.success("Lead created.");
           setIsSubmitting(false);
           utils.list.b2b.pipelines.invalidate();
+          utils.list.b2b.companies.invalidate();
           props.onClose();
         },
         onError: (err) => {
@@ -207,23 +243,72 @@ export default function CreateLeadsPipelineFormCMS(props: CreateLeadsPipelineFor
             <AppInput
               variant="CMS"
               inputId="lead-name"
-              inputName="Company Name"
+              inputName="Program Name"
               inputType="text"
-              inputPlaceholder="e.g. PT Maju Bersama"
+              inputPlaceholder="e.g. AI Bootcamp Q3 Sponsorship"
               value={formData.name}
               onInputChange={handleInputChange("name")}
               required
             />
-            <AppSelect
-              variant="CMS"
-              selectId="lead-industry"
-              selectName="Industry"
-              selectPlaceholder="Pick an industry"
-              value={formData.industry_id}
-              onChange={handleInputChange("industry_id")}
-              options={industryOptions}
-              required
-            />
+
+            {/* Company: pick an existing one or create a new one inline */}
+            <div className="flex flex-col gap-2">
+              <div className="flex items-center gap-2">
+                <AppButton
+                  type="button"
+                  variant={companyMode === "existing" ? "tertiary" : "neutral"}
+                  size="small"
+                  onClick={() => setCompanyMode("existing")}
+                >
+                  Existing Company
+                </AppButton>
+                <AppButton
+                  type="button"
+                  variant={companyMode === "new" ? "tertiary" : "neutral"}
+                  size="small"
+                  onClick={() => setCompanyMode("new")}
+                >
+                  New Company
+                </AppButton>
+              </div>
+
+              {companyMode === "existing" ? (
+                <AppSelect
+                  variant="CMS"
+                  selectId="lead-company"
+                  selectName="Company"
+                  selectPlaceholder="Pick a company"
+                  value={formData.company_id}
+                  onChange={handleInputChange("company_id")}
+                  options={companyOptions}
+                  required
+                />
+              ) : (
+                <div className="flex flex-col gap-4 p-4 bg-card-inside-bg border border-dashboard-border rounded-md">
+                  <AppInput
+                    variant="CMS"
+                    inputId="lead-company-name"
+                    inputName="Company Name"
+                    inputType="text"
+                    inputPlaceholder="e.g. PT Maju Bersama"
+                    value={formData.company_name}
+                    onInputChange={handleInputChange("company_name")}
+                    required
+                  />
+                  <AppSelect
+                    variant="CMS"
+                    selectId="lead-industry"
+                    selectName="Industry"
+                    selectPlaceholder="Pick an industry"
+                    value={formData.industry_id}
+                    onChange={handleInputChange("industry_id")}
+                    options={industryOptions}
+                    required
+                  />
+                </div>
+              )}
+            </div>
+
             <AppSelect
               variant="CMS"
               selectId="lead-product"
@@ -308,47 +393,49 @@ export default function CreateLeadsPipelineFormCMS(props: CreateLeadsPipelineFor
             </div>
           </div>
 
-          <div className="group-input flex flex-col gap-4 pt-2 border-t border-dashboard-border">
-            <h4 className="text-sm  font-bold pt-3">
-              Person in Charge (optional)
-            </h4>
-            <AppInput
-              variant="CMS"
-              inputId="lead-pic-name"
-              inputName="PIC Name"
-              inputType="text"
-              inputPlaceholder="e.g. Budi Santoso"
-              value={formData.pic_name}
-              onInputChange={handleInputChange("pic_name")}
-            />
-            <AppInput
-              variant="CMS"
-              inputId="lead-pic-job-title"
-              inputName="PIC Job Title"
-              inputType="text"
-              inputPlaceholder="e.g. Head of L&D"
-              value={formData.pic_job_title}
-              onInputChange={handleInputChange("pic_job_title")}
-            />
-            <AppInput
-              variant="CMS"
-              inputId="lead-pic-wa"
-              inputName="PIC WhatsApp"
-              inputType="text"
-              inputPlaceholder="e.g. 6281234567890"
-              value={formData.pic_wa}
-              onInputChange={handleInputChange("pic_wa")}
-            />
-            <AppInput
-              variant="CMS"
-              inputId="lead-pic-email"
-              inputName="PIC Email"
-              inputType="email"
-              inputPlaceholder="e.g. budi@majubersama.co.id"
-              value={formData.pic_email}
-              onInputChange={handleInputChange("pic_email")}
-            />
-          </div>
+          {companyMode === "new" && (
+            <div className="group-input flex flex-col gap-4 pt-2 border-t border-dashboard-border">
+              <h4 className="text-sm  font-bold pt-3">
+                Person in Charge (optional)
+              </h4>
+              <AppInput
+                variant="CMS"
+                inputId="lead-pic-name"
+                inputName="PIC Name"
+                inputType="text"
+                inputPlaceholder="e.g. Budi Santoso"
+                value={formData.pic_name}
+                onInputChange={handleInputChange("pic_name")}
+              />
+              <AppInput
+                variant="CMS"
+                inputId="lead-pic-job-title"
+                inputName="PIC Job Title"
+                inputType="text"
+                inputPlaceholder="e.g. Head of L&D"
+                value={formData.pic_job_title}
+                onInputChange={handleInputChange("pic_job_title")}
+              />
+              <AppInput
+                variant="CMS"
+                inputId="lead-pic-wa"
+                inputName="PIC WhatsApp"
+                inputType="text"
+                inputPlaceholder="e.g. 6281234567890"
+                value={formData.pic_wa}
+                onInputChange={handleInputChange("pic_wa")}
+              />
+              <AppInput
+                variant="CMS"
+                inputId="lead-pic-email"
+                inputName="PIC Email"
+                inputType="email"
+                inputPlaceholder="e.g. budi@majubersama.co.id"
+                value={formData.pic_email}
+                onInputChange={handleInputChange("pic_email")}
+              />
+            </div>
+          )}
         </div>
         <div className="sticky bottom-0 w-full p-4 bg-sb-bg z-40">
           <AppButton

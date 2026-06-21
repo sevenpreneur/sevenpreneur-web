@@ -26,8 +26,10 @@ export async function POST(req: NextRequest) {
         owner: {
           select: { id: true, full_name: true, email: true, avatar: true },
         },
-        industry: {
-          select: { id: true, industry_name: true },
+        company: {
+          include: {
+            industry: { select: { id: true, industry_name: true } },
+          },
         },
         actions: {
           orderBy: { created_at: "desc" },
@@ -40,11 +42,13 @@ export async function POST(req: NextRequest) {
   const list = pipelines.map((p) => ({
     id: p.id,
     name: p.name,
-    industry: p.industry,
-    pic_name: p.pic_name,
-    pic_job_title: p.pic_job_title,
-    pic_wa: p.pic_wa,
-    pic_email: p.pic_email,
+    company_id: p.company.id,
+    company_name: p.company.name,
+    industry: p.company.industry,
+    pic_name: p.company.pic_name,
+    pic_job_title: p.company.pic_job_title,
+    pic_wa: p.company.pic_wa,
+    pic_email: p.company.pic_email,
     product: p.product,
     source: p.source,
     stage: p.stage,
@@ -58,7 +62,7 @@ export async function POST(req: NextRequest) {
     updated_at: p.updated_at,
     actions: p.actions.map((a) => ({
       id: a.id,
-      company_id: a.company_id,
+      pipeline_id: a.pipeline_id,
       activity_type: a.activity_type,
       summary: a.summary,
       created_at: a.created_at,

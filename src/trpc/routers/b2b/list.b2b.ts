@@ -19,6 +19,59 @@ import {
 import z from "zod";
 
 export const listB2B = {
+  companies: administratorProcedure
+    .input(
+      z.object({
+        keyword: stringNotBlank().optional(),
+        page: numberIsPosInt().optional(),
+        page_size: numberIsPosInt().optional(),
+      })
+    )
+    .query(async (opts) => {
+      const whereClause: Prisma.B2BCompanyWhereInput = {};
+      if (opts.input.keyword !== undefined) {
+        whereClause.OR = [
+          { name: { contains: opts.input.keyword, mode: "insensitive" } },
+          { pic_name: { contains: opts.input.keyword, mode: "insensitive" } },
+          { pic_email: { contains: opts.input.keyword, mode: "insensitive" } },
+        ];
+      }
+
+      const paging = calculatePage(
+        opts.input,
+        await opts.ctx.prisma.b2BCompany.aggregate({
+          _count: true,
+          where: whereClause,
+        })
+      );
+
+      const companyList = await opts.ctx.prisma.b2BCompany.findMany({
+        include: {
+          industry: { select: { id: true, industry_name: true } },
+        },
+        orderBy: [{ name: "asc" }],
+        where: whereClause,
+        skip: paging.prisma.skip,
+        take: paging.prisma.take,
+      });
+
+      return {
+        code: STATUS_OK,
+        message: "Success",
+        list: companyList.map((entry) => ({
+          id: entry.id,
+          name: entry.name,
+          industry_id: entry.industry.id,
+          industry_name: entry.industry.industry_name,
+          pic_name: entry.pic_name,
+          pic_job_title: entry.pic_job_title,
+          pic_wa: entry.pic_wa,
+          pic_email: entry.pic_email,
+        })),
+        metapaging: paging.metapaging,
+      };
+    }),
+
   pipelines: administratorProcedure
     .input(
       z.object({
@@ -43,8 +96,13 @@ export const listB2B = {
         OR: undefined as Optional<
           [
             { name: { contains: string; mode: "insensitive" } },
-            { pic_name: { contains: string; mode: "insensitive" } },
-            { pic_email: { contains: string; mode: "insensitive" } },
+            { company: { name: { contains: string; mode: "insensitive" } } },
+            {
+              company: { pic_name: { contains: string; mode: "insensitive" } };
+            },
+            {
+              company: { pic_email: { contains: string; mode: "insensitive" } };
+            },
           ]
         >,
       };
@@ -52,8 +110,21 @@ export const listB2B = {
       if (opts.input.keyword !== undefined) {
         whereClause.OR = [
           { name: { contains: opts.input.keyword, mode: "insensitive" } },
-          { pic_name: { contains: opts.input.keyword, mode: "insensitive" } },
-          { pic_email: { contains: opts.input.keyword, mode: "insensitive" } },
+          {
+            company: {
+              name: { contains: opts.input.keyword, mode: "insensitive" },
+            },
+          },
+          {
+            company: {
+              pic_name: { contains: opts.input.keyword, mode: "insensitive" },
+            },
+          },
+          {
+            company: {
+              pic_email: { contains: opts.input.keyword, mode: "insensitive" },
+            },
+          },
         ];
       }
 
@@ -86,7 +157,11 @@ export const listB2B = {
         opts.ctx.prisma.b2BPipeline.findMany({
           include: {
             owner: { select: { id: true, full_name: true, avatar: true } },
-            industry: { select: { id: true, industry_name: true } },
+            company: {
+              include: {
+                industry: { select: { id: true, industry_name: true } },
+              },
+            },
           },
           orderBy: [{ project_value: "desc" }],
           where: whereClause,
@@ -106,8 +181,10 @@ export const listB2B = {
       const returnedList = pipelineList.map((entry) => ({
         id: entry.id,
         name: entry.name,
-        industry_id: entry.industry.id,
-        industry_name: entry.industry.industry_name,
+        company_id: entry.company.id,
+        company_name: entry.company.name,
+        industry_id: entry.company.industry.id,
+        industry_name: entry.company.industry.industry_name,
         product: entry.product,
         stage: entry.stage,
         probability: entry.probability,
@@ -155,7 +232,7 @@ export const listB2B = {
   actions: administratorProcedure
     .input(
       z.object({
-        company_id: numberIsID(),
+        pipeline_id: numberIsID(),
         activity_type: z.enum(B2BActivityTypeEnum).optional(),
         page: numberIsPosInt().optional(),
         page_size: numberIsPosInt().optional(),
@@ -163,7 +240,7 @@ export const listB2B = {
     )
     .query(async (opts) => {
       const whereClause = {
-        company_id: opts.input.company_id,
+        pipeline_id: opts.input.pipeline_id,
         activity_type: opts.input.activity_type,
       };
 
