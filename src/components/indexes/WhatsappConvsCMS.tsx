@@ -113,7 +113,7 @@ export default function WhatsappConvsCMS(props: WhatsappConvsCMSProps) {
 
   // Fetch admin handler list for filter dropdown
   const { data: handlerList } = trpc.list.users.useQuery(
-    { role_id: 0, page_size: 100 },
+    { role_ids: [0], page_size: 100 },
     { enabled: !!props.sessionToken }
   );
 

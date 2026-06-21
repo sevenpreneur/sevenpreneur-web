@@ -61,7 +61,7 @@ export default function CreateArticleForm(props: CreateArticleFormProps) {
     isLoading: isLoadingUsers,
     isError: isErrorUsers,
   } = trpc.list.users.useQuery(
-    { role_id: 6 },
+    { role_ids: [6] },
     { enabled: !!props.sessionToken }
   );
 

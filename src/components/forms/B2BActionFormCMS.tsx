@@ -17,13 +17,14 @@ import AppSheet from "../modals/AppSheet";
 interface B2BActionFormCMSProps {
   sessionToken: string;
   pipelineId: number;
-  // When set, the form edits that action; otherwise it creates a new one.
   actionId?: number | null;
-  // Pre-selected column when adding from a specific kanban column.
   defaultStatus?: B2BActionStatusEnum;
   isOpen: boolean;
   onClose: () => void;
 }
+
+const DEFAULT_AVATAR =
+  "https://tskubmriuclmbcfmaiur.supabase.co/storage/v1/object/public/sevenpreneur/default-avatar.svg.png";
 
 const toDateInput = (value: Date | string | null | undefined) => {
   if (!value) return "";
@@ -37,13 +38,16 @@ export default function B2BActionFormCMS(props: B2BActionFormCMSProps) {
   const updateAction = trpc.update.b2b.action.useMutation();
 
   const { data: usersData } = trpc.list.users.useQuery(
-    { role_id: 2, page_size: 200 },
+    { role_ids: [0, 2, 4, 6], page_size: 200 },
     { enabled: !!props.sessionToken && props.isOpen }
   );
   const assigneeOptions = [
-    { label: "Unassigned", value: "" },
-    ...(usersData?.list.map((u) => ({ label: u.full_name, value: u.id })) ??
-      []),
+    { label: "Unassigned", value: "", image: DEFAULT_AVATAR },
+    ...(usersData?.list.map((u) => ({
+      label: u.full_name,
+      value: u.id,
+      image: u.avatar || DEFAULT_AVATAR,
+    })) ?? []),
   ];
 
   const { data: actionData } = trpc.read.b2b.action.useQuery(
@@ -164,8 +168,8 @@ export default function B2BActionFormCMS(props: B2BActionFormCMSProps) {
           <AppTextArea
             variant="CMS"
             textAreaId="action-summary"
-            textAreaName="Summary (optional)"
-            textAreaHeight="h-28"
+            textAreaName="Summary"
+            textAreaHeight="h-48"
             textAreaPlaceholder="e.g. Sent follow-up proposal to PIC, awaiting reply"
             value={formData.summary}
             onTextAreaChange={handleInputChange("summary")}

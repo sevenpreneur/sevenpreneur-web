@@ -18,7 +18,7 @@ export const listUserData = {
   ])
     .input(
       z.object({
-        role_id: numberIsRoleID().optional(),
+        role_ids: z.array(numberIsRoleID()).nonempty().optional(),
         page: numberIsPosInt().optional(),
         page_size: numberIsPosInt().optional(),
         keyword: stringNotBlank().optional(),
@@ -26,7 +26,7 @@ export const listUserData = {
     )
     .query(async (opts) => {
       const whereClause = {
-        role_id: opts.input.role_id,
+        role_id: opts.input.role_ids ? { in: opts.input.role_ids } : undefined,
         OR: undefined as Optional<
           [
             { full_name: { contains: string; mode: "insensitive" } },

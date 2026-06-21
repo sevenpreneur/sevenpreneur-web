@@ -36,7 +36,7 @@ export default function EditLeadStatusFormCMS(
 
   // Fetch administrator list (role_id = 0)
   const { data: userData, isLoading: isLoadingUsers } =
-    trpc.list.users.useQuery({ role_id: 0 }, { enabled: props.isOpen });
+    trpc.list.users.useQuery({ role_ids: [0] }, { enabled: props.isOpen });
 
   const handlerOptions: OptionType[] =
     userData?.list.map((user) => ({

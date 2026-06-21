@@ -12,7 +12,7 @@ import B2BActionItemCMS from "../items/B2BActionItemCMS";
 import AppAlertConfirmDialog from "../modals/AppAlertConfirmDialog";
 import PageContainerCMS from "../pages/PageContainerCMS";
 import AppErrorComponents from "../states/AppErrorComponents";
-import AppLoadingComponents from "../states/AppLoadingComponents";
+import AppPageLoading from "../states/AppPageLoading";
 
 interface B2BActionsKanbanCMSProps {
   sessionToken: string;
@@ -41,16 +41,24 @@ export default function B2BActionsKanbanCMS({
     if (sessionToken) setSessionToken(sessionToken);
   }, [sessionToken]);
 
-  const { data: pipelineData } = trpc.read.b2b.pipeline.useQuery(
+  const {
+    data: pipelineData,
+    isLoading: isPipelineLoading,
+    isError: isPipelineError,
+  } = trpc.read.b2b.pipeline.useQuery(
     { id: pipelineId },
     { enabled: !!sessionToken }
   );
   const pipeline = pipelineData?.pipeline;
 
-  const { data, isLoading, isError } = useActionsData(
-    pipelineId,
-    !!sessionToken
-  );
+  const {
+    data,
+    isLoading: isActionsLoading,
+    isError: isActionsError,
+  } = useActionsData(pipelineId, !!sessionToken);
+
+  const isLoading = isPipelineLoading || isActionsLoading;
+  const isError = isPipelineError || isActionsError;
   const updateAction = trpc.update.b2b.action.useMutation();
   const deleteAction = trpc.delete.b2b.action.useMutation();
 
@@ -118,6 +126,8 @@ export default function B2BActionsKanbanCMS({
     setDeleteTarget(null);
   };
 
+  if (isLoading) return <AppPageLoading type="CMS" />;
+
   return (
     <React.Fragment>
       <PageContainerCMS>
@@ -136,10 +146,9 @@ export default function B2BActionsKanbanCMS({
             </AppButton>
           </PageHeaderCMS>
 
-          {isLoading && <AppLoadingComponents />}
           {isError && <AppErrorComponents />}
 
-          {!isLoading && !isError && (
+          {!isError && (
             <div className="kanban-scroll w-full overflow-x-auto pb-2 h-[calc(100vh-9rem)]">
               <div className="kanban-columns flex gap-4 min-w-max h-full">
                 {B2B_ACTION_STATUSES.map((col) => {
@@ -170,7 +179,9 @@ export default function B2BActionsKanbanCMS({
                             {col.label}
                           </span>
                         </div>
-                        <span className="text-xs font-semibold text-emphasis">
+                        <span
+                          className={`flex size-5 items-center justify-center rounded-full text-[11px] font-bold text-white ${col.dot}`}
+                        >
                           {items.length}
                         </span>
                       </div>

@@ -33,7 +33,7 @@ export default function CreateLearningFormCMS(
     isLoading,
     isError,
   } = trpc.list.users.useQuery(
-    { role_id: 1 },
+    { role_ids: [1] },
     { enabled: !!props.sessionToken }
   );
 

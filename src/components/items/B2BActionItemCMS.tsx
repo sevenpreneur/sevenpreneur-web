@@ -53,7 +53,7 @@ export default function B2BActionItemCMS({
       onDragStart={onDragStart}
       onDragEnd={onDragEnd}
       onClick={onEdit}
-      className={`kanban-card group relative flex flex-col gap-2 rounded-md border border-dashboard-border bg-background p-3 transition-all hover:border-tertiary/40 hover:bg-tertiary/5 hover:cursor-pointer active:cursor-grabbing ${
+      className={`kanban-card group relative flex flex-col gap-2 rounded-md border border-dashboard-border bg-background p-3 transition-all hover:border-tertiary/40 hover:bg-[#F7F4FF] dark:hover:bg-[#080020] hover:cursor-pointer active:cursor-grabbing ${
         isDragging ? "opacity-50" : ""
       }`}
     >

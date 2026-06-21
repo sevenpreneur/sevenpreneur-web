@@ -33,7 +33,7 @@ export default function EditLearningFormCMS(props: EditLearningFormCMSProps) {
     isLoading: isLoadingEducatorList,
     isError: isErrorEducatorList,
   } = trpc.list.users.useQuery(
-    { role_id: 1 },
+    { role_ids: [1] },
     { enabled: !!props.sessionToken }
   );
   const {
