@@ -1,7 +1,10 @@
 "use client";
 
 import B2BActionPriorityLabelCMS from "@/components/labels/B2BActionPriorityLabelCMS";
-import type { B2BActionPriorityEnum } from "@prisma/client";
+import type {
+  B2BActionPriorityEnum,
+  B2BActionStatusEnum,
+} from "@prisma/client";
 import dayjs from "dayjs";
 import { CalendarClock, Trash2 } from "lucide-react";
 import Image from "next/image";
@@ -10,6 +13,7 @@ interface B2BActionItemCMSProps {
   action: {
     id: number;
     name: string;
+    status: B2BActionStatusEnum;
     priority: B2BActionPriorityEnum;
     due_date: Date | string | null;
     assignee_name: string | null;
@@ -28,12 +32,13 @@ const initials = (name: string | null) => {
   return ((parts[0]?.[0] ?? "") + (parts[1]?.[0] ?? "")).toUpperCase() || "?";
 };
 
-const dueLabel = (due: Date | string | null) => {
+const dueLabel = (due: Date | string | null, isDone: boolean) => {
   if (!due) return null;
   const target = dayjs(due).startOf("day");
   const diff = target.diff(dayjs().startOf("day"), "day");
-  if (diff < 0) return { text: `${Math.abs(diff)}d late`, late: true };
-  if (diff === 0) return { text: "Today", late: false };
+  // A completed action is never "late" — just show the due date plainly.
+  if (diff < 0 && !isDone) return { text: `${Math.abs(diff)}d late`, late: true };
+  if (diff === 0 && !isDone) return { text: "Today", late: false };
   return { text: target.format("MMM D"), late: false };
 };
 
@@ -45,7 +50,7 @@ export default function B2BActionItemCMS({
   onEdit,
   onDelete,
 }: B2BActionItemCMSProps) {
-  const due = dueLabel(action.due_date);
+  const due = dueLabel(action.due_date, action.status === "DONE");
 
   return (
     <div
