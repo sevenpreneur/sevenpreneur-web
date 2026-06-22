@@ -959,7 +959,7 @@ model B2BPipeline {
   company             B2BCompany               @relation(fields: [company_id], references: [id])
   company_id          Int
   product             B2BProductEnum
-  source              B2BSourceEnum
+  source              B2BSourceEnum?
   stage               B2BStageEnum             @default(LEAD_IDENTIFIED)
   probability         Int                      @default(0) @db.SmallInt
   probability_status  B2BProbabilityStatusEnum @default(COLD)

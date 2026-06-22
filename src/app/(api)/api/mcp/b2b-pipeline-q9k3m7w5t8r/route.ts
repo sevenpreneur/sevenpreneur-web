@@ -901,8 +901,8 @@ const handler = createSevenpreneurMcp(
             key = r.product;
             label = r.product;
           } else if (args.group_by === "source") {
-            key = r.source;
-            label = r.source;
+            key = r.source ?? "UNKNOWN";
+            label = r.source ?? "UNKNOWN";
           } else {
             key = r.owner_id;
             label = r.owner?.full_name ?? r.owner_id;

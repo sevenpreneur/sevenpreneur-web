@@ -7,18 +7,23 @@ import {
   B2BStageEnum,
 } from "@prisma/client";
 import { Loader2 } from "lucide-react";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { toast } from "sonner";
 import AppButton from "../buttons/AppButton";
 import AppInput from "../fields/AppInput";
 import AppSelect from "../fields/AppSelect";
 import AppSheet from "../modals/AppSheet";
+import { Switch } from "../ui/switch";
+import { Slider } from "../ui/slider";
 
-interface CreateLeadsPipelineFormCMSProps {
+interface CreateB2BLeadFormCMSProps {
   sessionToken: string;
   isOpen: boolean;
   onClose: () => void;
 }
+
+const DEFAULT_AVATAR =
+  "https://tskubmriuclmbcfmaiur.supabase.co/storage/v1/object/public/sevenpreneur/default-avatar.svg.png";
 
 const PRODUCT_OPTIONS = [
   { label: "Sponsorship", value: B2BProductEnum.SPONSORSHIP },
@@ -54,12 +59,13 @@ const PROBABILITY_STATUS_OPTIONS = [
   { label: "Hot", value: B2BProbabilityStatusEnum.HOT },
 ];
 
-export default function CreateLeadsPipelineFormCMS(props: CreateLeadsPipelineFormCMSProps) {
+export default function CreateB2BLeadFormCMS(props: CreateB2BLeadFormCMSProps) {
   const utils = trpc.useUtils();
   const createPipeline = trpc.create.b2b.pipeline.useMutation();
   const { data: sessionData } = trpc.auth.checkSession.useQuery(undefined, {
     enabled: !!props.sessionToken,
   });
+
   const { data: industriesData } = trpc.list.industries.useQuery(undefined, {
     enabled: !!props.sessionToken,
   });
@@ -71,7 +77,7 @@ export default function CreateLeadsPipelineFormCMS(props: CreateLeadsPipelineFor
 
   const { data: companiesData } = trpc.list.b2b.companies.useQuery(
     { page: 1, page_size: 200 },
-    { enabled: !!props.sessionToken }
+    { enabled: !!props.sessionToken && props.isOpen }
   );
   const companyOptions =
     companiesData?.list.map((entry) => ({
@@ -79,8 +85,20 @@ export default function CreateLeadsPipelineFormCMS(props: CreateLeadsPipelineFor
       value: entry.id,
     })) ?? [];
 
-  // "existing" = pick a company from the dropdown; "new" = create one inline.
-  const [companyMode, setCompanyMode] = useState<"existing" | "new">("existing");
+  // Internal team members that a lead can be assigned to.
+  const { data: usersData } = trpc.list.users.useQuery(
+    { role_ids: [0, 2, 4, 6], page_size: 200 },
+    { enabled: !!props.sessionToken && props.isOpen }
+  );
+  const assigneeOptions =
+    usersData?.list.map((u) => ({
+      label: u.full_name,
+      value: u.id,
+      image: u.avatar || DEFAULT_AVATAR,
+    })) ?? [];
+
+  // Default is creating a new company; toggle on to pick an existing one.
+  const [useExistingCompany, setUseExistingCompany] = useState(false);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
@@ -95,14 +113,24 @@ export default function CreateLeadsPipelineFormCMS(props: CreateLeadsPipelineFor
     product: "" as B2BProductEnum | "",
     source: "" as B2BSourceEnum | "",
     stage: B2BStageEnum.LEAD_IDENTIFIED as B2BStageEnum,
-    probability: "50",
     probability_status:
       B2BProbabilityStatusEnum.COLD as B2BProbabilityStatusEnum,
+    probability: 50,
     project_value: "",
     project_start_month: "",
     project_end_month: "",
+    assignee_id: "" as string,
   });
-  const ownerId = sessionData?.user.id;
+
+  // Default the assignee to the current user once the session is ready.
+  useEffect(() => {
+    const currentUserId = sessionData?.user.id;
+    if (currentUserId && !formData.assignee_id) {
+      queueMicrotask(() =>
+        setFormData((prev) => ({ ...prev, assignee_id: currentUserId }))
+      );
+    }
+  }, [sessionData?.user.id, formData.assignee_id]);
 
   const handleInputChange = (fieldName: string) => (value: unknown) => {
     setFormData((prev) => ({ ...prev, [fieldName]: value }));
@@ -112,80 +140,47 @@ export default function CreateLeadsPipelineFormCMS(props: CreateLeadsPipelineFor
     e.preventDefault();
     setIsSubmitting(true);
 
-    if (!formData.name.trim()) {
-      toast.error("Program name is required.");
+    const fail = (message: string) => {
+      toast.error(message);
       setIsSubmitting(false);
-      return;
-    }
-    if (companyMode === "existing") {
-      if (!formData.company_id) {
-        toast.error("Pick a company.");
-        setIsSubmitting(false);
-        return;
-      }
+    };
+
+    if (!formData.name.trim()) return fail("Program name is required.");
+
+    if (useExistingCompany) {
+      if (!formData.company_id) return fail("Pick a company.");
     } else {
-      if (!formData.company_name.trim()) {
-        toast.error("Company name is required.");
-        setIsSubmitting(false);
-        return;
-      }
-      if (!formData.industry_id) {
-        toast.error("Pick an industry.");
-        setIsSubmitting(false);
-        return;
-      }
+      if (!formData.company_name.trim())
+        return fail("Company name is required.");
+      if (!formData.industry_id) return fail("Pick an industry.");
     }
-    if (!formData.product) {
-      toast.error("Pick a product type.");
-      setIsSubmitting(false);
-      return;
-    }
-    if (!formData.source) {
-      toast.error("Pick a lead source.");
-      setIsSubmitting(false);
-      return;
-    }
-    if (!formData.stage) {
-      toast.error("Pick a pipeline stage.");
-      setIsSubmitting(false);
-      return;
-    }
-    const probability = Number(formData.probability);
-    if (!Number.isInteger(probability) || probability < 0 || probability > 100) {
-      toast.error("Probability must be an integer between 0 and 100.");
-      setIsSubmitting(false);
-      return;
-    }
-    if (!formData.probability_status) {
-      toast.error("Pick a probability status.");
-      setIsSubmitting(false);
-      return;
-    }
+
+    if (!formData.product) return fail("Pick a product type.");
+    if (!formData.stage) return fail("Pick a pipeline stage.");
+    if (!formData.probability_status) return fail("Pick a status.");
+
+    const probability = formData.probability;
+    if (!Number.isInteger(probability) || probability < 0 || probability > 100)
+      return fail("Probability must be between 0 and 100.");
+
     const projectValue = Number(formData.project_value);
-    if (!Number.isFinite(projectValue) || projectValue < 0) {
-      toast.error("Project value must be a non-negative number.");
-      setIsSubmitting(false);
-      return;
-    }
+    if (!Number.isFinite(projectValue) || projectValue < 0)
+      return fail("Project value must be a non-negative number.");
+
     if (
       formData.project_start_month &&
       formData.project_end_month &&
       formData.project_end_month < formData.project_start_month
-    ) {
-      toast.error("Project end month must be on or after start month.");
-      setIsSubmitting(false);
-      return;
-    }
-    if (!ownerId) {
-      toast.error("Session not ready, try again in a moment.");
-      setIsSubmitting(false);
-      return;
-    }
+    )
+      return fail("Project end month must be on or after start month.");
+
+    if (!formData.assignee_id)
+      return fail("Assign this lead to a team member.");
 
     createPipeline.mutate(
       {
         name: formData.name.trim(),
-        ...(companyMode === "existing"
+        ...(useExistingCompany
           ? { company_id: Number(formData.company_id) }
           : {
               new_company: {
@@ -198,7 +193,7 @@ export default function CreateLeadsPipelineFormCMS(props: CreateLeadsPipelineFor
               },
             }),
         product: formData.product as B2BProductEnum,
-        source: formData.source as B2BSourceEnum,
+        source: (formData.source as B2BSourceEnum) || null,
         stage: formData.stage,
         probability,
         probability_status: formData.probability_status,
@@ -209,7 +204,7 @@ export default function CreateLeadsPipelineFormCMS(props: CreateLeadsPipelineFor
         project_end_month: formData.project_end_month
           ? `${formData.project_end_month}-01`
           : null,
-        owner_id: ownerId,
+        owner_id: formData.assignee_id,
       },
       {
         onSuccess: () => {
@@ -235,10 +230,10 @@ export default function CreateLeadsPipelineFormCMS(props: CreateLeadsPipelineFor
       onClose={props.onClose}
     >
       <form
-        className="relative w-full h-full flex flex-col"
+        className="relative w-full flex flex-col flex-1 min-h-0"
         onSubmit={handleSubmit}
       >
-        <div className="form-container flex flex-col h-full px-6 pb-32 gap-5 overflow-y-auto">
+        <div className="form-container flex flex-col flex-1 min-h-0 px-6 pb-64 gap-5 overflow-y-auto">
           <div className="group-input flex flex-col gap-4">
             <AppInput
               variant="CMS"
@@ -251,28 +246,25 @@ export default function CreateLeadsPipelineFormCMS(props: CreateLeadsPipelineFor
               required
             />
 
-            {/* Company: pick an existing one or create a new one inline */}
-            <div className="flex flex-col gap-2">
-              <div className="flex items-center gap-2">
-                <AppButton
-                  type="button"
-                  variant={companyMode === "existing" ? "tertiary" : "neutral"}
-                  size="small"
-                  onClick={() => setCompanyMode("existing")}
-                >
-                  Existing Company
-                </AppButton>
-                <AppButton
-                  type="button"
-                  variant={companyMode === "new" ? "tertiary" : "neutral"}
-                  size="small"
-                  onClick={() => setCompanyMode("new")}
-                >
-                  New Company
-                </AppButton>
+            {/* Company: create a new one (default) or pick an existing one */}
+            <div className="flex flex-col gap-3 p-4 bg-card-bg/50 border border-dashboard-border rounded-md dark:bg-card-inside-bg">
+              <div className="flex items-center justify-between gap-2">
+                <div className="flex flex-col">
+                  <span className="text-[15px] font-semibold text-sb-text-strong">
+                    Use existing company
+                  </span>
+                  <span className="text-[13px] text-emphasis">
+                    Off creates a new company inline.
+                  </span>
+                </div>
+                <Switch
+                  className="data-[state=checked]:bg-tertiary"
+                  checked={useExistingCompany}
+                  onCheckedChange={(checked) => setUseExistingCompany(checked)}
+                />
               </div>
 
-              {companyMode === "existing" ? (
+              {useExistingCompany ? (
                 <AppSelect
                   variant="CMS"
                   selectId="lead-company"
@@ -284,7 +276,7 @@ export default function CreateLeadsPipelineFormCMS(props: CreateLeadsPipelineFor
                   required
                 />
               ) : (
-                <div className="flex flex-col gap-4 p-4 bg-card-inside-bg border border-dashboard-border rounded-md">
+                <div className="flex flex-col gap-4">
                   <AppInput
                     variant="CMS"
                     inputId="lead-company-name"
@@ -305,6 +297,42 @@ export default function CreateLeadsPipelineFormCMS(props: CreateLeadsPipelineFor
                     options={industryOptions}
                     required
                   />
+                  <AppInput
+                    variant="CMS"
+                    inputId="lead-pic-name"
+                    inputName="PIC Name"
+                    inputType="text"
+                    inputPlaceholder="e.g. Budi Santoso"
+                    value={formData.pic_name}
+                    onInputChange={handleInputChange("pic_name")}
+                  />
+                  <AppInput
+                    variant="CMS"
+                    inputId="lead-pic-job-title"
+                    inputName="PIC Job Title"
+                    inputType="text"
+                    inputPlaceholder="e.g. Head of L&D"
+                    value={formData.pic_job_title}
+                    onInputChange={handleInputChange("pic_job_title")}
+                  />
+                  <AppInput
+                    variant="CMS"
+                    inputId="lead-pic-wa"
+                    inputName="PIC WhatsApp"
+                    inputType="text"
+                    inputPlaceholder="e.g. 6281234567890"
+                    value={formData.pic_wa}
+                    onInputChange={handleInputChange("pic_wa")}
+                  />
+                  <AppInput
+                    variant="CMS"
+                    inputId="lead-pic-email"
+                    inputName="PIC Email"
+                    inputType="email"
+                    inputPlaceholder="e.g. budi@majubersama.co.id"
+                    value={formData.pic_email}
+                    onInputChange={handleInputChange("pic_email")}
+                  />
                 </div>
               )}
             </div>
@@ -321,16 +349,6 @@ export default function CreateLeadsPipelineFormCMS(props: CreateLeadsPipelineFor
             />
             <AppSelect
               variant="CMS"
-              selectId="lead-source"
-              selectName="Source"
-              selectPlaceholder="How did this lead come in?"
-              value={formData.source}
-              onChange={handleInputChange("source")}
-              options={SOURCE_OPTIONS}
-              required
-            />
-            <AppSelect
-              variant="CMS"
               selectId="lead-stage"
               selectName="Stage"
               selectPlaceholder="Current pipeline stage"
@@ -339,26 +357,38 @@ export default function CreateLeadsPipelineFormCMS(props: CreateLeadsPipelineFor
               options={STAGE_OPTIONS}
               required
             />
-            <AppInput
-              variant="CMS"
-              inputId="lead-probability"
-              inputName="Probability (1–100)"
-              inputType="number"
-              inputPlaceholder="e.g. 50"
-              value={formData.probability}
-              onInputChange={handleInputChange("probability")}
-              required
-            />
             <AppSelect
               variant="CMS"
               selectId="lead-probability-status"
-              selectName="Probability Status"
-              selectPlaceholder="Pick probability status"
+              selectName="Status"
+              selectPlaceholder="Pick a status"
               value={formData.probability_status}
               onChange={handleInputChange("probability_status")}
               options={PROBABILITY_STATUS_OPTIONS}
               required
             />
+
+            {/* Probability as a slider, mirroring the WA Lead Details UI */}
+            <div className="flex flex-col gap-1">
+              <label className="flex pl-1 gap-0.5 text-sm text-sb-text-strong font-semibold">
+                Probability
+                <span className="text-destructive">*</span>
+              </label>
+              <div className="flex w-full items-center gap-3 pl-1">
+                <Slider
+                  value={[formData.probability]}
+                  max={100}
+                  step={5}
+                  onValueChange={(values) =>
+                    handleInputChange("probability")(values[0])
+                  }
+                />
+                <div className="w-10 text-right text-sm text-emphasis font-medium">
+                  {formData.probability}%
+                </div>
+              </div>
+            </div>
+
             <AppInput
               variant="CMS"
               inputId="lead-project-value"
@@ -391,51 +421,27 @@ export default function CreateLeadsPipelineFormCMS(props: CreateLeadsPipelineFor
                 />
               </div>
             </div>
-          </div>
 
-          {companyMode === "new" && (
-            <div className="group-input flex flex-col gap-4 pt-2 border-t border-dashboard-border">
-              <h4 className="text-sm  font-bold pt-3">
-                Person in Charge (optional)
-              </h4>
-              <AppInput
-                variant="CMS"
-                inputId="lead-pic-name"
-                inputName="PIC Name"
-                inputType="text"
-                inputPlaceholder="e.g. Budi Santoso"
-                value={formData.pic_name}
-                onInputChange={handleInputChange("pic_name")}
-              />
-              <AppInput
-                variant="CMS"
-                inputId="lead-pic-job-title"
-                inputName="PIC Job Title"
-                inputType="text"
-                inputPlaceholder="e.g. Head of L&D"
-                value={formData.pic_job_title}
-                onInputChange={handleInputChange("pic_job_title")}
-              />
-              <AppInput
-                variant="CMS"
-                inputId="lead-pic-wa"
-                inputName="PIC WhatsApp"
-                inputType="text"
-                inputPlaceholder="e.g. 6281234567890"
-                value={formData.pic_wa}
-                onInputChange={handleInputChange("pic_wa")}
-              />
-              <AppInput
-                variant="CMS"
-                inputId="lead-pic-email"
-                inputName="PIC Email"
-                inputType="email"
-                inputPlaceholder="e.g. budi@majubersama.co.id"
-                value={formData.pic_email}
-                onInputChange={handleInputChange("pic_email")}
-              />
-            </div>
-          )}
+            <AppSelect
+              variant="CMS"
+              selectId="lead-assignee"
+              selectName="Assign To"
+              selectPlaceholder="Pick a team member"
+              value={formData.assignee_id}
+              onChange={handleInputChange("assignee_id")}
+              options={assigneeOptions}
+              required
+            />
+            <AppSelect
+              variant="CMS"
+              selectId="lead-source"
+              selectName="Source (optional)"
+              selectPlaceholder="How did this lead come in?"
+              value={formData.source}
+              onChange={handleInputChange("source")}
+              options={SOURCE_OPTIONS}
+            />
+          </div>
         </div>
         <div className="sticky bottom-0 w-full p-4 bg-sb-bg z-40">
           <AppButton

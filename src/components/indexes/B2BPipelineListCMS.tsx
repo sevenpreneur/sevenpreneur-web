@@ -31,8 +31,8 @@ import AppScorecardDashboard from "../cards/AppScorecardDashboard";
 import AppDropdown from "../elements/AppDropdown";
 import AppDropdownItemList from "../elements/AppDropdownItemList";
 import AppInput from "../fields/AppInput";
-import CreateLeadsPipelineFormCMS from "../forms/CreateLeadsPipelineFormCMS";
-import EditLeadsPipelineFormCMS from "../forms/EditLeadsPipelineFormCMS";
+import CreateB2BLeadFormCMS from "../forms/CreateB2BLeadFormCMS";
+import EditB2BLeadFormCMS from "../forms/EditB2BLeadFormCMS";
 import B2BProbabilityStatusLabelCMS from "../labels/B2BProbabilityStatusLabelCMS";
 import B2BStageLabelCMS from "../labels/B2BStageLabelCMS";
 import FilterLabelCMS from "../labels/FilterLabelCMS";
@@ -246,18 +246,6 @@ export default function B2BPipelineListCMS(props: B2BPipelineListCMSProps) {
               />
             </AppScorecardDashboard>
             <AppScorecardDashboard
-              title="Closed Won Value"
-              value={getShortRupiahCurrency(closedWonValue)}
-              icon={<Trophy className="size-5 text-white" />}
-              iconClassName="bg-success-foreground"
-            >
-              <ScorecardProgress
-                percent={closedWonPercent}
-                barColor="bg-success-foreground"
-                target={SCORECARD_TARGET}
-              />
-            </AppScorecardDashboard>
-            <AppScorecardDashboard
               title="Weighted Value"
               value={getShortRupiahCurrency(weightedValue)}
               icon={<Scale className="size-5 text-white" />}
@@ -266,6 +254,18 @@ export default function B2BPipelineListCMS(props: B2BPipelineListCMSProps) {
               <ScorecardProgress
                 percent={weightedPercent}
                 barColor="bg-warning-foreground"
+                target={SCORECARD_TARGET}
+              />
+            </AppScorecardDashboard>
+            <AppScorecardDashboard
+              title="Closed Won Value"
+              value={getShortRupiahCurrency(closedWonValue)}
+              icon={<Trophy className="size-5 text-white" />}
+              iconClassName="bg-success-foreground"
+            >
+              <ScorecardProgress
+                percent={closedWonPercent}
+                barColor="bg-success-foreground"
                 target={SCORECARD_TARGET}
               />
             </AppScorecardDashboard>
@@ -492,7 +492,7 @@ export default function B2BPipelineListCMS(props: B2BPipelineListCMSProps) {
       </PageContainerCMS>
 
       {isCreateOpen && (
-        <CreateLeadsPipelineFormCMS
+        <CreateB2BLeadFormCMS
           sessionToken={props.sessionToken}
           isOpen={isCreateOpen}
           onClose={() => setIsCreateOpen(false)}
@@ -500,7 +500,7 @@ export default function B2BPipelineListCMS(props: B2BPipelineListCMSProps) {
       )}
 
       {editTargetId !== null && (
-        <EditLeadsPipelineFormCMS
+        <EditB2BLeadFormCMS
           sessionToken={props.sessionToken}
           pipelineId={editTargetId}
           isOpen={editTargetId !== null}

@@ -731,7 +731,7 @@ CREATE TABLE b2b_pipeline (
   name                 VARCHAR           NOT NULL,
   company_id           INTEGER           NOT NULL,
   product              b2b_product_enum  NOT NULL,
-  source               b2b_source_enum   NOT NULL,
+  source               b2b_source_enum       NULL,
   stage                b2b_stage_enum    NOT NULL  DEFAULT 'lead_identified',
   probability          SMALLINT          NOT NULL  DEFAULT 0,
   probability_status   b2b_probability_status_enum  NOT NULL  DEFAULT 'cold',

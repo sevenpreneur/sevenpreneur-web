@@ -54,7 +54,7 @@ export const updateB2B = {
         name: stringNotBlank().optional(),
         company_id: numberIsID().optional(),
         product: z.enum(B2BProductEnum).optional(),
-        source: z.enum(B2BSourceEnum).optional(),
+        source: z.enum(B2BSourceEnum).nullable().optional(),
         stage: z.enum(B2BStageEnum).optional(),
         probability: z.number().int().min(0).max(100).optional(),
         probability_status: z.enum(B2BProbabilityStatusEnum).optional(),
