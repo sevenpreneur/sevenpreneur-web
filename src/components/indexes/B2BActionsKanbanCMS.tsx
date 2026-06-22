@@ -7,7 +7,8 @@ import { KanbanSquare, Plus, PlusCircle } from "lucide-react";
 import React, { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import AppButton from "../buttons/AppButton";
-import B2BActionFormCMS from "../forms/B2BActionFormCMS";
+import CreateB2BActionFormCMS from "../forms/CreateB2BActionFormCMS";
+import EditB2BActionFormCMS from "../forms/EditB2BActionFormCMS";
 import B2BActionItemCMS from "../items/B2BActionItemCMS";
 import AppAlertConfirmDialog from "../modals/AppAlertConfirmDialog";
 import PageContainerCMS from "../pages/PageContainerCMS";
@@ -149,8 +150,8 @@ export default function B2BActionsKanbanCMS({
           {isError && <AppErrorComponents />}
 
           {!isError && (
-            <div className="kanban-scroll w-full overflow-x-auto pb-2 h-[calc(100vh-9rem)]">
-              <div className="kanban-columns flex gap-4 min-w-max h-full">
+            <div className="kanban-scroll w-full pb-2 h-[calc(100vh-9rem)]">
+              <div className="kanban-columns grid grid-cols-4 gap-4 h-full w-full">
                 {B2B_ACTION_STATUSES.map((col) => {
                   const items = board.filter((b) => b.status === col.value);
                   const isOver = dragOverStatus === col.value;
@@ -166,7 +167,7 @@ export default function B2BActionsKanbanCMS({
                           setDragOverStatus(null);
                       }}
                       onDrop={handleDrop(col.value)}
-                      className={`kanban-column flex flex-col w-80 shrink-0 h-full gap-2 rounded-lg border p-2.5 transition-colors ${
+                      className={`kanban-column flex flex-col min-w-0 h-full gap-2 rounded-lg border p-2.5 transition-colors ${
                         isOver
                           ? "border-tertiary bg-tertiary/5"
                           : "border-dashboard-border bg-card-inside-bg"
@@ -218,7 +219,7 @@ export default function B2BActionsKanbanCMS({
       </PageContainerCMS>
 
       {createStatus !== null && (
-        <B2BActionFormCMS
+        <CreateB2BActionFormCMS
           sessionToken={sessionToken}
           pipelineId={pipelineId}
           defaultStatus={createStatus}
@@ -228,9 +229,8 @@ export default function B2BActionsKanbanCMS({
       )}
 
       {editId !== null && (
-        <B2BActionFormCMS
+        <EditB2BActionFormCMS
           sessionToken={sessionToken}
-          pipelineId={pipelineId}
           actionId={editId}
           isOpen={editId !== null}
           onClose={() => setEditId(null)}

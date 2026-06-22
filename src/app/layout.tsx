@@ -9,7 +9,6 @@ import {
   JetBrains_Mono,
   Mona_Sans,
   Plus_Jakarta_Sans,
-  Google_Sans,
 } from "next/font/google";
 import localFont from "next/font/local";
 import Script from "next/script";
@@ -28,12 +27,6 @@ const monaSans = Mona_Sans({
 const inter = Inter({
   variable: "--font-inter-source",
   subsets: ["latin"],
-});
-
-const googleSans = Google_Sans({
-  variable: "--font-google-sans",
-  subsets: ["latin"],
-  adjustFontFallback: false,
 });
 
 const jetbrainsMono = JetBrains_Mono({
@@ -118,7 +111,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html
       lang="en"
-      className={`scroll-smooth ${googleSans.variable} ${monaSans.variable} ${plusJakartaSans.variable} ${openSauceOne.variable} ${inter.variable} ${jetbrainsMono.variable} ${geistSans.variable} ${geistMono.variable} antialiased`}
+      className={`scroll-smooth ${monaSans.variable} ${plusJakartaSans.variable} ${openSauceOne.variable} ${inter.variable} ${jetbrainsMono.variable} ${geistSans.variable} ${geistMono.variable} antialiased`}
       suppressHydrationWarning
     >
       <GoogleTagManager gtmId={googleTagManagerId!} />

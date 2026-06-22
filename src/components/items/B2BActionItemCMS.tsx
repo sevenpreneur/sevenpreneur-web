@@ -78,11 +78,11 @@ export default function B2BActionItemCMS({
           <B2BActionPriorityLabelCMS variants={action.priority} />
           {due && (
             <span
-              className={`inline-flex items-center gap-1 text-[11px] font-medium ${
+              className={`inline-flex items-center gap-1 text-xs font-medium ${
                 due.late ? "text-destructive" : "text-emphasis"
               }`}
             >
-              <CalendarClock className="size-3" />
+              <CalendarClock className="size-3.5" />
               {due.text}
             </span>
           )}

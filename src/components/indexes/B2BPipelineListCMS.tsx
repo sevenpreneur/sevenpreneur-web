@@ -1,13 +1,13 @@
 "use client";
 import AppButton from "@/components/buttons/AppButton";
 import PageHeaderCMS from "@/components/titles/PageHeaderCMS";
-import { getRupiahCurrency, getShortRupiahCurrency } from "@/lib/currency";
-import { setSessionToken, trpc } from "@/trpc/client";
 import type {
   B2BProbabilityStatusEnum,
   B2BProductEnum,
   B2BStageEnum,
 } from "@/lib/app-types";
+import { getRupiahCurrency, getShortRupiahCurrency } from "@/lib/currency";
+import { setSessionToken, trpc } from "@/trpc/client";
 import {
   Building2,
   EllipsisVertical,
@@ -17,11 +17,13 @@ import {
   Scale,
   Search,
   Settings2,
+  SquareArrowOutUpRight,
   Trash2,
   Trophy,
   Wallet,
 } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
@@ -51,7 +53,6 @@ import TableCellCMS from "../tables/TableCellCMS";
 import TableHeadCMS from "../tables/TableHeadCMS";
 import TableHeaderCMS from "../tables/TableHeaderCMS";
 import TableRowCMS from "../tables/TableRowCMS";
-import Link from "next/link";
 
 interface B2BPipelineListCMSProps {
   sessionToken: string;
@@ -363,10 +364,14 @@ export default function B2BPipelineListCMS(props: B2BPipelineListCMSProps) {
                       {(currentPage - 1) * pageSize + index + 1}
                     </TableCellCMS>
                     <TableCellCMS>
-                      <Link href={`/b2b-pipeline/${post.id}`}>
-                        <p className="font-semibold text-sm line-clamp-2 max-w-64 dark:text-sevenpreneur-white">
+                      <Link
+                        href={`/b2b-pipeline/${post.id}`}
+                        className="flex items-center gap-1 hover:text-primary"
+                      >
+                        <p className="font-semibold text-sm line-clamp-2 max-w-64 hover:underline hover:underline-offset-2 dark:text-sevenpreneur-white">
                           {post.company_name}
                         </p>
+                        <SquareArrowOutUpRight className="size-3" />
                       </Link>
                     </TableCellCMS>
                     <TableCellCMS>
