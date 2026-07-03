@@ -23,6 +23,7 @@ const nextConfig = {
       },
     ],
   },
+  // Force revalidation on the marketing domains so a cookie-dependent response never gets served stale.
   async headers() {
     return [
       {
@@ -45,6 +46,7 @@ const nextConfig = {
   },
   async redirects() {
     return [
+      // No session cookie on agora/admin (prod) -> bounce to the login page on the main domain.
       {
         source: "/(.*)",
         has: [
@@ -64,6 +66,7 @@ const nextConfig = {
         basePath: false,
         permanent: false,
       },
+      // Same as above, but for the local/ngrok dev host.
       {
         source: "/(.*)",
         has: [
@@ -83,6 +86,7 @@ const nextConfig = {
         basePath: false,
         permanent: false,
       },
+      // Already signed in -> don't show the login page again.
       {
         source: "/auth(.*)",
         has: [
@@ -103,6 +107,7 @@ const nextConfig = {
     ];
   },
   async rewrites() {
+    // Falls back to a domain nobody owns so the ngrok rewrite below is a no-op until NGROK_DOMAIN is set.
     let ngrokDomain = "ngrok-no-domain.ngrok-free.app";
     if (process.env.DOMAIN_MODE === "local") {
       const ngrokDomainEnv = process.env.NGROK_DOMAIN;
@@ -111,6 +116,7 @@ const nextConfig = {
       }
     }
     return {
+      // Hide the internal route groups ("/admin", "/agora", "/api", "/www") from direct access.
       beforeFiles: [
         {
           source: "/(admin|agora|api|www)",
@@ -118,6 +124,7 @@ const nextConfig = {
         },
       ],
       afterFiles: [
+        // Any other subdomain (tenant.sevenpreneur.com) -> route into its matching folder.
         {
           source: "/:path*",
           has: [
@@ -129,6 +136,7 @@ const nextConfig = {
           ],
           destination: "/:subdomain/:path*",
         },
+        // Bare apex domain -> the marketing site.
         {
           source: "/:path*",
           has: [
@@ -140,6 +148,7 @@ const nextConfig = {
           ],
           destination: "/www/:path*",
         },
+        // Vercel preview deployments also serve the marketing site.
         {
           source: "/:path*",
           has: [
@@ -151,6 +160,7 @@ const nextConfig = {
           ],
           destination: "/www/:path*",
         },
+        // Requests coming in through the local ngrok tunnel are hitting the API directly.
         {
           source: "/:path*",
           has: [
