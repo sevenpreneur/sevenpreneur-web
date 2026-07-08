@@ -132,7 +132,7 @@ export const createPlaylist = {
         image_url: stringNotBlank(),
         video_url: stringNotBlank(),
         num_order: z.number().optional(),
-        external_video_id: stringNotBlank(),
+        external_video_id: stringNotBlank().nullable().optional(),
         status: z.enum(StatusEnum),
       })
     )

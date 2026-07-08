@@ -28,7 +28,7 @@ export interface VideoItem {
   image_url: string;
   duration: number;
   video_url?: string;
-  external_video_id?: string;
+  external_video_id?: string | null;
 }
 
 interface PlaylistDetailsSVPProps {

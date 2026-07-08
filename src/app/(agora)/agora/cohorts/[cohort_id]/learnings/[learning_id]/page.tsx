@@ -85,7 +85,7 @@ export default async function LearningsDetailsPageLMS({
         "https://tskubmriuclmbcfmaiur.supabase.co/storage/v1/object/public/sevenpreneur/default-avatar.svg.png"
       }
       learningRecordingYoutube={learningDetails.recording_url || ""}
-      learningRecordingCloudflare={learningDetails.external_video_id || ""}
+      learningRecordingBunny={learningDetails.external_video_id || ""}
       materialList={materialList}
       discussionStarterList={discussionStarterList}
       hasCheckIn={hasAttendance.check_in}

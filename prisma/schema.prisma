@@ -629,7 +629,7 @@ model Video {
   image_url         String     @db.VarChar()
   video_url         String     @db.VarChar()
   num_order         Int        @default(0) @db.SmallInt
-  external_video_id String     @db.VarChar()
+  external_video_id String?    @db.VarChar()
   status            StatusEnum
 
   @@map("videos")

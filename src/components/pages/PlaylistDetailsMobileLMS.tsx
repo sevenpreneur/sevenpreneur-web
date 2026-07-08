@@ -82,7 +82,7 @@ export default function PlaylistDetailsMobileLMS(
       <HeaderMobileLMS headerTitle={props.playlistName} headerBackURL="/" />
       <div className="video-player-attributes relative flex flex-col w-full gap-4">
         <div className="video-player w-full bg-black overflow-hidden">
-          {selectedVideoData ? (
+          {selectedVideoData && selectedVideoData.external_video_id ? (
             <div className="video-item relative w-full h-auto overflow-hidden">
               <AppVideoPlayer videoId={selectedVideoData.external_video_id} />
             </div>
@@ -135,9 +135,7 @@ export default function PlaylistDetailsMobileLMS(
         )}
       </div>
       <div className="other-videos flex flex-col gap-3 p-5 pt-8">
-        <h3 className="section-title  font-bold">
-          Other Episodes
-        </h3>
+        <h3 className="section-title  font-bold">Other Episodes</h3>
         <div className="video-list flex flex-col gap-4">
           {props.playlistVideos.map((post, index) => (
             <VideoListItemMobileLMS

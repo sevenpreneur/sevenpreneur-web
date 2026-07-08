@@ -56,7 +56,7 @@ interface LearningDetailsLMSProps extends AvatarBadgeLMSProps {
   learningEducatorName: string;
   learningEducatorAvatar: string;
   learningRecordingYoutube: string;
-  learningRecordingCloudflare: string;
+  learningRecordingBunny: string;
   materialList: MaterialList[];
   discussionStarterList: DiscussionStarterList[];
   hasCheckIn: boolean;
@@ -133,8 +133,7 @@ export default function LearningDetailsLMS(props: LearningDetailsLMSProps) {
   };
 
   const learningVideoKey = (() => {
-    if (props.learningRecordingCloudflare)
-      return props.learningRecordingCloudflare;
+    if (props.learningRecordingBunny) return props.learningRecordingBunny;
 
     if (props.learningRecordingYoutube) {
       const extracted = extractEmbedPathFromYouTubeURL(
@@ -170,7 +169,7 @@ export default function LearningDetailsLMS(props: LearningDetailsLMSProps) {
         learningEducatorName={props.learningEducatorName}
         learningEducatorAvatar={props.learningEducatorAvatar}
         learningRecordingYoutube={props.learningRecordingYoutube}
-        learningRecordingCloudflare={props.learningRecordingCloudflare}
+        learningRecordingBunny={props.learningRecordingBunny}
         materialList={props.materialList}
         discussionStarterList={props.discussionStarterList}
         hasCheckIn={props.hasCheckIn}
@@ -208,12 +207,12 @@ export default function LearningDetailsLMS(props: LearningDetailsLMSProps) {
               </p>
             </SectionContainerLMS>
             <SectionContainerLMS title="Live Class Recording">
-              {props.learningRecordingCloudflare && (
+              {props.learningRecordingBunny && (
                 <div className="relative w-full h-auto overflow-hidden rounded-md">
-                  <AppVideoPlayer videoId={props.learningRecordingCloudflare} />
+                  <AppVideoPlayer videoId={props.learningRecordingBunny} />
                 </div>
               )}
-              {!props.learningRecordingCloudflare && learningVideoKey && (
+              {!props.learningRecordingBunny && learningVideoKey && (
                 <div className="relative w-full aspect-video overflow-hidden rounded-md">
                   <iframe
                     width="100%"

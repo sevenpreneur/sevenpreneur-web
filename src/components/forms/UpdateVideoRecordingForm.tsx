@@ -38,17 +38,17 @@ export default function UpdateVideoRecordingFormCMS({
   // Beginning State
   const [formData, setFormData] = useState<{
     learningRecordingYoutube: string;
-    learningRecordingCloudflare: string;
+    learningRecordingBunny: string;
   }>({
     learningRecordingYoutube: initialData?.recording_url || "",
-    learningRecordingCloudflare: initialData?.external_video_id || "",
+    learningRecordingBunny: initialData?.external_video_id || "",
   });
 
   useEffect(() => {
     if (initialData) {
       setFormData({
         learningRecordingYoutube: initialData.recording_url || "",
-        learningRecordingCloudflare: initialData.external_video_id || "",
+        learningRecordingBunny: initialData.external_video_id || "",
       });
     }
   }, [initialData]);
@@ -93,8 +93,7 @@ export default function UpdateVideoRecordingFormCMS({
         {
           id: learningId,
           recording_url: formData.learningRecordingYoutube.trim() || null,
-          external_video_id:
-            formData.learningRecordingCloudflare.trim() || null,
+          external_video_id: formData.learningRecordingBunny.trim() || null,
         },
         {
           onSuccess: () => {
@@ -150,12 +149,12 @@ export default function UpdateVideoRecordingFormCMS({
                 onInputChange={handleInputChange("learningRecordingYoutube")}
               />
               <AppInput variant="CMS"
-                inputId="learning-recording-cloudflare"
-                inputName="Add Recording from Cloudflare"
+                inputId="learning-recording-bunny"
+                inputName="Add Recording from Bunny.net"
                 inputType="text"
-                inputPlaceholder="e.g. d929af5a12b4d3fbe74215e9678b1b58"
-                value={formData.learningRecordingCloudflare}
-                onInputChange={handleInputChange("learningRecordingCloudflare")}
+                inputPlaceholder="e.g. 75a3bad1-9668-4b0a-85f9-24d7471ac507"
+                value={formData.learningRecordingBunny}
+                onInputChange={handleInputChange("learningRecordingBunny")}
               />
             </div>
           </div>

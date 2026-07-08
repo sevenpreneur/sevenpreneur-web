@@ -5,7 +5,6 @@ import Image from "next/image";
 import { useState } from "react";
 import { toast } from "sonner";
 import AppDiscussionStarterSubmitter from "../messages/AppDiscussionStarterSubmitter";
-import AppButton from "../buttons/AppButton";
 import { AvatarBadgeLMSProps } from "../buttons/AvatarBadgeLMS";
 import HeaderMobileLMS from "../navigations/HeaderMobileLMS";
 import LearningDetailsTabsMobileLMS from "../tabs/LearningDetailsTabsMobileLMS";
@@ -29,7 +28,7 @@ interface LearningDetailsMobileLMSProps extends AvatarBadgeLMSProps {
   learningSessionCheckOut: boolean;
   sessionToken: string;
   learningRecordingYoutube: string;
-  learningRecordingCloudflare: string;
+  learningRecordingBunny: string;
   hasCheckIn: boolean;
   hasCheckOut: boolean;
   materialList: MaterialList[];
@@ -138,7 +137,7 @@ export default function LearningDetailsMobileLMS(
         learningLocationURL={props.learningLocationURL}
         learningSessionCheckIn={props.learningSessionCheckIn}
         learningSessionCheckOut={props.learningSessionCheckOut}
-        learningRecordingCloudflare={props.learningRecordingCloudflare}
+        learningRecordingBunny={props.learningRecordingBunny}
         learningRecordingYoutube={props.learningRecordingYoutube}
         hasCheckIn={props.hasCheckIn}
         hasCheckOut={props.hasCheckOut}

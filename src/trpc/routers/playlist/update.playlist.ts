@@ -68,7 +68,7 @@ export const updatePlaylist = {
         image_url: stringNotBlank().optional(),
         video_url: stringNotBlank().optional(),
         num_order: z.number().optional(),
-        external_video_id: stringNotBlank().optional(),
+        external_video_id: stringNotBlank().nullable().optional(),
         status: z.enum(StatusEnum).optional(),
       })
     )

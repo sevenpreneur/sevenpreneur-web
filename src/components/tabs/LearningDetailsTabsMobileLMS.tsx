@@ -33,7 +33,7 @@ export interface LearningDetailsTabsMobileLMSProps extends AvatarBadgeLMSProps {
   learningSessionCheckIn: boolean;
   learningSessionCheckOut: boolean;
   learningRecordingYoutube: string;
-  learningRecordingCloudflare: string;
+  learningRecordingBunny: string;
   hasCheckIn: boolean;
   hasCheckOut: boolean;
   sessionToken: string;
@@ -105,8 +105,7 @@ export default function LearningDetailsTabsMobileLMS(
 
   // Get Video Key from URL
   const learningVideoKey = (() => {
-    if (props.learningRecordingCloudflare)
-      return props.learningRecordingCloudflare;
+    if (props.learningRecordingBunny) return props.learningRecordingBunny;
 
     if (props.learningRecordingYoutube) {
       const extracted = extractEmbedPathFromYouTubeURL(
@@ -304,12 +303,12 @@ export default function LearningDetailsTabsMobileLMS(
             <h2 className="section-title  font-bold">
               Video Recording
             </h2>
-            {props.learningRecordingCloudflare && (
+            {props.learningRecordingBunny && (
               <div className="learning-video-recording relative w-full h-auto overflow-hidden rounded-sm">
-                <AppVideoPlayer videoId={props.learningRecordingCloudflare} />
+                <AppVideoPlayer videoId={props.learningRecordingBunny} />
               </div>
             )}
-            {!props.learningRecordingCloudflare && learningVideoKey && (
+            {!props.learningRecordingBunny && learningVideoKey && (
               <div className="learning-video-recording relative w-full aspect-video overflow-hidden rounded-md">
                 <iframe
                   width="100%"

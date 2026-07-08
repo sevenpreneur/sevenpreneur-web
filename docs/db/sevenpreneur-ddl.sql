@@ -469,7 +469,7 @@ CREATE TABLE videos (
   image_url          VARCHAR      NOT NULL,
   video_url          VARCHAR      NOT NULL,
   num_order          SMALLINT     NOT NULL  DEFAULT 0,
-  external_video_id  VARCHAR      NOT NULL,
+  external_video_id  VARCHAR          NULL,
   status             status_enum  NOT NULL
 );
 

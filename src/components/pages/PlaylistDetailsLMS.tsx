@@ -17,7 +17,7 @@ export interface VideoItem {
   image_url: string;
   duration: number;
   video_url?: string;
-  external_video_id: string;
+  external_video_id: string | null;
   status: StatusType;
 }
 
@@ -109,7 +109,7 @@ export default function PlaylistDetailsLMS(props: PlaylistDetailsLMSProps) {
         <main className="main flex flex-col flex-2 w-full gap-4">
           <div className="video-attributes flex flex-col w-full bg-card-bg border border-dashboard-border gap-4 rounded-lg">
             <div className="video-player relative w-full aspect-video bg-dashboard-bg rounded-lg overflow-hidden">
-              {selectedVideoData ? (
+              {selectedVideoData && selectedVideoData.external_video_id ? (
                 <AppVideoPlayer videoId={selectedVideoData.external_video_id} />
               ) : (
                 <iframe
