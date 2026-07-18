@@ -1,5 +1,6 @@
 "use client";
 import { StatusType } from "@/lib/app-types";
+import { extractEmbedPathFromYouTubeURL } from "@/lib/extract-youtube-id";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { AvatarBadgeLMSProps } from "../buttons/AvatarBadgeLMS";
@@ -56,6 +57,11 @@ export default function PlaylistDetailsLMS(props: PlaylistDetailsLMSProps) {
     );
   }, [selectedVideoId, activeVideos]);
 
+  // TEMP: prioritize YouTube over Bunny/Agora player until Bunny Stream is fully rolled out
+  const selectedVideoYoutubeKey = selectedVideoData?.video_url
+    ? extractEmbedPathFromYouTubeURL(selectedVideoData.video_url)
+    : null;
+
   // Handle Query Params Video ID
   const handleParamsQuery = (videoId: number) => {
     if (videoId !== selectedVideoId) {
@@ -109,7 +115,18 @@ export default function PlaylistDetailsLMS(props: PlaylistDetailsLMSProps) {
         <main className="main flex flex-col flex-2 w-full gap-4">
           <div className="video-attributes flex flex-col w-full bg-card-bg border border-dashboard-border gap-4 rounded-lg">
             <div className="video-player relative w-full aspect-video bg-dashboard-bg rounded-lg overflow-hidden">
-              {selectedVideoData && selectedVideoData.external_video_id ? (
+              {selectedVideoYoutubeKey ? (
+                <iframe
+                  width="100%"
+                  height="100%"
+                  src={`https://www.youtube.com/embed/${selectedVideoYoutubeKey}&amp;controls=1`}
+                  title="YouTube video player"
+                  frameBorder="0"
+                  allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  referrerPolicy="strict-origin-when-cross-origin"
+                  allowFullScreen
+                ></iframe>
+              ) : selectedVideoData && selectedVideoData.external_video_id ? (
                 <AppVideoPlayer videoId={selectedVideoData.external_video_id} />
               ) : (
                 <iframe

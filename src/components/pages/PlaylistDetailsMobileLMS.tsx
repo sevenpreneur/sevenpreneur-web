@@ -1,4 +1,5 @@
 "use client";
+import { extractEmbedPathFromYouTubeURL } from "@/lib/extract-youtube-id";
 import { ChevronDown } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -46,6 +47,11 @@ export default function PlaylistDetailsMobileLMS(
     );
   }, [selectedVideoId, activeVideos]);
 
+  // TEMP: prioritize YouTube over Bunny/Agora player until Bunny Stream is fully rolled out
+  const selectedVideoYoutubeKey = selectedVideoData?.video_url
+    ? extractEmbedPathFromYouTubeURL(selectedVideoData.video_url)
+    : null;
+
   // Handle Query Params Video ID
   const handleParamsQuery = (videoId: number) => {
     if (videoId !== selectedVideoId) {
@@ -82,7 +88,20 @@ export default function PlaylistDetailsMobileLMS(
       <HeaderMobileLMS headerTitle={props.playlistName} headerBackURL="/" />
       <div className="video-player-attributes relative flex flex-col w-full gap-4">
         <div className="video-player w-full bg-black overflow-hidden">
-          {selectedVideoData && selectedVideoData.external_video_id ? (
+          {selectedVideoYoutubeKey ? (
+            <div className="video-item relative w-full aspect-video overflow-hidden">
+              <iframe
+                width="100%"
+                height="100%"
+                src={`https://www.youtube.com/embed/${selectedVideoYoutubeKey}&amp;controls=1`}
+                title="YouTube video player"
+                frameBorder="0"
+                allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                referrerPolicy="strict-origin-when-cross-origin"
+                allowFullScreen
+              ></iframe>
+            </div>
+          ) : selectedVideoData && selectedVideoData.external_video_id ? (
             <div className="video-item relative w-full h-auto overflow-hidden">
               <AppVideoPlayer videoId={selectedVideoData.external_video_id} />
             </div>

@@ -104,18 +104,12 @@ export default function LearningDetailsTabsMobileLMS(
   }, []);
 
   // Get Video Key from URL
-  const learningVideoKey = (() => {
-    if (props.learningRecordingBunny) return props.learningRecordingBunny;
+  // TEMP: prioritize YouTube over Bunny/Agora player until Bunny Stream is fully rolled out
+  const youtubeVideoKey = props.learningRecordingYoutube
+    ? extractEmbedPathFromYouTubeURL(props.learningRecordingYoutube)
+    : null;
 
-    if (props.learningRecordingYoutube) {
-      const extracted = extractEmbedPathFromYouTubeURL(
-        props.learningRecordingYoutube
-      );
-      return extracted || null;
-    }
-
-    return null;
-  })();
+  const learningVideoKey = youtubeVideoKey || props.learningRecordingBunny || null;
 
   return (
     <div className="learning-session-tabs flex flex-col w-full">
@@ -303,23 +297,23 @@ export default function LearningDetailsTabsMobileLMS(
             <h2 className="section-title  font-bold">
               Video Recording
             </h2>
-            {props.learningRecordingBunny && (
-              <div className="learning-video-recording relative w-full h-auto overflow-hidden rounded-sm">
-                <AppVideoPlayer videoId={props.learningRecordingBunny} />
-              </div>
-            )}
-            {!props.learningRecordingBunny && learningVideoKey && (
+            {youtubeVideoKey && (
               <div className="learning-video-recording relative w-full aspect-video overflow-hidden rounded-md">
                 <iframe
                   width="100%"
                   height="100%"
-                  src={`https://www.youtube.com/embed/${learningVideoKey}&amp;controls=1`}
+                  src={`https://www.youtube.com/embed/${youtubeVideoKey}&amp;controls=1`}
                   title="YouTube video player"
                   frameBorder="0"
                   allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                   referrerPolicy="strict-origin-when-cross-origin"
                   allowFullScreen
                 />
+              </div>
+            )}
+            {!youtubeVideoKey && props.learningRecordingBunny && (
+              <div className="learning-video-recording relative w-full h-auto overflow-hidden rounded-sm">
+                <AppVideoPlayer videoId={props.learningRecordingBunny} />
               </div>
             )}
             {!learningVideoKey && <EmptyComponentsLMS variant="RECORDING" />}
