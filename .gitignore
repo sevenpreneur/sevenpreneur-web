@@ -50,3 +50,6 @@ certificates
 /.agents/
 /.claude/
 /.codex/
+
+# MCP Config
+.mcp.json

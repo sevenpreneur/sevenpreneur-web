@@ -61,6 +61,7 @@ export default function EditAutomationFormCMS({
   // Iterate initial data (so it doesn't get lost)
   useEffect(() => {
     if (initialData) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setFormData({
         automationKey: initialData.key,
         automationDescription: initialData.description,
